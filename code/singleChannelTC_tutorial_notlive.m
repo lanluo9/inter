@@ -2,13 +2,13 @@
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 lg_fn = fullfile(fn_base, 'home\lindsey'); 
 data_fn = fullfile(lg_fn, 'Data\2P_images');
-mworks_fn = fullfile(fn_base, 'Behavior\Data'); % mwork ?= behavior data
+mworks_fn = fullfile(fn_base, 'Behavior\Data'); % mwork = behavior data
 fnout = fullfile(lg_fn, 'Analysis\2P\test'); % output in analysis folder
 
 %% specify file names & load data
 date = '200118';
 ImgFolder = '002';
-time = strvcat('1508'); % why catenate vertically?
+time = strvcat('1508'); % catenate multiple time vertically to get a matrix of file/folder name
 mouse = 'i1312';
 frame_rate = 15.5;
 run_str = catRunName(ImgFolder, 1);
@@ -20,7 +20,7 @@ load(fName); % load behavior data, aka "input"
 CD = fullfile(data_fn, mouse, date, ImgFolder);
 cd(CD);
 imgMatFile = [ImgFolder '_000_000.mat'];
-load(imgMatFile); % load 2P img data, aka "info"
+load(imgMatFile); % load 2P img metadata, aka "info" % check content
 
 %% visualize episodes
 totframes = input.counterValues{end}(end); % total # of frames
@@ -32,7 +32,9 @@ fprintf(['Data new dimension: ' num2str(size(data)) '\n'])
 nframes = 500; % nframes to average
 nskip = 1500; % nframes to skip for each average. avg 500 frame -> skip 1k frame -> etc
 
-nep = floor(size(data,3)./nskip); % # of subplot. ep ?= episode
+% choose target both stable and at middle of stack, to account for x-y shift
+
+nep = floor(size(data,3)./nskip); % # of subplot. ep = episode
 [n, n2] = subplotn(nep); 
 figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:nep; 
@@ -50,8 +52,9 @@ if w == 0 % Returns 0 when terminated by mouse, 1 when keypress
     numClicked = find(axesClicked==allAxes);
     close all
 end
-fprintf(['Selected subplot ' num2str(numClicked) '\n']) % i pressed subplot 6 and numClicked = 4. why?
-% which one should i click?
+fprintf(['Selected subplot ' num2str(numClicked) '\n']) % i pressed subplot 6 and numClicked = 4. why? -> test this
+% which one should i click? cells look sharpest. could plot a smaller zoomed-in fov to make it more obvious
+% if vasculature unfocus, there is drift in Z which cannot be rectified
 
 %% analyze & save specific episode
 data_avg = mean(data(:,:,1+((numClicked-1)*nskip):nframes+((numClicked-1)*nskip)),3); % avg of the clicked 500-frame episode
@@ -76,14 +79,14 @@ print(fullfile(fnout, datemouse, datemouserun, [datemouserun '_FOV_avg.pdf']), '
 
 %% normalize & sort by dir & filter
 clear data
-nOn = input.nScansOn; % behavior data "input". nScansOn = # frames when on?
+% trial = no-stim (nScansOff) period + stim present (nScansOn)
+nOn = input.nScansOn; % behavior data "input"
 nOff = input.nScansOff;
 ntrials = size(input.tGratingDirectionDeg,2); %this is a cell array with one grating direction value per trial, so length = ntrials
 sz = size(data_reg);
 data_tr = reshape(data_reg,[sz(1), sz(2), nOn+nOff, ntrials]); % data ordered by trial
-% on+off = 1 trial? what is scan? 
 fprintf(['Size of data_tr is ' num2str(size(data_tr))])
-data_f = mean(data_tr(:,:,nOff/2:nOff,:), 3); % what is f? looks like (y,x,frame,dir), but why nOff/2? -> nOn?
+data_f = mean(data_tr(:,:,nOff/2:nOff,:), 3); % (y,x,frame,dir). nOff/2 account for ca reaction time
 data_df = bsxfun(@minus, double(data_tr), data_f); % subtract avg (baseline) of trial
 data_dfof = bsxfun(@rdivide, data_df, data_f); % normalize by baseline. dfof = delta_f/f0 = (f-f0)/f0
 
@@ -123,14 +126,15 @@ for iStim = 1:size(data_dfof,3)
     mask_all = mask_all + bwout; %adds new cells to old cells
     mask_exp = imCellBuffer(mask_all, 3) + mask_all; %creates buffer around cells to avoid fusing
     close all
-end
+end % select all bright cells
 mask_cell = bwlabel(mask_all); %turns logical into numbered cells
 figure;
 imagesc(mask_cell)
 
-nMaskPix = 5; %thickness of neuropil ring in pixels
-nBuffPix = 3; %thickness of buffer between cell and ring
+nMaskPix = 5; %thickness of neuropil ring in pixels -> neighbor's contamination
+nBuffPix = 3; %thickness of buffer between cell and ring -> account for illumination of surrounding of the cell itself
 mask_np = imCellNeuropil(mask_cell, nBuffPix, nMaskPix); % account for no-cell area around cell
+% point spread function -> contamination from neighbor cell
 save(fullfile(fnout, datemouse, datemouserun, [datemouserun '_mask_cell.mat']), 'data_dfof_max', 'mask_cell', 'mask_np')
 clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_2 data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
 
@@ -150,14 +154,15 @@ for i = 1:nCells
      fprintf(['Cell #' num2str(i) '\n']) 
 end
 
-%% ???
+%% minimize neuropil contribution
 ii= 0.01:0.01:1;
 x = zeros(length(ii), nCells);
 for i = 1:100
-    x(i,:) = skewness(data_tc_down - tcRemoveDC(np_tc_down*ii(i))); % tcRemoveDC? skewness?
+    x(i,:) = skewness(data_tc_down - tcRemoveDC(np_tc_down*ii(i))); % tcRemoveDC = tc - mean aka direct current
+    % assume sparse ca signal -> long tail & positive skewness
 end
-[max_skew, ind] =  max(x,[],1); 
-np_w = 0.01*ind; 
+[max_skew, ind] =  max(x,[],1); % maximize skew by i value
+np_w = 0.01*ind; % np_weight
 npSub_tc = data_tc - bsxfun(@times, tcRemoveDC(np_tc), np_w);
 clear data_reg data_reg_down
 save(fullfile(fnout, datemouse, datemouserun, [datemouserun '_TCs.mat']), 'data_tc', 'np_tc', 'npSub_tc')
