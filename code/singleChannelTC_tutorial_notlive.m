@@ -34,6 +34,7 @@ nskip = 1500; % nframes to skip for each average. avg 500 frame -> skip 1k frame
 
 % choose target both stable and at middle of stack, to account for x-y shift
 
+%%
 nep = floor(size(data,3)./nskip); % # of subplot. ep = episode
 [n, n2] = subplotn(nep); 
 figure('units','normalized','outerposition',[0 0 1 1]);
@@ -122,21 +123,26 @@ mask_all = zeros(sz(1), sz(2));
 for iStim = 1:size(data_dfof,3)
     mask_data_temp = mask_data(:,:,iStim);
     mask_data_temp(find(mask_exp >= 1)) = 0; %blacks out old cells
-    bwout = imCellEditInteractiveLG(mask_data_temp); %selection GUI
+    bwout = imCellEditInteractiveLG_LL(mask_data_temp); %selection GUI
     mask_all = mask_all + bwout; %adds new cells to old cells
     mask_exp = imCellBuffer(mask_all, 3) + mask_all; %creates buffer around cells to avoid fusing
     close all
 end % select all bright cells
 mask_cell = bwlabel(mask_all); %turns logical into numbered cells
+
 figure;
 imagesc(mask_cell)
+t = string(datetime('now'));
+t = replace(t, ':', '_'); t = replace(t, ' ', '_');
+saveas(gcf, ['mask_cell_', t, '.png'])
+
 
 nMaskPix = 5; %thickness of neuropil ring in pixels -> neighbor's contamination
 nBuffPix = 3; %thickness of buffer between cell and ring -> account for illumination of surrounding of the cell itself
 mask_np = imCellNeuropil(mask_cell, nBuffPix, nMaskPix); % account for no-cell area around cell
 % point spread function -> contamination from neighbor cell
 save(fullfile(fnout, datemouse, datemouserun, [datemouserun '_mask_cell.mat']), 'data_dfof_max', 'mask_cell', 'mask_np')
-clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_2 data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
+% clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_2 data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
 
 data_tc = stackGetTimeCourses(data_reg, mask_cell); %apply cell mask to img stack to get time courses
 fprintf(['data_tc is ' num2str(size(data_tc))]) 
