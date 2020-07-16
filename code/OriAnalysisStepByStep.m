@@ -48,9 +48,13 @@ Ori(convert_idx) = Ori(convert_idx) - 180;
 Ori_list = unique(Ori);
 nOri = length(Ori_list);
 
-for iori = 1:nOri
+for iori = 1 : nOri
     idx = find(Ori == Ori_list(iori)); 
-    
+    for icell = 1 : ncell
+        base_win = 
+        resp_win = 
+        
+    end
 end
 
 
