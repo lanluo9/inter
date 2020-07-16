@@ -49,6 +49,11 @@ Ori(convert_idx) = Ori(convert_idx) - 180;
 Ori_list = unique(Ori);
 nOri = length(Ori_list);
 
+% tt = mean(mean(tc_trials,1),2);
+% plot(1:trial_len, squeeze(tt)) 
+% trial = 0-60 off + 61-90 on. signal decays >2/3 after 0-30 off
+% as short as 3 frames would suffice. now take 10 frames as window len:
+
 for iori = 1 : nOri
     idx = find(Ori == Ori_list(iori)); 
     for icell = 1 : ncell
@@ -58,10 +63,7 @@ for iori = 1 : nOri
     end
 end
 
-tt = mean(mean(tc_trials,1),2);
-plot(1:trial_len, squeeze(tt)) 
-% trial = 0-60 off + 61-90 on. signal decays >2/3 after 0-30 off
-% will take 
+
 
 
 
