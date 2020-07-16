@@ -33,6 +33,7 @@ load([tc_name, '\', datemouserun, '_TCs.mat']);
 
 nOn = input.nScansOn; % behavior data "input"
 nOff = input.nScansOff;
+trial_len = nOn + nOff;
 ntrials = size(input.tGratingDirectionDeg,2);
 size(npSub_tc) % nframe * ncell
 ncell = size(npSub_tc, 2);
@@ -57,6 +58,10 @@ for iori = 1 : nOri
     end
 end
 
+tt = mean(mean(tc_trials,1),2);
+plot(1:trial_len, squeeze(tt)) 
+% trial = 0-60 off + 61-90 on. signal decays >2/3 after 0-30 off
+% will take 
 
 
 
