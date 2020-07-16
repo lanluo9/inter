@@ -1,4 +1,5 @@
 %% 
+
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 lg_fn = fullfile(fn_base, 'home\lindsey'); 
 data_fn = fullfile(lg_fn, 'Data\2P_images');
@@ -16,6 +17,7 @@ datemouse = [date '_' mouse];
 datemouserun = [date '_' mouse '_' run_str];
 
 %% load data
+
 fName = fullfile(mworks_fn, ['data-' mouse '-' date '-' time '.mat']);
 load(fName); % load behavior data, aka "input"
 
@@ -27,13 +29,29 @@ load(imgMatFile); % load 2P img metadata, aka "info" % check content
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
 load([tc_name, '\', datemouserun, '_TCs.mat']);
 
-%%
+%% use npSub_tc to conduct further analysis
 
+nOn = input.nScansOn; % behavior data "input"
+nOff = input.nScansOff;
+ntrials = size(input.tGratingDirectionDeg,2);
+size(npSub_tc) % nframe * ncell
+ncell = size(npSub_tc, 2);
 
+tc_trials = reshape(npSub_tc,[nOn+nOff, ntrials, size(npSub_tc,2)]); 
+tc_trials = permute(tc_trials, [3,2,1]);
+size(tc_trials) % ncell * ntrial * trial_len
 
+Dir = celleqel2mat_padded(input.tGratingDirectionDeg); 
+convert_idx = Dir>=180;
+Ori = Dir;
+Ori(convert_idx) = Ori(convert_idx) - 180; 
+Ori_list = unique(Ori);
+nOri = length(Ori_list);
 
-
-
+for iori = 1:nOri
+    idx = find(Ori == Ori_list(iori)); 
+    
+end
 
 
 

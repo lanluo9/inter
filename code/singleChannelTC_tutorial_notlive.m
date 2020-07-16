@@ -164,7 +164,7 @@ end
 ii= 0.01:0.01:1;
 x = zeros(length(ii), nCells);
 for i = 1:100
-    x(i,:) = skewness(data_tc_down - tcRemoveDC(np_tc_down*ii(i))); % tcRemoveDC = tc - mean aka direct current
+    x(i,:) = skewness(data_tc_down - tcRemoveDC(np_tc_down*ii(i))); % tcRemoveDC = tc - mean (direct current)
     % assume sparse ca signal -> long tail & positive skewness
 end
 [max_skew, ind] =  max(x,[],1); % maximize skew by i value
