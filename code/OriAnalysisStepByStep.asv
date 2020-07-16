@@ -53,19 +53,52 @@ nOri = length(Ori_list);
 % plot(1:trial_len, squeeze(tt)) 
 % trial = 0-60 off + 61-90 on. signal decays >2/3 after 0-30 off
 % as short as 3 frames would suffice. now take 10 frames as window len:
+win_len = 10;
 
-for iori = 1 : nOri
-    idx = find(Ori == Ori_list(iori)); 
+%% cells sensitive to orientations
+sig_ttest = pi * ones(ncell, nOri);
+resp_avg = pi * ones(ncell, nOri);
+resp_ste = pi * ones(ncell, nOri); % standard error 
+dfof_avg = pi * ones(ncell, nOri); % dF/F
+dfof_ste = pi * ones(ncell, nOri);
+
+for iOri = 1 : nOri
+    idx = find(Ori == Ori_list(iOri)); 
+    ntrials_ori = length(idx);
     for icell = 1 : ncell
-        base_win = tc_trials(icell, idx, 50:nO);
-        resp_win = tc_trials(icell, idx, (trial_len-win_len):trial_len);
+        base_win = squeeze(tc_trials(icell, idx, (nOff - win_len + 1):nOff));
+        base_win = mean(base_win, 2);
+        resp_win = squeeze(tc_trials(icell, idx, (trial_len - win_len + 1):trial_len));
+        resp_win = mean(resp_win, 2);
         
+        sig_ttest(icell, iOri) = ttest(base_win,resp_win, 'alpha',0.05./(ntrials_ori));
+        resp_avg(icell, iOri) = mean(resp_win);
+        dfof_avg(icell, iOri) = mean( (resp_win - base_win) ./ mean(base_win) );
+        resp_ste(icell, iOri) = std(resp_win) / sqrt( length(resp_win));
+        dfof_ste(icell, iOri) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(length(resp_win));
     end
 end
 
+sum(sum(sig_ttest,2)>0) % ncells responsive to >= 1 orientation: 80/148
 
+%% orientation tuning of indiv cell
 
-
-
+for icell = 1 : ncell
+    figure('units','normalized','outerposition',[0 0 1 1]);
+    errorbar(Ori_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
+    hold on
+    if sum(sig_ttest(icell,:)) > 0
+        sig_idx = sig_ttest(icell,:) > 0;
+        sig_ori = Ori_list(sig_idx);
+        sig_star_height = dfof_avg(icell,sig_idx) + dfof_ste(icell,sig_idx) + 0.01;
+        scatter(sig_ori, sig_star_height, '*', 'LineWidth',1)
+    else
+        sig_ori = [];
+    end
+    xlim([0-5, 180])
+    title(['cell ', num2str(icell), ': sensitive to ' num2str(length(sig_ori)), ' orientations'])
+    saveas(gcf, ['ori_tuning_', num2str(icell)], 'jpg')
+    close
+end
 
 
