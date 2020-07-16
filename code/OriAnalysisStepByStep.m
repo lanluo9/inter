@@ -53,19 +53,29 @@ nOri = length(Ori_list);
 % plot(1:trial_len, squeeze(tt)) 
 % trial = 0-60 off + 61-90 on. signal decays >2/3 after 0-30 off
 % as short as 3 frames would suffice. now take 10 frames as window len:
+win_len = 10;
 
-for iori = 1 : nOri
-    idx = find(Ori == Ori_list(iori)); 
+%%
+sig_ttest = pi * ones(ncell, nOri);
+resp_avg = pi * ones(ncell, nOri);
+resp_ste = pi * ones(ncell, nOri); % standard error 
+
+for iOri = 1 : nOri
+    idx = find(Ori == Ori_list(iOri)); 
+    ntrials_ori = length(idx);
     for icell = 1 : ncell
-        base_win = 
-        resp_win = 
+        base_win = squeeze(tc_trials(icell, idx, (nOff - win_len + 1):nOff));
+        base_win = mean(base_win, 2);
+        resp_win = squeeze(tc_trials(icell, idx, (trial_len - win_len + 1):trial_len));
+        resp_win = mean(resp_win, 2);
         
+        sig_ttest(icell, iOri) = ttest(base_win,resp_win, 'alpha',0.05./(ntrials_ori));
+        resp_avg(icell, iOri) = mean(resp_win);
+        resp_ste(icell, iOri) = std(resp_win) / sqrt( length(resp_win));
     end
 end
 
+sum(sum(sig_ttest,2)>0) % ncells responsive to >= 1 orientation: 80/148
 
-
-
-
-
+%%
 
