@@ -180,6 +180,8 @@ ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
 ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
 ori_pref_cells = ori_pref;
 
+save ori_across_cells.mat dfof_avg dfof_ste fit_param ori_pref_cells
+
 %% bootstrap -> goodness of fit
 
 dfof_avg_runs = pi * ones(ncell, nOri, nrun);
@@ -236,8 +238,9 @@ for irun = 1 : nrun
     end
 end
 
-%% san
+save ori_bootstrap.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
 
+% san
 tt = mean(dfof_avg_runs, 3);
 
 subplot(1,2,1)
@@ -248,3 +251,67 @@ subplot(1,2,2)
 imagesc(mean(dfof_avg_runs, 3))
 % imagesc(dfof_avg_runs(:,:,1))
 colorbar
+
+%% evaluate ori_pref across runs -> good fit
+
+ori_closeness = sort(abs(ori_pref_runs - ori_pref_cells), 2); % sort each row aka cell
+percentile_threshold = 0.90;
+percentile_idx = percentile_threshold * nrun;
+ori_perc = ori_closeness(:, percentile_idx);
+
+% sum(ori_perc<22.5) / length(ori_perc)
+% histogram(ori_perc,8)
+
+good_fit_cell = ori_perc<22.5;
+sum(good_fit_cell)
+sig_ori_cell = sum(sig_ttest,2)>0;
+sum(sig_ori_cell)
+ori_cell = good_fit_cell & sig_ori_cell;
+sum(ori_cell)
+
+%% distribution
+
+xname = {'segmented'; 'sig ori-tuned'; 'good fit'; 'both'};
+y = [ncell, sum(sig_ori_cell), sum(good_fit_cell), sum(ori_cell)]; 
+x = 1 : length(y);
+bar(x, y)
+set(gca,'xticklabel', xname)
+
+for iloc = 1:numel(y)
+    text(x(iloc),y(iloc), num2str(y(iloc),'%0.2f'),...
+               'HorizontalAlignment','center', 'VerticalAlignment','bottom')
+end
+
+ylim([0, max(y)+10])
+ylabel('number of cells')
+set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, 'number of cells.jpg')
+close
+
+%%
+% fit_param(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+ori_pref_qualified = rad2deg(fit_param(ori_cell, 5));
+ori_pref_qualified(ori_pref_qualified<0) = ori_pref_qualified(ori_pref_qualified<0) + 180;
+ori_sharp_qualified = fit_param(ori_cell, 3);
+
+subplot(1,2,1)
+edges = Ori_list;
+histogram(ori_pref_qualified, edges)
+% x = 1 : length(ori_pref_qualified);
+% for iloc = 1:numel(ori_pref_qualified)
+%     text(x(iloc),ori_pref_qualified(iloc), num2str(ori_pref_qualified(iloc),'%0.2f'),...
+%                'HorizontalAlignment','center', 'VerticalAlignment','bottom')
+% end
+xlabel('preferred ori')
+subplot(1,2,2)
+histogram(ori_sharp_qualified, 10)
+% x = 1 : length(ori_sharp_qualified);
+% for iloc = 1:numel(ori_sharp_qualified)
+%     text(x(iloc),ori_sharp_qualified(iloc), num2str(ori_sharp_qualified(iloc),'%0.2f'),...
+%                'HorizontalAlignment','center', 'VerticalAlignment','bottom')
+% end
+xlabel('sharpness of tuning')
+
+set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, 'ori_pref_w_sharp.jpg')
+close
