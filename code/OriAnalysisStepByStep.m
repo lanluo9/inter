@@ -19,15 +19,15 @@ datemouserun = [date '_' mouse '_' run_str];
 %% load data (took the ref TC)
 
 fName = fullfile(mworks_fn, ['data-' mouse '-' date '-' time '.mat']);
-load(fName); % load behavior data, aka "input"
+load(fName); % load behavior data "input"
 
 CD = fullfile(data_fn, mouse, date, ImgFolder);
 cd(CD);
 imgMatFile = [ImgFolder '_000_000.mat'];
-load(imgMatFile); % load 2P img metadata, aka "info" % check content
+load(imgMatFile); % load 2P img metadata "info"
 
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
-load([tc_name, '\', datemouserun, '_TCs.mat']);
+load([tc_name, '\', datemouserun, '_TCs.mat']); % load time course
 
 %% use npSub_tc for further analysis
 
@@ -58,13 +58,10 @@ plot(1:trial_len, squeeze(tt))
 win_len = 10;
 
 %% cells sensitive to orientations
-sig_ttest = pi * ones(ncell, nOri);
-p_ttest = pi * ones(ncell, nOri);
+sig_ttest = pi * ones(ncell, nOri); p_ttest = pi * ones(ncell, nOri);
 base_avg = pi * ones(ncell, nOri);
-resp_avg = pi * ones(ncell, nOri);
-resp_ste = pi * ones(ncell, nOri); % standard error 
-dfof_avg = pi * ones(ncell, nOri); % dF/F
-dfof_ste = pi * ones(ncell, nOri);
+resp_avg = pi * ones(ncell, nOri); resp_ste = pi * ones(ncell, nOri); % standard error 
+dfof_avg = pi * ones(ncell, nOri); dfof_ste = pi * ones(ncell, nOri); % dF/F
 
 for iOri = 1 : nOri
     idx = find(Ori == Ori_list(iOri)); 
@@ -75,7 +72,8 @@ for iOri = 1 : nOri
         resp_win = squeeze(tc_trials(icell, idx, (trial_len - win_len + 1):trial_len));
         resp_win = mean(resp_win, 2);
         
-        [sig_ttest(icell, iOri), p_ttest(icell, iOri)] = ttest(base_win, resp_win, 'alpha',0.05./(ntrials_ori - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+        [sig_ttest(icell, iOri), p_ttest(icell, iOri)] = ttest(base_win, resp_win,...
+            'alpha',0.05./(ntrials_ori - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
         base_avg(icell, iOri) = mean(base_win); % avg over trials of same ori
         resp_avg(icell, iOri) = mean(resp_win);
         resp_ste(icell, iOri) = std(resp_win) / sqrt(length(resp_win));
@@ -238,19 +236,19 @@ for irun = 1 : nrun
     end
 end
 
-save ori_bootstrap.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
+save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
 
-% san
-tt = mean(dfof_avg_runs, 3);
-
-subplot(1,2,1)
-imagesc(dfof_avg)
-colorbar
-
-subplot(1,2,2)
-imagesc(mean(dfof_avg_runs, 3))
-% imagesc(dfof_avg_runs(:,:,1))
-colorbar
+% % sanity check
+% tt = mean(dfof_avg_runs, 3);
+% 
+% subplot(1,2,1)
+% imagesc(dfof_avg)
+% colorbar
+% 
+% subplot(1,2,2)
+% imagesc(mean(dfof_avg_runs, 3))
+% % imagesc(dfof_avg_runs(:,:,1))
+% colorbar
 
 %% evaluate ori_pref across runs -> good fit
 
