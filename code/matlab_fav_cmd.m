@@ -12,6 +12,7 @@ disp(' ')
 
 %% startup 
 addpath(genpath('D:\Lan_temp'))
+addpath(genpath('C:\Users\lan\Documents\repos'))
 disp('path added')
 
 currentdir = 'C:\Users\lan\Documents\repos';
@@ -22,3 +23,14 @@ coreInitJavaPath(svnroot,ijroot);
 coreInitMatlabPath(svnroot,ijroot);
 disp('imageJ added')
 disp(' ')
+
+%% figure tips
+figure('units','normalized','outerposition',[0 0 1 1]);
+set(gcf, 'Position', get(0, 'Screensize'));
+
+line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
+yl = ylim; % query [ymin ymax]
+line([ori_pref, ori_pref], [yl(1), (b_hat + R1_hat)], 'Color', 'r', 'LineWidth', 1);
+
+saveas(gcf, ['ori_tuning_fit_', num2str(icell)], 'jpg')
+

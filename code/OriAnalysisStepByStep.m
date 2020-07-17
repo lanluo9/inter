@@ -49,7 +49,7 @@ Ori(convert_idx) = Ori(convert_idx) - 180;
 Ori_list = unique(Ori);
 nOri = length(Ori_list);
 
-%% 
+%% probe win_len
 
 tt = mean(mean(tc_trials,1),2);
 plot(1:trial_len, squeeze(tt)) 
