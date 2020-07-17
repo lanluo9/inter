@@ -57,6 +57,7 @@ win_len = 10;
 
 %% cells sensitive to orientations
 sig_ttest = pi * ones(ncell, nOri);
+base_avg = pi * ones(ncell, nOri);
 resp_avg = pi * ones(ncell, nOri);
 resp_ste = pi * ones(ncell, nOri); % standard error 
 dfof_avg = pi * ones(ncell, nOri); % dF/F
@@ -72,16 +73,17 @@ for iOri = 1 : nOri
         resp_win = mean(resp_win, 2);
         
         sig_ttest(icell, iOri) = ttest(base_win, resp_win, 'alpha',0.05./(ntrials_ori));
+        base_avg(icell, iOri) = mean(base_win);
         resp_avg(icell, iOri) = mean(resp_win);
-        dfof_avg(icell, iOri) = mean( (resp_win - base_win) ./ mean(base_win) );
         resp_ste(icell, iOri) = std(resp_win) / sqrt(length(resp_win));
+
+        dfof_avg(icell, iOri) = mean( (resp_win - base_win) ./ mean(base_win) );
         dfof_ste(icell, iOri) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrials_ori);
     end
 end
 
 sum(sum(sig_ttest,2)>0) % ncells responsive to >= 1 orientation: 80/148
 
-size(tc_trials) % ncell * ntrial * trial_len
 base = mean(tc_trials(:,:, (nOff - win_len + 1):nOff), 3);
 resp = mean(tc_trials(:,:, (trial_len - win_len + 1):trial_len), 3);
 df = resp - base;
@@ -109,4 +111,30 @@ end
 % sig & dfof correct?
 
 
-%%
+%% fit von Mises function
+fit_param = pi * ones(ncell, 7);
+
+for icell = 1 %1 : ncell
+    theta = Ori_list; 
+    data = resp_avg(icell, :) - base_avg(icell, :);
+%     data = resp_avg(icell, :);
+    
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+    fit_param(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+%   icell, baseline, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+    
+    theta_finer = 0:1:179;
+%     theta_finer = theta;
+    y_fit = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
+%   y_fit = b_tmp+R1_tmp.*exp(k1_tmp.*(cos(2.*(theta-u1_tmp))-1));
+
+    plot(theta_finer, y_fit)
+end
+
+%% bootstrap -> goodness of fit
+
+nrun = 1000;
+for irun = 1 : nrun
+    
+    
+end
