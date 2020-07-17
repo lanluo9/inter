@@ -114,10 +114,10 @@ end
 
 %% ntrial_ori is similar across ori, why sig differ?
 
-ntrials_ori = [];
+ntrials_nOri = [];
 for iOri = 1 : nOri
     idx = find(Ori == Ori_list(iOri)); 
-    ntrials_ori(iOri) = length(idx); %#ok<*SAGROW>
+    ntrials_nOri(iOri) = length(idx); 
 end
 
 %% fit von Mises function
@@ -148,11 +148,14 @@ for icell = 1 : ncell
     theta_finer = deg2rad(0:1:179);
     y_fit = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
     ori_pref = rad2deg(u1_hat);
-    if ori_pref < 0
-        ori_pref = ori_pref + 180;
-    elseif ori_pref > 180
-        ori_pref = ori_pref - 180;
-    end
+%     if ori_pref < 0
+%         ori_pref = ori_pref + 180;
+%     elseif ori_pref > 180
+%         ori_pref = ori_pref - 180;
+%     end
+    ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
+    ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+
     plot(rad2deg(theta_finer), y_fit, 'LineWidth', 1)
     yl = ylim; % query [ymin ymax]
     line([ori_pref, ori_pref], [yl(1), (b_hat + R1_hat)], 'Color', 'r', 'LineWidth', 1);
@@ -171,10 +174,77 @@ for icell = 1 : ncell
     
 end
 
+u1_hat_cells = fit_param(:,5);
+ori_pref = rad2deg(u1_hat_cells);
+ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
+ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+ori_pref_cells = ori_pref;
+
 %% bootstrap -> goodness of fit
 
+dfof_avg_runs = pi * ones(ncell, nOri, nrun);
+dfof_ste_runs = pi * ones(ncell, nOri, nrun);
+fit_param_runs = pi * ones(ncell, 7, nrun);
+ori_pref_runs = pi * ones(ncell, nrun);
+
+theta = deg2rad(Ori_list);
 nrun = 1000;
+
 for irun = 1 : nrun
-    
-    
+    irun
+
+    for icell = 1 : ncell
+        
+        for iOri = 1 : nOri
+            idx = find(Ori == Ori_list(iOri)); 
+            ntrials_ori = length(idx);
+            bootstrap_draw = round(ntrials_ori * 0.7);
+            idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
+
+            base_win = squeeze(tc_trials(icell, idx_run, (nOff - win_len + 1):nOff));
+            base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
+            resp_win = squeeze(tc_trials(icell, idx_run, (trial_len - win_len + 1):trial_len));
+            resp_win = mean(resp_win, 2);
+
+%             [sig_ttest(icell, iOri), p_ttest(icell, iOri)] = ttest(base_win, resp_win, 'alpha',0.05./(ntrials_ori - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+%             base_avg(icell, iOri) = mean(base_win); % avg over sampled trials 
+%             resp_avg(icell, iOri) = mean(resp_win);
+%             resp_ste(icell, iOri) = std(resp_win) / sqrt(length(resp_win));
+
+            dfof_avg_runs(icell, iOri, irun) = mean( (resp_win - base_win) ./ mean(base_win) );
+            dfof_ste_runs(icell, iOri, irun) = std( (resp_win - base_win) ./ mean(base_win) ) ./ sqrt(ntrials_ori);
+        end
+        
+        
+        data = dfof_avg_runs(icell, :, irun); 
+        [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+        fit_param_runs(icell, :, irun) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+    %   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+
+%         theta_finer = deg2rad(0:1:179);
+%         y_fit = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
+        ori_pref = rad2deg(u1_hat);
+%     if ori_pref < 0
+%         ori_pref = ori_pref + 180;
+%     elseif ori_pref > 180
+%         ori_pref = ori_pref - 180;
+%     end
+        ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
+        ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+        ori_pref_runs(icell, irun) = ori_pref;
+        
+    end
 end
+
+%% san
+
+tt = mean(dfof_avg_runs, 3);
+
+subplot(1,2,1)
+imagesc(dfof_avg)
+colorbar
+
+subplot(1,2,2)
+imagesc(mean(dfof_avg_runs, 3))
+% imagesc(dfof_avg_runs(:,:,1))
+colorbar
