@@ -123,21 +123,51 @@ end
 %% fit von Mises function
 fit_param = pi * ones(ncell, 7);
 
-for icell = 1 %1 : ncell
-    theta = deg2rad(Ori_list);
-    data = resp_avg(icell, :) - base_avg(icell, :);
+for icell = 1 : ncell
+%     figure('units','normalized','outerposition',[0 0 1 1]);
+    errorbar(Ori_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
+    hold on
+    if sum(sig_ttest(icell,:)) > 0
+        sig_idx = sig_ttest(icell,:) > 0;
+        sig_ori = Ori_list(sig_idx);
+        sig_star_height = dfof_avg(icell,sig_idx) + dfof_ste(icell,sig_idx) + 0.01;
+        scatter(sig_ori, sig_star_height, '*', 'LineWidth',1)
+    else
+        sig_ori = [];
+    end
+    xlim([0-5, 180+5])
+    line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
     
+    
+    theta = deg2rad(Ori_list);
+    data = dfof_avg(icell,:); % data = resp_avg(icell, :) - base_avg(icell, :);
     [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
     fit_param(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
-%   icell, baseline, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+%   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
     
     theta_finer = deg2rad(0:1:179);
     y_fit = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
-
     ori_pref = rad2deg(u1_hat);
-    plot(rad2deg(theta_finer), y_fit)
-    hold on
+    if ori_pref < 0
+        ori_pref = ori_pref + 180;
+    elseif ori_pref > 180
+        ori_pref = ori_pref - 180;
+    end
+    plot(rad2deg(theta_finer), y_fit, 'LineWidth', 1)
+    yl = ylim; % query [ymin ymax]
+    line([ori_pref, ori_pref], [yl(1), (b_hat + R1_hat)], 'Color', 'r', 'LineWidth', 1);
     
+    xlabel('ori in deg')
+    ylabel('dF/F')
+    if isempty(sig_ori)
+        title(['cell ', num2str(icell), ' has no ori-pref'])
+    else
+        title(['cell ', num2str(icell), ' prefer ori ', num2str(round(ori_pref, 2))])
+    end
+    
+    set(gcf, 'Position', get(0, 'Screensize'));
+    saveas(gcf, ['ori_tuning_fit_', num2str(icell)], 'jpg')
+    close
     
 end
 

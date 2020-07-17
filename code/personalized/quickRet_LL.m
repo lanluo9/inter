@@ -4,7 +4,7 @@ ImgFolder = '001';
 time = '1130';
 doReg = 0;
 nrun = size(ImgFolder,1);
-rc = behavConstsAV_LL;
+rc = behavConstsAV;
 subnum = mouse;
 
 run_str = ['runs-' ImgFolder(1,:)];
