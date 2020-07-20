@@ -1,4 +1,4 @@
-function rc = behavConstsAV
+function rc = behavConstsAV_LL
 
 
 tHostname = lower(hostname);
@@ -22,6 +22,19 @@ switch tHostname
             rc.lindseyAnalysis = fullfile(rootDir,'Analysis\2P');
             rc.data = fullfile(rootDir,'Data\2P_images');
             rc.ashleyAnalysis = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\all_staff\home\ashley\Analysis';
+        elseif contains(tUsername,'lan')
+            rc.name = 'lan';
+            rootDir = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\all_staff\home\lan';
+            rc.indexFilename = fullfile(rootDir, 'Analysis\Behavior\experimentIndexes\av-subj-days-lg.xls');
+            rc.fitOutputFilename = fullfile(rootDir, 'Analysis\Behavior\experimentIndexes\av-subj-fits-lg.xls');
+            rc.fitOutputSummary = fullfile(rootDir, 'Analysis\Behavior\output\summary');
+            rc.fitOutputPdfDir = fullfile(rootDir, 'Analysis\Behavior\output\pdfFits');
+            rc.fitOutputMatDir = fullfile(rootDir, 'Analysis\Behavior\output\fitMatStats');
+            rc.eyeOutputDir = fullfile(rootDir,'Analysis\Behavior\EyeTracking');
+%             rc.eyeInputDir = '\\CRASH.dhe.duke.edu\data\home\ashley\Analysis\';
+            rc.lanAnalysis = fullfile(rootDir,'home\lan\Analysis');
+            rc.data = fullfile(rootDir,'home\lan\Data\2P_images');
+%             rc.ashleyAnalysis = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\all_staff\home\ashley\Analysis';
         elseif contains(tUsername,'ashle') % tUsername(1:5) == 'ashle'
             rc.name = 'ashle';
             rootDirCrash = '\\CRASH.dhe.duke.edu\data\home\ashley';
@@ -52,19 +65,7 @@ switch tHostname
             rc.ashleyData = fullfile(rootDir,'home\ashley\data');
             rc.carolynAnalysis = fullfile(rootDir,'home\carolyn\Analysis');
             rc.carolynData = fullfile(rootDir,'home\carolyn\Data');
-        elseif contains(tUsername,'lan')
-            rc.name = 'lan';
-            rootDir = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\all_staff\home\lan';
-            rc.indexFilename = fullfile(rootDir, 'Analysis\Behavior\experimentIndexes\av-subj-days-lg.xls');
-            rc.fitOutputFilename = fullfile(rootDir, 'Analysis\Behavior\experimentIndexes\av-subj-fits-lg.xls');
-            rc.fitOutputSummary = fullfile(rootDir, 'Analysis\Behavior\output\summary');
-            rc.fitOutputPdfDir = fullfile(rootDir, 'Analysis\Behavior\output\pdfFits');
-            rc.fitOutputMatDir = fullfile(rootDir, 'Analysis\Behavior\output\fitMatStats');
-            rc.eyeOutputDir = fullfile(rootDir,'Analysis\Behavior\EyeTracking');
-%             rc.eyeInputDir = '\\CRASH.dhe.duke.edu\data\home\ashley\Analysis\';
-            rc.lanAnalysis = fullfile(rootDir,'home\lan\Analysis');
-            rc.data = fullfile(rootDir,'home\lan\Data\2P_images');
-%             rc.ashleyAnalysis = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\all_staff\home\ashley\Analysis';
+        
         end
 end
 

@@ -1,5 +1,8 @@
 % select 1 position w low SNR & clustered cells
 
+clear all
+close all
+
 date = '200720';
 mouse = '1323';
 ImgFolder = '001';
