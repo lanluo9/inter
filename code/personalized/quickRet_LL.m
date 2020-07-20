@@ -1,7 +1,9 @@
-date = '200716';
+% select 1 position w low SNR & clustered cells
+
+date = '200720';
 mouse = '1323';
 ImgFolder = '001';
-time = '1130';
+time = '1049';
 doReg = 0;
 nrun = size(ImgFolder,1);
 rc = behavConstsAV_LL;
