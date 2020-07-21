@@ -34,3 +34,5 @@ line([ori_pref, ori_pref], [yl(1), (b_hat + R1_hat)], 'Color', 'r', 'LineWidth',
 
 saveas(gcf, ['ori_tuning_fit_', num2str(icell)], 'jpg')
 
+%% saving var
+save('data_reg.mat', 'data_reg', '-v7.3') % force save >2GB .mat
