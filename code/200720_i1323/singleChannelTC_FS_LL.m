@@ -14,7 +14,7 @@ LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
 %% load and register
 tic
 data = [];
-% clear temp
+clear temp
 trial_n = [];
 offset = 0;
 for irun = 1:nrun
@@ -64,9 +64,10 @@ for irun = 1:nrun
     trial_n = [trial_n nframes];
 end
 input = concatenateDataBlocks(temp);
-% clear data_temp
-% clear temp
+clear data_temp
+clear temp
 toc
+
 % %% For behavior experiments
 % % Plot outcome by trial number
 % SIx = strcmp(input.trialOutcomeCell, 'success');
@@ -112,7 +113,7 @@ else
     save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg', 'data_reg')
     save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_input.mat']), 'input')
 end
-% clear data out
+clear data out
 
 %% test stability
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data_reg(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
@@ -123,12 +124,11 @@ print(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run
 
 %% find activated cells
 
-tCyc = cell2mat(input.tCyclesOn);
-cStart = cell2mat(c); % same as cStimOn
-
+% tCyc = cell2mat(input.tCyclesOn);
+cStart = cell2mat(input.cStimOn); % same as cStimOn
 cStim = cell2mat(input.cStimOn);
 cTarget = celleqel2mat_padded(input.cTargetOn);
-nTrials = length(tCyc);
+nTrials = input.trialsSinceReset;
 sz = size(data_reg);
 
 data_f = zeros(sz(1),sz(2),nTrials);
@@ -137,9 +137,6 @@ data_base2 = zeros(sz(1),sz(2),nTrials);
 data_targ = zeros(sz(1),sz(2),nTrials);
 
 %%
-save('tc_fs_half.mat', '-v7.3') % force save >2GB .mat
-
-load tc_fs_half.mat
 
 for itrial = 1:nTrials
     if ~isnan(cStart(itrial))
@@ -170,7 +167,7 @@ data_base2_dfof = (data_base2-data_f)./data_f;
 data_targ_dfof = (data_targ-data_f)./data_f;
 targCon = celleqel2mat_padded(input.tGratingContrast);
 if input.doRandCon
-        baseCon = ones(size(targCon));
+    baseCon = ones(size(targCon));
 else
     baseCon = celleqel2mat_padded(input.tBaseGratingContrast);
 end
@@ -183,7 +180,7 @@ deltas = unique(targetDelta);
 nDelta = length(deltas);
 data_dfof_dir = zeros(sz(1),sz(2),ndir);
 data_dfof2_dir = zeros(sz(1),sz(2),ndir);
-[n n2] = subplotn(ndir);
+[n, n2] = subplotn(ndir);
 figure;
 for idir = 1:ndir
     ind = setdiff(find(baseDir == dirs(idir)),ind_con);
@@ -199,7 +196,7 @@ else
     data_dfof_dir_all = data_dfof_dir;
 end
 data_dfof_targ = zeros(sz(1),sz(2),nDelta);
-[n n2] = subplotn(nDelta);
+[n, n2] = subplotn(nDelta);
 figure;
 for idir = 1:nDelta
     ind = find(targetDelta == deltas(idir));
