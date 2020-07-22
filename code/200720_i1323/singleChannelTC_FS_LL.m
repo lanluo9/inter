@@ -126,10 +126,11 @@ print(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run
 
 % tCyc = cell2mat(input.tCyclesOn);
 cStart = cell2mat(input.cStimOn); % same as cStimOn
-cStim = cell2mat(input.cStimOn);
-cTarget = celleqel2mat_padded(input.cTargetOn);
+cStimOn = cell2mat(input.cStimOn);
+cStimOff = cell2mat(input.cStimOff);
+cTarget = celleqel2mat_padded(input.cTargetOn); cTarget = int64(cTarget);
 nTrials = input.trialsSinceReset;
-sz = size(data_reg);
+sz = size(data_reg); % [y pixel * x pixel * nframe]
 
 data_f = zeros(sz(1),sz(2),nTrials);
 data_base = zeros(sz(1),sz(2),nTrials);
@@ -137,13 +138,13 @@ data_base2 = zeros(sz(1),sz(2),nTrials);
 data_targ = zeros(sz(1),sz(2),nTrials);
 
 %%
-
 for itrial = 1:nTrials
     if ~isnan(cStart(itrial))
         data_f(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-20:cStart(itrial)-1),3);
         data_base(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)+10:cStart(itrial)+20),3);
-        if cStim(itrial) > cStart(itrial) 
-            data_base2(:,:,itrial) = mean(data_reg(:,:,cStim(itrial)+9:cStim(itrial)+19),3);
+        
+        if cStimOn(itrial) >= cStart(itrial) 
+            data_base2(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial)+9:cStimOn(itrial)+19),3);
         else
             data_base2(:,:,itrial) = nan(sz(1),sz(2));
         end
@@ -152,6 +153,7 @@ for itrial = 1:nTrials
         data_base(:,:,itrial) = nan(sz(1),sz(2));
         data_base2(:,:,itrial) = nan(sz(1),sz(2));
     end
+    
     if ~isnan(cTarget(itrial))
         if cTarget(itrial)+19 < sz(3)
             data_targ(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)+5:cTarget(itrial)+10),3);
@@ -162,9 +164,11 @@ for itrial = 1:nTrials
         data_targ(:,:,itrial) = nan(sz(1),sz(2));
     end
 end
+
 data_base_dfof = (data_base-data_f)./data_f;
 data_base2_dfof = (data_base2-data_f)./data_f;
 data_targ_dfof = (data_targ-data_f)./data_f;
+
 targCon = celleqel2mat_padded(input.tGratingContrast);
 if input.doRandCon
     baseCon = ones(size(targCon));
@@ -172,12 +176,14 @@ else
     baseCon = celleqel2mat_padded(input.tBaseGratingContrast);
 end
 ind_con = intersect(find(targCon == 1),find(baseCon == 0));
+
 baseDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
 dirs = unique(baseDir);
 ndir = length(dirs);
 targetDelta = round(celleqel2mat_padded(input.tGratingDirectionDeg),0);
 deltas = unique(targetDelta);
 nDelta = length(deltas);
+
 data_dfof_dir = zeros(sz(1),sz(2),ndir);
 data_dfof2_dir = zeros(sz(1),sz(2),ndir);
 [n, n2] = subplotn(ndir);
@@ -190,11 +196,13 @@ for idir = 1:ndir
     imagesc(data_dfof_dir(:,:,idir))
     title(dirs(idir))
 end
+
 if sum(~isnan(data_dfof2_dir))>1
     data_dfof_dir_all = cat(3, data_dfof_dir, data_dfof2_dir);
 else
     data_dfof_dir_all = data_dfof_dir;
 end
+
 data_dfof_targ = zeros(sz(1),sz(2),nDelta);
 [n, n2] = subplotn(nDelta);
 figure;
@@ -206,6 +214,7 @@ for idir = 1:nDelta
     title(deltas(idir))
 end
 data_dfof = cat(3,data_dfof_dir_all,data_dfof_targ);
+
 myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof_max = max(imfilter(data_dfof,myfilter),[],3);
 figure;

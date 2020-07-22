@@ -10,6 +10,26 @@ currentEditor.Selection = [originalSelection(1) + 1, 1, originalSelection(1) + 1
 clear currentEditor originalselection
 disp(' ')
 
+%% openvar
+currentEditor = matlab.desktop.editor.getActive;
+originalSelection = currentEditor.Selection;
+disp(currentEditor.SelectedText)
+openvar(currentEditor.SelectedText);
+% currentEditor.Selection = [originalSelection(1) + 1, 1, originalSelection(1) + 1, 1];%Reset selection to original state + 1 line (go to next line)
+clear currentEditor originalselection
+disp(' ')
+
+%% edit function for detailed help
+currentEditor = matlab.desktop.editor.getActive;
+originalSelection = currentEditor.Selection;
+
+prefix = 'edit ';
+function_name = currentEditor.SelectedText;
+disp([prefix function_name])
+
+call_help = [prefix function_name];
+eval(call_help);
+
 %% startup 
 addpath(genpath('D:\Lan_temp'))
 addpath(genpath('C:\Users\lan\Documents\repos'))
