@@ -332,7 +332,7 @@ for idir = 1:nDelta
     title(deltas(idir))
 end
 set(gcf, 'Position', get(0, 'Screensize'));
-data_dfof = cat(3,data_dfof_dir_all, data_dfof_targ);
+data_dfof = cat(3,data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof_max = max(imfilter(data_dfof, myfilter),[],3);
@@ -354,8 +354,13 @@ for iStim = 1:size(data_dfof,3)
     mask_exp = imCellBuffer(mask_all,3)+mask_all;
     close all
 end
+
 mask_cell= bwlabel(mask_all);
 figure; imagesc(mask_cell)
+set(gcf, 'Position', get(0, 'Screensize'));
+cd C:\Users\lan\Documents\repos\inter\code
+saveas(gcf, ['mask_cell.jpg'])
+
 % bwout = imCellEditInteractive(data_dfof_max);
 % mask_cell = bwlabel(bwout);
 

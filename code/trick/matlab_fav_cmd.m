@@ -52,6 +52,7 @@ line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 yl = ylim; % query [ymin ymax]
 line([ori_pref, ori_pref], [yl(1), (b_hat + R1_hat)], 'Color', 'r', 'LineWidth', 1);
 
+cd C:\Users\lan\Documents\repos\inter\code
 saveas(gcf, ['ori_tuning_fit_', num2str(icell)], 'jpg')
 
 %% saving var
