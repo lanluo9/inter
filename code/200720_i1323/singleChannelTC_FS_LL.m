@@ -171,7 +171,11 @@ histogram(trial_len)
 
 pretend_len = 207;
 tt = data_reg(:,:, 1 : sz(3) - mod(sz(3), pretend_len));
-tt = reshape(tt, [sz(1), sz(2), pretend_len, sz(3)/pretend_len]);
+t = sz(3) - mod(sz(3), pretend_len);
+tt = reshape(tt, [sz(1)*sz(2), pretend_len, t/pretend_len]);
+tt_avg = mean(tt, 3);
+
+imagesc(tt_avg(1:1000, :))
 
 %%
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(itrial)+3 < sz(3))
