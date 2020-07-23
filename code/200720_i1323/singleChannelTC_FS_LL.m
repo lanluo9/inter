@@ -178,7 +178,39 @@ tt_avg = mean(tt, 3);
 imagesc(tt_avg(1:1000, :))
 
 %%
-assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(itrial)+3 < sz(3))
+
+tc_screen = mean(mean(data_reg,1),2);
+tc_screen = squeeze(tc_screen);
+all_trial_len = sz(3) - cStart(1);
+
+tt = tc_screen(cStart(1) : all_trial_len - mod(all_trial_len-cStart(1)+1, pretend_len));
+temp = reshape(tt, [pretend_len, length(tt)/pretend_len]);
+figure
+plot(mean(temp, 2))
+
+% sz = size(data_reg);
+% data_trial = zeros(sz(1),sz(2),200,nTrials);
+% 
+% for it = 1:nTrials
+%     data_trial(:,:, = 
+% 
+
+%% determine ca signal latency
+
+data_trial = zeros(sz(1),sz(2),200,nTrials); % take 1-200 frame of every trial
+whos tc_screen
+
+for it = 1:nTrials
+    start_id = cStimOn(it);
+    data_trial(:,:,:,it) = tc_screen(1 : 200)
+    
+end
+
+
+
+%%
+
+assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
 for itrial = 1:nTrials
 %     if ~isnan(cStart(itrial))
         data_f(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-10:cStart(itrial)-1),3);
@@ -264,8 +296,13 @@ for idir = 1:ndir
     imagesc(data_dfof_dir(:,:,idir))
     title(dirs(idir))
 end
+
+figure
 imagesc(data_dfof_dir) % adapter (deg == 0) resp shows no cell?
+title('data dfof dir')
+figure
 imagesc(data_dfof2_dir) % but baseline2 does??
+title('data dfof2 dir')
 
 if sum(~isnan(data_dfof2_dir))>1
     data_dfof_dir_all = cat(3, data_dfof_dir, data_dfof2_dir);
@@ -289,6 +326,7 @@ myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof_max = max(imfilter(data_dfof, myfilter),[],3);
 figure;
 imagesc(data_dfof_max)
+title('data dfof max')
 
 %% cell segmentation 
 mask_exp = zeros(sz(1),sz(2));
