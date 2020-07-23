@@ -138,8 +138,9 @@ data_f2 = zeros(sz(1),sz(2),nTrials);
 data_targ = zeros(sz(1),sz(2),nTrials);
 
 %%
-unique(cStimOff - cStimOn) % adapter = 3-4 frame
-unique(cTarget - cStimOff) % ISI = 8 or 22-23 frame
+unique(cStimOff - cStimOn) % adapter = 3-4 frame. rounded from 100 ms?
+unique(cTarget - cStimOff) % ISI = 8 or 22-23 frame. rounded from 250? or 750 ms
+unique(cTarget - cStimOn)
 % target: 3-4 frame too
 
 % index2 = structfun(@(x) any(contains(x, 'Targ')), input);  sum(index2)
@@ -177,6 +178,21 @@ tt_avg = mean(tt, 3);
 
 imagesc(tt_avg(1:1000, :))
 
+%% determine ca signal latency (around 8 frames in this case)
+
+data_trial = zeros(200, nTrials); % take 1-200 frame of every trial
+data_trial_real = zeros(max(trial_len), nTrials);
+whos tc_screen
+
+for it = 1:(nTrials-1)
+    start_id = cStimOn(it);
+    data_trial(:,it) = tc_screen(start_id : start_id + 200 - 1);
+    data_trial_real(:,it) = [tc_screen(start_id : start_id + trial_len(it) - 1); NaN(max(trial_len) - trial_len(it), 1)];
+end
+
+plot(mean(data_trial, 2))
+data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:50)); grid on; grid minor
+
 %%
 
 tc_screen = mean(mean(data_reg,1),2);
@@ -195,29 +211,22 @@ plot(mean(temp, 2))
 %     data_trial(:,:, = 
 % 
 
-%% determine ca signal latency
-
-data_trial = zeros(sz(1),sz(2),200,nTrials); % take 1-200 frame of every trial
-whos tc_screen
-
-for it = 1:nTrials
-    start_id = cStimOn(it);
-    data_trial(:,:,:,it) = tc_screen(1 : 200)
-    
-end
-
 
 
 %%
+% see data_trial_zoom_in. ca signal latency = 8 frames & adapter|target = 3|4 frames
+% count from frame #1
+% data_adapter = frame #8-11
+% data_f2 (baseline after adaptation) = frame #14-16
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
 for itrial = 1:nTrials
 %     if ~isnan(cStart(itrial))
         data_f(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-10:cStart(itrial)-1),3);
-        data_adapter(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial):cStimOn(itrial)+3),3);
+        data_adapter(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial)+7:cStimOn(itrial)+10),3);
         
 %         if cStimOn(itrial) >= cStart(itrial) 
-        data_f2(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)-3:cTarget(itrial)-1),3);
+        data_f2(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial)+13:cStimOn(itrial)+15),3);
 %         else
 %             data_base2(:,:,itrial) = nan(sz(1),sz(2));
 %         end
@@ -229,7 +238,7 @@ for itrial = 1:nTrials
     
 %     if ~isnan(cTarget(itrial))
 %         if cTarget(itrial)+3 < sz(3)
-        data_targ(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial):cTarget(itrial)+3),3);
+        data_targ(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)+7:cTarget(itrial)+10),3);
 %         else
 %             data_targ(:,:,itrial) = nan(sz(1),sz(2));
 %         end
@@ -240,7 +249,7 @@ end
 
 data_adapter_dfof = (data_adapter-data_f)./data_f;
 data_base2_dfof = (data_f2-data_f)./data_f;
-data_targ_dfof = (data_targ-data_f2)./data_f2; % ??
+data_targ_dfof = (data_targ-data_f2)./data_f2; 
 
 %%
 
@@ -287,22 +296,24 @@ nDelta = length(deltas);
 data_dfof_dir = zeros(sz(1),sz(2),ndir);
 data_dfof2_dir = zeros(sz(1),sz(2),ndir);
 [n, n2] = subplotn(ndir);
-figure;
+% figure;
 for idir = 1:ndir
     ind = setdiff(find(adapterDir == dirs(idir)),ind_con);
     data_dfof_dir(:,:,idir) = nanmean(data_adapter_dfof(:,:,ind),3);
     data_dfof2_dir(:,:,idir) = nanmean(data_base2_dfof(:,:,ind),3);
-    subplot(n,n2,idir)
-    imagesc(data_dfof_dir(:,:,idir))
-    title(dirs(idir))
+%     subplot(n,n2,idir)
+%     imagesc(data_dfof_dir(:,:,idir))
+%     title(dirs(idir))
 end
 
 figure
-imagesc(data_dfof_dir) % adapter (deg == 0) resp shows no cell?
+imagesc(data_dfof_dir) % adapter (deg == 0) resp is ok
 title('data dfof dir')
+set(gcf, 'Position', get(0, 'Screensize'));
 figure
-imagesc(data_dfof2_dir) % but baseline2 does??
+imagesc(data_dfof2_dir) % but baseline2 shows bright cells, almost same as adapter resp
 title('data dfof2 dir')
+set(gcf, 'Position', get(0, 'Screensize'));
 
 if sum(~isnan(data_dfof2_dir))>1
     data_dfof_dir_all = cat(3, data_dfof_dir, data_dfof2_dir);
@@ -317,9 +328,10 @@ for idir = 1:nDelta
     ind = find(targetDelta == deltas(idir));
     data_dfof_targ(:,:,idir) = nanmean(data_targ_dfof(:,:,ind),3);
     subplot(n,n2,idir)
-    imagesc(data_dfof_targ(:,:,idir)) % targ resp shows no cell?
+    imagesc(data_dfof_targ(:,:,idir)) % targ resp shows dim and blurry cells
     title(deltas(idir))
 end
+set(gcf, 'Position', get(0, 'Screensize'));
 data_dfof = cat(3,data_dfof_dir_all, data_dfof_targ);
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
