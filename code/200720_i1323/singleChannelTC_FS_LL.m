@@ -129,12 +129,12 @@ cStart = cell2mat(input.cStimOn); % same as cStimOn
 cStimOn = cell2mat(input.cStimOn);
 cStimOff = cell2mat(input.cStimOff);
 cTarget = celleqel2mat_padded(input.cTargetOn); cTarget = int64(cTarget);
-nTrials = input.trialsSinceReset;
+nTrials = input.trialsSinceReset; % 464 = 32 types * 14.5 reps
 sz = size(data_reg); % [y pixel * x pixel * nframe]
 
-data_base = zeros(sz(1),sz(2),nTrials);
+data_f = zeros(sz(1),sz(2),nTrials);
 data_adapter = zeros(sz(1),sz(2),nTrials);
-data_base2 = zeros(sz(1),sz(2),nTrials);
+data_f2 = zeros(sz(1),sz(2),nTrials);
 data_targ = zeros(sz(1),sz(2),nTrials);
 
 %%
@@ -164,14 +164,24 @@ input.targetStimOnMs
 input.targetOnTimeMs % 100 ms
 
 %%
+
+trial_len = diff(cStart);
+unique(trial_len)
+histogram(trial_len)
+
+pretend_len = 207;
+tt = data_reg(:,:, 1 : sz(3) - mod(sz(3), pretend_len));
+tt = reshape(tt, [sz(1), sz(2), pretend_len, sz(3)/pretend_len]);
+
+%%
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(itrial)+3 < sz(3))
 for itrial = 1:nTrials
 %     if ~isnan(cStart(itrial))
-        data_base(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-10:cStart(itrial)-1),3);
+        data_f(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-10:cStart(itrial)-1),3);
         data_adapter(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial):cStimOn(itrial)+3),3);
         
 %         if cStimOn(itrial) >= cStart(itrial) 
-        data_base2(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)-3:cTarget(itrial)-1),3);
+        data_f2(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)-3:cTarget(itrial)-1),3);
 %         else
 %             data_base2(:,:,itrial) = nan(sz(1),sz(2));
 %         end
@@ -192,9 +202,9 @@ for itrial = 1:nTrials
 %     end
 end
 
-data_adapter_dfof = (data_adapter-data_base)./data_base;
-data_base2_dfof = (data_base2-data_base)./data_base;
-data_targ_dfof = (data_targ-data_base)./data_base;
+data_adapter_dfof = (data_adapter-data_f)./data_f;
+data_base2_dfof = (data_f2-data_f)./data_f;
+data_targ_dfof = (data_targ-data_f2)./data_f2; % ??
 
 %%
 
@@ -222,13 +232,13 @@ input.tGratingDirectionDeg % == input.gratingDirectionDeg
 
 %%
 targCon = celleqel2mat_padded(input.tGratingContrast);
-unique(targCon)
+unique(targCon) % target contrast 1
 if input.doRandCon
     baseCon = ones(size(targCon));
 else
     baseCon = celleqel2mat_padded(input.tBaseGratingContrast);
 end
-unique(baseCon)
+unique(baseCon) % adapter contrast 0 or 1
 ind_con = intersect(find(targCon == 1),find(baseCon == 0));
 
 adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
@@ -250,6 +260,8 @@ for idir = 1:ndir
     imagesc(data_dfof_dir(:,:,idir))
     title(dirs(idir))
 end
+imagesc(data_dfof_dir) % adapter (deg == 0) resp shows no cell?
+imagesc(data_dfof2_dir) % but baseline2 does??
 
 if sum(~isnan(data_dfof2_dir))>1
     data_dfof_dir_all = cat(3, data_dfof_dir, data_dfof2_dir);
@@ -264,13 +276,13 @@ for idir = 1:nDelta
     ind = find(targetDelta == deltas(idir));
     data_dfof_targ(:,:,idir) = nanmean(data_targ_dfof(:,:,ind),3);
     subplot(n,n2,idir)
-    imagesc(data_dfof_targ(:,:,idir))
+    imagesc(data_dfof_targ(:,:,idir)) % targ resp shows no cell?
     title(deltas(idir))
 end
-data_dfof = cat(3,data_dfof_dir_all,data_dfof_targ);
+data_dfof = cat(3,data_dfof_dir_all, data_dfof_targ);
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
-data_dfof_max = max(imfilter(data_dfof,myfilter),[],3);
+data_dfof_max = max(imfilter(data_dfof, myfilter),[],3);
 figure;
 imagesc(data_dfof_max)
 
@@ -282,7 +294,8 @@ mask_data = data_dfof;
 for iStim = 1:size(data_dfof,3)
     mask_data_temp = mask_data(:,:,end+1-iStim);
     mask_data_temp(find(mask_exp >= 1)) = 0;
-    bwout = imCellEditInteractive(mask_data_temp);
+    bwout = imCellEditInteractiveLG_LL(mask_data_temp);
+%     bwout = imCellEditInteractive_LL(mask_data_temp);
     mask_all = mask_all+bwout;
     mask_exp = imCellBuffer(mask_all,3)+mask_all;
     close all
@@ -384,8 +397,8 @@ for itrial = 1:nTrials
         data_trial(:,:,icyc,itrial) = NaN(prewin_frames+postwin_frames,nCells);
     end
 end
-data_base = nanmean(data_trial(1:prewin_frames,:,1,:),1);
-data_dfof = bsxfun(@rdivide,bsxfun(@minus,data_trial,data_base),data_base);
+data_f = nanmean(data_trial(1:prewin_frames,:,1,:),1);
+data_dfof = bsxfun(@rdivide,bsxfun(@minus,data_trial,data_f),data_f);
 
 targCon = celleqel2mat_padded(input.tGratingContrast);
 if isfield(input,'doRandCon') & input.doRandCon
