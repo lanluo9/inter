@@ -132,55 +132,109 @@ cTarget = celleqel2mat_padded(input.cTargetOn); cTarget = int64(cTarget);
 nTrials = input.trialsSinceReset;
 sz = size(data_reg); % [y pixel * x pixel * nframe]
 
-data_f = zeros(sz(1),sz(2),nTrials);
 data_base = zeros(sz(1),sz(2),nTrials);
+data_adapter = zeros(sz(1),sz(2),nTrials);
 data_base2 = zeros(sz(1),sz(2),nTrials);
 data_targ = zeros(sz(1),sz(2),nTrials);
 
 %%
-for itrial = 1:nTrials
-    if ~isnan(cStart(itrial))
-        data_f(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-20:cStart(itrial)-1),3);
-        data_base(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)+10:cStart(itrial)+20),3);
-        
-        if cStimOn(itrial) >= cStart(itrial) 
-            data_base2(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial)+9:cStimOn(itrial)+19),3);
-        else
-            data_base2(:,:,itrial) = nan(sz(1),sz(2));
-        end
-    else
-        data_f(:,:,itrial) = nan(sz(1),sz(2));
-        data_base(:,:,itrial) = nan(sz(1),sz(2));
-        data_base2(:,:,itrial) = nan(sz(1),sz(2));
-    end
-    
-    if ~isnan(cTarget(itrial))
-        if cTarget(itrial)+19 < sz(3)
-            data_targ(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)+5:cTarget(itrial)+10),3);
-        else
-            data_targ(:,:,itrial) = nan(sz(1),sz(2));
-        end
-    else
-        data_targ(:,:,itrial) = nan(sz(1),sz(2));
-    end
+unique(cStimOff - cStimOn) % adapter = 3-4 frame
+unique(cTarget - cStimOff) % ISI = 8 or 22-23 frame
+% target: 3-4 frame too
+
+% index2 = structfun(@(x) any(contains(x, 'Targ')), input);  sum(index2)
+tt = fieldnames(input)
+index = cellfun(@(x) any(contains(x, 'targ')),tt); sum(index)
+id = find(index > 0);
+for i = 1 : length(id)
+    fprintf(['input.', tt{id(i)}])
+    disp(' ')
 end
 
-data_base_dfof = (data_base-data_f)./data_f;
-data_base2_dfof = (data_base2-data_f)./data_f;
-data_targ_dfof = (data_targ-data_f)./data_f;
+input.cTargetOn 
+% input.tSoundTargetAmplitude 
+% input.doLinearTargetSpacing 
+% input.soundTargetAmplitude 
+% input.soundTargetStepsPerOctave 
+input.block2TargetOnTimeMs % 100 ms -> thus also 3-4 frames
+% input.block2SoundTargetAmplitude 
+% input.block2SoundTargetStepsPerOctave 
+input.doCustomTargetTime % 0
+input.targetStimOnMs
+input.targetOnTimeMs % 100 ms
 
+%%
+assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(itrial)+3 < sz(3))
+for itrial = 1:nTrials
+%     if ~isnan(cStart(itrial))
+        data_base(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-10:cStart(itrial)-1),3);
+        data_adapter(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial):cStimOn(itrial)+3),3);
+        
+%         if cStimOn(itrial) >= cStart(itrial) 
+        data_base2(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)-3:cTarget(itrial)-1),3);
+%         else
+%             data_base2(:,:,itrial) = nan(sz(1),sz(2));
+%         end
+%     else
+%         data_bef(:,:,itrial) = nan(sz(1),sz(2));
+%         data_adapter(:,:,itrial) = nan(sz(1),sz(2));
+% %         data_base2(:,:,itrial) = nan(sz(1),sz(2));
+%     end
+    
+%     if ~isnan(cTarget(itrial))
+%         if cTarget(itrial)+3 < sz(3)
+        data_targ(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial):cTarget(itrial)+3),3);
+%         else
+%             data_targ(:,:,itrial) = nan(sz(1),sz(2));
+%         end
+%     else
+%         data_targ(:,:,itrial) = nan(sz(1),sz(2));
+%     end
+end
+
+data_adapter_dfof = (data_adapter-data_base)./data_base;
+data_base2_dfof = (data_base2-data_base)./data_base;
+data_targ_dfof = (data_targ-data_base)./data_base;
+
+%%
+
+tt = fieldnames(input)
+index = cellfun(@(x) any(contains(x, 'Dir')),tt); sum(index)
+id = find(index > 0);
+for i = 1 : length(id)
+    fprintf(['input.', tt{id(i)}])
+    disp(' ')
+end
+
+% input.tGratingMaxDirectionStepDeg 
+input.tGratingDirectionStepsPerOctave % ??
+% input.tBaseGratingDirectionDeg 
+input.tGratingDirectionDeg % == input.gratingDirectionDeg
+% input.tCatchGratingDirectionDeg 
+% input.baseGratingDirectionDeg 
+% input.baseGratingDirectionStepDeg 
+% input.baseGratingDirectionStepN 
+% input.gratingMaxDirectionStepDeg 
+% input.gratingDirectionStepsPerOctave 
+% input.block2BaseGratingDirectionDeg % 0
+% input.block2GratingMaxDirectionStepDeg 
+% input.block2GratingDirectionStepsPerOctave 
+
+%%
 targCon = celleqel2mat_padded(input.tGratingContrast);
+unique(targCon)
 if input.doRandCon
     baseCon = ones(size(targCon));
 else
     baseCon = celleqel2mat_padded(input.tBaseGratingContrast);
 end
+unique(baseCon)
 ind_con = intersect(find(targCon == 1),find(baseCon == 0));
 
-baseDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
-dirs = unique(baseDir);
+adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
+dirs = unique(adapterDir);
 ndir = length(dirs);
-targetDelta = round(celleqel2mat_padded(input.tGratingDirectionDeg),0);
+targetDelta = celleqel2mat_padded(input.tGratingDirectionDeg);
 deltas = unique(targetDelta);
 nDelta = length(deltas);
 
@@ -189,8 +243,8 @@ data_dfof2_dir = zeros(sz(1),sz(2),ndir);
 [n, n2] = subplotn(ndir);
 figure;
 for idir = 1:ndir
-    ind = setdiff(find(baseDir == dirs(idir)),ind_con);
-    data_dfof_dir(:,:,idir) = nanmean(data_base_dfof(:,:,ind),3);
+    ind = setdiff(find(adapterDir == dirs(idir)),ind_con);
+    data_dfof_dir(:,:,idir) = nanmean(data_adapter_dfof(:,:,ind),3);
     data_dfof2_dir(:,:,idir) = nanmean(data_base2_dfof(:,:,ind),3);
     subplot(n,n2,idir)
     imagesc(data_dfof_dir(:,:,idir))
@@ -330,8 +384,8 @@ for itrial = 1:nTrials
         data_trial(:,:,icyc,itrial) = NaN(prewin_frames+postwin_frames,nCells);
     end
 end
-data_f = nanmean(data_trial(1:prewin_frames,:,1,:),1);
-data_dfof = bsxfun(@rdivide,bsxfun(@minus,data_trial,data_f),data_f);
+data_base = nanmean(data_trial(1:prewin_frames,:,1,:),1);
+data_dfof = bsxfun(@rdivide,bsxfun(@minus,data_trial,data_base),data_base);
 
 targCon = celleqel2mat_padded(input.tGratingContrast);
 if isfield(input,'doRandCon') & input.doRandCon
@@ -344,12 +398,12 @@ else
     baseCon = celleqel2mat_padded(input.tBaseGratingContrast);
     ind_con = intersect(find(targCon == 1),find(baseCon == 0));
 end
-baseDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
-dirs = unique(baseDir);
+adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
+dirs = unique(adapterDir);
 ndir = length(dirs);
 tGratingDir = round(double(celleqel2mat_padded(input.tGratingDirectionDeg)),0);
-if sum(tGratingDir-baseDir) == 0
-    targetDelta = tGratingDir-baseDir;
+if sum(tGratingDir-adapterDir) == 0
+    targetDelta = tGratingDir-adapterDir;
 else
     targetDelta = tGratingDir;
 end
