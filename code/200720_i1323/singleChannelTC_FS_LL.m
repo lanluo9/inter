@@ -328,7 +328,22 @@ for idir = 1:nDelta
     title(deltas(idir))
 end
 set(gcf, 'Position', get(0, 'Screensize'));
-data_dfof = cat(3,data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
+% data_dfof = cat(3,data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
+
+data_dfof_targ_noadapt = zeros(sz(1),sz(2),nDelta);
+[n, n2] = subplotn(nDelta);
+figure;
+for idir = 1:nDelta
+    ind = find(targetDelta == deltas(idir) & adapterCon == 0);
+    data_dfof_targ_noadapt(:,:,idir) = nanmean(data_targ_dfof(:,:,ind),3);
+
+    subplot(n,n2,idir)
+    imagesc(data_dfof_targ_noadapt(:,:,idir))
+    title(deltas(idir))
+end
+set(gcf, 'Position', get(0, 'Screensize'));
+data_dfof = cat(3,data_dfof_targ_fake, data_dfof_targ_noadapt, data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
+% noadapt should be upfront!
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof_max = max(imfilter(data_dfof, myfilter),[],3);
@@ -339,15 +354,17 @@ title('data dfof max')
 %% cell segmentation 
 mask_exp = zeros(sz(1),sz(2));
 mask_all = zeros(sz(1), sz(2));
-% mask_data = data_dfof;
-mask_data = data_dfof_targ_fake;
+mask_data = data_dfof;
+% mask_data = data_dfof_targ_fake;
 
-% for iStim = 1:size(data_dfof,3)
-for iStim = 1:size(data_dfof_targ_fake,3)
+for iStim = 1:size(data_dfof,3)
+% for iStim = 1:size(data_dfof_targ_fake,3)
     mask_data_temp = mask_data(:,:,end+1-iStim);
     mask_data_temp(find(mask_exp >= 1)) = 0;
+    
+    fprintf('%d out of %d',iStim, size(data_dfof,3));
     bwout = imCellEditInteractiveLG_LL(mask_data_temp);
-%     bwout = imCellEditInteractive_LL(mask_data_temp);
+%     bwout = imCellEditInteractive(mask_data_temp);
     mask_all = mask_all+bwout;
     mask_exp = imCellBuffer(mask_all,3)+mask_all;
     close all
@@ -357,14 +374,14 @@ mask_cell= bwlabel(mask_all);
 figure; imagesc(mask_cell)
 set(gcf, 'Position', get(0, 'Screensize'));
 cd C:\Users\lan\Documents\repos\inter\code
-saveas(gcf, ['mask_cell.jpg'])
+saveas(gcf, ['mask_cell_addfake.jpg'])
 
 % bwout = imCellEditInteractive(data_dfof_max);
 % mask_cell = bwlabel(bwout);
 
 %% neuropil mask and subtraction
 mask_np = imCellNeuropil(mask_cell, 3, 5);
-save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_mask_cell.mat']), 'data_dfof', 'mask_cell', 'mask_np')
+save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_mask_cell_addfake.mat']), 'data_dfof', 'mask_cell', 'mask_np')
 
 clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_data_temp mask_exp data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
 
@@ -375,7 +392,7 @@ sz = size(data_reg);
 data_tc = stackGetTimeCourses(data_reg, mask_cell);
 data_reg_down  = stackGroupProject(data_reg,down);
 data_tc_down = stackGetTimeCourses(data_reg_down, mask_cell);
-nCells = size(data_tc,2);
+nCells = size(data_tc,2)
 np_tc = zeros(sz(3),nCells);
 np_tc_down = zeros(floor(sz(3)./down), nCells);
 for i = 1:nCells
