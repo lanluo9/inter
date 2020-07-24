@@ -411,7 +411,7 @@ np_w = 0.01*ind;
 npSub_tc = data_tc-bsxfun(@times,tcRemoveDC(np_tc),np_w);
 clear data_reg data_reg_down
 
-save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_TCs.mat']), 'data_tc', 'np_tc', 'npSub_tc')
+save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_TCs_addfake.mat']), 'data_tc', 'np_tc', 'npSub_tc')
 
 clear data_tc data_tc_down np_tc np_tc_down mask_np mask_cell
 %% FS cycle analysis
