@@ -87,20 +87,26 @@ for icell = 1:ncell
     end
 end
 
-% sanity check
 size(tc_trials) % ncell * ntrial * trial_len (padded by nan)
-temp = tc_trials(:);
+temp = tc_trials(
 sum(isnan(temp))/length(temp)
+% plot(mean(data_trial, 2))
+% data_trial_zoom_in = nanmean(tc_trials, 2); plot(data_trial_zoom_in(1:50)); grid on; grid minor
 
-trial_len = double(trial_len);
-unique_len = unique(trial_len);
-n = histc(trial_len, unique_len);
-n_nan = sum((max(unique_len) - unique_len) .* n) .* ncell
-sum(isnan(temp))
+
+% tc_trials = reshape(npSub_tc,[nOn+nOff, ntrial, ncell]); 
+% tc_trials = permute(tc_trials, [3,2,1]);
+% size(tc_trials) % ncell * ntrial * trial_len
+
+%% probe win_len
+
+tt = mean(mean(tc_trials,1),2);
+plot(1:trial_len, squeeze(tt)) 
+% trial = 0-60 off + 61-90 on. signal decays >2/3 after 0-30 off
+% as short as 3 frames would suffice. now take 10 frames as window len: 51-60 = base, 81-90 = resp
+win_len = 10;
 
 %% cells sensitive to orientations
-% Ca signal latency = 8 frames 
-
 sig_ttest = pi * ones(ncell, nOri); p_ttest = pi * ones(ncell, nOri);
 base_avg = pi * ones(ncell, nOri);
 resp_avg = pi * ones(ncell, nOri); resp_ste = pi * ones(ncell, nOri); % standard error 
@@ -347,6 +353,3 @@ xlabel('sharpness of tuning')
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, 'ori_pref_w_sharp.jpg')
 close
-
-%% adaptation index
-

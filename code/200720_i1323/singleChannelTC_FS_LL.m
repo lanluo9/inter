@@ -88,6 +88,7 @@ nep = floor(size(data,3)./10000);
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
 data_avg = mean(data(:,:,70001:70500),3);
+
 %% Register data
 
 if exist(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str]))
@@ -166,9 +167,9 @@ input.targetOnTimeMs % 100 ms
 
 % %%
 % 
-% trial_len = diff(cStart);
-% unique(trial_len)
-% histogram(trial_len)
+trial_len = diff(cStart);
+unique(trial_len)
+histogram(trial_len)
 % 
 % pretend_len = 207;
 % tt = data_reg(:,:, 1 : sz(3) - mod(sz(3), pretend_len));
@@ -178,7 +179,7 @@ input.targetOnTimeMs % 100 ms
 % 
 % imagesc(tt_avg(1:1000, :))
 
-%% determine ca signal latency (around 8 frames in this case)
+%% determine ca signal latency (around 8 frames for this session)
 
 data_trial = zeros(200, nTrials); % take 1-200 frame of every trial
 data_trial_real = zeros(max(trial_len), nTrials);
