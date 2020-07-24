@@ -47,7 +47,6 @@ cTarget = celleqel2mat_padded(input.cTargetOn); cTarget = int64(cTarget);
 
 unique(cStimOff - cStimOn) % adapter = 3-4 frames, rounded from 100 ms
 unique(cTarget - cStimOff) % ISI = 8 or 22-23 frames, rounded up from 250 or 750 ms
-% unique(cTarget - cStimOn)
 input.targetOnTimeMs % target = 3-4 frames, rounded from 100 ms
 unique(cStimOn(2:end) - (cTarget(1:end-1) + 3)) % ITI = 192-193-194 frames, 6.4-6.5 s?
 
@@ -99,11 +98,8 @@ n_nan = sum((max(unique_len) - unique_len) .* n) .* ncell
 sum(isnan(temp))
 
 %% cells sensitive to target dir
-% Ca signal latency = 8 frames 
-
-% delta_seq = celleqel2mat_padded(input.tGratingDirectionDeg);
-% delta_list = unique(delta_seq)
-% ndelta = length(delta_list); 
+ca_latency = 7; % Ca signal latency: signal from frame #1 shows up at frame #8
+target_relative = cTarget - cStimOn; % unique(cTarget - cStimOn) = [11 26]
 
 sig_ttest = pi * ones(ncell, ndelta); p_ttest = pi * ones(ncell, ndelta);
 base_avg = pi * ones(ncell, ndelta);
@@ -115,9 +111,14 @@ for idelta = 1 : ndelta
     ntrial_delta = length(idx);
     
     for icell = 1 : ncell
-        base_win = squeeze(tc_trials(icell, idx, (nOff - win_len + 1):nOff));
+        
+        targ_start_id = 1 + target_relative + ca_latency; % time to receive targ resp signal
+        range_adapt_base = [targ_start_id - 3 : targ_start_id - 1]; % adapted baseline just bef targ onset
+        range_targ_resp = [targ_start_id : targ_start_id + 3]; % targ onset til #4 frames after
+        
+        base_win = squeeze(tc_trials(icell, idx, range_adapt_base));
         base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
-        resp_win = squeeze(tc_trials(icell, idx, (trial_len - win_len + 1):trial_len));
+        resp_win = squeeze(tc_trials(icell, idx, range_targ_resp));
         resp_win = mean(resp_win, 2);
         
         [sig_ttest(icell, idelta), p_ttest(icell, idelta)] = ttest(base_win, resp_win,...
@@ -133,27 +134,27 @@ end
 
 sum(sum(sig_ttest,2)>0) % ncells responsive to >= 1 orientation: 80->89/148 after set tail
 
-base = mean(tc_trials(:,:, (nOff - win_len + 1):nOff), 3);
-resp = mean(tc_trials(:,:, (trial_len - win_len + 1):trial_len), 3);
-df = resp - base;
+% base = mean(tc_trials(:,:, (nOff - win_len + 1):nOff), 3);
+% resp = mean(tc_trials(:,:, (trial_len - win_len + 1):trial_len), 3);
+% df = resp - base;
 
 %% orientation tuning plot of indiv cell
 
 for icell = 1 : ncell
     figure('units','normalized','outerposition',[0 0 1 1]);
-    errorbar(Ori_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
+    errorbar(delta_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
     hold on
     if sum(sig_ttest(icell,:)) > 0
         sig_idx = sig_ttest(icell,:) > 0;
-        sig_ori = Ori_list(sig_idx);
+        sig_delta = delta_list(sig_idx);
         sig_star_height = dfof_avg(icell,sig_idx) + dfof_ste(icell,sig_idx) + 0.01;
-        scatter(sig_ori, sig_star_height, '*', 'LineWidth',1)
+        scatter(sig_delta, sig_star_height, '*', 'LineWidth',1)
     else
-        sig_ori = [];
+        sig_delta = [];
     end
     xlim([0-5, 180])
     line([0-5, 180], [0, 0], 'Color', 'g', 'LineWidth', 1);
-    title(['cell ', num2str(icell), ': sensitive to ' num2str(length(sig_ori)), ' orientations'])
+    title(['cell ', num2str(icell), ': sensitive to ' num2str(length(sig_delta)), ' orientations'])
     saveas(gcf, ['ori_tuning_', num2str(icell)], 'jpg')
     close
 end
@@ -162,7 +163,7 @@ end
 
 ntrial_ndelta = [];
 for idelta = 1 : ndelta
-    idx = find(Ori == Ori_list(idelta)); 
+    idx = find(delta_seq == delta_list(idelta)); 
     ntrial_ndelta(idelta) = length(idx); 
 end
 
@@ -171,21 +172,21 @@ fit_param = pi * ones(ncell, 7);
 
 for icell = 1 : ncell
 %     figure('units','normalized','outerposition',[0 0 1 1]);
-    errorbar(Ori_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
+    errorbar(delta_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
     hold on
     if sum(sig_ttest(icell,:)) > 0
         sig_idx = sig_ttest(icell,:) > 0;
-        sig_ori = Ori_list(sig_idx);
+        sig_delta = delta_list(sig_idx);
         sig_star_height = dfof_avg(icell,sig_idx) + dfof_ste(icell,sig_idx) + 0.01;
-        scatter(sig_ori, sig_star_height, '*', 'LineWidth',1)
+        scatter(sig_delta, sig_star_height, '*', 'LineWidth',1)
     else
-        sig_ori = [];
+        sig_delta = [];
     end
     xlim([0-5, 180+5])
     line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
     
     
-    theta = deg2rad(Ori_list);
+    theta = deg2rad(delta_list);
     data = dfof_avg(icell,:); % data = resp_avg(icell, :) - base_avg(icell, :);
     [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
     fit_param(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
@@ -208,7 +209,7 @@ for icell = 1 : ncell
     
     xlabel('ori in deg')
     ylabel('dF/F')
-    if isempty(sig_ori)
+    if isempty(sig_delta)
         title(['cell ', num2str(icell), ' has no ori-pref'])
     else
         title(['cell ', num2str(icell), ' prefer ori ', num2str(round(ori_pref, 2))])
@@ -235,7 +236,7 @@ dfof_ste_runs = pi * ones(ncell, ndelta, nrun);
 fit_param_runs = pi * ones(ncell, 7, nrun);
 ori_pref_runs = pi * ones(ncell, nrun);
 
-theta = deg2rad(Ori_list);
+theta = deg2rad(delta_list);
 nrun = 1000;
 
 for irun = 1 : nrun
@@ -244,7 +245,7 @@ for irun = 1 : nrun
     for icell = 1 : ncell
         
         for idelta = 1 : ndelta
-            idx = find(Ori == Ori_list(idelta)); 
+            idx = find(delta_seq == delta_list(idelta)); 
             ntrial_delta = length(idx);
             bootstrap_draw = round(ntrial_delta * 0.7);
             idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
@@ -341,7 +342,7 @@ ori_pref_qualified(ori_pref_qualified<0) = ori_pref_qualified(ori_pref_qualified
 ori_sharp_qualified = fit_param(ori_cell, 3);
 
 subplot(1,2,1)
-edges = [Ori_list, 180];
+edges = [delta_list, 180];
 histogram(ori_pref_qualified, edges)
 xlabel('preferred ori')
 

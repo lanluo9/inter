@@ -2,7 +2,7 @@
 date = '200720';
 ImgFolder = strvcat('003');
 time = strvcat('1133');
-mouse = '1323';
+mouse = 'i1323';
 doFromRef = 0;
 ref = strvcat('002'); % what is ref?
 nrun = size(ImgFolder,1);
@@ -18,12 +18,12 @@ clear temp
 trial_n = [];
 offset = 0;
 for irun = 1:nrun
-%     CD = [LL_base '\Data\2P_images\' mouse '\' date '\' ImgFolder(irun,:)];
-    CD = [LL_base '\Data\2P_images\' date '_' mouse '\' ImgFolder(irun,:)];
+    CD = [LL_base '\Data\2P_images\' mouse '\' date '\' ImgFolder(irun,:)];
+%     CD = [LL_base '\Data\2P_images\' date '_' mouse '\' ImgFolder(irun,:)];
     cd(CD);
     imgMatFile = [ImgFolder(irun,:) '_000_000.mat'];
     load(imgMatFile);
-    fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-i' mouse '-' date '-' time(irun,:) '.mat'];
+    fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' mouse '-' date '-' time(irun,:) '.mat'];
     load(fName);
     
     temp(irun) = input;
@@ -181,6 +181,10 @@ histogram(trial_len)
 
 %% determine ca signal latency (around 8 frames for this session)
 
+tc_screen = mean(mean(data_reg,1),2);
+tc_screen = squeeze(tc_screen);
+all_trial_len = sz(3) - cStart(1);
+
 data_trial = zeros(200, nTrials); % take 1-200 frame of every trial
 data_trial_real = zeros(max(trial_len), nTrials);
 whos tc_screen
@@ -196,9 +200,6 @@ data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:50))
 
 % %%
 % 
-% tc_screen = mean(mean(data_reg,1),2);
-% tc_screen = squeeze(tc_screen);
-% all_trial_len = sz(3) - cStart(1);
 % 
 % tt = tc_screen(cStart(1) : all_trial_len - mod(all_trial_len-cStart(1)+1, pretend_len));
 % temp = reshape(tt, [pretend_len, length(tt)/pretend_len]);
