@@ -382,167 +382,167 @@ saveas(gcf, ['mask_cell_addfake.jpg'])
 %% neuropil mask and subtraction
 mask_np = imCellNeuropil(mask_cell, 3, 5);
 save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_mask_cell_addfake.mat']), 'data_dfof', 'mask_cell', 'mask_np')
-
 clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_data_temp mask_exp data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
 
 % neuropil subtraction
 down = 5;
 sz = size(data_reg);
-
 data_tc = stackGetTimeCourses(data_reg, mask_cell);
 data_reg_down  = stackGroupProject(data_reg,down);
 data_tc_down = stackGetTimeCourses(data_reg_down, mask_cell);
 nCells = size(data_tc,2)
+
 np_tc = zeros(sz(3),nCells);
 np_tc_down = zeros(floor(sz(3)./down), nCells);
 for i = 1:nCells
      np_tc(:,i) = stackGetTimeCourses(data_reg,mask_np(:,:,i));
      np_tc_down(:,i) = stackGetTimeCourses(data_reg_down,mask_np(:,:,i));
-     fprintf(['Cell #' num2str(i) '%s/n']) 
+     fprintf(['Cell #' num2str(i) '%s /n']) 
 end
+
 %get weights by maximizing skew
 ii= 0.01:0.01:1;
 x = zeros(length(ii), nCells);
 for i = 1:100
     x(i,:) = skewness(data_tc_down-tcRemoveDC(np_tc_down*ii(i)));
 end
-[max_skew ind] =  max(x,[],1);
+[max_skew, ind] =  max(x,[],1);
 np_w = 0.01*ind;
 npSub_tc = data_tc-bsxfun(@times,tcRemoveDC(np_tc),np_w);
 clear data_reg data_reg_down
 
 save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_TCs_addfake.mat']), 'data_tc', 'np_tc', 'npSub_tc')
-
 clear data_tc data_tc_down np_tc np_tc_down mask_np mask_cell
-%% FS cycle analysis
 
-if iscell(input.nFramesOn)
-    nOn = input.nFramesOn{1};
-else
-    nOn = input.nFramesOn;
-end
-prewin_frames = 30;
-postwin_frames = 90;
-tCyc = cell2mat(input.tCyclesOn);
-cStart = celleqel2mat_padded(input.cFirstStim);
-cTarget = celleqel2mat_padded(input.cTargetOn);
-nTrials = length(tCyc);
-nCells = size(npSub_tc,2);
-maxCyc = max(tCyc,[],2);
-data_trial = nan(prewin_frames+postwin_frames,nCells,maxCyc+1,nTrials);
-
-tFramesOff = nan(nTrials,maxCyc);
-SIx = strcmp(input.trialOutcomeCell, 'success');
-MIx = strcmp(input.trialOutcomeCell, 'ignore');
-FIx = strcmp(input.trialOutcomeCell, 'failure');
-nCyc = tCyc;
-nCyc([find(MIx) find(SIx)]) = tCyc([find(MIx) find(SIx)])+1;
-for itrial = 1:nTrials
-    if isfield(input, 'tFramesOff')
-        if length(input.tFramesOff{itrial}>0)
-            tempFramesOff = input.tFramesOff{itrial};
-        else
-            tempFramesOff = input.nFramesOff{itrial}.*(ones(1,tCyc(itrial)));
-            input.tFramesOff{itrial} = tempFramesOff;
-        end
-    else
-        if iscell(input.nFramesOff)
-            tempFramesOff = input.nFramesOff{itrial}.*(ones(1,tCyc(itrial)));
-        else
-            tempFramesOff = input.nFramesOff.*(ones(1,tCyc(itrial)));
-        end
-    end
-
-    tFramesOff(itrial,1:tCyc(itrial)) = tempFramesOff(1:tCyc(itrial));
-    if ~isnan(cStart(itrial))
-        for icyc = 1:nCyc(itrial)
-            if icyc > 1
-                cyc_add = ((icyc-1)*nOn)+sum(tempFramesOff(1:icyc-1));
-            else
-                cyc_add = 0;
-            end
-            if cStart(itrial)+postwin_frames-1+cyc_add <= size(npSub_tc,1)
-                data_trial(:,:,icyc,itrial) = npSub_tc(cStart(itrial)-prewin_frames+cyc_add:cStart(itrial)+postwin_frames+cyc_add-1,:);
-            else
-                data_trial(:,:,icyc,itrial) = NaN(prewin_frames+postwin_frames,nCells);
-            end 
-        end
-    else
-        data_trial(:,:,icyc,itrial) = NaN(prewin_frames+postwin_frames,nCells);
-    end
-end
-data_f = nanmean(data_trial(1:prewin_frames,:,1,:),1);
-data_dfof = bsxfun(@rdivide,bsxfun(@minus,data_trial,data_f),data_f);
-
-targCon = celleqel2mat_padded(input.tGratingContrast);
-if isfield(input,'doRandCon') & input.doRandCon
-	adapterCon = nan(maxCyc,nTrials);
-    for itrial = 1:nTrials
-        adapterCon(:,itrial) = input.tBaseGratingContrast{itrial}(1:tCyc(itrial));
-    end
-    ind_con = [];
-else
-    adapterCon = celleqel2mat_padded(input.tBaseGratingContrast);
-    ind_con = intersect(find(targCon == 1),find(adapterCon == 0));
-end
-adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
-dirs = unique(adapterDir);
-ndir = length(dirs);
-tGratingDir = round(double(celleqel2mat_padded(input.tGratingDirectionDeg)),0);
-if sum(tGratingDir-adapterDir) == 0
-    targetDelta = tGratingDir-adapterDir;
-else
-    targetDelta = tGratingDir;
-end
-deltas = unique(targetDelta);
-nDelta = length(deltas);
-offs = unique(tFramesOff(:,1));
-noff = length(offs);
-frameRateHz = input.frameRateHz;
-
-base_win =33:35;
-resp_win =39:41; 
-
+% %% FS cycle analysis
+% 
+% if iscell(input.nFramesOn)
+%     nOn = input.nFramesOn{1};
+% else
+%     nOn = input.nFramesOn;
+% end
+% prewin_frames = 30;
+% postwin_frames = 90;
+% tCyc = cell2mat(input.tCyclesOn);
+% cStart = celleqel2mat_padded(input.cFirstStim);
+% cTarget = celleqel2mat_padded(input.cTargetOn);
+% nTrials = length(tCyc);
+% nCells = size(npSub_tc,2);
+% maxCyc = max(tCyc,[],2);
+% data_trial = nan(prewin_frames+postwin_frames,nCells,maxCyc+1,nTrials);
+% 
+% tFramesOff = nan(nTrials,maxCyc);
+% SIx = strcmp(input.trialOutcomeCell, 'success');
+% MIx = strcmp(input.trialOutcomeCell, 'ignore');
+% FIx = strcmp(input.trialOutcomeCell, 'failure');
+% nCyc = tCyc;
+% nCyc([find(MIx) find(SIx)]) = tCyc([find(MIx) find(SIx)])+1;
+% for itrial = 1:nTrials
+%     if isfield(input, 'tFramesOff')
+%         if length(input.tFramesOff{itrial}>0)
+%             tempFramesOff = input.tFramesOff{itrial};
+%         else
+%             tempFramesOff = input.nFramesOff{itrial}.*(ones(1,tCyc(itrial)));
+%             input.tFramesOff{itrial} = tempFramesOff;
+%         end
+%     else
+%         if iscell(input.nFramesOff)
+%             tempFramesOff = input.nFramesOff{itrial}.*(ones(1,tCyc(itrial)));
+%         else
+%             tempFramesOff = input.nFramesOff.*(ones(1,tCyc(itrial)));
+%         end
+%     end
+% 
+%     tFramesOff(itrial,1:tCyc(itrial)) = tempFramesOff(1:tCyc(itrial));
+%     if ~isnan(cStart(itrial))
+%         for icyc = 1:nCyc(itrial)
+%             if icyc > 1
+%                 cyc_add = ((icyc-1)*nOn)+sum(tempFramesOff(1:icyc-1));
+%             else
+%                 cyc_add = 0;
+%             end
+%             if cStart(itrial)+postwin_frames-1+cyc_add <= size(npSub_tc,1)
+%                 data_trial(:,:,icyc,itrial) = npSub_tc(cStart(itrial)-prewin_frames+cyc_add:cStart(itrial)+postwin_frames+cyc_add-1,:);
+%             else
+%                 data_trial(:,:,icyc,itrial) = NaN(prewin_frames+postwin_frames,nCells);
+%             end 
+%         end
+%     else
+%         data_trial(:,:,icyc,itrial) = NaN(prewin_frames+postwin_frames,nCells);
+%     end
+% end
+% data_f = nanmean(data_trial(1:prewin_frames,:,1,:),1);
+% data_dfof = bsxfun(@rdivide,bsxfun(@minus,data_trial,data_f),data_f);
+% 
+% targCon = celleqel2mat_padded(input.tGratingContrast);
+% if isfield(input,'doRandCon') & input.doRandCon
+% 	adapterCon = nan(maxCyc,nTrials);
+%     for itrial = 1:nTrials
+%         adapterCon(:,itrial) = input.tBaseGratingContrast{itrial}(1:tCyc(itrial));
+%     end
+%     ind_con = [];
+% else
+%     adapterCon = celleqel2mat_padded(input.tBaseGratingContrast);
+%     ind_con = intersect(find(targCon == 1),find(adapterCon == 0));
+% end
+% adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
+% dirs = unique(adapterDir);
+% ndir = length(dirs);
+% tGratingDir = round(double(celleqel2mat_padded(input.tGratingDirectionDeg)),0);
+% if sum(tGratingDir-adapterDir) == 0
+%     targetDelta = tGratingDir-adapterDir;
+% else
+%     targetDelta = tGratingDir;
+% end
+% deltas = unique(targetDelta);
+% nDelta = length(deltas);
+% offs = unique(tFramesOff(:,1));
+% noff = length(offs);
+% frameRateHz = input.frameRateHz;
+% 
+% base_win =33:35;
+% resp_win =39:41; 
+% 
+% % figure;
+% % if nCells<25
+% %     ii = nCells;
+% % else
+% %     ii = 25;
+% % end
+% % for i = 1:ii
+% %     subplot(5,5,i)
+% % if length(ind_con)>10
+% %     plot(squeeze(nanmean(mean(data_dfof(20:50,i,2,ind_con),2),4)))
+% % elseif noff>1
+% %     ind = find(tFramesOff(:,1) == offs(noff));
+% %     plot(squeeze(nanmean(mean(data_dfof(20:50,i,1,:),2),4)))
+% % else
+% %     plot(squeeze(nanmean(mean(data_dfof(20:50,i,1,:),2),4)))
+% % end
+% % vline(base_win-19)
+% % vline(resp_win-19)
+% % end
+% 
 % figure;
-% if nCells<25
-%     ii = nCells;
-% else
-%     ii = 25;
+% subplot(2,1,1)
+% plot(squeeze(nanmean(mean(data_dfof(:,:,1,:),2),4)));
+% vline(base_win,'k:')
+% vline(resp_win,'r:')
+% title('Baseline')
+% subplot(2,1,2)
+% sz = size(data_dfof);
+% data_targ = zeros(sz(1),sz(2),length([find(SIx)]));
+% for itrial = 1:sz(4);
+%     %if find([find(SIx)] == itrial)
+%         data_targ(:,:,itrial) = data_dfof(:,:,nCyc(itrial),itrial);
+%     %end
 % end
-% for i = 1:ii
-%     subplot(5,5,i)
-% if length(ind_con)>10
-%     plot(squeeze(nanmean(mean(data_dfof(20:50,i,2,ind_con),2),4)))
-% elseif noff>1
-%     ind = find(tFramesOff(:,1) == offs(noff));
-%     plot(squeeze(nanmean(mean(data_dfof(20:50,i,1,:),2),4)))
-% else
-%     plot(squeeze(nanmean(mean(data_dfof(20:50,i,1,:),2),4)))
-% end
-% vline(base_win-19)
-% vline(resp_win-19)
-% end
-
-figure;
-subplot(2,1,1)
-plot(squeeze(nanmean(mean(data_dfof(:,:,1,:),2),4)));
-vline(base_win,'k:')
-vline(resp_win,'r:')
-title('Baseline')
-subplot(2,1,2)
-sz = size(data_dfof);
-data_targ = zeros(sz(1),sz(2),length([find(SIx)]));
-for itrial = 1:sz(4);
-    %if find([find(SIx)] == itrial)
-        data_targ(:,:,itrial) = data_dfof(:,:,nCyc(itrial),itrial);
-    %end
-end
-plot(squeeze(nanmean(mean(data_targ,2),3)));
-title('Target')
-vline(base_win,'k:')
-vline(resp_win,'r:')
-
-%%
-
-save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_dfofData.mat']), 'data_dfof', 'prewin_frames', 'postwin_frames', 'base_win','resp_win')
-save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_stimData.mat']),'prewin_frames','baseDir', 'dirs', 'ndir', 'tFramesOff', 'offs', 'noff', 'baseCon', 'ind_con', 'tGratingDir', 'targetDelta', 'deltas', 'nDelta', 'tCyc', 'nCyc', 'maxCyc', 'nCells', 'frameRateHz', 'nTrials', 'SIx', 'MIx', 'FIx', 'cTarget', 'cStart', 'base_win','resp_win')
+% plot(squeeze(nanmean(mean(data_targ,2),3)));
+% title('Target')
+% vline(base_win,'k:')
+% vline(resp_win,'r:')
+% 
+% %%
+% 
+% save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_dfofData.mat']), 'data_dfof', 'prewin_frames', 'postwin_frames', 'base_win','resp_win')
+% save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_stimData.mat']),'prewin_frames','baseDir', 'dirs', 'ndir', 'tFramesOff', 'offs', 'noff', 'baseCon', 'ind_con', 'tGratingDir', 'targetDelta', 'deltas', 'nDelta', 'tCyc', 'nCyc', 'maxCyc', 'nCells', 'frameRateHz', 'nTrials', 'SIx', 'MIx', 'FIx', 'cTarget', 'cStart', 'base_win','resp_win')
