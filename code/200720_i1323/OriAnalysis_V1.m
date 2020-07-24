@@ -35,7 +35,7 @@ mouse = '1323';
 datemouse = [date '_' mouse];
 datemouserun = [date '_' mouse '_' run_str];
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
-load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course
+load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course including fake targ resp
 
 %% exp design
 
@@ -60,9 +60,9 @@ unique(adapterCon) % adapter contrast 0 or 1
 adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
 dirs = unique(adapterDir) % adapter dir === 0
 ndir = length(dirs);
-targetDelta = celleqel2mat_padded(input.tGratingDirectionDeg);
-deltas = unique(targetDelta) % target 8 dir (actually ori): 22.5-180. equivalent to diff from adapter
-ndelta = length(deltas); 
+delta_seq = celleqel2mat_padded(input.tGratingDirectionDeg);
+delta_list = unique(delta_seq) % target 8 dir (actually ori): 22.5-180. equivalent to diff from adapter
+ndelta = length(delta_list); 
 
 size(npSub_tc) % nframe * ncell
 ncell = size(npSub_tc, 2);
@@ -98,31 +98,36 @@ n = histc(trial_len, unique_len);
 n_nan = sum((max(unique_len) - unique_len) .* n) .* ncell
 sum(isnan(temp))
 
-%% cells sensitive to orientations
+%% cells sensitive to target dir
 % Ca signal latency = 8 frames 
 
-sig_ttest = pi * ones(ncell, nOri); p_ttest = pi * ones(ncell, nOri);
-base_avg = pi * ones(ncell, nOri);
-resp_avg = pi * ones(ncell, nOri); resp_ste = pi * ones(ncell, nOri); % standard error 
-dfof_avg = pi * ones(ncell, nOri); dfof_ste = pi * ones(ncell, nOri); % dF/F
+% delta_seq = celleqel2mat_padded(input.tGratingDirectionDeg);
+% delta_list = unique(delta_seq)
+% ndelta = length(delta_list); 
 
-for iOri = 1 : nOri
-    idx = find(Ori == Ori_list(iOri)); 
-    ntrial_ori = length(idx);
+sig_ttest = pi * ones(ncell, ndelta); p_ttest = pi * ones(ncell, ndelta);
+base_avg = pi * ones(ncell, ndelta);
+resp_avg = pi * ones(ncell, ndelta); resp_ste = pi * ones(ncell, ndelta); % standard error 
+dfof_avg = pi * ones(ncell, ndelta); dfof_ste = pi * ones(ncell, ndelta); % dF/F
+
+for idelta = 1 : ndelta
+    idx = find(delta_seq == delta_list(idelta)); 
+    ntrial_delta = length(idx);
+    
     for icell = 1 : ncell
         base_win = squeeze(tc_trials(icell, idx, (nOff - win_len + 1):nOff));
         base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
         resp_win = squeeze(tc_trials(icell, idx, (trial_len - win_len + 1):trial_len));
         resp_win = mean(resp_win, 2);
         
-        [sig_ttest(icell, iOri), p_ttest(icell, iOri)] = ttest(base_win, resp_win,...
-            'alpha',0.05./(ntrial_ori - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
-        base_avg(icell, iOri) = mean(base_win); % avg over trials of same ori
-        resp_avg(icell, iOri) = mean(resp_win);
-        resp_ste(icell, iOri) = std(resp_win) / sqrt(length(resp_win));
+        [sig_ttest(icell, idelta), p_ttest(icell, idelta)] = ttest(base_win, resp_win,...
+            'alpha',0.05./(ntrial_delta - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+        base_avg(icell, idelta) = mean(base_win); % avg over trials of same ori
+        resp_avg(icell, idelta) = mean(resp_win);
+        resp_ste(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
 
-        dfof_avg(icell, iOri) = mean( (resp_win - base_win) ./ mean(base_win) );
-        dfof_ste(icell, iOri) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_ori);
+        dfof_avg(icell, idelta) = mean( (resp_win - base_win) ./ mean(base_win) );
+        dfof_ste(icell, idelta) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_delta);
     end
 end
 
@@ -155,10 +160,10 @@ end
 
 %% ntrial_ori is similar across ori, why sig differ?
 
-ntrial_nOri = [];
-for iOri = 1 : nOri
-    idx = find(Ori == Ori_list(iOri)); 
-    ntrial_nOri(iOri) = length(idx); 
+ntrial_ndelta = [];
+for idelta = 1 : ndelta
+    idx = find(Ori == Ori_list(idelta)); 
+    ntrial_ndelta(idelta) = length(idx); 
 end
 
 %% fit von Mises function
@@ -225,8 +230,8 @@ save ori_across_cells.mat dfof_avg dfof_ste fit_param ori_pref_cells
 
 %% bootstrap -> goodness of fit
 
-dfof_avg_runs = pi * ones(ncell, nOri, nrun);
-dfof_ste_runs = pi * ones(ncell, nOri, nrun);
+dfof_avg_runs = pi * ones(ncell, ndelta, nrun);
+dfof_ste_runs = pi * ones(ncell, ndelta, nrun);
 fit_param_runs = pi * ones(ncell, 7, nrun);
 ori_pref_runs = pi * ones(ncell, nrun);
 
@@ -238,10 +243,10 @@ for irun = 1 : nrun
 
     for icell = 1 : ncell
         
-        for iOri = 1 : nOri
-            idx = find(Ori == Ori_list(iOri)); 
-            ntrial_ori = length(idx);
-            bootstrap_draw = round(ntrial_ori * 0.7);
+        for idelta = 1 : ndelta
+            idx = find(Ori == Ori_list(idelta)); 
+            ntrial_delta = length(idx);
+            bootstrap_draw = round(ntrial_delta * 0.7);
             idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
 
             base_win = squeeze(tc_trials(icell, idx_run, (nOff - win_len + 1):nOff));
@@ -249,13 +254,13 @@ for irun = 1 : nrun
             resp_win = squeeze(tc_trials(icell, idx_run, (trial_len - win_len + 1):trial_len));
             resp_win = mean(resp_win, 2);
 
-%             [sig_ttest(icell, iOri), p_ttest(icell, iOri)] = ttest(base_win, resp_win, 'alpha',0.05./(ntrial_ori - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
-%             base_avg(icell, iOri) = mean(base_win); % avg over sampled trials 
-%             resp_avg(icell, iOri) = mean(resp_win);
-%             resp_ste(icell, iOri) = std(resp_win) / sqrt(length(resp_win));
+%             [sig_ttest(icell, idelta), p_ttest(icell, idelta)] = ttest(base_win, resp_win, 'alpha',0.05./(ntrial_ori - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+%             base_avg(icell, idelta) = mean(base_win); % avg over sampled trials 
+%             resp_avg(icell, idelta) = mean(resp_win);
+%             resp_ste(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
 
-            dfof_avg_runs(icell, iOri, irun) = mean( (resp_win - base_win) ./ mean(base_win) );
-            dfof_ste_runs(icell, iOri, irun) = std( (resp_win - base_win) ./ mean(base_win) ) ./ sqrt(ntrial_ori);
+            dfof_avg_runs(icell, idelta, irun) = mean( (resp_win - base_win) ./ mean(base_win) );
+            dfof_ste_runs(icell, idelta, irun) = std( (resp_win - base_win) ./ mean(base_win) ) ./ sqrt(ntrial_delta);
         end
         
         
