@@ -57,3 +57,13 @@ saveas(gcf, ['ori_tuning_fit_', num2str(icell)], 'jpg')
 
 %% saving var
 save('data_reg.mat', 'data_reg', '-v7.3') % force save >2GB .mat
+
+%% search field name in struct
+
+tt = fieldnames(input);
+index = cellfun(@(x) any(contains(x, 'Contr')),tt); sum(index)
+id = find(index > 0);
+for i = 1 : length(id)
+    fprintf(['input.', tt{id(i)}])
+    fprintf('\n')
+end

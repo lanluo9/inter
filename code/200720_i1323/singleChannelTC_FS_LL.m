@@ -137,7 +137,7 @@ data_adapter = zeros(sz(1),sz(2),nTrials);
 data_f2 = zeros(sz(1),sz(2),nTrials);
 data_targ = zeros(sz(1),sz(2),nTrials);
 
-%%
+%% trial design
 unique(cStimOff - cStimOn) % adapter = 3-4 frame. rounded from 100 ms?
 unique(cTarget - cStimOff) % ISI = 8 or 22-23 frame. rounded from 250? or 750 ms
 unique(cTarget - cStimOn)
@@ -164,19 +164,19 @@ input.doCustomTargetTime % 0
 input.targetStimOnMs
 input.targetOnTimeMs % 100 ms
 
-%%
-
-trial_len = diff(cStart);
-unique(trial_len)
-histogram(trial_len)
-
-pretend_len = 207;
-tt = data_reg(:,:, 1 : sz(3) - mod(sz(3), pretend_len));
-t = sz(3) - mod(sz(3), pretend_len);
-tt = reshape(tt, [sz(1)*sz(2), pretend_len, t/pretend_len]);
-tt_avg = mean(tt, 3);
-
-imagesc(tt_avg(1:1000, :))
+% %%
+% 
+% trial_len = diff(cStart);
+% unique(trial_len)
+% histogram(trial_len)
+% 
+% pretend_len = 207;
+% tt = data_reg(:,:, 1 : sz(3) - mod(sz(3), pretend_len));
+% t = sz(3) - mod(sz(3), pretend_len);
+% tt = reshape(tt, [sz(1)*sz(2), pretend_len, t/pretend_len]);
+% tt_avg = mean(tt, 3);
+% 
+% imagesc(tt_avg(1:1000, :))
 
 %% determine ca signal latency (around 8 frames in this case)
 
@@ -193,27 +193,18 @@ end
 plot(mean(data_trial, 2))
 data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:50)); grid on; grid minor
 
-%%
-
-tc_screen = mean(mean(data_reg,1),2);
-tc_screen = squeeze(tc_screen);
-all_trial_len = sz(3) - cStart(1);
-
-tt = tc_screen(cStart(1) : all_trial_len - mod(all_trial_len-cStart(1)+1, pretend_len));
-temp = reshape(tt, [pretend_len, length(tt)/pretend_len]);
-figure
-plot(mean(temp, 2))
-
-% sz = size(data_reg);
-% data_trial = zeros(sz(1),sz(2),200,nTrials);
+% %%
 % 
-% for it = 1:nTrials
-%     data_trial(:,:, = 
+% tc_screen = mean(mean(data_reg,1),2);
+% tc_screen = squeeze(tc_screen);
+% all_trial_len = sz(3) - cStart(1);
 % 
+% tt = tc_screen(cStart(1) : all_trial_len - mod(all_trial_len-cStart(1)+1, pretend_len));
+% temp = reshape(tt, [pretend_len, length(tt)/pretend_len]);
+% figure
+% plot(mean(temp, 2))
 
-
-
-%%
+%% calculate response
 % see data_trial_zoom_in. ca signal latency = 8 frames & adapter|target = 3|4 frames
 % count from frame #1
 % data_adapter = frame #8-11
@@ -250,41 +241,42 @@ end
 data_adapter_dfof = (data_adapter-data_f)./data_f;
 data_base2_dfof = (data_f2-data_f)./data_f;
 data_targ_dfof = (data_targ-data_f2)./data_f2; 
+data_targ_dfof_fake = (data_targ-data_f)./data_f; 
 
-%%
+% %% find direction
+% 
+% tt = fieldnames(input)
+% index = cellfun(@(x) any(contains(x, 'Dir')),tt); sum(index)
+% id = find(index > 0);
+% for i = 1 : length(id)
+%     fprintf(['input.', tt{id(i)}])
+%     disp(' ')
+% end
+% 
+% % input.tGratingMaxDirectionStepDeg 
+% input.tGratingDirectionStepsPerOctave % ??
+% % input.tBaseGratingDirectionDeg 
+% input.tGratingDirectionDeg % == input.gratingDirectionDeg
+% % input.tCatchGratingDirectionDeg 
+% % input.baseGratingDirectionDeg 
+% % input.baseGratingDirectionStepDeg 
+% % input.baseGratingDirectionStepN 
+% % input.gratingMaxDirectionStepDeg 
+% % input.gratingDirectionStepsPerOctave 
+% % input.block2BaseGratingDirectionDeg % 0
+% % input.block2GratingMaxDirectionStepDeg 
+% % input.block2GratingDirectionStepsPerOctave 
 
-tt = fieldnames(input)
-index = cellfun(@(x) any(contains(x, 'Dir')),tt); sum(index)
-id = find(index > 0);
-for i = 1 : length(id)
-    fprintf(['input.', tt{id(i)}])
-    disp(' ')
-end
-
-% input.tGratingMaxDirectionStepDeg 
-input.tGratingDirectionStepsPerOctave % ??
-% input.tBaseGratingDirectionDeg 
-input.tGratingDirectionDeg % == input.gratingDirectionDeg
-% input.tCatchGratingDirectionDeg 
-% input.baseGratingDirectionDeg 
-% input.baseGratingDirectionStepDeg 
-% input.baseGratingDirectionStepN 
-% input.gratingMaxDirectionStepDeg 
-% input.gratingDirectionStepsPerOctave 
-% input.block2BaseGratingDirectionDeg % 0
-% input.block2GratingMaxDirectionStepDeg 
-% input.block2GratingDirectionStepsPerOctave 
-
-%%
+%% plot response
 targCon = celleqel2mat_padded(input.tGratingContrast);
 unique(targCon) % target contrast 1
 if input.doRandCon
-    baseCon = ones(size(targCon));
+    adapterCon = ones(size(targCon));
 else
-    baseCon = celleqel2mat_padded(input.tBaseGratingContrast);
+    adapterCon = celleqel2mat_padded(input.tBaseGratingContrast);
 end
-unique(baseCon) % adapter contrast 0 or 1
-ind_con = intersect(find(targCon == 1),find(baseCon == 0));
+unique(adapterCon) % adapter contrast 0 or 1
+ind_con = intersect(find(targCon == 1),find(adapterCon == 0));
 
 adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
 dirs = unique(adapterDir);
@@ -322,13 +314,17 @@ else
 end
 
 data_dfof_targ = zeros(sz(1),sz(2),nDelta);
+data_dfof_targ_fake = zeros(sz(1),sz(2),nDelta);
 [n, n2] = subplotn(nDelta);
 figure;
 for idir = 1:nDelta
     ind = find(targetDelta == deltas(idir));
     data_dfof_targ(:,:,idir) = nanmean(data_targ_dfof(:,:,ind),3);
+    data_dfof_targ_fake(:,:,idir) = nanmean(data_targ_dfof_fake(:,:,ind),3);
+
     subplot(n,n2,idir)
-    imagesc(data_dfof_targ(:,:,idir)) % targ resp shows dim and blurry cells
+%     imagesc(data_dfof_targ(:,:,idir)) % targ resp shows dim and blurry cells
+    imagesc(data_dfof_targ_fake(:,:,idir))
     title(deltas(idir))
 end
 set(gcf, 'Position', get(0, 'Screensize'));
@@ -343,9 +339,11 @@ title('data dfof max')
 %% cell segmentation 
 mask_exp = zeros(sz(1),sz(2));
 mask_all = zeros(sz(1), sz(2));
-mask_data = data_dfof;
+% mask_data = data_dfof;
+mask_data = data_dfof_targ_fake;
 
-for iStim = 1:size(data_dfof,3)
+% for iStim = 1:size(data_dfof,3)
+for iStim = 1:size(data_dfof_targ_fake,3)
     mask_data_temp = mask_data(:,:,end+1-iStim);
     mask_data_temp(find(mask_exp >= 1)) = 0;
     bwout = imCellEditInteractiveLG_LL(mask_data_temp);
@@ -461,14 +459,14 @@ data_dfof = bsxfun(@rdivide,bsxfun(@minus,data_trial,data_f),data_f);
 
 targCon = celleqel2mat_padded(input.tGratingContrast);
 if isfield(input,'doRandCon') & input.doRandCon
-	baseCon = nan(maxCyc,nTrials);
+	adapterCon = nan(maxCyc,nTrials);
     for itrial = 1:nTrials
-        baseCon(:,itrial) = input.tBaseGratingContrast{itrial}(1:tCyc(itrial));
+        adapterCon(:,itrial) = input.tBaseGratingContrast{itrial}(1:tCyc(itrial));
     end
     ind_con = [];
 else
-    baseCon = celleqel2mat_padded(input.tBaseGratingContrast);
-    ind_con = intersect(find(targCon == 1),find(baseCon == 0));
+    adapterCon = celleqel2mat_padded(input.tBaseGratingContrast);
+    ind_con = intersect(find(targCon == 1),find(adapterCon == 0));
 end
 adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
 dirs = unique(adapterDir);
