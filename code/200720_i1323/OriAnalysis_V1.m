@@ -103,6 +103,8 @@ base_avg = pi * ones(ncell, ndelta);
 resp_avg = pi * ones(ncell, ndelta); resp_ste = pi * ones(ncell, ndelta); % standard error 
 dfof_avg = pi * ones(ncell, ndelta); dfof_ste = pi * ones(ncell, ndelta); % dF/F
 
+% for 11 or 26
+% find by target_relative -> determine range
 for idelta = 1 : ndelta
     idx = find(delta_seq == delta_list(idelta)); 
     ntrial_delta = length(idx);
