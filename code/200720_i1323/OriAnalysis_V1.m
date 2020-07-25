@@ -98,45 +98,58 @@ ca_latency = 7; % Ca signal latency: signal from frame #1 shows up at frame #8
 target_relative = cTarget - cStimOn; % unique(cTarget - cStimOn) = [11 26]
 targ_start = 1 + target_relative + ca_latency; % time to receive targ resp signal
 
-sig_ttest = pi * ones(ncell, ndelta); p_ttest = pi * ones(ncell, ndelta);
-base_avg = pi * ones(ncell, ndelta);
-resp_avg = pi * ones(ncell, ndelta); resp_ste = pi * ones(ncell, ndelta); % standard error 
-dfof_avg = pi * ones(ncell, ndelta); dfof_ste = pi * ones(ncell, ndelta); % dF/F
+sig_ttest = pi * ones(ncell, ndelta, ngap); p_ttest = pi * ones(ncell, ndelta, ngap);
+base_avg = pi * ones(ncell, ndelta, ngap);
+resp_avg = pi * ones(ncell, ndelta, ngap); resp_ste = pi * ones(ncell, ndelta, ngap); % standard error 
+dfof_avg = pi * ones(ncell, ndelta, ngap); dfof_ste = pi * ones(ncell, ndelta, ngap); % dF/F
 
-% for 11 or 26
-% find by target_relative -> determine range
-for idelta = 1 : ndelta
-    idx = find(delta_seq == delta_list(idelta)); 
-    ntrial_delta = length(idx);
+targ_start_list = unique(targ_start);
+ngap = length(targ_start_list);
+for igap =  1 : ngap % ntrial per isi is equal but not distributed evenly to every delta
+    id_targ = find(targ_start == targ_start_list(igap));
+    range_adapt_base = [targ_start_list(igap) - targ_stim_len : targ_start_list(igap) - 1]; % adapted baseline just bef targ onset
+    range_targ_resp = [targ_start_list(igap) : targ_start_list(igap) + targ_stim_len - 1]; % targ onset til targ fin
+
+for idelta = 1 : ndelta % ntrial per delta is equal
+    id_delta = find(delta_seq == delta_list(idelta)); 
+    idx = intersect(id_targ, id_delta);
+    ntrial_cond = length(idx); % condition = specific isi (targ onset frame#) & targ dir
     
     for icell = 1 : ncell
-%         for itrial_delta = 1 : length(idx)
-            
-            range_adapt_base = [targ_start(idx(itrial_delta)) - targ_stim_len : targ_start(idx(itrial_delta)) - 1]; % adapted baseline just bef targ onset
-            range_targ_resp = [targ_start(idx(itrial_delta)) : targ_start(idx(itrial_delta)) + targ_stim_len - 1]; % targ onset til targ fin
 
-            base_win = squeeze(tc_trials(icell, idx, range_adapt_base));
-            base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
-            resp_win = squeeze(tc_trials(icell, idx, range_targ_resp));
-            resp_win = mean(resp_win, 2);
+        base_win = squeeze(tc_trials(icell, idx, range_adapt_base));
+        base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
+        resp_win = squeeze(tc_trials(icell, idx, range_targ_resp));
+        resp_win = mean(resp_win, 2);
 
-            [sig_ttest(icell, idelta), p_ttest(icell, idelta)] = ttest(base_win, resp_win,...
-                'alpha',0.05./(ntrial_delta - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
-            base_avg(icell, idelta) = mean(base_win); % avg over trials of same ori
-            resp_avg(icell, idelta) = mean(resp_win);
-            resp_ste(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
+        [sig_ttest(icell, idelta, igap), p_ttest(icell, idelta, igap)] = ttest(base_win, resp_win,...
+            'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+        base_avg(icell, idelta, igap) = mean(base_win); % avg over trials of same ori
+        resp_avg(icell, idelta, igap) = mean(resp_win);
+        resp_ste(icell, idelta, igap) = std(resp_win) / sqrt(length(resp_win));
 
-            dfof_avg(icell, idelta) = mean( (resp_win - base_win) ./ mean(base_win) );
-            dfof_ste(icell, idelta) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_delta);
-%         end
+        dfof_avg(icell, idelta, igap) = mean( (resp_win - base_win) ./ mean(base_win) );
+        dfof_ste(icell, idelta, igap) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_cond);
     end
 end
+end
 
-sum(sum(sig_ttest,2)>0) % ncells responsive to >= 1 orientation: 17/103
+t = sig_ttest(:,:,1) + sig_ttest(:,:,2);
+sum(sum(t,2)>0) % ncells responsive to >= 1 targ ori: 56/103
 
-% base = mean(tc_trials(:,:, (nOff - win_len + 1):nOff), 3);
-% resp = mean(tc_trials(:,:, (trial_len - win_len + 1):trial_len), 3);
-% df = resp - base;
+subplot(1,3,1)
+imagesc(t); colorbar
+title('sig>=1 is ori-tuned')
+subplot(1,3,2)
+imagesc(p_ttest(:,:,1)); colorbar
+title('p value of small isi')
+subplot(1,3,3)
+imagesc(p_ttest(:,:,2)); colorbar
+title('p value of large isi')
+set(gcf, 'Position', get(0, 'Screensize'));
+cd C:\Users\lan\Documents\repos\inter\code
+saveas(gcf, ['ori_tuned_cells_across_isi.jpg'])
+close
 
 %% orientation tuning plot of indiv cell
 
@@ -246,8 +259,8 @@ for irun = 1 : nrun
         
         for idelta = 1 : ndelta
             idx = find(delta_seq == delta_list(idelta)); 
-            ntrial_delta = length(idx);
-            bootstrap_draw = round(ntrial_delta * 0.7);
+            ntrial_cond = length(idx);
+            bootstrap_draw = round(ntrial_cond * 0.7);
             idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
 
             base_win = squeeze(tc_trials(icell, idx_run, (nOff - win_len + 1):nOff));
@@ -261,7 +274,7 @@ for irun = 1 : nrun
 %             resp_ste(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
 
             dfof_avg_runs(icell, idelta, irun) = mean( (resp_win - base_win) ./ mean(base_win) );
-            dfof_ste_runs(icell, idelta, irun) = std( (resp_win - base_win) ./ mean(base_win) ) ./ sqrt(ntrial_delta);
+            dfof_ste_runs(icell, idelta, irun) = std( (resp_win - base_win) ./ mean(base_win) ) ./ sqrt(ntrial_cond);
         end
         
         
