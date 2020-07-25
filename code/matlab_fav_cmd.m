@@ -47,13 +47,12 @@ disp(' ')
 %% figure tips
 figure('units','normalized','outerposition',[0 0 1 1]);
 set(gcf, 'Position', get(0, 'Screensize'));
+cd C:\Users\lan\Documents\repos\inter\code
+saveas(gcf, ['ori_tuning_fit_', num2str(icell)], 'jpg')
 
 line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 yl = ylim; % query [ymin ymax]
 line([ori_pref, ori_pref], [yl(1), (b_hat + R1_hat)], 'Color', 'r', 'LineWidth', 1);
-
-cd C:\Users\lan\Documents\repos\inter\code
-saveas(gcf, ['ori_tuning_fit_', num2str(icell)], 'jpg')
 
 %% saving var
 save('data_reg.mat', 'data_reg', '-v7.3') % force save >2GB .mat

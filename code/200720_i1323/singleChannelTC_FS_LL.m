@@ -196,7 +196,14 @@ for it = 1:(nTrials-1)
 end
 
 plot(mean(data_trial, 2))
+set(gcf, 'Position', get(0, 'Screensize'));
+cd C:\Users\lan\Documents\repos\inter\code
+saveas(gcf, ['find_ca_latency.jpg'])
+
 data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:50)); grid on; grid minor
+set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['find_ca_latency_zoomin.jpg'])
+save find_ca_latency.mat data_trial_zoom_in data_trial
 
 % %%
 % 

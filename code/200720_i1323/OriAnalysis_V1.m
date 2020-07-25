@@ -2,6 +2,7 @@
 
 close all
 clear
+clc
 
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 ll_fn = fullfile(fn_base, 'home\lan'); 
@@ -45,38 +46,33 @@ cStimOn = cell2mat(input.cStimOn);
 cStimOff = cell2mat(input.cStimOff);
 cTarget = celleqel2mat_padded(input.cTargetOn); cTarget = int64(cTarget);
 
-unique(cStimOff - cStimOn) % adapter = 3-4 frames, rounded from 100 ms
-unique(cTarget - cStimOff) % ISI = 8 or 22-23 frames, rounded up from 250 or 750 ms
-input.targetOnTimeMs % target = 3-4 frames, rounded from 100 ms
-unique(cStimOn(2:end) - (cTarget(1:end-1) + 3)) % ITI = 192-193-194 frames, 6.4-6.5 s?
+adapter_stim_len = unique(cStimOff - cStimOn) % adapter = 3-4 frames, rounded from 100 ms
+isi_len = unique(cTarget - cStimOff) % ISI = 8 or 22-23 frames, rounded up from 250 or 750 ms
+targ_stim_len = floor(input.targetOnTimeMs / frame_rate) % target = 3-4 frames, rounded from 100 ms
+iti_len = unique(cStimOn(2:end) - (cTarget(1:end-1) + 3)) % ITI = 192-193-194 frames, 6.4-6.5 s?
 
 targCon = celleqel2mat_padded(input.tGratingContrast);
-unique(targCon) % target contrast 1
+unique(targCon); % target contrast 1
 adapterCon = celleqel2mat_padded(input.tBaseGratingContrast);
-unique(adapterCon) % adapter contrast 0 or 1
+unique(adapterCon); % adapter contrast 0 or 1
 % ind_noadapter = intersect(find(targCon == 1),find(adapterCon == 0));
 
 adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
-dirs = unique(adapterDir) % adapter dir === 0
+dirs = unique(adapterDir); % adapter dir === 0
 ndir = length(dirs);
 delta_seq = celleqel2mat_padded(input.tGratingDirectionDeg);
-delta_list = unique(delta_seq) % target 8 dir (actually ori): 22.5-180. equivalent to diff from adapter
+delta_list = unique(delta_seq); % target 8 dir (actually ori): 22.5-180. equivalent to diff from adapter
 ndelta = length(delta_list); 
 
-size(npSub_tc) % nframe * ncell
-ncell = size(npSub_tc, 2);
-nframe = size(npSub_tc, 1);
+[nframe, ncell] = size(npSub_tc) % nframe * ncell
 
 %% align by trial start
 
 trial_len = diff(cStimOn);
 trial_len_final = nframe - cStimOn(end);
 trial_len = [trial_len, trial_len_final];
-unique(trial_len)
-% histogram(trial_len)
-tc_trials = zeros(ncell, ntrial, max(trial_len));
-whos npSub_tc
 
+tc_trials = zeros(ncell, ntrial, max(trial_len));
 for icell = 1:ncell
     npSub_tc_cell = npSub_tc(:,icell);
     for itrial = 1:ntrial
@@ -86,20 +82,21 @@ for icell = 1:ncell
     end
 end
 
-% sanity check
-size(tc_trials) % ncell * ntrial * trial_len (padded by nan)
-temp = tc_trials(:);
-sum(isnan(temp))/length(temp)
-
-trial_len = double(trial_len);
-unique_len = unique(trial_len);
-n = histc(trial_len, unique_len);
-n_nan = sum((max(unique_len) - unique_len) .* n) .* ncell
-sum(isnan(temp))
+% % sanity check
+% size(tc_trials) % ncell * ntrial * trial_len (padded by nan)
+% temp = tc_trials(:);
+% sum(isnan(temp))/length(temp)
+% 
+% trial_len = double(trial_len);
+% unique_len = unique(trial_len)
+% n = histc(trial_len, unique_len);
+% n_nan = sum((max(unique_len) - unique_len) .* n) .* ncell
+% sum(isnan(temp))
 
 %% cells sensitive to target dir
 ca_latency = 7; % Ca signal latency: signal from frame #1 shows up at frame #8
 target_relative = cTarget - cStimOn; % unique(cTarget - cStimOn) = [11 26]
+targ_start = 1 + target_relative + ca_latency; % time to receive targ resp signal
 
 sig_ttest = pi * ones(ncell, ndelta); p_ttest = pi * ones(ncell, ndelta);
 base_avg = pi * ones(ncell, ndelta);
@@ -111,10 +108,8 @@ for idelta = 1 : ndelta
     ntrial_delta = length(idx);
     
     for icell = 1 : ncell
-        
-        targ_start_id = 1 + target_relative + ca_latency; % time to receive targ resp signal
-        range_adapt_base = [targ_start_id - 3 : targ_start_id - 1]; % adapted baseline just bef targ onset
-        range_targ_resp = [targ_start_id : targ_start_id + 3]; % targ onset til #4 frames after
+        range_adapt_base = [targ_start(idx) - targ_stim_len : targ_start(idx) - 1]; % adapted baseline just bef targ onset
+        range_targ_resp = [targ_start(idx) : targ_start(idx) + targ_stim_len - 1]; % targ onset til targ fin
         
         base_win = squeeze(tc_trials(icell, idx, range_adapt_base));
         base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
