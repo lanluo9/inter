@@ -110,26 +110,29 @@ for idelta = 1 : ndelta
     ntrial_delta = length(idx);
     
     for icell = 1 : ncell
-        range_adapt_base = [targ_start(idx) - targ_stim_len : targ_start(idx) - 1]; % adapted baseline just bef targ onset
-        range_targ_resp = [targ_start(idx) : targ_start(idx) + targ_stim_len - 1]; % targ onset til targ fin
-        
-        base_win = squeeze(tc_trials(icell, idx, range_adapt_base));
-        base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
-        resp_win = squeeze(tc_trials(icell, idx, range_targ_resp));
-        resp_win = mean(resp_win, 2);
-        
-        [sig_ttest(icell, idelta), p_ttest(icell, idelta)] = ttest(base_win, resp_win,...
-            'alpha',0.05./(ntrial_delta - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
-        base_avg(icell, idelta) = mean(base_win); % avg over trials of same ori
-        resp_avg(icell, idelta) = mean(resp_win);
-        resp_ste(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
+%         for itrial_delta = 1 : length(idx)
+            
+            range_adapt_base = [targ_start(idx(itrial_delta)) - targ_stim_len : targ_start(idx(itrial_delta)) - 1]; % adapted baseline just bef targ onset
+            range_targ_resp = [targ_start(idx(itrial_delta)) : targ_start(idx(itrial_delta)) + targ_stim_len - 1]; % targ onset til targ fin
 
-        dfof_avg(icell, idelta) = mean( (resp_win - base_win) ./ mean(base_win) );
-        dfof_ste(icell, idelta) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_delta);
+            base_win = squeeze(tc_trials(icell, idx, range_adapt_base));
+            base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
+            resp_win = squeeze(tc_trials(icell, idx, range_targ_resp));
+            resp_win = mean(resp_win, 2);
+
+            [sig_ttest(icell, idelta), p_ttest(icell, idelta)] = ttest(base_win, resp_win,...
+                'alpha',0.05./(ntrial_delta - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+            base_avg(icell, idelta) = mean(base_win); % avg over trials of same ori
+            resp_avg(icell, idelta) = mean(resp_win);
+            resp_ste(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
+
+            dfof_avg(icell, idelta) = mean( (resp_win - base_win) ./ mean(base_win) );
+            dfof_ste(icell, idelta) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_delta);
+%         end
     end
 end
 
-sum(sum(sig_ttest,2)>0) % ncells responsive to >= 1 orientation: 80->89/148 after set tail
+sum(sum(sig_ttest,2)>0) % ncells responsive to >= 1 orientation: 17/103
 
 % base = mean(tc_trials(:,:, (nOff - win_len + 1):nOff), 3);
 % resp = mean(tc_trials(:,:, (trial_len - win_len + 1):trial_len), 3);
