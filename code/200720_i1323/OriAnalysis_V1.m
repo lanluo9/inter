@@ -151,6 +151,39 @@ cd C:\Users\lan\Documents\repos\inter\code
 saveas(gcf, ['ori_tuned_cells_across_isi.jpg'])
 close
 
+%% test no-adapter trial #
+
+adapt_list = unique(adapterCon);
+nadapt = length(adapt_list);
+ntrial_cond = [];
+for iadapt =  1 : nadapt % ntrial per isi is equal but not distributed evenly to every delta
+    id_adapt = find(adapterCon == adapt_list(iadapt));
+    
+for idelta = 1 : ndelta % ntrial per delta is equal
+    id_delta = find(delta_seq == delta_list(idelta)); 
+    idx = intersect(id_adapt, id_delta);
+    ntrial_cond(idelta, iadapt) = length(idx); % condition = specific isi (targ onset frame#) & targ dir
+
+end
+end
+
+targ_start_list = unique(targ_start);
+ngap = length(targ_start_list);
+for igap =  1 : ngap % ntrial per isi is equal but not distributed evenly to every delta
+    id_targ = find(targ_start == targ_start_list(igap));
+    range_adapt_base = [targ_start_list(igap) - targ_stim_len : targ_start_list(igap) - 1]; % adapted baseline just bef targ onset
+    range_targ_resp = [targ_start_list(igap) : targ_start_list(igap) + targ_stim_len - 1]; % targ onset til targ fin
+
+for idelta = 1 : ndelta % ntrial per delta is equal
+    id_delta = find(delta_seq == delta_list(idelta)); 
+    idx = intersect(id_targ, id_delta);
+    ntrial_cond2(idelta, igap) = length(idx);
+end
+end
+
+ntrial_cond
+ntrial_cond2
+
 %% orientation tuning plot of indiv cell
 
 for icell = 1 : ncell
