@@ -100,6 +100,7 @@ targ_start = 1 + target_relative + ca_latency; % time to receive targ resp signa
 sig_ttest = pi * ones(ncell, ndelta); p_ttest = pi * ones(ncell, ndelta);
 base_avg = pi * ones(ncell, ndelta);
 resp_avg = pi * ones(ncell, ndelta); resp_ste = pi * ones(ncell, ndelta); % standard error 
+cp_win = cell(ncell, ndelta);
 dfof_avg = pi * ones(ncell, ndelta); dfof_ste = pi * ones(ncell, ndelta); % dF/F
 
 id_noadapter = intersect(find(targCon == 1),find(adapterCon == 0));
@@ -129,6 +130,7 @@ for icell = 1 : ncell
     base_avg(icell, idelta) = mean(base_win); % avg over trials of same ori
     resp_avg(icell, idelta) = mean(resp_win);
     resp_ste(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
+    cp_win{icell, idelta} = [base_win, resp_win];
 
     dfof_avg(icell, idelta) = mean( (resp_win - base_win) ./ mean(base_win) );
     dfof_ste(icell, idelta) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_cond);
@@ -240,7 +242,7 @@ for icell = 1 : ncell
     y_fit = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
     ori_pref = rad2deg(u1_hat);
     ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
-    ori_pref(ori_pref > 180) = ori_pref(ori_pref >= 180) - 180;
+    ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
 
     plot(rad2deg(theta_finer), y_fit, 'LineWidth', 1)
     yl = ylim; % query [ymin ymax]
@@ -268,7 +270,7 @@ ori_pref_cells = ori_pref;
 
 save ori_across_cells.mat dfof_avg dfof_ste fit_param ori_pref_cells
 
-%% bootstrap -> goodness of fit
+%% bootstrap -> goodness of fit (untested)
 
 dfof_avg_runs = pi * ones(ncell, ndelta, nrun);
 dfof_ste_runs = pi * ones(ncell, ndelta, nrun);
@@ -284,21 +286,14 @@ for irun = 1 : nrun
     for icell = 1 : ncell
         
         for idelta = 1 : ndelta
-            idx = find(delta_seq == delta_list(idelta)); 
-            ntrial_cond = length(idx);
+            temp_win = cp_win{icell, idelta};
+            ntrial_cond = size(temp_win,1);
+            idx = 1 : ntrial_cond;
             bootstrap_draw = round(ntrial_cond * 0.7);
             idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
 
-            base_win = squeeze(tc_trials(icell, idx_run, (nOff - win_len + 1):nOff));
-            base_win = mean(base_win, 2); % avg over window -> [ntrial_ori, 1]
-            resp_win = squeeze(tc_trials(icell, idx_run, (trial_len - win_len + 1):trial_len));
-            resp_win = mean(resp_win, 2);
-
-%             [sig_ttest(icell, idelta), p_ttest(icell, idelta)] = ttest(base_win, resp_win, 'alpha',0.05./(ntrial_ori - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
-%             base_avg(icell, idelta) = mean(base_win); % avg over sampled trials 
-%             resp_avg(icell, idelta) = mean(resp_win);
-%             resp_ste(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
-
+            base_win = temp_win(idx_run,1); 
+            resp_win = temp_win(idx_run,2);
             dfof_avg_runs(icell, idelta, irun) = mean( (resp_win - base_win) ./ mean(base_win) );
             dfof_ste_runs(icell, idelta, irun) = std( (resp_win - base_win) ./ mean(base_win) ) ./ sqrt(ntrial_cond);
         end
@@ -309,18 +304,10 @@ for irun = 1 : nrun
         fit_param_runs(icell, :, irun) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
     %   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
 
-%         theta_finer = deg2rad(0:1:179);
-%         y_fit = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
         ori_pref = rad2deg(u1_hat);
-%     if ori_pref < 0
-%         ori_pref = ori_pref + 180;
-%     elseif ori_pref > 180
-%         ori_pref = ori_pref - 180;
-%     end
         ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
-        ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+        ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
         ori_pref_runs(icell, irun) = ori_pref;
-        
     end
 end
 
