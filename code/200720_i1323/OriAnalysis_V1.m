@@ -52,6 +52,7 @@ adapter_stim_len = unique(cStimOff - cStimOn) % adapter = 3-4 frames, rounded fr
 isi_len = unique(cTarget - cStimOff) % ISI = 8 or 22-23 frames, rounded up from 250 or 750 ms
 targ_stim_len = floor(input.targetOnTimeMs / frame_rate) % target = 3-4 frames, rounded from 100 ms
 iti_len = unique(cStimOn(2:end) - (cTarget(1:end-1) + 3)) % ITI = 192-193-194 frames, 6.4-6.5 s?
+trial_len_list = unique(diff(cStimOn)); % 6.9 or 7.4s
 
 targCon = celleqel2mat_padded(input.tGratingContrast);
 unique(targCon); % target contrast 1
@@ -381,6 +382,56 @@ xlabel('sharpness of tuning')
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, 'ori_pref_w_sharp.jpg')
 close
+
+%% sharply ori-tuned, well-fit, vis-driven cell list
+
+sharp_cell = fit_param(:, 3) > 3;
+real_ori_cell = ori_cell & sharp_cell;
+real_ori_cell_list = find(real_ori_cell);
+ncell_real_ori = length(real_ori_cell_list)
+
+for ic = 1 : ncell_real_ori
+    icell = real_ori_cell_list(ic);
+    errorbar(delta_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
+    hold on
+    if sum(sig_ttest(icell,:)) > 0
+        sig_idx = sig_ttest(icell,:) > 0;
+        sig_delta = delta_list(sig_idx);
+        sig_star_height = dfof_avg(icell,sig_idx) + dfof_ste(icell,sig_idx) + 0.01;
+        scatter(sig_delta, sig_star_height, '*', 'LineWidth',1)
+    else
+        sig_delta = [];
+    end
+    xlim([0-5, 180+5])
+    line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
+    
+    theta_finer = deg2rad(0:1:179);
+    b_hat = fit_param(icell,2);
+    k1_hat = fit_param(icell,3);
+    R1_hat = fit_param(icell,4);
+    u1_hat = fit_param(icell,5);
+    y_fit = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
+    ori_pref = rad2deg(u1_hat);
+    ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
+    ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
+
+    plot(rad2deg(theta_finer), y_fit, 'LineWidth', 1)
+    yl = ylim; % query [ymin ymax]
+    line([ori_pref, ori_pref], [yl(1), (b_hat + R1_hat)], 'Color', 'r', 'LineWidth', 1);
+    
+    xlabel('ori in deg')
+    ylabel('dF/F')
+    if isempty(sig_delta)
+        title(['cell ', num2str(icell), ' has no ori-pref'])
+        filename = ['null_ori_tuning_fit_', num2str(icell)];
+    else
+        title(['cell ', num2str(icell), ' prefer ori ', num2str(round(ori_pref, 2))])
+        filename = ['ori_tuning_fit_', num2str(icell)];
+    end
+    set(gcf, 'Position', get(0, 'Screensize'));
+    saveas(gcf, filename, 'jpg')
+    close    
+end
 
 %% adaptation index
 
