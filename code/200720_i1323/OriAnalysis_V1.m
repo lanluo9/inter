@@ -148,9 +148,9 @@ imagesc(p_ttest(:,:,1)); colorbar
 title('p value')
 
 set(gcf, 'Position', get(0, 'Screensize'));
-cd C:\Users\lan\Documents\repos\inter\code
-saveas(gcf, ['visual_driven_cells_noadapter.jpg'])
-close
+% cd C:\Users\lan\Documents\repos\inter\code
+% saveas(gcf, ['visual_driven_cells_noadapter.jpg'])
+% close
 
 %% test trial # distribution across conditions: randomized but not split evenly
 
@@ -177,7 +177,7 @@ for igap =  1 : ngap % ntrial per isi is equal but not distributed evenly to eve
 
 for idelta = 1 : ndelta % ntrial per delta is equal
     id_delta = find(delta_seq == delta_list(idelta)); 
-    idx = intersect(id_targ, id_delta);pu
+    idx = intersect(id_targ, id_delta);
     ntrial_cond2(idelta, igap) = length(idx);
 end
 end
@@ -258,7 +258,7 @@ for icell = 1 : ncell
         filename = ['ori_tuning_fit_', num2str(icell)];
     end
     set(gcf, 'Position', get(0, 'Screensize'));
-    saveas(gcf, filename, 'jpg')
+%     saveas(gcf, filename, 'jpg')
     close    
 end
 
@@ -268,17 +268,18 @@ ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
 ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
 ori_pref_cells = ori_pref;
 
-save ori_across_cells.mat dfof_avg dfof_ste fit_param ori_pref_cells
+% save ori_across_cells.mat dfof_avg dfof_ste fit_param ori_pref_cells
 
 %% bootstrap -> goodness of fit (untested)
+
+% load ori_across_cells.mat
+nrun = 1000;
+theta = deg2rad(delta_list);
 
 dfof_avg_runs = pi * ones(ncell, ndelta, nrun);
 dfof_ste_runs = pi * ones(ncell, ndelta, nrun);
 fit_param_runs = pi * ones(ncell, 7, nrun);
 ori_pref_runs = pi * ones(ncell, nrun);
-
-theta = deg2rad(delta_list);
-nrun = 1000;
 
 for irun = 1 : nrun
     irun
@@ -290,14 +291,13 @@ for irun = 1 : nrun
             ntrial_cond = size(temp_win,1);
             idx = 1 : ntrial_cond;
             bootstrap_draw = round(ntrial_cond * 0.7);
-            idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
+            idx_run = randsample(idx, bootstrap_draw, 0); % w/o replacement
 
             base_win = temp_win(idx_run,1); 
             resp_win = temp_win(idx_run,2);
             dfof_avg_runs(icell, idelta, irun) = mean( (resp_win - base_win) ./ mean(base_win) );
             dfof_ste_runs(icell, idelta, irun) = std( (resp_win - base_win) ./ mean(base_win) ) ./ sqrt(ntrial_cond);
         end
-        
         
         data = dfof_avg_runs(icell, :, irun); 
         [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
@@ -337,15 +337,15 @@ ori_perc = ori_closeness(:, percentile_idx);
 
 good_fit_cell = ori_perc<22.5;
 sum(good_fit_cell)
-sig_ori_cell = sum(sig_ttest,2)>0;
-sum(sig_ori_cell)
-ori_cell = good_fit_cell & sig_ori_cell;
+sig_vis_cell = sum(sig_ttest,2)>0;
+sum(sig_vis_cell)
+ori_cell = good_fit_cell & sig_vis_cell;
 sum(ori_cell)
 
 %% cell distribution
 
-xname = {'segmented'; 'sig ori-tuned'; 'good fit'; 'both'};
-y = [ncell, sum(sig_ori_cell), sum(good_fit_cell), sum(ori_cell)]; 
+xname = {'segmented'; 'sig vis-driven'; 'good fit'; 'both'};
+y = [ncell, sum(sig_vis_cell), sum(good_fit_cell), sum(ori_cell)]; 
 x = 1 : length(y);
 bar(x, y)
 set(gca,'xticklabel', xname)
