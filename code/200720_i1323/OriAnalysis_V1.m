@@ -38,6 +38,8 @@ datemouserun = [date '_' mouse '_' run_str];
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
 load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course including fake targ resp
 
+cd C:\Users\lan\Documents\repos\inter\code\200720_i1323
+
 %% exp design
 
 ntrial = input.trialSinceReset; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps
@@ -313,17 +315,13 @@ end
 
 save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
 
-% % sanity check
-% tt = mean(dfof_avg_runs, 3);
-% 
-% subplot(1,2,1)
-% imagesc(dfof_avg)
-% colorbar
-% 
-% subplot(1,2,2)
-% imagesc(mean(dfof_avg_runs, 3))
-% % imagesc(dfof_avg_runs(:,:,1))
-% colorbar
+% sanity check
+tt = mean(dfof_avg_runs, 3);
+subplot(1,2,1)
+imagesc(dfof_avg); colorbar
+subplot(1,2,2)
+imagesc(mean(dfof_avg_runs, 3)); colorbar
+set(gcf, 'Position', get(0, 'Screensize'));
 
 %% evaluate ori_pref across runs -> good fit
 
@@ -332,8 +330,8 @@ percentile_threshold = 0.90;
 percentile_idx = percentile_threshold * nrun;
 ori_perc = ori_closeness(:, percentile_idx);
 
-% sum(ori_perc<22.5) / length(ori_perc)
-% histogram(ori_perc,8)
+sum(ori_perc<22.5) / length(ori_perc)
+histogram(ori_perc,8)
 
 good_fit_cell = ori_perc<22.5;
 sum(good_fit_cell)
@@ -342,9 +340,13 @@ sum(sig_vis_cell)
 ori_cell = good_fit_cell & sig_vis_cell;
 sum(ori_cell)
 
+% figure, axis equal, axis off
+% A = [sum(good_fit_cell), sum(sig_vis_cell)]; I = sum(ori_cell);
+% venn(A,I,'FaceColor',{'b','y'},'FaceAlpha',{1,0.6},'EdgeColor','white')
+
 %% cell distribution
 
-xname = {'segmented'; 'sig vis-driven'; 'good fit'; 'both'};
+xname = {'segmented'; 'vis-driven'; 'good fit'; 'both'};
 y = [ncell, sum(sig_vis_cell), sum(good_fit_cell), sum(ori_cell)]; 
 x = 1 : length(y);
 bar(x, y)
@@ -358,7 +360,7 @@ end
 ylim([0, max(y)+10])
 ylabel('number of cells')
 set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, 'number of cells.jpg')
+saveas(gcf, 'dist of cells.jpg')
 close
 
 %% ori tuning param dist
@@ -368,7 +370,7 @@ ori_pref_qualified(ori_pref_qualified<0) = ori_pref_qualified(ori_pref_qualified
 ori_sharp_qualified = fit_param(ori_cell, 3);
 
 subplot(1,2,1)
-edges = [delta_list, 180];
+edges = [0, delta_list];
 histogram(ori_pref_qualified, edges)
 xlabel('preferred ori')
 
