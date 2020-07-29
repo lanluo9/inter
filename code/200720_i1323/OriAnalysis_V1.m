@@ -273,9 +273,9 @@ ori_pref_cells = ori_pref;
 
 % save ori_across_cells.mat dfof_avg dfof_ste fit_param ori_pref_cells
 
-%% bootstrap -> goodness of fit (untested)
+%% bootstrap -> goodness of fit 
 
-% load ori_across_cells.mat
+load ori_across_cells.mat
 nrun = 1000;
 theta = deg2rad(delta_list);
 
@@ -294,7 +294,7 @@ for irun = 1 : nrun
             ntrial_cond = size(temp_win,1);
             idx = 1 : ntrial_cond;
             bootstrap_draw = round(ntrial_cond * 0.7);
-            idx_run = randsample(idx, bootstrap_draw, 0); % w/o replacement
+            idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
 
             base_win = temp_win(idx_run,1); 
             resp_win = temp_win(idx_run,2);
@@ -314,7 +314,7 @@ for irun = 1 : nrun
     end
 end
 
-save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
+% save ori_across_bootstrap_runs_with_replace.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
 
 % sanity check
 tt = mean(dfof_avg_runs, 3);
@@ -361,8 +361,8 @@ end
 ylim([0, max(y)+10])
 ylabel('number of cells')
 set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, 'dist of cells.jpg')
-close
+% saveas(gcf, 'dist of cells with replace.jpg')
+% close
 
 %% ori tuning param dist
 % fit_param(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
@@ -380,8 +380,8 @@ histogram(ori_sharp_qualified, 10)
 xlabel('sharpness of tuning')
 
 set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, 'ori_pref_w_sharp.jpg')
-close
+saveas(gcf, 'ori_pref_w_sharp_with_replace.jpg')
+% close
 
 %% sharply ori-tuned, well-fit, vis-driven cell list
 
@@ -435,3 +435,6 @@ end
 
 %% adaptation index
 
+
+
+%% use decoder

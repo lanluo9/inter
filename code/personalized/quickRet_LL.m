@@ -2,29 +2,32 @@
 
 clear all
 close all
+clc
 
-date = '200723';
-mouse = '1323';
+date = '200729';
+mouse = '1324';
 ImgFolder = '002';
-time = '1322';
+time = '1236';
+
+imouse = ['i' mouse];
+rc = behavConstsAV_LL;
 doReg = 0;
 nrun = size(ImgFolder,1);
-rc = behavConstsAV_LL;
 subnum = mouse;
-
 run_str = ['runs-' ImgFolder(1,:)];
 if nrun>1
     run_str = [run_str '-' ImgFolder(nrun,:)];
 end
 
+%%
 data = [];
 clear temp
 for irun = 1:nrun
-    if strcmp(rc.name,'ashle')
-    CD = ['Z:\home\ashley\data\' mouse '\two-photon imaging\' date '\' ImgFolder(irun,:)];
-    else
-    CD = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\' date '_' mouse '\' ImgFolder(irun,:)];
-    end
+%     if strcmp(rc.name,'ashle')
+%     CD = ['Z:\home\ashley\data\' mouse '\two-photon imaging\' date '\' ImgFolder(irun,:)];
+%     else
+    CD = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\' imouse '\' date  '\' ImgFolder(irun,:)];
+%     end
     cd(CD);
     imgMatFile = [ImgFolder(irun,:) '_000_000.mat'];
     load(imgMatFile);
@@ -137,9 +140,11 @@ expt_input = concatenateDataBlocks(temp);
 %             img_avg_resp(i) = mean(mean(mean(data_dfof_avg_all(:,:,i),3),2),1);
             %clim([0 max(data_dfof_avg_all(:))./2])
         end
+        
         if strcmp(rc.name,'lan')
             mkdir(['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:)]);
             print(['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:) '\' date '_' mouse '_' ImgFolder(irun,:) '_retinotopy.pdf'], '-dpdf','-bestfit')
+            set(gcf, 'Position', get(0, 'Screensize'));
 %         elseif strcmp(rc.name,'robin')
 %             mkdir(['R:\home\robin\Imaging\Analysis\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:)]);
 %             print(['R:\home\robin\Imaging\Analysis\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:) '\' date '_' mouse '_' ImgFolder(irun,:) '_retinotopy.pdf'], '-dpdf','-bestfit')    
