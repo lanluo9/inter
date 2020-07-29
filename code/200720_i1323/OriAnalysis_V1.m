@@ -155,67 +155,7 @@ set(gcf, 'Position', get(0, 'Screensize'));
 % saveas(gcf, ['visual_driven_cells_noadapter.jpg'])
 % close
 
-%% test trial # distribution across conditions: randomized but not split evenly
-
-adapt_list = unique(adapterCon);
-nadapt = length(adapt_list);
-ntrial_cond = [];
-for iadapt =  1 : nadapt % ntrial per isi is equal but not distributed evenly to every delta
-    id_adapt = find(adapterCon == adapt_list(iadapt));
-    
-for idelta = 1 : ndelta % ntrial per delta is equal
-    id_delta = find(delta_seq == delta_list(idelta)); 
-    idx = intersect(id_adapt, id_delta);
-    ntrial_cond(idelta, iadapt) = length(idx); % condition = specific isi (targ onset frame#) & targ dir
-
-end
-end
-
-targ_start_list = unique(targ_start);
-ngap = length(targ_start_list);
-for igap =  1 : ngap % ntrial per isi is equal but not distributed evenly to every delta
-    id_targ = find(targ_start == targ_start_list(igap));
-    range_adapt_base = [targ_start_list(igap) - targ_stim_len : targ_start_list(igap) - 1]; % adapted baseline just bef targ onset
-    range_targ_resp = [targ_start_list(igap) : targ_start_list(igap) + targ_stim_len - 1]; % targ onset til targ fin
-
-for idelta = 1 : ndelta % ntrial per delta is equal
-    id_delta = find(delta_seq == delta_list(idelta)); 
-    idx = intersect(id_targ, id_delta);
-    ntrial_cond2(idelta, igap) = length(idx);
-end
-end
-
-ntrial_cond
-ntrial_cond2
-
-% %% orientation tuning plot of indiv cell
-% 
-% for icell = 1 : ncell
-%     figure('units','normalized','outerposition',[0 0 1 1]);
-%     errorbar(delta_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
-%     hold on
-%     if sum(sig_ttest(icell,:)) > 0
-%         sig_idx = sig_ttest(icell,:) > 0;
-%         sig_delta = delta_list(sig_idx);
-%         sig_star_height = dfof_avg(icell,sig_idx) + dfof_ste(icell,sig_idx) + 0.01;
-%         scatter(sig_delta, sig_star_height, '*', 'LineWidth',1)
-%     else
-%         sig_delta = [];
-%     end
-%     xlim([0-5, 180])
-%     line([0-5, 180], [0, 0], 'Color', 'g', 'LineWidth', 1);
-%     title(['cell ', num2str(icell), ': sensitive to ' num2str(length(sig_delta)), ' orientations'])
-%     saveas(gcf, ['ori_tuning_', num2str(icell)], 'jpg')
-%     close
-% end
-% 
-% %% ntrial_ori is similar across ori, why sig requirement differ?
-% 
-% ntrial_ndelta = [];
-% for idelta = 1 : ndelta
-%     idx = find(delta_seq == delta_list(idelta)); 
-%     ntrial_ndelta(idelta) = length(idx); 
-% end
+% save no_ad_targ_resp.mat dfof_avg dfof_ste cp_win base_avg resp_avg resp_ste sig_ttest p_ttest
 
 %% ori tuning & fit von Mises function for single cell (targ resp of no-adapter trial)
 fit_param = pi * ones(ncell, 7);
@@ -275,7 +215,7 @@ ori_pref_cells = ori_pref;
 
 %% bootstrap -> goodness of fit 
 
-load ori_across_cells.mat
+% load ori_across_cells.mat
 nrun = 1000;
 theta = deg2rad(delta_list);
 
@@ -429,12 +369,69 @@ for ic = 1 : ncell_real_ori
         filename = ['ori_tuning_fit_', num2str(icell)];
     end
     set(gcf, 'Position', get(0, 'Screensize'));
-    saveas(gcf, filename, 'jpg')
+%     saveas(gcf, filename, 'jpg')
     close    
 end
 
-%% adaptation index
+%% test trial # distribution across conditions: randomized but not split evenly
 
+adapt_list = unique(adapterCon);
+nadapt = length(adapt_list);
+ntrial_cond = [];
+for iadapt =  1 : nadapt % ntrial per isi is equal but not distributed evenly to every delta
+    id_adapt = find(adapterCon == adapt_list(iadapt));
+    
+for idelta = 1 : ndelta % ntrial per delta is equal
+    id_delta = find(delta_seq == delta_list(idelta)); 
+    idx = intersect(id_adapt, id_delta);
+    ntrial_cond(idelta, iadapt) = length(idx); % condition = specific isi (targ onset frame#) & targ dir
 
+end
+end
 
-%% use decoder
+targ_start_list = unique(targ_start);
+ngap = length(targ_start_list);
+for igap =  1 : ngap % ntrial per isi is equal but not distributed evenly to every delta
+    id_targ = find(targ_start == targ_start_list(igap));
+    range_adapt_base = [targ_start_list(igap) - targ_stim_len : targ_start_list(igap) - 1]; % adapted baseline just bef targ onset
+    range_targ_resp = [targ_start_list(igap) : targ_start_list(igap) + targ_stim_len - 1]; % targ onset til targ fin
+
+for idelta = 1 : ndelta % ntrial per delta is equal
+    id_delta = find(delta_seq == delta_list(idelta)); 
+    idx = intersect(id_targ, id_delta);
+    ntrial_cond2(idelta, igap) = length(idx);
+end
+end
+
+ntrial_cond
+ntrial_cond2
+
+% %% orientation tuning plot of indiv cell
+% 
+% for icell = 1 : ncell
+%     figure('units','normalized','outerposition',[0 0 1 1]);
+%     errorbar(delta_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
+%     hold on
+%     if sum(sig_ttest(icell,:)) > 0
+%         sig_idx = sig_ttest(icell,:) > 0;
+%         sig_delta = delta_list(sig_idx);
+%         sig_star_height = dfof_avg(icell,sig_idx) + dfof_ste(icell,sig_idx) + 0.01;
+%         scatter(sig_delta, sig_star_height, '*', 'LineWidth',1)
+%     else
+%         sig_delta = [];
+%     end
+%     xlim([0-5, 180])
+%     line([0-5, 180], [0, 0], 'Color', 'g', 'LineWidth', 1);
+%     title(['cell ', num2str(icell), ': sensitive to ' num2str(length(sig_delta)), ' orientations'])
+%     saveas(gcf, ['ori_tuning_', num2str(icell)], 'jpg')
+%     close
+% end
+% 
+% %% ntrial_ori is similar across ori, why sig requirement differ?
+% 
+% ntrial_ndelta = [];
+% for idelta = 1 : ndelta
+%     idx = find(delta_seq == delta_list(idelta)); 
+%     ntrial_ndelta(idelta) = length(idx); 
+% end
+
