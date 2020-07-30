@@ -4,10 +4,10 @@ clear all
 close all
 clc
 
-date = '200729';
+date = '200730';
 mouse = '1324';
 ImgFolder = '002';
-time = '1236';
+time = '1256';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -20,6 +20,7 @@ if nrun>1
 end
 
 %%
+disp('start quickRet')
 data = [];
 clear temp
 for irun = 1:nrun

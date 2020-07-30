@@ -137,14 +137,105 @@ title('p value')
 
 set(gcf, 'Position', get(0, 'Screensize'));
 cd C:\Users\lan\Documents\repos\inter\code
-saveas(gcf, ['visual_driven_cells_adapter.jpg'])
+% saveas(gcf, ['visual_driven_cells_adapter.jpg'])
 % close
 % save adapter_resp.mat dfof_avg_ad dfof_ste_ad cp_win_ad base_avg_ad resp_avg_ad resp_ste_ad sig_ttest_ad p_ttest_ad
+
+%% get with-adapter 0-deg targ resp
+
+target_relative = cTarget - cStimOn; % unique(cTarget - cStimOn) = [11 26]
+targ_start = 1 + target_relative + ca_latency; % time to receive targ resp signal
+targ_start_list = unique(targ_start);
+ngap = length(targ_start_list);
+id_delta0 = find(delta_seq == 180);
+
+sig_ttest_tg0 = pi * ones(ncell, ngap); p_ttest_tg0 = pi * ones(ncell, ngap);
+base_avg_tg0 = pi * ones(ncell, ngap);
+resp_avg_tg0 = pi * ones(ncell, ngap); resp_ste_tg0 = pi * ones(ncell, ngap); % standard error 
+cp_win_tg0 = cell(ncell, ngap);
+dfof_avg_tg0 = pi * ones(ncell, ngap); dfof_ste_tg0 = pi * ones(ncell, ngap); % dF/F
+
+for icell = 1 : ncell
+    base_win = cell(1,2); resp_win = cell(1,2);
+    for igap =  1 : ngap % ntrial per isi is equal but not distributed evenly to every delta
+        id_targ = find(targ_start == targ_start_list(igap));
+        idx = intersect(intersect(id_targ, id_delta0), id_adapter); % use only with-adapter 0-deg trials
+        ntrial_cond = length(idx); 
+        
+        range_adapt_base = [targ_start_list(igap) - targ_stim_len : targ_start_list(igap) - 1]; % adapted baseline just bef targ onset
+        range_targ_resp = [targ_start_list(igap) : targ_start_list(igap) + targ_stim_len - 1]; % targ onset til targ fin
+        base_win{1,igap} = mean(squeeze(tc_trials(icell, idx, range_adapt_base)),2); % avg over window -> [ntrial_ori, 1]
+        resp_win{1,igap} = mean(squeeze(tc_trials(icell, idx, range_targ_resp)),2);
+    end
+
+    for igap =  1 : ngap
+       [sig_ttest_tg0(icell, igap), p_ttest_tg0(icell, igap)] = ttest(base_win{1,igap}, resp_win{1,igap},...
+                'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+            
+        base_avg_tg0(icell, igap) = mean(base_win{1,igap}); % avg over trials of same ori
+        resp_avg_tg0(icell, igap) = mean(resp_win{1,igap});
+        resp_ste_tg0(icell, igap) = std(resp_win{1,igap}) / sqrt(length(resp_win{1,igap}));
+        cp_win_tg0{icell, igap} = [base_win{1,igap}, resp_win{1,igap}];
+
+        dfof_avg_tg0(icell, igap) = mean( (resp_win{1,igap} - base_win{1,igap}) ./ mean(base_win{1,igap}) );
+        dfof_ste_tg0(icell, igap) = std( (resp_win{1,igap} - base_win{1,igap}) ./ mean(base_win{1,igap}) ) / sqrt(ntrial_cond);
+    end
+end
+
+sum(sig_ttest_tg0, 1) % ncells responsive to with-ad targ whose isi=250 or 750: 0/103 | 5/103
+
+subplot(1,2,1)
+imagesc(sig_ttest_tg0); colorbar
+title('visually driven by with-adapter targ, isi=250 or 750')
+subplot(1,2,2)
+imagesc(p_ttest_tg0(:,:,1)); colorbar
+title('p value')
+
+set(gcf, 'Position', get(0, 'Screensize'));
+cd C:\Users\lan\Documents\repos\inter\code
+% saveas(gcf, ['visual_driven_cells_targ_after_adapter.jpg'])
+% close
+% save with_ad_0deg_targ_resp.mat dfof_avg_tg0 dfof_ste_tg0 cp_win_tg0 base_avg_tg0 resp_avg_tg0 resp_ste_tg0 sig_ttest_tg0 p_ttest_tg0
 
 %% compare ad_resp vs 0-deg targ_resp_250/750 of vis_driven cells
 
 id_isi_1 = intersect(find(cTarget - cStimOff < 10), id_adapter); % isi 250
 id_isi_2 = intersect(find(cTarget - cStimOff >= 10), id_adapter); % isi 750
+% use all cells
+scatter(dfof_avg_ad, dfof_avg_tg0(:,1), 'b*'); hold on % isi 250
+scatter(dfof_avg_ad, dfof_avg_tg0(:,2), 'r*') % isi 750
+set(gcf, 'Position', get(0, 'Screensize'));
 
-% dfof_avg_ad
+
+% use only 0-preferring cells. other cells' ad & tg resp will certainly co-vary
+load ori_across_cells.mat
+pref_0_cell = find(ori_pref_cells > delta_list(end-1));
+% pref_0_cell = find(ori_pref_cells > 170);
+subplot(1,2,1)
+scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1), 'b*'); hold on
+title('isi=250')
+subplot(1,2,2)
+scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2), 'r*')
+title('isi=750')
+for n=1:2
+AX_handles(n) = subplot(1,2,n)
+end
+set(AX_handles,'YLim',[-0.04 0.14])
+set(gcf, 'Position', get(0, 'Screensize'));
+
 % bin cells by adapter resp
+histogram(dfof_avg_ad(vis_driven_ad))
+min(dfof_avg_ad(vis_driven_ad))
+max(dfof_avg_ad(vis_driven_ad))
+
+[count_bin, idx] = histc(dfof_avg_ad(vis_driven_ad),0:0.05:0.4);
+resp_bin_ad = accumarray(idx(:),dfof_avg_ad(vis_driven_ad),[],@mean)
+resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,1),[],@mean)
+resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,2),[],@mean)
+
+scatter(resp_bin_ad, resp_bin_tg(:,1), 'b*'); hold on 
+scatter(resp_bin_ad, resp_bin_tg(:,2), 'r*')
+set(gcf, 'Position', get(0, 'Screensize'));
+
+
+
