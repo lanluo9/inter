@@ -310,4 +310,11 @@ set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['Fig1C time course of adaptation recovery w only 2 data points.jpg'])
 close
 
-%% Fig 2
+
+%% Fig 2B: cell resp by dir & condition (no_ad, 750, 250)
+
+for icell = 1:nell
+    
+    
+    
+end

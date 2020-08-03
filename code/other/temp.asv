@@ -26,43 +26,43 @@ end
 
 %%
 
-sig_ttest_cond = pi * ones(ncell, ndelta, ngap); p_ttest_cond = pi * ones(ncell, ndelta, ngap);
-base_avg_cond = pi * ones(ncell, ndelta, ngap);
-resp_avg_cond = pi * ones(ncell, ndelta, ngap); resp_ste_cond = pi * ones(ncell, ndelta, ngap); % standard error 
-cp_win_cond = cell(ncell, ndelta, ngap);
-dfof_avg_cond = pi * ones(ncell, ndelta, ngap); dfof_ste_cond = pi * ones(ncell, ndelta, ngap); % dF/F
+sig_ttest_oris = pi * ones(ncell, ndelta, ngap); p_ttest_oris = pi * ones(ncell, ndelta, ngap);
+base_avg_oris = pi * ones(ncell, ndelta, ngap);
+resp_avg_oris = pi * ones(ncell, ndelta, ngap); resp_ste_oris = pi * ones(ncell, ndelta, ngap); % standard error 
+cp_win_oris = cell(ncell, ndelta, ngap);
+dfof_avg_oris = pi * ones(ncell, ndelta, ngap); dfof_ste_oris = pi * ones(ncell, ndelta, ngap); % dF/F
 
 for icell = 1 : ncell
 for idelta = 1 : ndelta 
     id_delta = find(delta_seq == delta_list(idelta));
     
     for igap =  1 : ngap
-       [sig_ttest_cond(icell, idelta, igap), p_ttest_cond(icell, idelta, igap)] = ttest(base_cond{icell, idelta, igap}, resp_cond{icell, idelta, igap},...
+       [sig_ttest_oris(icell, idelta, igap), p_ttest_oris(icell, idelta, igap)] = ttest(base_cond{icell, idelta, igap}, resp_cond{icell, idelta, igap},...
                 'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
             
-        base_avg_cond(icell, idelta, igap) = mean(base_cond{icell, idelta, igap}); % avg over trials of same ori
-        resp_avg_cond(icell, idelta, igap) = mean(resp_cond{icell, idelta, igap});
-        resp_ste_cond(icell, idelta, igap) = std(resp_cond{icell, idelta, igap}) / sqrt(length(resp_cond{icell, idelta, igap}));
-        cp_win_cond{icell, idelta, igap} = [base_cond{icell, idelta, igap}, resp_cond{icell, idelta, igap}];
+        base_avg_oris(icell, idelta, igap) = mean(base_cond{icell, idelta, igap}); % avg over trials of same ori
+        resp_avg_oris(icell, idelta, igap) = mean(resp_cond{icell, idelta, igap});
+        resp_ste_oris(icell, idelta, igap) = std(resp_cond{icell, idelta, igap}) / sqrt(length(resp_cond{icell, igap}));
+        cp_win_oris{icell, igap} = [base_cond{icell, igap}, resp_cond{icell, igap}];
 
-        dfof_avg_cond(icell, idelta, igap) = mean( (resp_cond{icell, idelta, igap} - base_cond{icell, idelta, igap}) ./ mean(base_cond{icell, idelta, igap}) );
-        dfof_ste_cond(icell, idelta, igap) = std( (resp_cond{icell, idelta, igap} - base_cond{icell, idelta, igap}) ./ mean(base_cond{icell, idelta, igap}) ) / sqrt(ntrial_cond);
+        dfof_avg_oris(icell, igap) = mean( (resp_cond{icell, igap} - base_cond{icell, igap}) ./ mean(base_cond{icell, igap}) );
+        dfof_ste_oris(icell, igap) = std( (resp_cond{icell, igap} - base_cond{icell, igap}) ./ mean(base_cond{icell, igap}) ) / sqrt(ntrial_cond);
     end
 end
 end
 
 %%
-sum(sig_ttest_cond, 1) % ncells responsive to with-ad targ whose isi=250 or 750: 0/103 | 5/103
+sum(sig_ttest_oris, 1) % ncells responsive to with-ad targ whose isi=250 or 750: 0/103 | 5/103
 
 subplot(1,2,1)
-imagesc(sig_ttest_cond); colorbar
+imagesc(sig_ttest_oris); colorbar
 title('visually driven by with-adapter targ, isi=250 or 750')
 subplot(1,2,2)
-imagesc(p_ttest_cond(:,:,1)); colorbar
+imagesc(p_ttest_oris(:,:,1)); colorbar
 title('p value')
 
 set(gcf, 'Position', get(0, 'Screensize'));
 cd C:\Users\lan\Documents\repos\inter\code
-% saveas(gcf, ['visual_driven_cells_targ_with_adapter.jpg'])
+% saveas(gcf, ['visual_driven_cells_targ_after_adapter.jpg'])
 % close
-save with_ad_all_oris_targ_resp.mat dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
+% save with_ad_0deg_targ_resp.mat dfof_avg_oris dfof_ste_oris cp_win_oris base_avg_oris resp_avg_oris resp_ste_oris sig_ttest_oris p_ttest_oris
