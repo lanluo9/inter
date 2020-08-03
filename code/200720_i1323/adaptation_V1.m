@@ -364,13 +364,87 @@ end
 cd C:\Users\lan\Documents\repos\inter\code
 save with_ad_all_oris_targ_resp.mat dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
 
-%%
+%% get all cell trial trace by dir & isi
+
+target_relative = cTarget - cStimOn; % unique(cTarget - cStimOn) = [11 26]
+targ_start = 1 + target_relative + ca_latency; % time to receive targ resp signal
+targ_start_list = unique(targ_start);
+ngap = length(targ_start_list);
+
+trace_cond = cell(ncell, ndelta, ngap); 
+for icell = 1 : ncell    
+for idelta = 1 : ndelta 
+    id_delta = find(delta_seq == delta_list(idelta));
+    
+    for igap =  1 : ngap 
+        id_targ = find(targ_start == targ_start_list(igap));
+        
+        idx = intersect(intersect(id_targ, id_delta), id_adapter); % with-ad, specific isi & ori
+        range_trace = [1 : max(trial_len)]; 
+        trace_cond{icell, idelta, igap} = squeeze(tc_trials(icell, idx, range_trace)); % [ntrial, trial_len]
+    end
+end
+end
+
+trace_no_ad = cell(ncell, ndelta, ngap); 
+for icell = 1 : ncell    
+for idelta = 1 : ndelta 
+    id_delta = find(delta_seq == delta_list(idelta));
+    
+    for igap =  1 : ngap 
+        id_targ = find(targ_start == targ_start_list(igap));
+        idx = intersect(intersect(id_targ, id_delta), id_noadapter); % no-ad, merge isi & specific ori
+        range_trace = [1 : max(trial_len)]; 
+        trace_no_ad{icell, idelta, igap} = squeeze(tc_trials(icell, idx, range_trace)); 
+    end
+end
+end
+
+cd C:\Users\lan\Documents\repos\inter\code
+% save trace_by_cond.mat trace_cond trace_no_ad
 
 
+%% align no-ad targ resp across fake isi
+
+alt_targ_start = max(targ_start_list) - (min(targ_start_list) - 1);
+trace_no_ad_align = cell(ncell, ndelta, ngap); 
+
+for icell = 1 : ncell    
+for idelta = 1 : ndelta 
+    
+    for igap =  1 : ngap 
+        if igap == 1
+            range_trace = [1 : (1 + max(trial_len) - alt_targ_start)]; % take 1:208 of isi_250 trials
+            trace_no_ad_align{icell, idelta, igap} = trace_no_ad{icell, idelta, igap}(:,range_trace);
+        elseif igap == 2
+            range_trace = [alt_targ_start : max(trial_len)]; % take 16:end of isi_750 trials
+            trace_no_ad_align{icell, idelta, igap} = trace_no_ad{icell, idelta, igap}(:,range_trace);
+        end
+    end
+end
+end
+
+trace_no_ad_merge = cell(ncell, ndelta);
+for icell = 1 : ncell    
+for idelta = 1 : ndelta
+    trace_no_ad_merge{icell, idelta} = [trace_no_ad_align{icell, idelta, 1}; trace_no_ad_align{icell, idelta, 2}];
+end
+end
+
+% save('trace_by_cond.mat', 'trace_no_ad_merge', '-append') 
 
 %% Fig 2B: cell resp by dir & condition (no_ad, 750, 250)
 
-for icell = 1:nell
+% plot no-ad control trial avg trace
+
+for idelta = 1 : ndelta
+    subplot(ndelta,1,idelta)
+    trace_no_ad_avg = nanmean(trace_no_ad_merge{icell, idelta}, 1)
+    plot(trace_no_ad_avg)
+    ylim([0,1000])
+end
+
+for icell = 1:2 %nell
     
     
     
