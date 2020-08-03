@@ -40,6 +40,10 @@ load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course inclu
 
 cd C:\Users\lan\Documents\repos\inter\code\200720_i1323
 
+load ori_across_cells.mat
+load ori_across_bootstrap_runs_with_replace.mat
+load no_ad_targ_resp.mat
+
 %% exp design
 
 ntrial = input.trialSinceReset; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps
@@ -197,48 +201,110 @@ cd C:\Users\lan\Documents\repos\inter\code
 % close
 % save with_ad_0deg_targ_resp.mat dfof_avg_tg0 dfof_ste_tg0 cp_win_tg0 base_avg_tg0 resp_avg_tg0 resp_ste_tg0 sig_ttest_tg0 p_ttest_tg0
 
-%% compare ad_resp vs 0-deg targ_resp_250/750 of vis_driven cells
+%% evaluate best cells
+
+nrun=1000;
+ori_closeness = sort(abs(ori_pref_runs - ori_pref_cells), 2); % sort each row aka cell
+percentile_threshold = 0.90;
+percentile_idx = percentile_threshold * nrun;
+ori_perc = ori_closeness(:, percentile_idx);
+% sum(ori_perc<22.5) / length(ori_perc)
+% histogram(ori_perc,8)
+
+good_fit_cell = ori_perc<22.5;
+sum(good_fit_cell)
+sig_vis_cell = sum(sig_ttest,2)>0; % sig vis-driven by no-ad targ
+sum(sig_vis_cell)
+ori_cell = good_fit_cell & sig_vis_cell;
+sum(ori_cell)
+
+sharp_cell = fit_param(:, 3) > 3;
+real_ori_cell = ori_cell & sharp_cell;
+real_ori_cell_list = find(real_ori_cell);
+ncell_real_ori = length(real_ori_cell_list)
+
+%% Fig 1E: compare ad_resp vs 0-deg targ_resp_250/750 of vis_driven cells
 
 id_isi_1 = intersect(find(cTarget - cStimOff < 10), id_adapter); % isi 250
 id_isi_2 = intersect(find(cTarget - cStimOff >= 10), id_adapter); % isi 750
 % use all cells
 figure
-scatter(dfof_avg_ad, dfof_avg_tg0(:,1), 'b*'); hold on % isi 250
-scatter(dfof_avg_ad, dfof_avg_tg0(:,2), 'r*') % isi 750
+scatter(dfof_avg_ad, dfof_avg_tg0(:,1)./dfof_avg_ad, 'b*'); hold on % isi 250
+scatter(dfof_avg_ad, dfof_avg_tg0(:,2)./dfof_avg_ad, 'r*') % isi 750
+yl = ylim; % query [ymin ymax]
+% ylim([0, yl(2)])
+% ylim([0, 2.5])
+xlabel('adapter resp dF/F')
+ylabel('0 deg targ resp dF/F norm-ed by ad resp')
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['Fig1E all cells.jpg'])
 close
 
 % use only 0-preferring cells. other cells' ad & tg resp will certainly co-vary
-load ori_across_cells.mat
-pref_0_cell = find(ori_pref_cells > delta_list(end-1));
+% pref_0_cell = find(ori_pref_cells > delta_list(end-1));
+pref_0_cell = find(ori_pref_cells > (delta_list(end-1) + delta_list(end))/2 | ori_pref_cells < delta_list(1)/2);
+pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0);
 % pref_0_cell = find(ori_pref_cells > 170);
 figure
 subplot(1,2,1)
-scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1), 'b*'); hold on
+scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1)./dfof_avg_ad(pref_0_cell), 'b*'); hold on
 title('isi=250')
 subplot(1,2,2)
-scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2), 'r*')
+scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2)./dfof_avg_ad(pref_0_cell), 'r*')
 title('isi=750')
-for n=1:2
-AX_handles(n) = subplot(1,2,n)
-end
-set(AX_handles,'YLim',[-0.04 0.14])
+% for n=1:2
+% AX_handles(n) = subplot(1,2,n)
+% end
+% set(AX_handles,'YLim',[-0.04 0.14])
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['Fig1E cells prefer 0 deg.jpg'])
 close
 
-% bin cells by adapter resp
-[count_bin, idx] = histc(dfof_avg_ad(vis_driven_ad),floor(min(dfof_avg_ad(vis_driven_ad))):0.05:ceil(max(dfof_avg_ad(vis_driven_ad))*10)/10);
+% bin all cells by adapter resp
+[count_bin, idx] = histc(dfof_avg_ad(vis_driven_ad),0:0.05:ceil(max(dfof_avg_ad(vis_driven_ad))*10)/10);
 % histogram(dfof_avg_ad(vis_driven_ad))
 resp_bin_ad = accumarray(idx(:),dfof_avg_ad(vis_driven_ad),[],@mean)
+resp_bin_tg = [];
 resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,1),[],@mean);
 resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,2),[],@mean)
 
 figure
-scatter(resp_bin_ad, resp_bin_tg(:,1), 'b*'); hold on 
-scatter(resp_bin_ad, resp_bin_tg(:,2), 'r*')
+scatter(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, 'b*'); hold on 
+scatter(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, 'r*')
+ylim([0,1])
+set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
+close
+
+% bin 0-deg preferring cells by ad resp
+[count_bin, idx] = histc(dfof_avg_ad(pref_0_cell), 0:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
+% histogram(dfof_avg_ad(pref_0_cell))
+resp_bin_ad = accumarray(idx(:),dfof_avg_ad(pref_0_cell),[],@mean)
+resp_bin_tg = [];
+resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@mean);
+resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@mean)
+
+figure
+scatter(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, 'b*'); hold on 
+scatter(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, 'r*')
+ylim([0,1])
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
 close
 
+%% Fig 1C (approx): time course of adaptation recovery for all cells
+
+% histogram(dfof_avg_tg0(:,1)./dfof_avg_ad)% isi 250
+% hold on
+% histogram(dfof_avg_tg0(:,2)./dfof_avg_ad)
+
+isi_list = [0.250, 0.750, 4];
+norm_targ_resp_list = [median((dfof_avg_tg0(:,1)./dfof_avg_ad)), median(dfof_avg_tg0(:,2)./dfof_avg_ad), 1];
+scatter(isi_list, norm_targ_resp_list)
+hold on
+f = fit(isi_list',norm_targ_resp_list','exp1')
+plot(f,isi_list',norm_targ_resp_list')
+xlim([0,4])
+ylim([0,1])
+
+%% Fig 2
