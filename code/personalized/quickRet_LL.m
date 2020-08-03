@@ -4,10 +4,10 @@ clear all
 close all
 clc
 
-date = '200730';
-mouse = '1324';
-ImgFolder = '007';
-time = '1517';
+date = '200803';
+mouse = '1322';
+ImgFolder = '001';
+time = '1111';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -23,7 +23,7 @@ end
 disp('start quickRet')
 data = [];
 clear temp
-for irun = 1:nrun
+% for irun = 1:nrun
 %     if strcmp(rc.name,'ashle')
 %     CD = ['Z:\home\ashley\data\' mouse '\two-photon imaging\' date '\' ImgFolder(irun,:)];
 %     else
@@ -48,6 +48,7 @@ for irun = 1:nrun
 %     fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\Behavior\Data\data-' mouse '-' date '-' time(irun,:) '.mat'];
     fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\Behavior\Data\data-i' mouse '-' date '-' time(irun,:) '.mat'];    
     end
+    
     load(fName);
     expt_input = input;
     temp(irun) = expt_input;
@@ -68,7 +69,8 @@ for irun = 1:nrun
 %     end
         
     data = cat(3,data,data_temp);
-end
+% end
+
 clear data_temp
 expt_input = concatenateDataBlocks(temp);
 
