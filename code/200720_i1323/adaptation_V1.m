@@ -306,5 +306,8 @@ f = fit(isi_list',norm_targ_resp_list','exp1')
 plot(f,isi_list',norm_targ_resp_list')
 xlim([0,4])
 ylim([0,1])
+set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['Fig1C time course of adaptation recovery w only 2 data points.jpg'])
+close
 
 %% Fig 2
