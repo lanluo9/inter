@@ -202,15 +202,18 @@ cd C:\Users\lan\Documents\repos\inter\code
 id_isi_1 = intersect(find(cTarget - cStimOff < 10), id_adapter); % isi 250
 id_isi_2 = intersect(find(cTarget - cStimOff >= 10), id_adapter); % isi 750
 % use all cells
+figure
 scatter(dfof_avg_ad, dfof_avg_tg0(:,1), 'b*'); hold on % isi 250
 scatter(dfof_avg_ad, dfof_avg_tg0(:,2), 'r*') % isi 750
 set(gcf, 'Position', get(0, 'Screensize'));
-
+saveas(gcf, ['Fig1E all cells.jpg'])
+close
 
 % use only 0-preferring cells. other cells' ad & tg resp will certainly co-vary
 load ori_across_cells.mat
 pref_0_cell = find(ori_pref_cells > delta_list(end-1));
 % pref_0_cell = find(ori_pref_cells > 170);
+figure
 subplot(1,2,1)
 scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1), 'b*'); hold on
 title('isi=250')
@@ -222,20 +225,20 @@ AX_handles(n) = subplot(1,2,n)
 end
 set(AX_handles,'YLim',[-0.04 0.14])
 set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['Fig1E cells prefer 0 deg.jpg'])
+close
 
 % bin cells by adapter resp
-histogram(dfof_avg_ad(vis_driven_ad))
-min(dfof_avg_ad(vis_driven_ad))
-max(dfof_avg_ad(vis_driven_ad))
-
-[count_bin, idx] = histc(dfof_avg_ad(vis_driven_ad),0:0.05:0.4);
+[count_bin, idx] = histc(dfof_avg_ad(vis_driven_ad),floor(min(dfof_avg_ad(vis_driven_ad))):0.05:ceil(max(dfof_avg_ad(vis_driven_ad))*10)/10);
+% histogram(dfof_avg_ad(vis_driven_ad))
 resp_bin_ad = accumarray(idx(:),dfof_avg_ad(vis_driven_ad),[],@mean)
-resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,1),[],@mean)
+resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,1),[],@mean);
 resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,2),[],@mean)
 
+figure
 scatter(resp_bin_ad, resp_bin_tg(:,1), 'b*'); hold on 
 scatter(resp_bin_ad, resp_bin_tg(:,2), 'r*')
 set(gcf, 'Position', get(0, 'Screensize'));
-
-
+saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
+close
 
