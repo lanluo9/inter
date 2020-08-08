@@ -145,6 +145,9 @@ cd C:\Users\lan\Documents\repos\inter\code
 % close
 % save adapter_resp.mat dfof_avg_ad dfof_ste_ad cp_win_ad base_avg_ad resp_avg_ad resp_ste_ad sig_ttest_ad p_ttest_ad
 
+load adapter_resp.mat
+vis_driven_ad = sum(sig_ttest_ad,2)>0;
+
 %% get with-adapter 0-deg targ resp
 
 target_relative = cTarget - cStimOn; % unique(cTarget - cStimOn) = [11 26]
@@ -201,6 +204,8 @@ cd C:\Users\lan\Documents\repos\inter\code
 % close
 % save with_ad_0deg_targ_resp.mat dfof_avg_tg0 dfof_ste_tg0 cp_win_tg0 base_avg_tg0 resp_avg_tg0 resp_ste_tg0 sig_ttest_tg0 p_ttest_tg0
 
+load with_ad_0deg_targ_resp.mat
+
 %% evaluate best cells
 
 nrun = 1000;
@@ -212,103 +217,146 @@ ori_perc = ori_closeness(:, percentile_idx);
 % histogram(ori_perc,8)
 
 good_fit_cell = ori_perc<22.5;
-sum(good_fit_cell)
+ncell_good_fit = sum(good_fit_cell)
 sig_vis_cell = sum(sig_ttest,2)>0; % sig vis-driven by no-ad targ
-sum(sig_vis_cell)
+ncell_sig_vis = sum(sig_vis_cell)
 ori_cell = good_fit_cell & sig_vis_cell;
-sum(ori_cell)
+ncell_ori = sum(ori_cell)
 
 sharp_cell = fit_param(:, 3) > 3;
-real_ori_cell = ori_cell & sharp_cell;
-real_ori_cell_list = find(real_ori_cell);
-ncell_real_ori = length(real_ori_cell_list)
+best_cell = ori_cell & sharp_cell;
+best_cell_list = find(best_cell);
+ncell_best = length(best_cell_list)
 
 %% Fig 1E: compare ad_resp vs 0-deg targ_resp_250/750 of vis_driven cells
 
-id_isi_1 = intersect(find(cTarget - cStimOff < 10), id_adapter); % isi 250
-id_isi_2 = intersect(find(cTarget - cStimOff >= 10), id_adapter); % isi 750
-% use all cells
-figure
-scatter(dfof_avg_ad, dfof_avg_tg0(:,1)./dfof_avg_ad, 'b*'); hold on % isi 250
-scatter(dfof_avg_ad, dfof_avg_tg0(:,2)./dfof_avg_ad, 'r*') % isi 750
-yl = ylim; % query [ymin ymax]
-% ylim([0, yl(2)])
-% ylim([0, 2.5])
-xlabel('adapter resp dF/F')
-ylabel('0 deg targ resp dF/F norm-ed by ad resp')
-set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, ['Fig1E all cells.jpg'])
-close
+% id_isi_1 = intersect(find(cTarget - cStimOff < 10), id_adapter); % isi 250
+% id_isi_2 = intersect(find(cTarget - cStimOff >= 10), id_adapter); % isi 750
 
-% use only 0-preferring cells. other cells' ad & tg resp will certainly co-vary
+% %%% use all cells
+% figure
+% scatter(dfof_avg_ad, dfof_avg_tg0(:,1)./dfof_avg_ad, 'b*'); hold on % isi 250
+% scatter(dfof_avg_ad, dfof_avg_tg0(:,2)./dfof_avg_ad, 'r*') % isi 750
+% yl = ylim; % query [ymin ymax]
+% % ylim([0, yl(2)])
+% % ylim([0, 2.5])
+% xlabel('adapter resp dF/F')
+% ylabel('0 deg targ resp dF/F norm-ed by ad resp')
+% set(gcf, 'Position', get(0, 'Screensize'));
+% saveas(gcf, ['Fig1E all cells.jpg'])
+% close
+
+%%% use only 0-preferring cells. other cells' ad & tg resp will certainly co-vary
 % pref_0_cell = find(ori_pref_cells > delta_list(end-1));
 pref_0_cell = find(ori_pref_cells > (delta_list(end-1) + delta_list(end))/2 | ori_pref_cells < delta_list(1)/2);
-pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0);
+pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0); % dfof should >0
 % pref_0_cell = find(ori_pref_cells > 170);
-figure
-subplot(1,2,1)
-scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1)./dfof_avg_ad(pref_0_cell), 'b*'); hold on
-title('isi=250')
-subplot(1,2,2)
-scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2)./dfof_avg_ad(pref_0_cell), 'r*')
-title('isi=750')
-% for n=1:2
-% AX_handles(n) = subplot(1,2,n)
-% end
-% set(AX_handles,'YLim',[-0.04 0.14])
-set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, ['Fig1E cells prefer 0 deg.jpg'])
-close
 
-% bin all cells by adapter resp
-[~, idx] = histc(dfof_avg_ad(vis_driven_ad),0:0.05:ceil(max(dfof_avg_ad(vis_driven_ad))*10)/10);
+% figure
+% subplot(1,2,1)
+% scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1)./dfof_avg_ad(pref_0_cell), 'b*'); hold on
+% title('isi=250')
+% subplot(1,2,2)
+% scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2)./dfof_avg_ad(pref_0_cell), 'r*')
+% title('isi=750')
+% % for n=1:2
+% % AX_handles(n) = subplot(1,2,n)
+% % end
+% % set(AX_handles,'YLim',[-0.04 0.14])
+% set(gcf, 'Position', get(0, 'Screensize'));
+% saveas(gcf, ['Fig1E cells prefer 0 deg.jpg'])
+% close
+
+%%% bin all cells by adapter resp
+[count, idx] = histc(dfof_avg_ad(vis_driven_ad),0:0.05:ceil(max(dfof_avg_ad(vis_driven_ad))*10)/10);
+count = count(1:end-1);
+count_nonzero_id = find(count~=0);
 % histogram(dfof_avg_ad(vis_driven_ad))
 resp_bin_ad = accumarray(idx(:),dfof_avg_ad(vis_driven_ad),[],@mean)
 resp_bin_tg = [];
+resp_bin_std = []; 
+resp_bin_ste = zeros(length(count),2);
 resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,1),[],@mean);
 resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,2),[],@mean)
+resp_bin_std(:,1) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,1),[],@std);
+resp_bin_std(:,2) = accumarray(idx(:),dfof_avg_tg0(vis_driven_ad,2),[],@std)
+resp_bin_ste(count~=0, :) = resp_bin_std(count~=0, :) ./ sqrt(count(count~=0)) % use std or ste?
 
 figure
-scatter(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, 'b*'); hold on 
-scatter(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, 'r*')
+scatter(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, 'b.'); hold on 
+scatter(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, 'r.')
+errorbar(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, resp_bin_std(:,1), 'b', 'LineStyle','none');
+errorbar(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, resp_bin_std(:,2), 'r', 'LineStyle','none');
+for itext = 1 : length(count_nonzero_id)
+    text(resp_bin_ad(count_nonzero_id(itext)), ...
+        resp_bin_tg(count_nonzero_id(itext),2)./resp_bin_ad(count_nonzero_id(itext)) + resp_bin_std(count_nonzero_id(itext),2) + 0.02, ...
+        ['n=', num2str(count(count_nonzero_id(itext)))], 'HorizontalAlignment', 'center')
+end
 ylim([0,1])
+legend('isi 250', 'isi 750')
 set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
-close
+% saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
+% close
 
-% bin 0-deg preferring cells by ad resp
-[~, idx] = histc(dfof_avg_ad(pref_0_cell), 0:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
+%%% bin 0-deg preferring cells by ad resp
+[count, idx] = histc(dfof_avg_ad(pref_0_cell),0:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
+count = count(1:end-1);
+count_nonzero_id = find(count~=0);
 % histogram(dfof_avg_ad(pref_0_cell))
 resp_bin_ad = accumarray(idx(:),dfof_avg_ad(pref_0_cell),[],@mean)
 resp_bin_tg = [];
+resp_bin_std = []; 
+resp_bin_ste = zeros(length(count),2);
 resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@mean);
 resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@mean)
+resp_bin_std(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@std);
+resp_bin_std(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@std)
+resp_bin_ste(count~=0, :) = resp_bin_std(count~=0, :) ./ sqrt(count(count~=0)) % use std or ste?
 
 figure
-scatter(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, 'b*'); hold on 
-scatter(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, 'r*')
+scatter(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, 'b.'); hold on 
+scatter(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, 'r.')
+errorbar(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, resp_bin_std(:,1), 'b', 'LineStyle','none');
+errorbar(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, resp_bin_std(:,2), 'r', 'LineStyle','none');
+for itext = 1 : length(count_nonzero_id)
+    text(resp_bin_ad(count_nonzero_id(itext)), ...
+        resp_bin_tg(count_nonzero_id(itext),2)./resp_bin_ad(count_nonzero_id(itext)) + resp_bin_std(count_nonzero_id(itext),2) + 0.02, ...
+        ['n=', num2str(count(count_nonzero_id(itext)))], 'HorizontalAlignment', 'center')
+end
 ylim([0,1])
+legend('isi 250', 'isi 750')
 set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
-close
+% saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
+% close
 
 %% Fig 1C (approx): time course of adaptation recovery for all cells
 
-% histogram(dfof_avg_tg0(:,1)./dfof_avg_ad)% isi 250
+vis_driven_ad_pos = dfof_avg_tg0(:,1)>0 & dfof_avg_tg0(:,2)>0 & vis_driven_ad;
+sum(vis_driven_ad_pos)
+% histogram(dfof_avg_tg0(vis_driven_ad_pos,1)./dfof_avg_ad(vis_driven_ad_pos), 10)% isi 250
 % hold on
-% histogram(dfof_avg_tg0(:,2)./dfof_avg_ad)
+% histogram(dfof_avg_tg0(vis_driven_ad_pos,2)./dfof_avg_ad(vis_driven_ad_pos), 10)
 
 isi_list = [0.250, 0.750, 4];
-norm_targ_resp_list = [median((dfof_avg_tg0(:,1)./dfof_avg_ad)), median(dfof_avg_tg0(:,2)./dfof_avg_ad), 1];
-scatter(isi_list, norm_targ_resp_list)
+% norm_targ_resp_median = [median((dfof_avg_tg0(vis_driven_ad,1)./dfof_avg_ad(vis_driven_ad))), ...
+%     median(dfof_avg_tg0(vis_driven_ad,2)./dfof_avg_ad(vis_driven_ad)), ...
+%     1];
+norm_targ_resp_mean = [mean((dfof_avg_tg0(vis_driven_ad,1)./dfof_avg_ad(vis_driven_ad))), ...
+    mean(dfof_avg_tg0(vis_driven_ad,2)./dfof_avg_ad(vis_driven_ad)), ...
+    1];
+
 hold on
-f = fit(isi_list',norm_targ_resp_list','exp1')
-plot(f,isi_list',norm_targ_resp_list')
-xlim([0,4])
-ylim([0,1])
-set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, ['Fig1C time course of adaptation recovery w only 2 data points.jpg'])
-close
+% scatter(isi_list, norm_targ_resp_median, 'b*')
+% f1 = fit(isi_list', norm_targ_resp_median','exp1')
+% plot(f1, 'b')
+scatter(isi_list, norm_targ_resp_mean, 'r*')
+f2 = fit(isi_list', norm_targ_resp_mean','exp1')
+plot(f2, 'r')
+xlim([0,4+0.5])
+ylim([0,1+0.1])
+% set(gcf, 'Position', get(0, 'Screensize'));
+% saveas(gcf, ['Fig1C time course of adapstation recovery of vis-driven cells.jpg'])
+% close
 
 %% get with-adapter targ resp by dir & isi
 
@@ -361,8 +409,10 @@ for idelta = 1 : ndelta
 end
 end
 
-cd C:\Users\lan\Documents\repos\inter\code
-save with_ad_all_oris_targ_resp.mat dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
+% cd C:\Users\lan\Documents\repos\inter\code
+% save with_ad_all_oris_targ_resp.mat dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
+
+load with_ad_all_oris_targ_resp.mat
 
 %% get all cell trial trace by dir & isi
 
@@ -403,6 +453,7 @@ end
 cd C:\Users\lan\Documents\repos\inter\code
 % save trace_by_cond.mat trace_cond trace_no_ad
 
+load trace_by_cond.mat
 
 %% align no-ad targ resp across fake isi
 
@@ -432,6 +483,10 @@ end
 end
 
 % save('trace_by_cond.mat', 'trace_no_ad_merge', '-append') 
+
+%% convert trace to dfof trace
+
+
 
 %% Fig 2B: cell resp by dir & condition (no_ad, 750, 250)
 

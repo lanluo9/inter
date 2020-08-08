@@ -1,0 +1,7 @@
+>> x = [1,2,3];
+>> y = x.^2;
+>> scatter(x,y);
+>> axis([0,4,0,10]);
+>> hold on;
+>> err = ones(size(x));
+>> errorbar(x, y, err, 'LineStyle','none');
