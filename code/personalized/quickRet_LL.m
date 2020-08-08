@@ -4,10 +4,10 @@ clear all
 close all
 clc
 
-date = '200803';
+date = '200806';
 mouse = '1322';
-ImgFolder = '001';
-time = '1111';
+ImgFolder = '002';
+time = '1123';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -23,6 +23,7 @@ end
 disp('start quickRet')
 data = [];
 clear temp
+irun = 1;
 % for irun = 1:nrun
 %     if strcmp(rc.name,'ashle')
 %     CD = ['Z:\home\ashley\data\' mouse '\two-photon imaging\' date '\' ImgFolder(irun,:)];
