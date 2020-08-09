@@ -508,6 +508,7 @@ end
 
 %% Fig 2B: cell resp by dir & condition (no_ad, 750, 250)
 
+% plot no-ad control trial avg trace
 icell = best_cell_list(5);
 
 ax_num = [1:ndelta];
@@ -528,26 +529,19 @@ end
 % linkaxes([axStruct_noad.(ax_name{1,1}), axStruct_noad.(ax_name{1,2}), axStruct_noad.(ax_name{1,3}), axStruct_noad.(ax_name{1,4})...
 %     axStruct_noad.(ax_name{1,5}), axStruct_noad.(ax_name{1,6}), axStruct_noad.(ax_name{1,7}), axStruct_noad.(ax_name{1,8})], 'xy')
 
-figure('units','normalized','outerposition',[0 0 1/3 1]);
-for idelta = 1 : ndelta
-    ax = subplot(ndelta,1,idelta);
-    ax_name{idelta} = matlab.lang.makeValidName(strcat('ax', ax_num_str_arr{idelta}));
-    axStruct_750.(ax_name{idelta}) = ax;
-    trace_cond_avg_750 = nanmean(trace_cond_dfof{icell, idelta, 2}, 1);
-    plot(trace_cond_avg_750)
-%     axis off
-    xlim([0,length(trace_cond_avg_750)])
-end
+for igap = 1 : ngap
+    figure('units','normalized','outerposition',[0 0 1/3 1]);
+    for idelta = 1 : ndelta
+        ax = subplot(ndelta,1,idelta);
+        ax_name{idelta} = matlab.lang.makeValidName(strcat('ax', ax_num_str_arr{idelta}));
+        axStruct_noad.(ax_name{idelta}) = ax;
+        trace_no_ad_avg = nanmean(trace_no_ad_merge_dfof{icell, idelta}, 1);
+        plot(trace_no_ad_avg)
+        axis off
+        xlim([0,length(trace_no_ad_avg)])
+    %     ylim([-0.05,0.2])   
+    end
 
-figure('units','normalized','outerposition',[0 0 1/3 1]);
-for idelta = 1 : ndelta
-    ax = subplot(ndelta,1,idelta);
-    ax_name{idelta} = matlab.lang.makeValidName(strcat('ax', ax_num_str_arr{idelta}));
-    axStruct_250.(ax_name{idelta}) = ax;
-    trace_cond_avg_250 = nanmean(trace_cond_dfof{icell, idelta, 1}, 1);
-    plot(trace_cond_avg_250)
-    axis off
-    xlim([0,length(trace_cond_avg_250)])
 end
 
 %%
