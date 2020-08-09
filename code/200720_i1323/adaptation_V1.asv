@@ -484,8 +484,6 @@ end
 
 %% convert trace to dfof value
 
-load trace_by_cond.mat
-
 base_range = [80:200]; % according to find_ca_latency.jpg
 trace_no_ad_merge_dfof = cell(ncell, ndelta);
 trace_cond_dfof = cell(ncell, ndelta, ngap);
@@ -547,8 +545,5 @@ end
 end
 
 %% tuning curve fit by condition (noad / 750 / 250)
-
-load no_ad_targ_resp.mat
-load with_ad_all_oris_targ_resp.mat
 
 
