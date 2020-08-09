@@ -506,53 +506,45 @@ for idelta = 1:ndelta
 end
 end
 
-%% Fig 2B: cell resp by dir & condition (no_ad, 750, 250)
+%% Fig 2B: cell resp by dir & condition (no_ad, 750, 250) for "best cells"
 
-icell = best_cell_list(5);
+for ibestcell = 1:length(best_cell_list)
+icell = best_cell_list(ibestcell);
+trace_no_ad_avg = []; trace_cond_avg_750 = []; trace_cond_avg_250 = [];
 
-ax_num = [1:ndelta];
-ax_num_str = num2str(ax_num);
-ax_num_str_arr = strsplit(ax_num_str,' ');
-
-figure('units','normalized','outerposition',[0 0 1/3 1]);
 for idelta = 1 : ndelta
-    ax = subplot(ndelta,1,idelta);
-    ax_name{idelta} = matlab.lang.makeValidName(strcat('ax', ax_num_str_arr{idelta}));
-    axStruct_noad.(ax_name{idelta}) = ax;
-    trace_no_ad_avg = nanmean(trace_no_ad_merge_dfof{icell, idelta}, 1);
-    plot(trace_no_ad_avg)
-    axis off
-    xlim([0,length(trace_no_ad_avg)])
-%     ylim([-0.05,0.2])   
+    trace_no_ad_avg(idelta, :) = nanmean(trace_no_ad_merge_dfof{icell, idelta}, 1);
+    trace_cond_avg_750(idelta, :) = nanmean(trace_cond_dfof{icell, idelta, 2}, 1);
+    trace_cond_avg_250(idelta, :) = nanmean(trace_cond_dfof{icell, idelta, 1}, 1);
 end
-% linkaxes([axStruct_noad.(ax_name{1,1}), axStruct_noad.(ax_name{1,2}), axStruct_noad.(ax_name{1,3}), axStruct_noad.(ax_name{1,4})...
-%     axStruct_noad.(ax_name{1,5}), axStruct_noad.(ax_name{1,6}), axStruct_noad.(ax_name{1,7}), axStruct_noad.(ax_name{1,8})], 'xy')
+x = [length(trace_no_ad_avg), length(trace_cond_avg_750), length(trace_cond_avg_250)];
+xmax = max(x);
+y = [trace_no_ad_avg, trace_cond_avg_750, trace_cond_avg_250];
+ymin = min(y(:));
+ymax = max(y(:));
 
-figure('units','normalized','outerposition',[0 0 1/3 1]);
-for idelta = 1 : ndelta
-    ax = subplot(ndelta,1,idelta);
-    ax_name{idelta} = matlab.lang.makeValidName(strcat('ax', ax_num_str_arr{idelta}));
-    axStruct_750.(ax_name{idelta}) = ax;
-    trace_cond_avg_750 = nanmean(trace_cond_dfof{icell, idelta, 2}, 1);
-    plot(trace_cond_avg_750)
-%     axis off
-    xlim([0,length(trace_cond_avg_750)])
+figure('units','normalized','outerposition',[0 0 1 1]);
+% suptitle_LL(num2str(icell))
+for col = 1 : 3
+    for idelta = 1 : ndelta
+        subplot(ndelta, 3, col + 3*(idelta-1));
+        if col == 1, plot(trace_no_ad_avg(idelta, :))
+            if idelta == 1, title('no adapter'), end
+        elseif col == 2, plot(trace_cond_avg_750(idelta, :))
+             if idelta == 1, title('isi 750'), end
+        elseif col == 3, plot(trace_cond_avg_250(idelta, :))
+             if idelta == 1, title('isi 250'), end
+        end
+%         axis off
+        xlim([0, xmax])
+        ylim([ymin, ymax])
+        xticks(0 : 30 : xmax)
+        yticks(round(ymin*10)/10 : 0.1 : round(ymax*10)/10)
+    end
 end
-
-figure('units','normalized','outerposition',[0 0 1/3 1]);
-for idelta = 1 : ndelta
-    ax = subplot(ndelta,1,idelta);
-    ax_name{idelta} = matlab.lang.makeValidName(strcat('ax', ax_num_str_arr{idelta}));
-    axStruct_250.(ax_name{idelta}) = ax;
-    trace_cond_avg_250 = nanmean(trace_cond_dfof{icell, idelta, 1}, 1);
-    plot(trace_cond_avg_250)
-    axis off
-    xlim([0,length(trace_cond_avg_250)])
+saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
+close
+    
 end
 
 %%
-for icell = 1:2 %nell
-    
-    
-    
-end

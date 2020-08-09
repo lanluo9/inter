@@ -1,3 +1,8 @@
+%% preference setting
+% evaluate selection: Ctrl + Shift + E
+% command window wrap lines
+% general - confirmation dialogs - confirm before matlab exit 
+
 %% runline windows
 currentEditor = matlab.desktop.editor.getActive;
 originalSelection = currentEditor.Selection;
