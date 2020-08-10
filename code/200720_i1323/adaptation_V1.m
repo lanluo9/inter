@@ -546,7 +546,7 @@ end
 % close    
 end
 
-%% tuning curve fit by condition (noad / 750 / 250) for vis-driven cells
+%% tuning curve fit by cond
 
 load no_ad_targ_resp.mat 
 load ori_across_cells.mat % noad dfof_avg dfof_ste fit_param ori_pref_cells
@@ -587,7 +587,86 @@ ori_pref = rad2deg(u1_hat_cells);
 ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
 ori_pref_cells_250 = ori_pref;
 
+% save ori_across_cells_750_250.mat dfof_avg_750 dfof_ste_750 fit_param_750 ori_pref_cells_750...
+%     dfof_avg_250 dfof_ste_250 fit_param_250 ori_pref_cells_250
 
-save ori_across_cells_750_250.mat dfof_avg_750 dfof_ste_750 fit_param_750 ori_pref_cells_750...
-    dfof_avg_250 dfof_ste_250 fit_param_250 ori_pref_cells_250
+%% Fig 2C: tuning curve fit by condition (noad / 750 / 250) for vis-driven cells
+
+dfof_avg_merge = cat(3, dfof_avg, dfof_avg_750, dfof_avg_250);
+dfof_ste_merge = cat(3, dfof_ste, dfof_ste_750, dfof_ste_250);
+fit_param_merge = cat(3, fit_param, fit_param_750, fit_param_250);
+% save ori_across_cells_cond.mat dfof_avg_merge dfof_ste_merge fit_param_merge
+
+theta_finer = deg2rad(0:1:179);
+subplot_title = {'control', 'isi 750 ms', 'isi 250 ms'};
+vis_driven_ad_cell_list = find(vis_driven_ad); % using adapter-vis-driven cell bc more numerous
+
+for iviscell = 1 : length(vis_driven_ad_cell_list)
+    icell = vis_driven_ad_cell_list(iviscell);
+    figure('units','normalized','outerposition',[0 0 1/2 1]);
+for row = 1 : 3
+    subplot(3,1,row)
+    
+    dfof_avg_now = dfof_avg_merge(:,:,row);
+    dfof_ste_now = dfof_ste_merge(:,:,row);
+    fit_param_now = fit_param_merge(:,:,row);
+    
+    errorbar([0,delta_list], [dfof_avg_now(icell,end), dfof_avg_now(icell,:)], ...
+        [dfof_ste_now(icell,end), dfof_ste_now(icell,:)], 'LineStyle','none')
+    hold on
+    scatter([0,delta_list], [dfof_avg_now(icell,end), dfof_avg_now(icell,:)], 'b')
+
+    t = num2cell(fit_param_now(icell, 2:end)); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});    
+    y_fit(row,:) = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
+    plot(rad2deg(theta_finer), y_fit(row,:), 'LineWidth', 1)
+    
+    ori_pref = rad2deg(u1_hat);
+    ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
+    scatter(ori_pref, b_hat + R1_hat, 'r*') % mark pref ori of fit
+    
+    xlim([0-10, 180+10])
+    tempmin = dfof_avg_merge - dfof_ste_merge; tempmin = tempmin(icell, :, :); ymin = min(tempmin(:));
+    tempmax = dfof_avg_merge + dfof_ste_merge; tempmax = tempmax(icell, :, :); ymax = max(tempmax(:));
+    padding = (ymax - ymin) ./ 50;
+    ylim([ymin - padding, ymax + padding])
+    
+    xlabel('orientation (deg)')
+    ylabel('dF/F')
+    title(subplot_title{row})
+end
+%     saveas(gcf, ['ori tuning across cond cell ', num2str(icell)], 'jpg')
+%     close
+end
+
+%% Fig 2D: targ degree distance from adapter changes dfof resp
+
+mod_ori = delta_list; mod_ori(mod_ori >= 180) = mod_ori(mod_ori >= 180) - 180;
+mod_ori(mod_ori > 90) = 180 - mod_ori(mod_ori > 90); % abs(targ - adapter) degree
+dis_list = unique(mod_ori);
+
+id_delta = {}; delta_ntrial = [];
+for idelta = 1:ndelta
+    id_delta{idelta} = find(delta_seq == delta_list(idelta)); 
+    delta_ntrial(idelta) = length(id_delta{idelta});
+end
+
+for icell = 1 : ncell
+    dfof_avg_isi = squeeze(dfof_avg_merge(icell, :, 2:end)); % [ndelta, 750/250]
+    dfof_avg_noad = squeeze(dfof_avg_merge(icell, :, 1))';
+    
+    for igap = 1 : ngap
+        dfof_avg_now = dfof_avg_isi(:,igap);
+        
+        for idis = 1 : length(dis_list)
+            dis_id = find(mod_ori == dis_list(idis));
+            if length(dis_id) > 1
+                
+                
+            elseif length(dis_id) == 1
+                
+            end
+        end
+    end
+end
 
