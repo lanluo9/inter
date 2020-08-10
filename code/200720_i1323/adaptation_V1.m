@@ -546,9 +546,48 @@ end
 % close    
 end
 
-%% tuning curve fit by condition (noad / 750 / 250)
+%% tuning curve fit by condition (noad / 750 / 250) for vis-driven cells
 
-load no_ad_targ_resp.mat
-load with_ad_all_oris_targ_resp.mat
+load no_ad_targ_resp.mat 
+load ori_across_cells.mat % noad dfof_avg dfof_ste fit_param ori_pref_cells
+load with_ad_all_oris_targ_resp.mat % 750/250 dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
 
+dfof_avg_750 = dfof_avg_cond(:,:,2);
+dfof_ste_750 = dfof_ste_cond(:,:,2);
+cp_win_750 = cp_win_cond(:,:,2);
+sig_ttest_750 = sig_ttest_cond(:,:,2);
+fit_param_750 = pi * ones(ncell, 7);
+for icell = 1 : ncell
+    theta = deg2rad(delta_list);
+    data = dfof_avg_750(icell,:); % data = resp_avg(icell, :) - base_avg(icell, :);
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+    fit_param_750(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+%   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+end
+u1_hat_cells = fit_param_750(:,5);
+ori_pref = rad2deg(u1_hat_cells);
+ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
+ori_pref_cells_750 = ori_pref;
+
+
+dfof_avg_250 = dfof_avg_cond(:,:,1);
+dfof_ste_250 = dfof_ste_cond(:,:,1);
+cp_win_250 = cp_win_cond(:,:,1);
+sig_ttest_250 = sig_ttest_cond(:,:,1);
+fit_param_250 = pi * ones(ncell, 7);
+for icell = 1 : ncell
+    theta = deg2rad(delta_list);
+    data = dfof_avg_250(icell,:); % data = resp_avg(icell, :) - base_avg(icell, :);
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+    fit_param_250(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+%   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+end
+u1_hat_cells = fit_param_250(:,5);
+ori_pref = rad2deg(u1_hat_cells);
+ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
+ori_pref_cells_250 = ori_pref;
+
+
+save ori_across_cells_750_250.mat dfof_avg_750 dfof_ste_750 fit_param_750 ori_pref_cells_750...
+    dfof_avg_250 dfof_ste_250 fit_param_250 ori_pref_cells_250
 

@@ -1,19 +1,15 @@
 %% ori tuning & fit von Mises function for single cell (750)
 
+% dfof_avg_750, dfof_ste_750, fit_param_750
 dfof_avg_merge = cat(3, dfof_avg, dfof_avg_750, dfof_avg_250);
 dfof_ste_merge = cat(3, dfof_ste, dfof_ste_750, dfof_ste_250);
 fit_param_merge = cat(3, fit_param, fit_param_750, fit_param_250);
 
 theta_finer = deg2rad(0:1:179);
-subplot_title = {'control', 'isi 750 ms', 'isi 250 ms'};
-vis_driven_ad_cell_list = find(vis_driven_ad); % using adapter-vis-driven cell bc more numerous
 
-for iviscell = 1 : length(vis_driven_ad_cell_list)
-    icell = vis_driven_ad_cell_list(iviscell);
-    figure('units','normalized','outerposition',[0 0 1/2 1]);
+for icell = 1 % : ncell
 for row = 1 : 3
     subplot(3,1,row)
-    
     dfof_avg_now = dfof_avg_merge(:,:,row);
     dfof_ste_now = dfof_ste_merge(:,:,row);
     fit_param_now = fit_param_merge(:,:,row);
@@ -21,28 +17,25 @@ for row = 1 : 3
     errorbar([0,delta_list], [dfof_avg_now(icell,end), dfof_avg_now(icell,:)], ...
         [dfof_ste_now(icell,end), dfof_ste_now(icell,:)], 'LineStyle','none')
     hold on
-    scatter([0,delta_list], [dfof_avg_now(icell,end), dfof_avg_now(icell,:)], 'b')
+    scatter([0,delta_list], [dfof_avg_now(icell,end), dfof_avg_now(icell,:)])
 
     t = num2cell(fit_param_now(icell, 2:end)); 
     [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});    
-    y_fit(row,:) = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
-    plot(rad2deg(theta_finer), y_fit(row,:), 'LineWidth', 1)
+    y_fit() = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
+    plot(rad2deg(theta_finer), y_fit, 'LineWidth', 1)
     
     ori_pref = rad2deg(u1_hat);
     ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
-    scatter(ori_pref, b_hat + R1_hat, 'r*') % mark pref ori of fit
+    scatter(ori_pref(icell), b_hat + R1_hat, 'r*')
     
     xlim([0-10, 180+10])
-    tempmin = dfof_avg_merge - dfof_ste_merge; tempmin = tempmin(icell, :, :); ymin = min(tempmin(:));
-    tempmax = dfof_avg_merge + dfof_ste_merge; tempmax = tempmax(icell, :, :); ymax = max(tempmax(:));
-    padding = (ymax - ymin) ./ 50;
-    ylim([ymin - padding, ymax + padding])
-    
+    ylim([ymin, ymax])
     xlabel('orientation (deg)')
     ylabel('dF/F')
-    title(subplot_title{row})
+    
 end
-    saveas(gcf, ['ori tuning across cond cell ', num2str(icell)], 'jpg')
+    set(gcf, 'Position', get(0, 'Screensize'));
+%     saveas(gcf, filename, 'jpg')
     close
 end
 
