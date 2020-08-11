@@ -300,7 +300,7 @@ close
 
 %%% bin 0-deg preferring cells by ad resp
 clear idx
-[count, idx] = histc(dfof_avg_ad(pref_0_cell),-0.01:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
+[count, idx] = histc(dfof_avg_ad(pref_0_cell),-0.01:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10); % relax lower bound: one cell dfof = -0.0049
 count = count(1:end-1);
 count_nonzero_id = find(count~=0);
 % histogram(dfof_avg_ad(pref_0_cell))
@@ -511,8 +511,10 @@ end
 
 %% Fig 2B: cell resp by dir & condition (no_ad, 750, 250) for "best cells"
 
-for ibestcell = 1:length(best_cell_list)
-icell = best_cell_list(ibestcell);
+% cell_list_now = best_cell_list;
+cell_list_now = vis_driven_ad_cell_list;
+for ii = 1:length(cell_list_now)
+icell = cell_list_now(ii);
 trace_no_ad_avg = []; trace_cond_avg_750 = []; trace_cond_avg_250 = [];
 
 for idelta = 1 : ndelta
@@ -520,18 +522,29 @@ for idelta = 1 : ndelta
     trace_cond_avg_750(idelta, :) = nanmean(trace_cond_dfof{icell, idelta, 2}, 1);
     trace_cond_avg_250(idelta, :) = nanmean(trace_cond_dfof{icell, idelta, 1}, 1);
 end
+
+trace_no_ad_avg = [trace_no_ad_avg(end,:); trace_no_ad_avg]; % wrap around
+adjusted_trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
+trace_no_ad_avg = trace_no_ad_avg(:, 1:adjusted_trace_len);
+trace_cond_avg_750 = [trace_cond_avg_750(end,:); trace_cond_avg_750]; % wrap around
+trace_cond_avg_750 = trace_cond_avg_750(:, 1:adjusted_trace_len);
+trace_cond_avg_250 = [trace_cond_avg_250(end,:); trace_cond_avg_250]; % wrap around
+trace_cond_avg_250 = trace_cond_avg_250(:, 1:adjusted_trace_len);
+
+
 x = [length(trace_no_ad_avg), length(trace_cond_avg_750), length(trace_cond_avg_250)];
 xmax = max(x);
 y = [trace_no_ad_avg, trace_cond_avg_750, trace_cond_avg_250];
 ymin = min(y(:));
 ymax = max(y(:));
 
-figure('units','normalized','outerposition',[0 0 1 1]);
+figure('units','normalized','outerposition',[0 0 1/2 1]);
 % suptitle_LL(num2str(icell))
 for col = 1 : 3
-    for idelta = 1 : ndelta
-        subplot(ndelta, 3, col + 3*(idelta-1));
-        if col == 1, plot(trace_no_ad_avg(idelta, :))
+    for idelta = 1 : (ndelta+1)
+        subplot(ndelta+1, 3, col + 3*(idelta-1));
+        if col == 1, plot(trace_no_ad_avg(idelta, :)) 
+            % small bug: need to align no-ad trial by subtracting false isi 250! fix in align section (already aligned 750 to 250)
             if idelta == 1, title('no adapter'), end
         elseif col == 2, plot(trace_cond_avg_750(idelta, :))
              if idelta == 1, title('isi 750'), end
@@ -545,8 +558,8 @@ for col = 1 : 3
         yticks(round(ymin*10)/10 : 0.1 : round(ymax*10)/10)
     end
 end
-% saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
-% close    
+saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
+close    
 end
 
 %% tuning curve fit by cond
