@@ -241,8 +241,8 @@ ncell_best = length(best_cell_list)
 % % ylim([0, yl(2)])
 % % ylim([0, 2.5])
 % xlabel('adapter resp dF/F')
-% ylabel('0 deg targ resp dF/F norm-ed by ad resp')
-% set(gcf, 'Position', get(0, 'Screensize'));
+% ylabel('normalized dF/F')
+% % set(gcf, 'Position', get(0, 'Screensize'));
 % saveas(gcf, ['Fig1E all cells.jpg'])
 % close
 
@@ -256,14 +256,14 @@ pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_c
 % subplot(1,2,1)
 % scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1)./dfof_avg_ad(pref_0_cell), 'b*'); hold on
 % title('isi=250')
+% xlabel('adapter resp dF/F')
+% ylabel('normalized dF/F')
 % subplot(1,2,2)
 % scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2)./dfof_avg_ad(pref_0_cell), 'r*')
 % title('isi=750')
-% % for n=1:2
-% % AX_handles(n) = subplot(1,2,n)
-% % end
-% % set(AX_handles,'YLim',[-0.04 0.14])
-% set(gcf, 'Position', get(0, 'Screensize'));
+% xlabel('adapter resp dF/F')
+% ylabel('normalized dF/F')
+% % set(gcf, 'Position', get(0, 'Screensize'));
 % saveas(gcf, ['Fig1E cells prefer 0 deg.jpg'])
 % close
 
@@ -294,23 +294,24 @@ for itext = 1 : length(count_nonzero_id)
 end
 ylim([0,1])
 legend('isi 250', 'isi 750')
-set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
-% close
+% set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
+close
 
 %%% bin 0-deg preferring cells by ad resp
-[count, idx] = histc(dfof_avg_ad(pref_0_cell),0:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
+clear idx
+[count, idx] = histc(dfof_avg_ad(pref_0_cell),-0.01:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
 count = count(1:end-1);
 count_nonzero_id = find(count~=0);
 % histogram(dfof_avg_ad(pref_0_cell))
-resp_bin_ad = accumarray(idx(:),dfof_avg_ad(pref_0_cell),[],@mean)
+resp_bin_ad = accumarray(idx(:), dfof_avg_ad(pref_0_cell),[],@mean)
 resp_bin_tg = [];
 resp_bin_std = []; 
 resp_bin_ste = zeros(length(count),2);
 resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@mean);
-resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@mean)
+resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@mean);
 resp_bin_std(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@std);
-resp_bin_std(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@std)
+resp_bin_std(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@std);
 resp_bin_ste(count~=0, :) = resp_bin_std(count~=0, :) ./ sqrt(count(count~=0)) % use std or ste?
 
 figure
@@ -325,9 +326,9 @@ for itext = 1 : length(count_nonzero_id)
 end
 ylim([0,1])
 legend('isi 250', 'isi 750')
-set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
-% close
+% set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
+close
 
 %% Fig 1C (approx): time course of adaptation recovery for all cells
 
@@ -351,12 +352,14 @@ hold on
 % plot(f1, 'b')
 scatter(isi_list, norm_targ_resp_mean, 'r*')
 f2 = fit(isi_list', norm_targ_resp_mean','exp1')
-plot(f2, 'r')
+plot(f2, 'b')
 xlim([0,4+0.5])
-ylim([0,1+0.1])
+ylim([0,1+0.3])
+xlabel('ISI (s)')
+ylabel('normalized dF/F')
 % set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1C time course of adapstation recovery of vis-driven cells.jpg'])
-% close
+saveas(gcf, ['Fig1C time course of adaptation recovery of vis-driven cells.jpg'])
+close
 
 %% get with-adapter targ resp by dir & isi
 

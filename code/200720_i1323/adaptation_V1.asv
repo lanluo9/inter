@@ -241,8 +241,8 @@ ncell_best = length(best_cell_list)
 % % ylim([0, yl(2)])
 % % ylim([0, 2.5])
 % xlabel('adapter resp dF/F')
-% ylabel('0 deg targ resp dF/F norm-ed by ad resp')
-% set(gcf, 'Position', get(0, 'Screensize'));
+% ylabel('normalized dF/F')
+% % set(gcf, 'Position', get(0, 'Screensize'));
 % saveas(gcf, ['Fig1E all cells.jpg'])
 % close
 
@@ -252,20 +252,19 @@ pref_0_cell = find(ori_pref_cells > (delta_list(end-1) + delta_list(end))/2 | or
 pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0); % dfof should >0
 % pref_0_cell = find(ori_pref_cells > 170);
 
-% figure
-% subplot(1,2,1)
-% scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1)./dfof_avg_ad(pref_0_cell), 'b*'); hold on
-% title('isi=250')
-% subplot(1,2,2)
-% scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2)./dfof_avg_ad(pref_0_cell), 'r*')
-% title('isi=750')
-% % for n=1:2
-% % AX_handles(n) = subplot(1,2,n)
-% % end
-% % set(AX_handles,'YLim',[-0.04 0.14])
+figure
+subplot(1,2,1)
+scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1)./dfof_avg_ad(pref_0_cell), 'b*'); hold on
+title('isi=250')
+
+subplot(1,2,2)
+scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2)./dfof_avg_ad(pref_0_cell), 'r*')
+title('isi=750')
+xlabel('adapter resp dF/F')
+ylabel('normalized dF/F')
 % set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1E cells prefer 0 deg.jpg'])
-% close
+saveas(gcf, ['Fig1E cells prefer 0 deg.jpg'])
+close
 
 %%% bin all cells by adapter resp
 [count, idx] = histc(dfof_avg_ad(vis_driven_ad),0:0.05:ceil(max(dfof_avg_ad(vis_driven_ad))*10)/10);
@@ -294,23 +293,24 @@ for itext = 1 : length(count_nonzero_id)
 end
 ylim([0,1])
 legend('isi 250', 'isi 750')
-set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
-% close
+% set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
+close
 
 %%% bin 0-deg preferring cells by ad resp
+clear idx
 [count, idx] = histc(dfof_avg_ad(pref_0_cell),0:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
 count = count(1:end-1);
 count_nonzero_id = find(count~=0);
 % histogram(dfof_avg_ad(pref_0_cell))
-resp_bin_ad = accumarray(idx(:),dfof_avg_ad(pref_0_cell),[],@mean)
+resp_bin_ad = accumarray(idx(:), dfof_avg_ad(pref_0_cell),[],@mean)
 resp_bin_tg = [];
 resp_bin_std = []; 
 resp_bin_ste = zeros(length(count),2);
 resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@mean);
-resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@mean)
+resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@mean);
 resp_bin_std(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@std);
-resp_bin_std(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@std)
+resp_bin_std(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@std);
 resp_bin_ste(count~=0, :) = resp_bin_std(count~=0, :) ./ sqrt(count(count~=0)) % use std or ste?
 
 figure
@@ -325,9 +325,9 @@ for itext = 1 : length(count_nonzero_id)
 end
 ylim([0,1])
 legend('isi 250', 'isi 750')
-set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
-% close
+% set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
+close
 
 %% Fig 1C (approx): time course of adaptation recovery for all cells
 
@@ -351,12 +351,14 @@ hold on
 % plot(f1, 'b')
 scatter(isi_list, norm_targ_resp_mean, 'r*')
 f2 = fit(isi_list', norm_targ_resp_mean','exp1')
-plot(f2, 'r')
+plot(f2, 'b')
 xlim([0,4+0.5])
-ylim([0,1+0.1])
+ylim([0,1+0.3])
+xlabel('ISI (s)')
+ylabel('normalized dF/F')
 % set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1C time course of adapstation recovery of vis-driven cells.jpg'])
-% close
+saveas(gcf, ['Fig1C time course of adaptation recovery of vis-driven cells.jpg'])
+close
 
 %% get with-adapter targ resp by dir & isi
 
@@ -642,7 +644,8 @@ end
 %% Fig 2D: targ degree distance from adapter changes dfof resp
 
 mod_ori = delta_list; mod_ori(mod_ori >= 180) = mod_ori(mod_ori >= 180) - 180;
-mod_ori(mod_ori > 90) = 180 - mod_ori(mod_ori > 90);
+mod_ori(mod_ori > 90) = 180 - mod_ori(mod_ori > 90); % abs(targ - adapter) degree
+dis_list = unique(mod_ori);
 
 id_delta = {}; delta_ntrial = [];
 for idelta = 1:ndelta
@@ -651,15 +654,20 @@ for idelta = 1:ndelta
 end
 
 for icell = 1 : ncell
-    dfof_avg_cell = squeeze(dfof_avg_merge(icell, :, 2:end)); % [ndelta, 750/250]
-    dfof_avg_noad = squeeze(dfof_avg_merge(icell, :, 2:end));
+    dfof_avg_isi = squeeze(dfof_avg_merge(icell, :, 2:end)); % [ndelta, 750/250]
+    dfof_avg_noad = squeeze(dfof_avg_merge(icell, :, 1))';
     
     for igap = 1 : ngap
-        dfof_avg_now = dfof_avg_cell(:,igap);
+        dfof_avg_now = dfof_avg_isi(:,igap);
         
-        for idis = 1 : ndelta
-            
-            
+        for idis = 1 : length(dis_list)
+            dis_id = find(mod_ori == dis_list(idis));
+            if length(dis_id) > 1
+                
+                
+            elseif length(dis_id) == 1
+                
+            end
         end
     end
 end
