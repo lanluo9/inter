@@ -147,6 +147,7 @@ cd C:\Users\lan\Documents\repos\inter\code
 
 load adapter_resp.mat
 vis_driven_ad = sum(sig_ttest_ad,2)>0;
+sum(vis_driven_ad)
 
 %% get with-adapter 0-deg targ resp
 
@@ -218,54 +219,31 @@ ori_perc = ori_closeness(:, percentile_idx);
 
 good_fit_cell = ori_perc<22.5;
 ncell_good_fit = sum(good_fit_cell)
-sig_vis_cell = sum(sig_ttest,2)>0; % sig vis-driven by no-ad targ
-ncell_sig_vis = sum(sig_vis_cell)
-ori_cell = good_fit_cell & sig_vis_cell;
-ncell_ori = sum(ori_cell)
+vis_driven_noad = sum(sig_ttest,2)>0; % sig vis-driven by no-ad targ
+ncell_vis_noad = sum(vis_driven_noad)
+ncell_vis_ad = sum(vis_driven_ad)
 
+ori_cell = good_fit_cell & vis_driven_noad;
+ncell_ori = sum(ori_cell)
 sharp_cell = fit_param(:, 3) > 3;
 best_cell = ori_cell & sharp_cell;
 best_cell_list = find(best_cell);
 ncell_best = length(best_cell_list)
+
+vis_driven = vis_driven_ad | vis_driven_noad;
+vis_driven_cell_list = find(vis_driven); % vis-driven cells are activated by adapter or no-ad targ
 
 %% Fig 1E: compare ad_resp vs 0-deg targ_resp_250/750 of vis_driven cells
 
 % id_isi_1 = intersect(find(cTarget - cStimOff < 10), id_adapter); % isi 250
 % id_isi_2 = intersect(find(cTarget - cStimOff >= 10), id_adapter); % isi 750
 
-% %%% use all cells
-% figure
-% scatter(dfof_avg_ad, dfof_avg_tg0(:,1)./dfof_avg_ad, 'b*'); hold on % isi 250
-% scatter(dfof_avg_ad, dfof_avg_tg0(:,2)./dfof_avg_ad, 'r*') % isi 750
-% yl = ylim; % query [ymin ymax]
-% % ylim([0, yl(2)])
-% % ylim([0, 2.5])
-% xlabel('adapter resp dF/F')
-% ylabel('normalized dF/F')
-% % set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1E all cells.jpg'])
-% close
-
 %%% use only 0-preferring cells. other cells' ad & tg resp will certainly co-vary
 % pref_0_cell = find(ori_pref_cells > delta_list(end-1));
 pref_0_cell = find(ori_pref_cells > (delta_list(end-1) + delta_list(end))/2 | ori_pref_cells < delta_list(1)/2);
 pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0); % dfof should >0
+pref_0_cell = intersect(pref_0_cell, vis_driven_cell_list);
 % pref_0_cell = find(ori_pref_cells > 170);
-
-% figure
-% subplot(1,2,1)
-% scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,1)./dfof_avg_ad(pref_0_cell), 'b*'); hold on
-% title('isi=250')
-% xlabel('adapter resp dF/F')
-% ylabel('normalized dF/F')
-% subplot(1,2,2)
-% scatter(dfof_avg_ad(pref_0_cell), dfof_avg_tg0(pref_0_cell,2)./dfof_avg_ad(pref_0_cell), 'r*')
-% title('isi=750')
-% xlabel('adapter resp dF/F')
-% ylabel('normalized dF/F')
-% % set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['Fig1E cells prefer 0 deg.jpg'])
-% close
 
 %%% bin all cells by adapter resp
 [count, idx] = histc(dfof_avg_ad(vis_driven_ad),0:0.05:ceil(max(dfof_avg_ad(vis_driven_ad))*10)/10);
@@ -294,9 +272,8 @@ for itext = 1 : length(count_nonzero_id)
 end
 ylim([0,1])
 legend('isi 250', 'isi 750')
-% set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
-close
+% saveas(gcf, ['Fig1E all cells binned by ad-resp.jpg'])
+% close
 
 %%% bin 0-deg preferring cells by ad resp
 clear idx
@@ -326,30 +303,17 @@ for itext = 1 : length(count_nonzero_id)
 end
 ylim([0,1])
 legend('isi 250', 'isi 750')
-% set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
-close
+% saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
+% close
 
 %% Fig 1C (approx): time course of adaptation recovery for all cells
 
-vis_driven_ad_pos = dfof_avg_tg0(:,1)>0 & dfof_avg_tg0(:,2)>0 & vis_driven_ad;
-sum(vis_driven_ad_pos)
-% histogram(dfof_avg_tg0(vis_driven_ad_pos,1)./dfof_avg_ad(vis_driven_ad_pos), 10)% isi 250
-% hold on
-% histogram(dfof_avg_tg0(vis_driven_ad_pos,2)./dfof_avg_ad(vis_driven_ad_pos), 10)
-
 isi_list = [0.250, 0.750, 4];
-% norm_targ_resp_median = [median((dfof_avg_tg0(vis_driven_ad,1)./dfof_avg_ad(vis_driven_ad))), ...
-%     median(dfof_avg_tg0(vis_driven_ad,2)./dfof_avg_ad(vis_driven_ad)), ...
-%     1];
 norm_targ_resp_mean = [mean((dfof_avg_tg0(vis_driven_ad,1)./dfof_avg_ad(vis_driven_ad))), ...
     mean(dfof_avg_tg0(vis_driven_ad,2)./dfof_avg_ad(vis_driven_ad)), ...
     1];
 
 hold on
-% scatter(isi_list, norm_targ_resp_median, 'b*')
-% f1 = fit(isi_list', norm_targ_resp_median','exp1')
-% plot(f1, 'b')
 scatter(isi_list, norm_targ_resp_mean, 'r*')
 f2 = fit(isi_list', norm_targ_resp_mean','exp1')
 plot(f2, 'b')
@@ -357,9 +321,9 @@ xlim([0,4+0.5])
 ylim([0,1+0.3])
 xlabel('ISI (s)')
 ylabel('normalized dF/F')
-% set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, ['Fig1C time course of adaptation recovery of vis-driven cells.jpg'])
-close
+legend off
+% saveas(gcf, ['Fig1C time course of adaptation recovery of vis-driven cells.jpg'])
+% close
 
 %% get with-adapter targ resp by dir & isi
 
@@ -512,7 +476,7 @@ end
 %% Fig 2B: cell resp by dir & condition (no_ad, 750, 250) for "best cells"
 
 % cell_list_now = best_cell_list;
-cell_list_now = vis_driven_ad_cell_list;
+cell_list_now = vis_driven_cell_list;
 for ii = 1:length(cell_list_now)
 icell = cell_list_now(ii);
 trace_no_ad_avg = []; trace_cond_avg_750 = []; trace_cond_avg_250 = [];
@@ -615,10 +579,9 @@ fit_param_merge = cat(3, fit_param, fit_param_750, fit_param_250);
 
 theta_finer = deg2rad(0:1:179);
 subplot_title = {'control', 'isi 750 ms', 'isi 250 ms'};
-vis_driven_ad_cell_list = find(vis_driven_ad); % using adapter-vis-driven cell bc more numerous
 
-for iviscell = 1 : length(vis_driven_ad_cell_list)
-    icell = vis_driven_ad_cell_list(iviscell);
+for iviscell = 1 : length(vis_driven_cell_list)
+    icell = vis_driven_cell_list(iviscell);
     figure('units','normalized','outerposition',[0 0 1/2 1]);
 for row = 1 : 3
     subplot(3,1,row)

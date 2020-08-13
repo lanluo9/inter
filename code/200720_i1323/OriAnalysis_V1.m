@@ -406,27 +406,6 @@ end
 ntrial_cond
 ntrial_cond2
 
-% %% orientation tuning plot of indiv cell
-% 
-% for icell = 1 : ncell
-%     figure('units','normalized','outerposition',[0 0 1 1]);
-%     errorbar(delta_list, dfof_avg(icell,:), dfof_ste(icell,:), 'LineWidth',1)
-%     hold on
-%     if sum(sig_ttest(icell,:)) > 0
-%         sig_idx = sig_ttest(icell,:) > 0;
-%         sig_delta = delta_list(sig_idx);
-%         sig_star_height = dfof_avg(icell,sig_idx) + dfof_ste(icell,sig_idx) + 0.01;
-%         scatter(sig_delta, sig_star_height, '*', 'LineWidth',1)
-%     else
-%         sig_delta = [];
-%     end
-%     xlim([0-5, 180])
-%     line([0-5, 180], [0, 0], 'Color', 'g', 'LineWidth', 1);
-%     title(['cell ', num2str(icell), ': sensitive to ' num2str(length(sig_delta)), ' orientations'])
-%     saveas(gcf, ['ori_tuning_', num2str(icell)], 'jpg')
-%     close
-% end
-% 
 % %% ntrial_ori is similar across ori, why sig requirement differ?
 % 
 % ntrial_ndelta = [];
