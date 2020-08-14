@@ -359,11 +359,12 @@ dfof_avg_cond = pi * ones(ncell, ndelta, ngap); dfof_ste_cond = pi * ones(ncell,
 
 for icell = 1 : ncell
 for idelta = 1 : ndelta 
-    id_delta = find(delta_seq == delta_list(idelta));
-    
+%     id_delta = find(delta_seq == delta_list(idelta));
     for igap =  1 : ngap
-       [sig_ttest_cond(icell, idelta, igap), p_ttest_cond(icell, idelta, igap)] = ttest(base_cond{icell, idelta, igap}, resp_cond{icell, idelta, igap},...
-                'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+        ntrial_cond = length(base_cond{icell, idelta, igap});
+       [sig_ttest_cond(icell, idelta, igap), p_ttest_cond(icell, idelta, igap)] = ttest(base_cond{icell, idelta, igap}, ...
+           resp_cond{icell, idelta, igap},...
+           'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
             
         base_avg_cond(icell, idelta, igap) = mean(base_cond{icell, idelta, igap}); % avg over trials of same ori
         resp_avg_cond(icell, idelta, igap) = mean(resp_cond{icell, idelta, igap});
@@ -382,11 +383,6 @@ end
 load with_ad_all_oris_targ_resp.mat
 
 %% get all cell trial trace by dir & isi
-
-target_relative = cTarget - cStimOn; % unique(cTarget - cStimOn) = [11 26]
-targ_start = 1 + target_relative + ca_latency; % time to receive targ resp signal
-targ_start_list = unique(targ_start);
-ngap = length(targ_start_list);
 
 trace_cond = cell(ncell, ndelta, ngap); 
 for icell = 1 : ncell    
@@ -417,23 +413,27 @@ for idelta = 1 : ndelta
 end
 end
 
-cd C:\Users\lan\Documents\repos\inter\code
+% cd C:\Users\lan\Documents\repos\inter\code
 % save trace_by_cond.mat trace_cond trace_no_ad
 
 %% align no-ad targ resp across fake isi
 
+target_relative = cTarget - cStimOn; % unique(cTarget - cStimOn) = [11 26]
 alt_targ_start = max(targ_start_list) - (min(targ_start_list) - 1);
-trace_no_ad_align = cell(ncell, ndelta, ngap); 
 
+trace_no_ad_align = cell(ncell, ndelta, ngap); 
 for icell = 1 : ncell    
 for idelta = 1 : ndelta 
     
     for igap =  1 : ngap 
         if igap == 1
-            range_trace = [1 : (1 + max(trial_len) - alt_targ_start)]; % take 1:208 of isi_250 trials
+            range_trace = [min(target_relative) - targ_stim_len : (1 + max(trial_len) - alt_targ_start)]; % take 1:208 of isi_250 trials
             trace_no_ad_align{icell, idelta, igap} = trace_no_ad{icell, idelta, igap}(:,range_trace);
+%             range_adapt_base = [targ_start_list(igap) - targ_stim_len : targ_start_list(igap) - 1]; % adapted baseline just bef targ onset
+%             range_targ_resp = [targ_start_list(igap) : targ_start_list(igap) + targ_stim_len - 1]; % targ onset til targ fin
+        
         elseif igap == 2
-            range_trace = [alt_targ_start : max(trial_len)]; % take 16:end of isi_750 trials
+            range_trace = [max(target_relative) - targ_stim_len : max(trial_len)]; % take 16:end of isi_750 trials
             trace_no_ad_align{icell, idelta, igap} = trace_no_ad{icell, idelta, igap}(:,range_trace);
         end
     end
@@ -451,23 +451,24 @@ end
 
 %% convert trace to dfof value
 
-load trace_by_cond.mat
+% load trace_by_cond.mat
 
-base_range = [80:200]; % according to find_ca_latency.jpg
-trace_no_ad_merge_dfof = cell(ncell, ndelta);
-trace_cond_dfof = cell(ncell, ndelta, ngap);
+% base_range = [80:200]; % according to find_ca_latency.jpg -> do not take such long baseline. will increase std
+trace_no_ad_merge_dfof = cell(ncell, ndelta);trace_cond_dfof = cell(ncell, ndelta, ngap);
 
 for icell = 1:ncell
 for idelta = 1:ndelta
-    trace_base = nanmean(trace_no_ad_merge{icell, idelta}(:,base_range), 2);
+    trace_base = nanmean(trace_no_ad_merge{icell, idelta}(:, 1:targ_stim_len), 2);
     trace_no_ad_merge_dfof{icell, idelta} = (trace_no_ad_merge{icell, idelta} - trace_base) ./ trace_base;
 end
 end
 
+unique(target_relative) + ca_latency
 for icell = 1:ncell
 for idelta = 1:ndelta
     for igap = 1:ngap
-        trace_base = nanmean(trace_cond{icell, idelta, igap}(:,base_range), 2);
+        trace_base = nanmean(trace_cond{icell, idelta, igap}(:, 1:targ_stim_len), 2);
+%         trace_base = base_cond{icell, idelta, igap};
         trace_cond_dfof{icell, idelta, igap} = (trace_cond{icell, idelta, igap} - trace_base) ./ trace_base;
     end
 end
@@ -477,7 +478,7 @@ end
 
 % cell_list_now = best_cell_list;
 cell_list_now = vis_driven_cell_list;
-for ii = 1:length(cell_list_now)
+for ii = 22 %1 : length(cell_list_now)
 icell = cell_list_now(ii);
 trace_no_ad_avg = []; trace_cond_avg_750 = []; trace_cond_avg_250 = [];
 
@@ -522,8 +523,8 @@ for col = 1 : 3
         yticks(round(ymin*10)/10 : 0.1 : round(ymax*10)/10)
     end
 end
-saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
-close    
+% saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
+% close    
 end
 
 %% tuning curve fit by cond
@@ -580,9 +581,11 @@ fit_param_merge = cat(3, fit_param, fit_param_750, fit_param_250);
 theta_finer = deg2rad(0:1:179);
 subplot_title = {'control', 'isi 750 ms', 'isi 250 ms'};
 
-for iviscell = 1 : length(vis_driven_cell_list)
-    icell = vis_driven_cell_list(iviscell);
+cell_list_now = vis_driven_cell_list;
+for ii = 22 %1 : length(cell_list_now)
+    icell = cell_list_now(ii);
     figure('units','normalized','outerposition',[0 0 1/2 1]);
+    
 for row = 1 : 3
     subplot(3,1,row)
     
