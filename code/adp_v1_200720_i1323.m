@@ -40,9 +40,10 @@ load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course inclu
 
 cd C:\Users\lan\Documents\repos\inter\code\200720_i1323
 
-load ori_across_cells.mat
-load ori_across_bootstrap_runs_with_replace.mat
+% load ori_across_bootstrap_runs_with_replace.mat
+load ori_across_cells_cond.mat
 load resp_noad_targ.mat
+load resp_ad_targ.mat
 load resp_ad_targ0deg.mat 
 load trace_by_cond.mat
 load trace_by_cond_dfof.mat
@@ -69,6 +70,7 @@ dirs = unique(adapterDir); % adapter dir === 0
 ndir = length(dirs);
 delta_seq = celleqel2mat_padded(input.tGratingDirectionDeg);
 delta_list = unique(delta_seq); % target 8 dir (actually ori): 22.5-180. equivalent to diff from adapter
+% potential bug: need to fix delta_list to convert 180 to 0
 ndelta = length(delta_list); 
 
 [nframe, ncell] = size(npSub_tc) % nframe * ncell
@@ -117,11 +119,12 @@ ngap = length(unique(cTarget - cStimOn));
 
 id_750 = find(isi_list > min(isi_list)); id_750(id_750 > ntrial) = [];
 id_250 = find(isi_list == min(isi_list)); id_750(id_750 > ntrial) = [];
-id_gaps = {id_250, id_750};
+id_gaps = {id_250, id_750}; 
+% potential bug: need to unify order of isi here. should change to {750, 250} and match all following var
 id_noad = intersect(find(targCon == 1),find(adapterCon == 0)); id_noad(id_noad > ntrial) = [];
 id_ad = intersect(find(targCon == 1),find(adapterCon == 1)); id_ad(id_ad > ntrial) = [];
 
-%% find vis-driven neurons: significant for no-ad targ or ad
+%% resp to no-ad targ or ad -> find vis-driven neurons
 
 % vis-driven by noad targ
 sig_ttest_noad = pi * ones(ncell, ndelta); p_ttest_noad = pi * ones(ncell, ndelta);
@@ -434,6 +437,221 @@ for col = 1 : 3
         yticks(round(ymin*10)/10 : 0.3 : round(ymax*10)/10)
     end
 end
-saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
-close    
+% saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
+% close    
 end
+
+%% resp to with-ad targ by cond (dir & isi)
+
+base_cond = cell(ncell, ndelta, ngap); resp_cond = cell(ncell, ndelta, ngap);
+for icell = 1 : ncell
+for idelta = 1 : ndelta 
+    id_delta = find(delta_seq == delta_list(idelta));
+    
+    for igap =  1 : ngap 
+        idx = intersect(intersect(id_gaps{igap}, id_delta), id_ad); % with-ad, specific isi & ori
+        ntrial_cond = length(idx); 
+        
+        range_adapt_base = [1:3]; 
+        range_targ_resp = [9:11];
+        base_cond{icell, idelta, igap} = mean(squeeze(tc_trial_align_targ(icell, idx, range_adapt_base)),2); % avg over window -> [ntrial_ori, 1]
+        resp_cond{icell, idelta, igap} = mean(squeeze(tc_trial_align_targ(icell, idx, range_targ_resp)),2);
+    end
+end
+end
+
+sig_ttest_cond = pi * ones(ncell, ndelta, ngap); p_ttest_cond = pi * ones(ncell, ndelta, ngap);
+base_avg_cond = pi * ones(ncell, ndelta, ngap);
+resp_avg_cond = pi * ones(ncell, ndelta, ngap); resp_ste_cond = pi * ones(ncell, ndelta, ngap); % standard error 
+cp_win_cond = cell(ncell, ndelta, ngap);
+dfof_avg_cond = pi * ones(ncell, ndelta, ngap); dfof_ste_cond = pi * ones(ncell, ndelta, ngap); % dF/F
+for icell = 1 : ncell
+for idelta = 1 : ndelta 
+    for igap =  1 : ngap
+        ntrial_cond = length(base_cond{icell, idelta, igap});
+       [sig_ttest_cond(icell, idelta, igap), p_ttest_cond(icell, idelta, igap)] = ttest(base_cond{icell, idelta, igap}, ...
+           resp_cond{icell, idelta, igap},...
+           'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+            
+        base_avg_cond(icell, idelta, igap) = mean(base_cond{icell, idelta, igap}); % avg over trials of same ori
+        resp_avg_cond(icell, idelta, igap) = mean(resp_cond{icell, idelta, igap});
+        resp_ste_cond(icell, idelta, igap) = std(resp_cond{icell, idelta, igap}) / sqrt(ntrial_cond);
+        cp_win_cond{icell, idelta, igap} = [base_cond{icell, idelta, igap}, resp_cond{icell, idelta, igap}];
+
+        dfof_avg_cond(icell, idelta, igap) = mean( (resp_cond{icell, idelta, igap} - base_cond{icell, idelta, igap}) ./ mean(base_cond{icell, idelta, igap}) );
+        dfof_ste_cond(icell, idelta, igap) = std( (resp_cond{icell, idelta, igap} - base_cond{icell, idelta, igap}) ./ mean(base_cond{icell, idelta, igap}) ) / sqrt(ntrial_cond);
+    end
+end
+end
+
+% cd C:\Users\lan\Documents\repos\inter\code
+% save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
+
+%% tuning curve fit by cond
+
+dfof_avg_750 = dfof_avg_cond(:,:,2);
+dfof_ste_750 = dfof_ste_cond(:,:,2);
+cp_win_750 = cp_win_cond(:,:,2);
+sig_ttest_750 = sig_ttest_cond(:,:,2);
+fit_param_750 = pi * ones(ncell, 7);
+for icell = 1 : ncell
+    theta = deg2rad(delta_list);
+    data = dfof_avg_750(icell,:); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+    fit_param_750(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+%   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+end
+u1_hat_cells = fit_param_750(:,5);
+ori_pref = rad2deg(u1_hat_cells);
+ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
+ori_pref_cells_750 = ori_pref;
+
+dfof_avg_250 = dfof_avg_cond(:,:,1);
+dfof_ste_250 = dfof_ste_cond(:,:,1);
+cp_win_250 = cp_win_cond(:,:,1);
+sig_ttest_250 = sig_ttest_cond(:,:,1);
+fit_param_250 = pi * ones(ncell, 7);
+for icell = 1 : ncell
+    theta = deg2rad(delta_list);
+    data = dfof_avg_250(icell,:); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+    fit_param_250(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+end
+u1_hat_cells = fit_param_250(:,5);
+ori_pref = rad2deg(u1_hat_cells);
+ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
+ori_pref_cells_250 = ori_pref;
+
+fit_param_noad = pi * ones(ncell, 7);
+for icell = 1 : ncell
+    theta = deg2rad(delta_list);
+    data = dfof_avg_noad(icell,:); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+    fit_param_noad(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+end
+u1_hat_cells = fit_param_noad(:,5);
+ori_pref = rad2deg(u1_hat_cells);
+ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
+ori_pref_cells_noad = ori_pref;
+
+dfof_avg_merge = cat(3, dfof_avg_noad, dfof_avg_750, dfof_avg_250);
+dfof_ste_merge = cat(3, dfof_ste_noad, dfof_ste_750, dfof_ste_250);
+fit_param_merge = cat(3, fit_param_noad, fit_param_750, fit_param_250);
+ori_pref_cells_merge = cat(2, ori_pref_cells_noad, ori_pref_cells_750, ori_pref_cells_250);
+
+% save ori_across_cells_cond.mat dfof_avg_merge dfof_ste_merge fit_param_merge ori_pref_cells_merge
+
+%% Fig 2C: tuning curve fit by condition (noad / 750 / 250) for vis-driven cells
+
+theta_finer = deg2rad(0:1:179);
+subplot_title = {'control', 'isi 750 ms', 'isi 250 ms'};
+
+cell_list_now = vis_driven_cell_list;
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    figure('units','normalized','outerposition',[0 0 1/2 1]);
+    
+for row = 1 : 3
+    subplot(3,1,row)
+    
+    dfof_avg_now = dfof_avg_merge(:,:,row);
+    dfof_ste_now = dfof_ste_merge(:,:,row);
+    fit_param_now = fit_param_merge(:,:,row);
+    
+    errorbar([0,delta_list], [dfof_avg_now(icell,end), dfof_avg_now(icell,:)], ...
+        [dfof_ste_now(icell,end), dfof_ste_now(icell,:)], 'LineStyle','none')
+    hold on
+    scatter([0,delta_list], [dfof_avg_now(icell,end), dfof_avg_now(icell,:)], 'b')
+
+    t = num2cell(fit_param_now(icell, 2:end)); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});    
+    y_fit(row,:) = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
+    plot(rad2deg(theta_finer), y_fit(row,:), 'LineWidth', 1)
+    
+    ori_pref = ori_pref_cells_merge(icell, row);
+    scatter(ori_pref, b_hat + R1_hat, 'r*') % mark pref ori of fit
+    
+    xlim([0-10, 180+10])
+    tempmin = dfof_avg_merge - dfof_ste_merge; tempmin = tempmin(icell, :, :); ymin = min(tempmin(:));
+    tempmax = dfof_avg_merge + dfof_ste_merge; tempmax = tempmax(icell, :, :); ymax = max(tempmax(:));
+    padding = (ymax - ymin) ./ 50;
+    ylim([ymin - padding, ymax + padding])
+    
+    xlabel('orientation (deg)')
+    ylabel('dF/F')
+    title(subplot_title{row})
+end
+    saveas(gcf, ['ori tuning across cond cell ', num2str(icell)], 'jpg')
+    close
+end
+
+%% Fig 2D: targ degree distance from adapter changes dfof resp
+
+dis_seq = delta_seq; 
+dis_seq(dis_seq > 90) = 180 - dis_seq(dis_seq > 90); 
+dis_list = unique(dis_seq);
+
+% mark trial number of each delta
+[C,ia,ic] = unique(delta_seq);
+for idelta = 1 : length(delta_list)
+    ntrial_delta(idelta) = length(find(ic == idelta));
+end
+
+dis_deltas = {[8], [1,7], [2,6], [3,5], [4]};
+
+%%
+dfof_dis_noad = {}; dfof_dis_targ = {};
+cell_list_now = find(vis_driven_noad);
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    dfof_avg_noad_now = squeeze(dfof_avg_merge(icell, :, 1));
+
+for igap = 1 : ngap
+    dfof_avg_isi_now = squeeze(dfof_avg_merge(icell, :, igap+1)); % 750&250
+
+    for idis = 1 : length(dis_list)
+        id_dis_delta = dis_deltas{idis};
+        
+        dfof_dis_noad{ii, idis, igap} = dfof_avg_noad_now(id_dis_delta) .* ntrial_delta(id_dis_delta);
+        dfof_dis_noad{ii, idis, igap}= sum(dfof_dis_noad{ii, idis, igap}) ./ sum(ntrial_delta(id_dis_delta));
+        dfof_dis_targ{ii, idis, igap}= dfof_avg_isi_now(id_dis_delta) .* ntrial_delta(id_dis_delta);
+        dfof_dis_targ{ii, idis, igap}= sum(dfof_dis_targ{ii, idis, igap}) ./ sum(ntrial_delta(id_dis_delta));
+        
+        dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap}- dfof_dis_noad{ii, idis, igap}) ./ dfof_dis_noad{ii, idis, igap};
+    end
+end
+end
+
+for igap = 1 : ngap
+    for idis = 1 : length(dis_list)
+        dfof_dis_norm_avg(idis, igap) = mean(dfof_dis_norm(:, idis, igap));
+        dfof_dis_norm_ste(idis, igap) = std(dfof_dis_norm(:, idis, igap))./size(dfof_dis_norm, 1);
+    end
+end
+
+%%
+figure
+for igap = 1 : ngap
+    hold on
+    scatter(dis_list, dfof_dis_norm_avg(:, igap))
+end
+for igap = 1 : ngap
+    errorbar(dis_list, dfof_dis_norm_avg(:, igap), dfof_dis_norm_ste(:, igap)) %, 'LineStyle','none')
+end
+line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
+% ylim([-1,-0.5])
+xlim([0-5, 90+5])
+legend('isi 750', 'isi 250')
+
+% % mark trial number of each distance
+% [C,ia,ic] = unique(dis_seq);
+% for idis = 1 : length(dis_list)
+%     ntrial_dis(idis) = length(find(ic == idis));
+% end
+% for itext = 1 : length(dis_list)
+%     text(dis_list(itext), ...
+%        dfof_dis_norm_avg(itext, 1) + dfof_dis_norm_ste(itext, 1) + 0.02, ...
+%         ['n=', num2str(ntrial_dis(itext))], 'HorizontalAlignment', 'center')
+% end
+
+%%
