@@ -113,6 +113,7 @@ grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
 
 %% index of trials
+
 ca_latency = 7; % monitor stim onset in frame #1 lead to neural signal in frame #8
 isi_list = cTarget - cStimOff; 
 ngap = length(unique(cTarget - cStimOn));
@@ -598,8 +599,6 @@ for idelta = 1 : length(delta_list)
 end
 
 dis_deltas = {[8], [1,7], [2,6], [3,5], [4]};
-
-%%
 dfof_dis_noad = {}; dfof_dis_targ = {};
 cell_list_now = find(vis_driven_noad);
 for ii = 1 : length(cell_list_now)
@@ -617,7 +616,8 @@ for igap = 1 : ngap
         dfof_dis_targ{ii, idis, igap}= dfof_avg_isi_now(id_dis_delta) .* ntrial_delta(id_dis_delta);
         dfof_dis_targ{ii, idis, igap}= sum(dfof_dis_targ{ii, idis, igap}) ./ sum(ntrial_delta(id_dis_delta));
         
-        dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap}- dfof_dis_noad{ii, idis, igap}) ./ dfof_dis_noad{ii, idis, igap};
+        dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
+           ./ dfof_dis_noad{ii, idis, igap};
     end
 end
 end
@@ -625,23 +625,31 @@ end
 for igap = 1 : ngap
     for idis = 1 : length(dis_list)
         dfof_dis_norm_avg(idis, igap) = mean(dfof_dis_norm(:, idis, igap));
+        dfof_dis_norm_median(idis, igap) = median(dfof_dis_norm(:, idis, igap));
         dfof_dis_norm_ste(idis, igap) = std(dfof_dis_norm(:, idis, igap))./size(dfof_dis_norm, 1);
     end
 end
+% used median instead of avg, bc some dfof_dis_noad are too close to 0, and dragged dfof_dis_norm super high
+% bug: how to get rid of large outlier when using avg?
 
-%%
+color_list = {[0,0,1], [1,0,0]};
 figure
 for igap = 1 : ngap
     hold on
-    scatter(dis_list, dfof_dis_norm_avg(:, igap))
+    scatter(dis_list, dfof_dis_norm_median(:, igap))
 end
 for igap = 1 : ngap
-    errorbar(dis_list, dfof_dis_norm_avg(:, igap), dfof_dis_norm_ste(:, igap)) %, 'LineStyle','none')
+    hold on
+    errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
 end
-line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
-% ylim([-1,-0.5])
+% line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
+ylim([-1, 0])
 xlim([0-5, 90+5])
 legend('isi 750', 'isi 250')
+xlabel('|Test - Adapter| (deg)')
+ylabel('delta norm dF/F')
+% saveas(gcf, ['response changes w targ-ad distance.jpg'])
+% close
 
 % % mark trial number of each distance
 % [C,ia,ic] = unique(dis_seq);
@@ -654,4 +662,105 @@ legend('isi 750', 'isi 250')
 %         ['n=', num2str(ntrial_dis(itext))], 'HorizontalAlignment', 'center')
 % end
 
-%%
+%% Fig 2E: resp changes w |ori_pref - ori_ad| distance
+% very buggy, might need to restrict to well-fitted cell? 
+% bootstrap for both no-ad and 2 isi? would have too few cells left
+
+ori_pref_binned = ori_pref_cells_noad;
+ori_pref_binned(ori_pref_binned > 90) = 180 - ori_pref_binned(ori_pref_binned > 90); 
+ori_pref_binned(ori_pref_binned<20) = 0;
+ori_pref_binned(ori_pref_binned>=20 & ori_pref_binned<=70) = 45;
+ori_pref_binned(ori_pref_binned>70) = 90;
+% histogram(ori_pref_binned, 12)
+
+cell_list_now = find(vis_driven);
+dfof_peak_norm = pi *ones(length(cell_list_now), ngap);
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    
+    t = num2cell(fit_param_noad(icell, 2:end)); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});
+    dfof_noad_peak(ii, igap) = b_hat + R1_hat;
+
+for igap = 1 : ngap
+    t = num2cell(fit_param_merge(icell, 2:end, igap+1)); % 750,250
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});
+    dfof_isi_peak(ii, igap) = b_hat + R1_hat;
+
+    dfof_peak_norm(ii, igap) = (dfof_isi_peak(ii, igap) - dfof_noad_peak(ii, igap))./ dfof_noad_peak(ii, igap);
+end
+end
+
+dfof_isi_peak(dis_now, igap)
+dfof_noad_peak(dis_now, igap)
+
+ori_pref_binned_list = unique(ori_pref_binned);
+dfof_peak_norm_avg = []; dfof_peak_norm_ste = []; ncell_dis = [];
+for igap = 1 : ngap
+    for idis = 1 : length(ori_pref_binned_list)
+        dis_now = ori_pref_binned(vis_driven) == ori_pref_binned_list(idis);
+        ncell_dis(idis) = sum(dis_now);
+        dfof_peak_norm_avg(idis, igap) = mean(dfof_peak_norm(dis_now, igap));
+        dfof_peak_norm_ste(idis, igap) = std(dfof_peak_norm(dis_now, igap)) ./ length(dfof_peak_norm(dis_now, igap));
+    end
+end
+
+color_list = {[0,0,1], [1,0,0]};
+figure
+for igap = 1 : ngap
+    hold on
+    scatter(ori_pref_binned_list, dfof_peak_norm_avg(:, igap))
+end
+for igap = 1 : ngap
+    hold on
+    errorbar(ori_pref_binned_list, dfof_peak_norm_avg(:, igap), dfof_peak_norm_ste(:, igap),...
+        'color', color_list{igap}) %, 'LineStyle','none')
+end
+% line([0-5, 180+5], [1, 1], 'Color', 'g', 'LineWidth', 1);
+xlim([0-5, 90+5])
+legend('isi 750', 'isi 250')
+
+%% Fig 2F: ori_pref changes w |ori_pref - ori_ad| distance
+% buggy. wow this is totally flipped. 
+
+ori_pref_dist = ori_pref_cells_merge;
+ori_pref_dist(ori_pref_dist > 90) = 180 - ori_pref_dist(ori_pref_dist > 90); 
+
+cell_list_now = find(vis_driven);
+ori_pref_shift = pi *ones(length(cell_list_now), ngap);
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    dfof_noad_pref(ii) = ori_pref_dist(ii, 1);
+
+for igap = 1 : ngap
+    dfof_isi_pref(ii, igap) = ori_pref_dist(ii, igap+1);
+    ori_pref_shift(ii, igap) = dfof_isi_pref(ii, igap) - dfof_noad_pref(ii);
+end
+end
+
+
+ori_pref_shift_avg = []; ori_pref_shift_ste = []; ncell_dis = [];
+for igap = 1 : ngap
+    for idis = 1 : length(ori_pref_binned_list)
+        dis_now = ori_pref_binned(vis_driven) == ori_pref_binned_list(idis);
+        ncell_dis(idis) = sum(dis_now);
+        ori_pref_shift_avg(idis, igap) = mean(ori_pref_shift(dis_now, igap));
+        ori_pref_shift_ste(idis, igap) = std(ori_pref_shift(dis_now, igap)) ./ length(ori_pref_shift(dis_now, igap));
+    end
+end
+
+color_list = {[0,0,1], [1,0,0]};
+figure; hold on
+for igap = 1 : ngap    
+    scatter(ori_pref_binned_list, ori_pref_shift_avg(:, igap))
+end
+for igap = 1 : ngap
+    errorbar(ori_pref_binned_list, ori_pref_shift_avg(:, igap), ori_pref_shift_ste(:, igap),...
+        'color', color_list{igap}) %, 'LineStyle','none')
+end
+% line([0-5, 180+5], [1, 1], 'Color', 'g', 'LineWidth', 1);
+xlim([0-5, 90+5])
+legend('isi 750', 'isi 250', 'Location','southeast')
+
+%% Fig 2G: OSI changes w |ori_pref - ori_ad| distance
+
