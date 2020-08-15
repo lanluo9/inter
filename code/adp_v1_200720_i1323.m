@@ -597,8 +597,8 @@ dis_list = unique(dis_seq);
 for idelta = 1 : length(delta_list)
     ntrial_delta(idelta) = length(find(ic == idelta));
 end
-
 dis_deltas = {[8], [1,7], [2,6], [3,5], [4]};
+
 dfof_dis_noad = {}; dfof_dis_targ = {};
 cell_list_now = find(vis_driven_noad);
 for ii = 1 : length(cell_list_now)
@@ -636,16 +636,18 @@ color_list = {[0,0,1], [1,0,0]};
 figure
 for igap = 1 : ngap
     hold on
+%     scatter(dis_list, dfof_dis_norm_avg(:, igap))
     scatter(dis_list, dfof_dis_norm_median(:, igap))
 end
 for igap = 1 : ngap
     hold on
-    errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
+%     errorbar(dis_list, dfof_dis_norm_avg(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
+    errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap})
 end
 % line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 ylim([-1, 0])
 xlim([0-5, 90+5])
-legend('isi 750', 'isi 250')
+legend('isi 750', 'isi 250', 'Location', 'southeast')
 xlabel('|Test - Adapter| (deg)')
 ylabel('delta norm dF/F')
 % saveas(gcf, ['response changes w targ-ad distance.jpg'])
@@ -678,21 +680,18 @@ dfof_peak_norm = pi *ones(length(cell_list_now), ngap);
 for ii = 1 : length(cell_list_now)
     icell = cell_list_now(ii);
     
-    t = num2cell(fit_param_noad(icell, 2:end)); 
+    t = num2cell(fit_param_merge(icell, 2:end, 1)); 
     [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});
-    dfof_noad_peak(ii, igap) = b_hat + R1_hat;
+    dfof_noad_peak(ii) = b_hat + R1_hat;
 
 for igap = 1 : ngap
     t = num2cell(fit_param_merge(icell, 2:end, igap+1)); % 750,250
     [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});
     dfof_isi_peak(ii, igap) = b_hat + R1_hat;
 
-    dfof_peak_norm(ii, igap) = (dfof_isi_peak(ii, igap) - dfof_noad_peak(ii, igap))./ dfof_noad_peak(ii, igap);
+    dfof_peak_norm(ii, igap) = (dfof_isi_peak(ii, igap) - dfof_noad_peak(ii))./ dfof_noad_peak(ii);
 end
 end
-
-dfof_isi_peak(dis_now, igap)
-dfof_noad_peak(dis_now, igap)
 
 ori_pref_binned_list = unique(ori_pref_binned);
 dfof_peak_norm_avg = []; dfof_peak_norm_ste = []; ncell_dis = [];
