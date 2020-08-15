@@ -113,6 +113,7 @@ grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
 
 %% index of trials
+
 ca_latency = 7; % monitor stim onset in frame #1 lead to neural signal in frame #8
 isi_list = cTarget - cStimOff; 
 ngap = length(unique(cTarget - cStimOn));
@@ -497,7 +498,7 @@ fit_param_750 = pi * ones(ncell, 7);
 for icell = 1 : ncell
     theta = deg2rad(delta_list);
     data = dfof_avg_750(icell,:); 
-    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaofmisesfit_ori(theta, data);
     fit_param_750(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
 %   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
 end
@@ -586,6 +587,8 @@ end
 end
 
 %% Fig 2D: targ degree distance from adapter changes dfof resp
+% used median instead of avg, bc some dfof_dis_noad are too close to 0, and dragged dfof_dis_norm super high
+% bug: how to get rid of large outlier when using avg?
 
 dis_seq = delta_seq; 
 dis_seq(dis_seq > 90) = 180 - dis_seq(dis_seq > 90); 
@@ -596,8 +599,8 @@ dis_list = unique(dis_seq);
 for idelta = 1 : length(delta_list)
     ntrial_delta(idelta) = length(find(ic == idelta));
 end
-
 dis_deltas = {[8], [1,7], [2,6], [3,5], [4]};
+
 dfof_dis_noad = {}; dfof_dis_targ = {};
 cell_list_now = find(vis_driven_noad);
 for ii = 1 : length(cell_list_now)
@@ -628,23 +631,23 @@ for igap = 1 : ngap
         dfof_dis_norm_ste(idis, igap) = std(dfof_dis_norm(:, idis, igap))./size(dfof_dis_norm, 1);
     end
 end
-% used median instead of avg, bc some dfof_dis_noad are too close to 0, and dragged dfof_dis_norm super high
-% bug: how to get rid of large outlier when using avg?
 
 color_list = {[0,0,1], [1,0,0]};
 figure
 for igap = 1 : ngap
     hold on
+%     scatter(dis_list, dfof_dis_norm_avg(:, igap))
     scatter(dis_list, dfof_dis_norm_median(:, igap))
 end
 for igap = 1 : ngap
     hold on
-    errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
+%     errorbar(dis_list, dfof_dis_norm_avg(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
+    errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap})
 end
 % line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 ylim([-1, 0])
 xlim([0-5, 90+5])
-legend('isi 750', 'isi 250')
+legend('isi 750', 'isi 250', 'Location', 'southeast')
 xlabel('|Test - Adapter| (deg)')
 ylabel('delta norm dF/F')
 % saveas(gcf, ['response changes w targ-ad distance.jpg'])
@@ -661,30 +664,87 @@ ylabel('delta norm dF/F')
 %         ['n=', num2str(ntrial_dis(itext))], 'HorizontalAlignment', 'center')
 % end
 
+%% Fig 2D: revised to norm against max actual response
+% used median instead of avg, bc some dfof_dis_noad are too close to 0, and dragged dfof_dis_norm super high
+% bug: how to get rid of large outlier when using avg?
+
+dfof_dis_noad = {}; dfof_dis_targ = {};
+cell_list_now = find(vis_driven_noad);
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    dfof_avg_noad_now = max(squeeze(dfof_avg_merge(icell, :, 1)));
+
+for igap = 1 : ngap
+    dfof_avg_isi_now = squeeze(dfof_avg_merge(icell, :, igap+1)); % 750&250
+
+    for idis = 1 : length(dis_list)
+        id_dis_delta = dis_deltas{idis};
+        
+        dfof_dis_noad{ii, idis, igap} = dfof_avg_noad_now;
+        dfof_dis_targ{ii, idis, igap}= dfof_avg_isi_now(id_dis_delta) .* ntrial_delta(id_dis_delta);
+        dfof_dis_targ{ii, idis, igap}= sum(dfof_dis_targ{ii, idis, igap}) ./ sum(ntrial_delta(id_dis_delta));
+        
+        dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
+           ./ dfof_dis_noad{ii, idis, igap};
+    end
+end
+end
+
+for igap = 1 : ngap
+    for idis = 1 : length(dis_list)
+        dfof_dis_norm_avg(idis, igap) = mean(dfof_dis_norm(:, idis, igap));
+        dfof_dis_norm_median(idis, igap) = median(dfof_dis_norm(:, idis, igap));
+        dfof_dis_norm_ste(idis, igap) = std(dfof_dis_norm(:, idis, igap))./size(dfof_dis_norm, 1);
+    end
+end
+
+color_list = {[0,0,1], [1,0,0]};
+figure
+for igap = 1 : ngap
+    hold on
+%     scatter(dis_list, dfof_dis_norm_avg(:, igap))
+    scatter(dis_list, dfof_dis_norm_median(:, igap))
+end
+for igap = 1 : ngap
+    hold on
+%     errorbar(dis_list, dfof_dis_norm_avg(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
+    errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap})
+end
+% line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
+ylim([-1, 0])
+xlim([0-5, 90+5])
+legend('isi 750', 'isi 250', 'Location', 'southeast')
+xlabel('|Test - Adapter| (deg)')
+ylabel('delta norm dF/F')
+% saveas(gcf, ['response changes w targ-ad distance.jpg'])
+% close
+
 %% Fig 2E: resp changes w |ori_pref - ori_ad| distance
+% very buggy
+% restrict to well-fitted cell? 
 
 ori_pref_binned = ori_pref_cells_noad;
 ori_pref_binned(ori_pref_binned > 90) = 180 - ori_pref_binned(ori_pref_binned > 90); 
 ori_pref_binned(ori_pref_binned<20) = 0;
 ori_pref_binned(ori_pref_binned>=20 & ori_pref_binned<=70) = 45;
 ori_pref_binned(ori_pref_binned>70) = 90;
-% histogram(ori_pref_binned, 12)
+% figure; histogram(ori_pref_binned)
 
-cell_list_now = find(vis_driven);
-dfof_peak_norm = pi *ones(length(cell_list_now), ngap);
+cell_list_now = find(vis_driven & good_fit_cell);
+dfof_peak_norm = []; dfof_noad_peak = []; dfof_isi_peak = [];
 for ii = 1 : length(cell_list_now)
     icell = cell_list_now(ii);
     
-    t = num2cell(fit_param_noad(icell, 2:end)); 
+    t = num2cell(fit_param_merge(icell, 2:end, 1)); 
     [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});
-    dfof_noad_peak = b_hat + R1_hat;
+    dfof_noad_peak(ii) = b_hat + R1_hat;
 
 for igap = 1 : ngap
     t = num2cell(fit_param_merge(icell, 2:end, igap+1)); % 750,250
     [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});
-    dfof_isi_peak(ii, igap)  = b_hat + R1_hat;
+    dfof_isi_peak(ii, igap) = b_hat + R1_hat;
 
-    dfof_peak_norm(ii, igap) = (dfof_isi_peak(ii, igap)  - dfof_noad_peak(ii, igap) )./ dfof_noad_peak(ii, igap) ;
+    dfof_peak_norm(ii, igap) = (dfof_isi_peak(ii, igap))./ dfof_noad_peak(ii);
 end
 end
 
@@ -692,14 +752,12 @@ ori_pref_binned_list = unique(ori_pref_binned);
 dfof_peak_norm_avg = []; dfof_peak_norm_ste = []; ncell_dis = [];
 for igap = 1 : ngap
     for idis = 1 : length(ori_pref_binned_list)
-        dis_now = ori_pref_binned(vis_driven) == ori_pref_binned_list(idis);
+        dis_now = ori_pref_binned(vis_driven & good_fit_cell) == ori_pref_binned_list(idis);
         ncell_dis(idis) = sum(dis_now);
         dfof_peak_norm_avg(idis, igap) = mean(dfof_peak_norm(dis_now, igap));
         dfof_peak_norm_ste(idis, igap) = std(dfof_peak_norm(dis_now, igap)) ./ length(dfof_peak_norm(dis_now, igap));
     end
 end
-
-%%
 
 color_list = {[0,0,1], [1,0,0]};
 figure
@@ -714,4 +772,102 @@ for igap = 1 : ngap
 end
 % line([0-5, 180+5], [1, 1], 'Color', 'g', 'LineWidth', 1);
 xlim([0-5, 90+5])
-legend('isi 750', 'isi 250')
+ylim([0, 1.1])
+legend('isi 750', 'isi 250', 'Location','southeast')
+xlabel('|Pref - Adapter| (deg)')
+ylabel('norm pred peak resp')
+grid on; grid minor
+
+%% Fig 2F: ori_pref changes w |ori_pref - ori_ad| distance
+% buggy. wow this is totally flipped. 
+
+ori_pref_dist = ori_pref_cells_merge;
+ori_pref_dist(ori_pref_dist > 90) = 180 - ori_pref_dist(ori_pref_dist > 90); 
+
+cell_list_now = find(vis_driven & good_fit_cell);
+ori_pref_shift = pi *ones(length(cell_list_now), ngap);
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    dfof_noad_pref(ii) = ori_pref_dist(ii, 1);
+
+for igap = 1 : ngap
+    dfof_isi_pref(ii, igap) = ori_pref_dist(ii, igap+1);
+    ori_pref_shift(ii, igap) = dfof_isi_pref(ii, igap) - dfof_noad_pref(ii);
+end
+end
+
+
+ori_pref_shift_avg = []; ori_pref_shift_ste = []; ncell_dis = [];
+for igap = 1 : ngap
+    for idis = 1 : length(ori_pref_binned_list)
+        dis_now = ori_pref_binned(vis_driven & good_fit_cell) == ori_pref_binned_list(idis);
+        ncell_dis(idis) = sum(dis_now);
+        ori_pref_shift_avg(idis, igap) = mean(ori_pref_shift(dis_now, igap));
+        ori_pref_shift_ste(idis, igap) = std(ori_pref_shift(dis_now, igap)) ./ length(ori_pref_shift(dis_now, igap));
+    end
+end
+
+color_list = {[0,0,1], [1,0,0]};
+figure; hold on
+for igap = 1 : ngap    
+    scatter(ori_pref_binned_list, ori_pref_shift_avg(:, igap))
+end
+for igap = 1 : ngap
+    errorbar(ori_pref_binned_list, ori_pref_shift_avg(:, igap), ori_pref_shift_ste(:, igap),...
+        'color', color_list{igap}) %, 'LineStyle','none')
+end
+% line([0-5, 180+5], [1, 1], 'Color', 'g', 'LineWidth', 1);
+xlim([0-5, 90+5])
+legend('isi 750', 'isi 250', 'Location','southeast')
+
+%% Fig 2G: OSI changes w |ori_pref - ori_ad| distance
+
+
+cell_list_now = find(vis_driven & good_fit_cell);
+osi_shift = [];
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    
+    t = num2cell(fit_param_merge(icell, 2:end, 1)); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});
+%     y_fit(row,:) = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(theta_finer - u1_hat))-1));
+    resp_pref = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(u1_hat - u1_hat))-1));
+    resp_orth = max(0, b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(u1_hat + pi/2 - u1_hat))-1)));
+    osi_noad(ii) = (resp_pref - resp_orth) / (resp_pref + resp_orth);
+
+for igap = 1 : ngap
+    
+    t = num2cell(fit_param_merge(icell, 2:end, 1+igap)); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = deal(t{:});
+    resp_pref = b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(u1_hat - u1_hat))-1));
+    resp_orth = max(0, b_hat + R1_hat .* exp(k1_hat.*(cos(2.*(u1_hat + pi/2 - u1_hat))-1)));
+    
+    osi_isi(ii, igap) = (resp_pref - resp_orth) / (resp_pref + resp_orth);
+    osi_shift(ii, igap) = osi_isi(ii, igap) - osi_noad(ii);
+end
+end
+
+
+osi_shift_avg = []; osi_shift_ste = []; ncell_dis = [];
+for igap = 1 : ngap
+    for idis = 1 : length(ori_pref_binned_list)
+        dis_now = ori_pref_binned(vis_driven & good_fit_cell) == ori_pref_binned_list(idis);
+        ncell_dis(idis) = sum(dis_now);
+        osi_shift_avg(idis, igap) = mean(osi_shift(dis_now, igap));
+        osi_shift_median(idis, igap) = median(osi_shift(dis_now, igap));
+        osi_shift_ste(idis, igap) = std(osi_shift(dis_now, igap)) ./ length(osi_shift(dis_now, igap));
+    end
+end
+
+color_list = {[0,0,1], [1,0,0]};
+figure; hold on
+for igap = 1 : ngap    
+    scatter(ori_pref_binned_list, osi_shift_avg(:, igap))
+end
+for igap = 1 : ngap
+    errorbar(ori_pref_binned_list, osi_shift_avg(:, igap), osi_shift_ste(:, igap),...
+        'color', color_list{igap}) %, 'LineStyle','none')
+end
+xlim([0-5, 90+5])
+legend('isi 750', 'isi 250', 'Location','southeast')
+
