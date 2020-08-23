@@ -211,6 +211,8 @@ data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:50))
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['find_ca_latency_zoomin.jpg'])
 save find_ca_latency.mat data_trial_zoom_in data_trial
+disp('now manually update ca latency and adapted baseline window in next section')
+disp(' ')
 
 % %%
 % 
@@ -221,19 +223,26 @@ save find_ca_latency.mat data_trial_zoom_in data_trial
 % plot(mean(temp, 2))
 
 %% calculate response
-% see data_trial_zoom_in. ca signal latency = 8 frames & adapter|target = 3|4 frames
+% see data_trial_zoom_in
+% if ca signal latency = +7 frames 
+% adapter|target = 3|4 frames
 % count from frame #1
 % data_adapter = frame #8-11
 % data_f2 (baseline after adaptation) = frame #14-16
+
+ca_latency = 9; % stim onset frame 1 -> signal received frame 10
+window_len = 3;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
 for itrial = 1:nTrials
 %     if ~isnan(cStart(itrial))
         data_f(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-10:cStart(itrial)-1),3);
-        data_adapter(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial)+7:cStimOn(itrial)+10),3);
+        data_adapter(:,:,itrial) = mean(data_reg(:,:,...
+            cStimOn(itrial) + ca_latency : cStimOn(itrial) + ca_latency + window_len),3);
         
 %         if cStimOn(itrial) >= cStart(itrial) 
-        data_f2(:,:,itrial) = mean(data_reg(:,:,cStimOn(itrial)+13:cStimOn(itrial)+15),3);
+        data_f2(:,:,itrial) = mean(data_reg(:,:,...
+            cStimOn(itrial) + 14 :cStimOn(itrial) + 16),3);
 %         else
 %             data_base2(:,:,itrial) = nan(sz(1),sz(2));
 %         end
@@ -245,7 +254,7 @@ for itrial = 1:nTrials
     
 %     if ~isnan(cTarget(itrial))
 %         if cTarget(itrial)+3 < sz(3)
-        data_targ(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)+7:cTarget(itrial)+10),3);
+        data_targ(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)+ca_latency:cTarget(itrial)+ca_latency+window_len),3);
 %         else
 %             data_targ(:,:,itrial) = nan(sz(1),sz(2));
 %         end
