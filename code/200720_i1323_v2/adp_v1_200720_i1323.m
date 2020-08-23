@@ -38,9 +38,9 @@ datemouserun = [date '_' mouse '_' run_str];
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
 load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course including fake targ resp
 
-cd C:\Users\lan\Documents\repos\inter\code\200720_i1323
+cd C:\Users\lan\Documents\repos\inter\code\
 
-% load ori_across_bootstrap_runs_with_replace.mat
+load ori_across_bootstrap_runs_with_replace.mat
 load ori_across_cells_cond.mat
 load resp_noad_targ.mat
 load resp_ad_targ.mat
@@ -237,14 +237,14 @@ vis_driven = vis_driven_ad | vis_driven_noad;
 vis_driven_cell_list = find(vis_driven); % vis-driven cells are activated by adapter or no-ad targ
 
 nrun = 1000;
-ori_closeness = sort(abs(ori_pref_runs - ori_pref_cells), 2); % sort each row aka cell
+ori_closeness = sort(abs(ori_pref_runs - ori_pref_cells_merge(:,1)), 2); % sort each row aka cell
 percentile_threshold = 0.90;
 percentile_idx = percentile_threshold * nrun;
 ori_perc = ori_closeness(:, percentile_idx);
 good_fit_cell = ori_perc<22.5;
 ncell_good_fit = sum(good_fit_cell)
 
-sharp_cell = fit_param(:, 3) > 3;
+sharp_cell = fit_param_merge(:, 3, 1) > 3;
 ncell_sharp = sum(sharp_cell)
 
 best_cell = vis_driven & sharp_cell & good_fit_cell;
@@ -498,7 +498,7 @@ fit_param_750 = pi * ones(ncell, 7);
 for icell = 1 : ncell
     theta = deg2rad(delta_list);
     data = dfof_avg_750(icell,:); 
-    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaofmisesfit_ori(theta, data);
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
     fit_param_750(icell,:) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
 %   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
 end
@@ -582,8 +582,8 @@ for row = 1 : 3
     ylabel('dF/F')
     title(subplot_title{row})
 end
-    saveas(gcf, ['ori tuning across cond cell ', num2str(icell)], 'jpg')
-    close
+%     saveas(gcf, ['ori tuning across cond cell ', num2str(icell)], 'jpg')
+%     close
 end
 
 %% Fig 2D: targ degree distance from adapter changes dfof resp
@@ -645,7 +645,7 @@ for igap = 1 : ngap
     errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap})
 end
 % line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
-ylim([-1, 0])
+ylim([-1, 0.2])
 xlim([0-5, 90+5])
 legend('isi 750', 'isi 250', 'Location', 'southeast')
 xlabel('|Test - Adapter| (deg)')

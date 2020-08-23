@@ -1,8 +1,11 @@
 %% get path names
-date = '200720';
+clear all
+clc
+
+date = '200729';
 ImgFolder = strvcat('003');
-time = strvcat('1133');
-mouse = 'i1323';
+time = strvcat('1251');
+mouse = 'i1324';
 doFromRef = 0;
 ref = strvcat('002'); % what is ref?
 nrun = size(ImgFolder,1);
@@ -87,7 +90,7 @@ nep = floor(size(data,3)./10000);
 [n n2] = subplotn(nep);
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
-data_avg = mean(data(:,:,70001:70500),3);
+data_avg = mean(data(:,:,50001:50500),3);
 
 %% Register data
 
@@ -111,16 +114,18 @@ elseif doFromRef
 else
     tic; [out, data_reg] = stackRegister(data,data_avg); toc;
     mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str]))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg', 'data_reg')
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
     save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_input.mat']), 'input')
 end
 clear data out
 
 %% test stability
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data_reg(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
+set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_FOV_byFrame.pdf']),'-dpdf', '-bestfit')
 
 figure; imagesq(mean(data_reg(:,:,1:10000),3)); truesize;
+set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_FOV_avg.pdf']),'-dpdf', '-bestfit')
 
 %% find activated cells
@@ -144,26 +149,26 @@ unique(cTarget - cStimOff) % ISI = 8 or 22-23 frame. rounded from 250? or 750 ms
 unique(cTarget - cStimOn)
 % target: 3-4 frame too
 
-% index2 = structfun(@(x) any(contains(x, 'Targ')), input);  sum(index2)
-tt = fieldnames(input)
-index = cellfun(@(x) any(contains(x, 'targ')),tt); sum(index)
-id = find(index > 0);
-for i = 1 : length(id)
-    fprintf(['input.', tt{id(i)}])
-    disp(' ')
-end
-
-input.cTargetOn 
-% input.tSoundTargetAmplitude 
-% input.doLinearTargetSpacing 
-% input.soundTargetAmplitude 
-% input.soundTargetStepsPerOctave 
-input.block2TargetOnTimeMs % 100 ms -> thus also 3-4 frames
-% input.block2SoundTargetAmplitude 
-% input.block2SoundTargetStepsPerOctave 
-input.doCustomTargetTime % 0
-input.targetStimOnMs
-input.targetOnTimeMs % 100 ms
+% % index2 = structfun(@(x) any(contains(x, 'Targ')), input);  sum(index2)
+% tt = fieldnames(input)
+% index = cellfun(@(x) any(contains(x, 'targ')),tt); sum(index)
+% id = find(index > 0);
+% for i = 1 : length(id)
+%     fprintf(['input.', tt{id(i)}])
+%     disp(' ')
+% end
+% 
+% input.cTargetOn 
+% % input.tSoundTargetAmplitude 
+% % input.doLinearTargetSpacing 
+% % input.soundTargetAmplitude 
+% % input.soundTargetStepsPerOctave 
+% input.block2TargetOnTimeMs % 100 ms -> thus also 3-4 frames
+% % input.block2SoundTargetAmplitude 
+% % input.block2SoundTargetStepsPerOctave 
+% input.doCustomTargetTime % 0
+% input.targetStimOnMs
+% input.targetOnTimeMs % 100 ms
 
 % %%
 % 
@@ -197,8 +202,10 @@ end
 
 plot(mean(data_trial, 2))
 set(gcf, 'Position', get(0, 'Screensize'));
-cd C:\Users\lan\Documents\repos\inter\code
+analysis_dir = fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str]);
+cd(analysis_dir)
 saveas(gcf, ['find_ca_latency.jpg'])
+close
 
 data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:50)); grid on; grid minor
 set(gcf, 'Position', get(0, 'Screensize'));
@@ -351,8 +358,7 @@ for idir = 1:nDelta
     title(deltas(idir))
 end
 set(gcf, 'Position', get(0, 'Screensize'));
-data_dfof = cat(3,data_dfof_targ_fake, data_dfof_targ_noadapt, data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
-% noadapt should be upfront!
+data_dfof = cat(3,data_dfof_targ_noadapt, data_dfof_targ_fake, data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof_max = max(imfilter(data_dfof, myfilter),[],3);
@@ -371,7 +377,7 @@ for iStim = 1:size(data_dfof,3)
     mask_data_temp = mask_data(:,:,end+1-iStim);
     mask_data_temp(find(mask_exp >= 1)) = 0;
     
-    fprintf('%d out of %d',iStim, size(data_dfof,3));
+    fprintf('\n %d out of %d \n',iStim, size(data_dfof,3));
     bwout = imCellEditInteractiveLG_LL(mask_data_temp);
 %     bwout = imCellEditInteractive(mask_data_temp);
     mask_all = mask_all+bwout;
@@ -382,7 +388,6 @@ end
 mask_cell= bwlabel(mask_all);
 figure; imagesc(mask_cell)
 set(gcf, 'Position', get(0, 'Screensize'));
-cd C:\Users\lan\Documents\repos\inter\code
 saveas(gcf, ['mask_cell_addfake.jpg'])
 
 % bwout = imCellEditInteractive(data_dfof_max);
