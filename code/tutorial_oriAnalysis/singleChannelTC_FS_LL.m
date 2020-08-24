@@ -2,10 +2,10 @@
 clear all
 clc
 
-date = '200723';
-mouse = 'i1323';
+date = '200806';
+mouse = 'i1322';
 ImgFolder = strvcat('003');
-time = strvcat('1343');
+time = strvcat('1139');
 frame_rate = 30;
 
 doFromRef = 0;
@@ -30,10 +30,10 @@ for irun = 1:nrun
     load(fName);
     
     temp(irun) = input;
-    nframes = [temp(irun).counterValues{end}(end) info.config.frames];
+    nframes = max([temp(irun).counterValues{end}(end) info.config.frames]);
 
     
-    fprintf(['Reading run ' num2str(irun) '- ' num2str(min(nframes)) ' frames \r\n'])
+    fprintf(['Reading run ' num2str(irun) ', consisting of ' num2str(min(nframes)) ' frames \r\n'])
     data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
     if size(data_temp,1)== 2
         data_temp = data_temp(1,:,:,:);
@@ -90,7 +90,7 @@ nep = floor(size(data,3)./10000);
 [n n2] = subplotn(nep);
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
-data_avg = mean(data(:,:,60001:60500),3);
+data_avg = mean(data(:,:,40001:40500),3);
 
 %% Register data
 
@@ -230,7 +230,7 @@ disp(' ')
 % data_adapter = frame #8-11
 % data_f2 (baseline after adaptation) = frame #14-16
 
-ca_latency = 9; % = x-1. stim onset frame 1 -> signal received frame x
+ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
 window_len = 3;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
@@ -242,7 +242,7 @@ for itrial = 1:nTrials
         
 %         if cStimOn(itrial) >= cStart(itrial) 
         data_f2(:,:,itrial) = mean(data_reg(:,:,...
-            cStimOn(itrial) + 13 :cStimOn(itrial) + 15),3);
+            cStimOn(itrial) + 14 :cStimOn(itrial) + 16),3);
 %         else
 %             data_base2(:,:,itrial) = nan(sz(1),sz(2));
 %         end
