@@ -2,10 +2,10 @@
 clear all
 clc
 
-date = '200723';
-mouse = 'i1323';
+date = '200804';
+mouse = 'i1322';
 ImgFolder = strvcat('003');
-time = strvcat('1343');
+time = strvcat('1201');
 frame_rate = 30;
 
 doFromRef = 0;
@@ -90,7 +90,7 @@ nep = floor(size(data,3)./10000);
 [n n2] = subplotn(nep);
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
-data_avg = mean(data(:,:,60001:60500),3);
+data_avg = mean(data(:,:,20001:20500),3);
 
 %% Register data
 
@@ -230,7 +230,7 @@ disp(' ')
 % data_adapter = frame #8-11
 % data_f2 (baseline after adaptation) = frame #14-16
 
-ca_latency = 9; % = x-1. stim onset frame 1 -> signal received frame x
+ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
 window_len = 3;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
@@ -423,7 +423,7 @@ for i = 1:nCells
      np_tc(:,i) = stackGetTimeCourses(data_reg,mask_np(:,:,i));
      np_tc_down(:,i) = stackGetTimeCourses(data_reg_down,mask_np(:,:,i));
      fprintf(['Cell #' num2str(i) '%s /n']) 
-     disp(' ')
+     disp()
 end
 
 %get weights by maximizing skew
@@ -439,7 +439,6 @@ clear data_reg data_reg_down
 
 save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_TCs_addfake.mat']), 'data_tc', 'np_tc', 'npSub_tc')
 clear data_tc data_tc_down np_tc np_tc_down mask_np mask_cell
-disp('TC extraction complete')
 
 % %% FS cycle analysis
 % 
