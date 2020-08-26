@@ -605,12 +605,13 @@ end
 dis_deltas = {[8], [1,7], [2,6], [3,5], [4]};
 
 dfof_dis_noad = {}; dfof_dis_targ = {};
-% cell_list_now = find(vis_driven_noad);
-cell_list_now = find(good_fit_cell);
+cell_list_now = find(vis_driven_noad);
+% cell_list_now = find(good_fit_cell);
 for ii = 1 : length(cell_list_now)
     icell = cell_list_now(ii);
     dfof_avg_noad_now = squeeze(dfof_avg_merge(icell, :, 1));
-    dfof_avg_noad_targ0 = squeeze(dfof_avg_merge(icell, 8, 1)); % use only noad targ 0 to normlz
+    dfof_avg_noad_targ_max = max(dfof_avg_merge(icell, :, 1)); 
+    dfof_avg_noad_targ0 = squeeze(dfof_avg_merge(icell, 8, 1));  % use only noad targ 0 to normlz
 
 for igap = 1 : ngap
     dfof_avg_isi_now = squeeze(dfof_avg_merge(icell, :, igap+1)); % 750&250
@@ -620,13 +621,14 @@ for igap = 1 : ngap
         
         dfof_dis_noad{ii, idis, igap} = dfof_avg_noad_now(id_dis_delta) .* ntrial_delta(id_dis_delta);
         dfof_dis_noad{ii, idis, igap}= sum(dfof_dis_noad{ii, idis, igap}) ./ sum(ntrial_delta(id_dis_delta));
+%         dfof_dis_noad{ii, idis, igap} = mean(); % sanity check using no-weight avg
         dfof_dis_targ{ii, idis, igap}= dfof_avg_isi_now(id_dis_delta) .* ntrial_delta(id_dis_delta);
         dfof_dis_targ{ii, idis, igap}= sum(dfof_dis_targ{ii, idis, igap}) ./ sum(ntrial_delta(id_dis_delta));
         
-        dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
-           ./ dfof_dis_noad{ii, idis, igap};
 %         dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
-%            ./ dfof_avg_noad_targ0;
+%            ./ dfof_dis_noad{ii, idis, igap};
+        dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
+           ./ dfof_avg_noad_targ_max;
     end
 end
 end
@@ -652,7 +654,7 @@ for igap = 1 : ngap
     errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap})
 end
 line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
-ylim([-1, 0.2])
+% ylim([-1, 0.2])
 xlim([0-5, 90+5])
 legend('isi 750', 'isi 250', 'Location', 'southeast')
 xlabel('|Test - Adapter| (deg)')
@@ -671,66 +673,66 @@ ylabel('delta norm dF/F')
 %         ['n=', num2str(ntrial_dis(itext))], 'HorizontalAlignment', 'center')
 % end
 
-%% Fig 2D: revised to norm against max actual response
-% used median instead of avg, bc some dfof_dis_noad are too close to 0, and dragged dfof_dis_norm super high
-% bug: how to get rid of large outlier when using avg?
-
-dfof_dis_noad = {}; dfof_dis_targ = {};
-cell_list_now = find(vis_driven_noad);
-for ii = 1 : length(cell_list_now)
-    icell = cell_list_now(ii);
-    dfof_avg_noad_now = max(squeeze(dfof_avg_merge(icell, :, 1)));
-
-for igap = 1 : ngap
-    dfof_avg_isi_now = squeeze(dfof_avg_merge(icell, :, igap+1)); % 750&250
-
-    for idis = 1 : length(dis_list)
-        id_dis_delta = dis_deltas{idis};
-        
-        dfof_dis_noad{ii, idis, igap} = dfof_avg_noad_now;
-        dfof_dis_targ{ii, idis, igap}= dfof_avg_isi_now(id_dis_delta) .* ntrial_delta(id_dis_delta);
-        dfof_dis_targ{ii, idis, igap}= sum(dfof_dis_targ{ii, idis, igap}) ./ sum(ntrial_delta(id_dis_delta));
-        
-        dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
-           ./ dfof_dis_noad{ii, idis, igap};
-    end
-end
-end
-
-for igap = 1 : ngap
-    for idis = 1 : length(dis_list)
-        dfof_dis_norm_avg(idis, igap) = mean(dfof_dis_norm(:, idis, igap));
-        dfof_dis_norm_median(idis, igap) = median(dfof_dis_norm(:, idis, igap));
-        dfof_dis_norm_ste(idis, igap) = std(dfof_dis_norm(:, idis, igap))./size(dfof_dis_norm, 1);
-    end
-end
-
-color_list = {[0,0,1], [1,0,0]};
-figure
-for igap = 1 : ngap
-    hold on
-%     scatter(dis_list, dfof_dis_norm_avg(:, igap))
-    scatter(dis_list, dfof_dis_norm_median(:, igap))
-end
-for igap = 1 : ngap
-    hold on
-%     errorbar(dis_list, dfof_dis_norm_avg(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
-    errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap})
-end
-% line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
-ylim([-1, 0])
-xlim([0-5, 90+5])
-legend('isi 750', 'isi 250', 'Location', 'southeast')
-xlabel('|Test - Adapter| (deg)')
-ylabel('delta norm dF/F')
-% saveas(gcf, ['response changes w targ-ad distance.jpg'])
-% close
+% %% Fig 2D: revised to norm against max actual response
+% % used median instead of avg, bc some dfof_dis_noad are too close to 0, and dragged dfof_dis_norm super high
+% % bug: how to get rid of large outlier when using avg?
+% 
+% dfof_dis_noad = {}; dfof_dis_targ = {};
+% cell_list_now = find(vis_driven_noad);
+% for ii = 1 : length(cell_list_now)
+%     icell = cell_list_now(ii);
+%     dfof_avg_noad_now = max(squeeze(dfof_avg_merge(icell, :, 1)));
+% 
+% for igap = 1 : ngap
+%     dfof_avg_isi_now = squeeze(dfof_avg_merge(icell, :, igap+1)); % 750&250
+% 
+%     for idis = 1 : length(dis_list)
+%         id_dis_delta = dis_deltas{idis};
+%         
+%         dfof_dis_noad{ii, idis, igap} = dfof_avg_noad_now;
+%         dfof_dis_targ{ii, idis, igap}= dfof_avg_isi_now(id_dis_delta) .* ntrial_delta(id_dis_delta);
+%         dfof_dis_targ{ii, idis, igap}= sum(dfof_dis_targ{ii, idis, igap}) ./ sum(ntrial_delta(id_dis_delta));
+%         
+%         dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
+%            ./ dfof_dis_noad{ii, idis, igap};
+%     end
+% end
+% end
+% 
+% for igap = 1 : ngap
+%     for idis = 1 : length(dis_list)
+%         dfof_dis_norm_avg(idis, igap) = mean(dfof_dis_norm(:, idis, igap));
+%         dfof_dis_norm_median(idis, igap) = median(dfof_dis_norm(:, idis, igap));
+%         dfof_dis_norm_ste(idis, igap) = std(dfof_dis_norm(:, idis, igap))./size(dfof_dis_norm, 1);
+%     end
+% end
+% 
+% color_list = {[0,0,1], [1,0,0]};
+% figure
+% for igap = 1 : ngap
+%     hold on
+% %     scatter(dis_list, dfof_dis_norm_avg(:, igap))
+%     scatter(dis_list, dfof_dis_norm_median(:, igap))
+% end
+% for igap = 1 : ngap
+%     hold on
+% %     errorbar(dis_list, dfof_dis_norm_avg(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
+%     errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap})
+% end
+% % line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
+% ylim([-1, 0])
+% xlim([0-5, 90+5])
+% legend('isi 750', 'isi 250', 'Location', 'southeast')
+% xlabel('|Test - Adapter| (deg)')
+% ylabel('delta norm dF/F')
+% % saveas(gcf, ['response changes w targ-ad distance.jpg'])
+% % close
 
 %% Fig 2E: resp changes w |ori_pref - ori_ad| distance
 % very buggy
 % restrict to well-fitted cell? 
 
-ori_pref_binned = ori_pref_cells_noad;
+ori_pref_binned = ori_pref_cells_merge(:,1); % pref measured by noad control
 ori_pref_binned(ori_pref_binned > 90) = 180 - ori_pref_binned(ori_pref_binned > 90); 
 ori_pref_binned(ori_pref_binned<20) = 0;
 ori_pref_binned(ori_pref_binned>=20 & ori_pref_binned<=70) = 45;
@@ -786,7 +788,7 @@ ylabel('norm pred peak resp')
 grid on; grid minor
 
 %% Fig 2F: ori_pref changes w |ori_pref - ori_ad| distance
-% buggy. wow this is totally flipped. 
+% buggy. wth is this. 
 
 ori_pref_dist = ori_pref_cells_merge;
 ori_pref_dist(ori_pref_dist > 90) = 180 - ori_pref_dist(ori_pref_dist > 90); 
