@@ -43,6 +43,7 @@ cd C:\Users\lan\Documents\repos\inter\code\
 load ori_across_bootstrap_runs_with_replace.mat
 load ori_across_cells_cond.mat
 load resp_noad_targ.mat
+load resp_ad.mat
 load resp_ad_targ.mat
 load resp_ad_targ0deg.mat 
 load trace_by_cond.mat
@@ -233,6 +234,7 @@ cd C:\Users\lan\Documents\repos\inter\code
 
 %% cell list by property
 
+vis_driven_ad = sum(sig_ttest_ad,2)>0; vis_driven_noad = sum(sig_ttest_noad,2)>0;
 vis_driven = vis_driven_ad | vis_driven_noad;
 vis_driven_cell_list = find(vis_driven); % vis-driven cells are activated by adapter or no-ad targ
 
@@ -291,6 +293,7 @@ end
 %% Fig 1E: compare ad_resp vs 0-deg targ_resp_250/750 of vis_driven cells
 % buggy
 
+ori_pref_cells = ori_pref_cells_merge(:,1);
 pref_0_cell = find(ori_pref_cells > (delta_list(end-1) + delta_list(end))/2 | ori_pref_cells < delta_list(1)/2);
 pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0); % dfof should >0
 pref_0_cell = pref_0_cell( dfof_avg_ad(pref_0_cell)>0 ); % dfof should >0
@@ -396,7 +399,7 @@ end
 %% Fig 2B: cell resp by dir & condition (no_ad, 750, 250) for "best cells"
 
 cell_list_now = vis_driven_cell_list;
-for ii = 1 : length(cell_list_now)
+for ii = 1 %: length(cell_list_now)
 icell = cell_list_now(ii);
 trace_no_ad_avg = []; trace_cond_avg_750 = []; trace_cond_avg_250 = [];
 
@@ -548,7 +551,7 @@ theta_finer = deg2rad(0:1:179);
 subplot_title = {'control', 'isi 750 ms', 'isi 250 ms'};
 
 cell_list_now = vis_driven_cell_list;
-for ii = 1 : length(cell_list_now)
+for ii = 1 %: length(cell_list_now)
     icell = cell_list_now(ii);
     figure('units','normalized','outerposition',[0 0 1/2 1]);
     
@@ -602,10 +605,12 @@ end
 dis_deltas = {[8], [1,7], [2,6], [3,5], [4]};
 
 dfof_dis_noad = {}; dfof_dis_targ = {};
-cell_list_now = find(vis_driven_noad);
+% cell_list_now = find(vis_driven_noad);
+cell_list_now = find(good_fit_cell);
 for ii = 1 : length(cell_list_now)
     icell = cell_list_now(ii);
     dfof_avg_noad_now = squeeze(dfof_avg_merge(icell, :, 1));
+    dfof_avg_noad_targ0 = squeeze(dfof_avg_merge(icell, 8, 1)); % use only noad targ 0 to normlz
 
 for igap = 1 : ngap
     dfof_avg_isi_now = squeeze(dfof_avg_merge(icell, :, igap+1)); % 750&250
@@ -620,6 +625,8 @@ for igap = 1 : ngap
         
         dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
            ./ dfof_dis_noad{ii, idis, igap};
+%         dfof_dis_norm(ii, idis, igap) = (dfof_dis_targ{ii, idis, igap} - dfof_dis_noad{ii, idis, igap})...
+%            ./ dfof_avg_noad_targ0;
     end
 end
 end
@@ -644,7 +651,7 @@ for igap = 1 : ngap
 %     errorbar(dis_list, dfof_dis_norm_avg(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap}) %, 'LineStyle','none')
     errorbar(dis_list, dfof_dis_norm_median(:, igap), dfof_dis_norm_ste(:, igap), 'color', color_list{igap})
 end
-% line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
+line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 ylim([-1, 0.2])
 xlim([0-5, 90+5])
 legend('isi 750', 'isi 250', 'Location', 'southeast')
