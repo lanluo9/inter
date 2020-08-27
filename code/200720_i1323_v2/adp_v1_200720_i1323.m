@@ -16,6 +16,7 @@ ImgFolder = '003';
 time = strvcat('1133'); 
 mouse = 'i1323';
 frame_rate = 30;
+result_folder = 'C:\Users\lan\Documents\repos\inter\code\200720_i1323_v3';
 
 run_str = catRunName(ImgFolder, 1);
 datemouse = [date '_' mouse];
@@ -40,14 +41,14 @@ load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course inclu
 
 cd C:\Users\lan\Documents\repos\inter\code\
 
-load ori_across_bootstrap_runs_with_replace.mat
-load ori_across_cells_cond.mat
-load resp_noad_targ.mat
-load resp_ad.mat
-load resp_ad_targ.mat
-load resp_ad_targ0deg.mat 
-load trace_by_cond.mat
-load trace_by_cond_dfof.mat
+% load ori_across_bootstrap_runs_with_replace.mat
+% load ori_across_cells_cond.mat
+% load resp_noad_targ.mat
+% load resp_ad.mat
+% load resp_ad_targ.mat
+% load resp_ad_targ0deg.mat 
+% load trace_by_cond.mat
+% load trace_by_cond_dfof.mat
 
 %% exp design
 
@@ -77,7 +78,7 @@ ndelta = length(delta_list);
 [nframe, ncell] = size(npSub_tc) % nframe * ncell
 
 %% align tc by stim onset or targ onset 
-% not accounting for ca latency yet. leave room for baseline
+% not accounting for ca latency yet. did not leave room for 1-sec-long "trial baseline"
 
 trial_len_ad = diff(cStimOn);
 tc_trial_align_ad = zeros(ncell, ntrial, max(trial_len_ad));
@@ -101,6 +102,29 @@ for icell = 1:ncell
     end
 end
 
+%% normalize aligned tc by 1-sec-long "trial baseline"
+
+trial_base_len = frame_rate * 1; % 30 frame/sec * 1 sec
+tc_trial_base = zeros(ncell, ntrial, trial_base_len);
+for icell = 1:ncell
+    npSub_tc_cell = npSub_tc(:,icell);
+    for itrial = 1:ntrial
+        start_id = cStimOn(itrial) - trial_base_len;
+        tc_trial_base(icell, itrial, :) = [npSub_tc_cell(cStimOn(itrial) - trial_base_len : cStimOn(itrial) - 1)];
+    end
+end
+t = squeeze(nanmean(squeeze(tc_trial_base(:,:,:)), 1)); 
+t_base = squeeze(nanmean(t(:,:), 1)); 
+plot(t_base, 'k');
+tc_trial_base_avg = mean(tc_trial_base, 3);
+
+for icell = 1:ncell
+    for itrial = 1:ntrial
+        tc_trial_align_ad(icell, itrial, :) = tc_trial_align_ad(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :);
+        tc_trial_align_targ(icell, itrial, :) = tc_trial_align_targ(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :);
+    end
+end
+
 %% find base & resp window in aligned tc
 % range = 223; 
 range = 50;
@@ -109,20 +133,21 @@ t_ad = squeeze(nanmean(t(:,:), 1));
 t = squeeze(nanmean(squeeze(tc_trial_align_targ(:,:,:)), 1)); 
 t_tg = squeeze(nanmean(t(:,:), 1)); 
 
-plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b')
+plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
+% saveas(gcf, ['aligned_tc_zoomin', num2str(icell)], 'jpg')
+disp('select base vs resp window accordingly, and edit below')
 
 %% index of trials
 
-ca_latency = 7; % monitor stim onset in frame #1 lead to neural signal in frame #8
+ca_latency = 8; % monitor stim onset in frame #1 lead to neural signal in frame #9
 isi_list = cTarget - cStimOff; 
 ngap = length(unique(cTarget - cStimOn));
 
-id_750 = find(isi_list > min(isi_list)); id_750(id_750 > ntrial) = [];
-id_250 = find(isi_list == min(isi_list)); id_750(id_750 > ntrial) = [];
-id_gaps = {id_250, id_750}; 
-% potential bug: need to unify order of isi here. should change to {750, 250} and match all following var
+id_750 = find(isi_list > mean(isi_list)); id_750(id_750 > ntrial) = [];
+id_250 = find(isi_list < mean(isi_list)); id_750(id_750 > ntrial) = [];
+id_gaps = {id_750, id_250}; 
 id_noad = intersect(find(targCon == 1),find(adapterCon == 0)); id_noad(id_noad > ntrial) = [];
 id_ad = intersect(find(targCon == 1),find(adapterCon == 1)); id_ad(id_ad > ntrial) = [];
 
@@ -141,12 +166,12 @@ for idelta = 1 : ndelta % ntrial per delta is equal
 for icell = 1 : ncell
     base_win = []; resp_win = [];
     
-    for igap =  1 : ngap % ntrial per isi is equal but not distributed evenly to every delta
+    for igap =  1 : ngap % order: 750, 250
         idx = intersect(intersect(id_gaps{igap}, id_delta), id_noad); % use only no-adapter trials with 1 ISI & 1 ori
         ntrial_cond = length(idx); 
         
         range_adapt_base = [1:3]; 
-        range_targ_resp = [9:11]; % ref session: find base & resp window in aligned tc
+        range_targ_resp = [9:11]; % ref section: find base & resp window in aligned tc
 
         base_win = [base_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_adapt_base)),2)]; % avg over window -> [ntrial_ori, 1]
         resp_win = [resp_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_targ_resp)),2)];
@@ -159,15 +184,15 @@ for icell = 1 : ncell
     resp_ste_noad(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
     cp_win_noad{icell, idelta} = [base_win, resp_win];
 
-    dfof_avg_noad(icell, idelta) = mean( (resp_win - base_win) ./ mean(base_win) );
-    dfof_ste_noad(icell, idelta) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_cond);
+    dfof_avg_noad(icell, idelta) = mean( resp_win - base_win );
+    dfof_ste_noad(icell, idelta) = std( resp_win - base_win ) / sqrt(ntrial_cond);
     
 end
 end
 vis_driven_noad = sum(sig_ttest_noad,2)>0;
 % save resp_noad_targ.mat dfof_avg_noad dfof_ste_noad cp_win_noad base_avg_noad resp_avg_noad resp_ste_noad sig_ttest_noad p_ttest_noad
 
-sum(sum(sig_ttest_noad,2)>0) % ncells responsive to >= 1 targ ori: 54/103
+sum(sum(sig_ttest_noad,2)>0) % ncells responsive to >= 1 targ ori: 58/103
 figure
 subplot(1,2,1)
 imagesc(sig_ttest_noad); colorbar
@@ -176,11 +201,10 @@ subplot(1,2,2)
 imagesc(p_ttest_noad(:,:,1)); colorbar
 title('p value')
 set(gcf, 'Position', get(0, 'Screensize'));
-cd C:\Users\lan\Documents\repos\inter\code
 % saveas(gcf, ['visual_driven_cells_noad_targ.jpg'])
 % close
 
-
+%%
 % vis-driven by ad
 sig_ttest_ad = pi * ones(ncell, ndelta); p_ttest_ad = pi * ones(ncell, ndelta);
 base_avg_ad = pi * ones(ncell, ndelta);
@@ -194,12 +218,12 @@ for idelta = 1 : ndelta % ntrial per delta is equal
 for icell = 1 : ncell
     base_win = []; resp_win = [];
     
-    for igap =  1 : ngap % ntrial per isi is equal but not distributed evenly to every delta
-        idx = intersect(intersect(id_gaps{igap}, id_delta), id_ad); % use only no-adapter trials with 1 ISI & 1 ori
+    for igap =  1 : ngap 
+        idx = intersect(intersect(id_gaps{igap}, id_delta), id_ad); % use only with-adapter trials with 1 ISI & 1 ori
         ntrial_cond = length(idx); 
         
         range_adapt_base = [1:3]; 
-        range_targ_resp = [9:11]; % ref session: find base & resp window in aligned tc
+        range_targ_resp = [9:11]; 
 
         base_win = [base_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_adapt_base)),2)]; % avg over window -> [ntrial_ori, 1]
         resp_win = [resp_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_targ_resp)),2)];
@@ -212,15 +236,15 @@ for icell = 1 : ncell
     resp_ste_ad(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
     cp_win_ad{icell, idelta} = [base_win, resp_win];
 
-    dfof_avg_ad(icell, idelta) = mean( (resp_win - base_win) ./ mean(base_win) );
-    dfof_ste_ad(icell, idelta) = std( (resp_win - base_win) ./ mean(base_win) ) / sqrt(ntrial_cond);
+    dfof_avg_ad(icell, idelta) = mean( resp_win - base_win );
+    dfof_ste_ad(icell, idelta) = std( resp_win - base_win ) / sqrt(ntrial_cond);
     
 end
 end
 vis_driven_ad = sum(sig_ttest_ad,2)>0;
 % save resp_ad.mat dfof_avg_ad dfof_ste_ad cp_win_ad base_avg_ad resp_avg_ad resp_ste_ad sig_ttest_ad p_ttest_ad
 
-sum(sum(sig_ttest_ad,2)>0) % ncells responsive to >= 1 targ ori: 69/103
+sum(sum(sig_ttest_ad,2)>0) % ncells responsive to >= 1 targ ori: 68/103
 subplot(1,2,1)
 imagesc(sig_ttest_ad); colorbar
 title('visually driven by no-adapter trial')
@@ -228,30 +252,80 @@ subplot(1,2,2)
 imagesc(p_ttest_ad(:,:,1)); colorbar
 title('p value')
 set(gcf, 'Position', get(0, 'Screensize'));
-cd C:\Users\lan\Documents\repos\inter\code
 % saveas(gcf, ['visual_driven_cells_adapter.jpg'])
 % close
 
+%% find good_fit_cells w bootstrap using new dfof
+
+dfof_avg_runs = pi * ones(ncell, ndelta, nrun);
+dfof_ste_runs = pi * ones(ncell, ndelta, nrun);
+fit_param_runs = pi * ones(ncell, 7, nrun);
+ori_pref_runs = pi * ones(ncell, nrun);
+
+theta = deg2rad(delta_list);
+nrun = 1000;
+disp('start bootstrap runs')
+for irun = 1 : nrun
+    disp(num2str(irun))
+
+    for icell = 1 : ncell        
+        for idelta = 1 : ndelta
+            idx = find(delta_seq == delta_list(idelta)); 
+            idx = intersect(idx, id_noad);
+            
+            ntrials_delta_noad = length(idx);
+            bootstrap_draw = round(ntrials_delta_noad * 0.7);
+            idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
+
+            % well-fit for no-ad only
+            base_win = squeeze(tc_trial_align_targ(icell, idx_run, 1:3));
+            base_win = mean(base_win, 2); % avg over window -> [ntrial, 1]
+            resp_win = squeeze(tc_trial_align_targ(icell, idx_run, 9:11));
+            resp_win = mean(resp_win, 2);
+
+            dfof_avg_runs(icell, idelta, irun) = mean( resp_win - base_win );
+            dfof_ste_runs(icell, idelta, irun) = std( resp_win - base_win ) ./ sqrt(ntrials_delta_noad);
+        end
+        
+        
+        data = dfof_avg_runs(icell, :, irun); 
+        [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+        fit_param_runs(icell, :, irun) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+    %   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+
+        ori_pref = rad2deg(u1_hat);
+        ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
+        ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+        ori_pref_runs(icell, irun) = ori_pref;
+    end
+end
+% save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
+
+% sanity check
+subplot(1,2,1)
+imagesc(dfof_avg_noad); colorbar
+subplot(1,2,2)
+imagesc(mean(dfof_avg_runs, 3)); colorbar
+% imagesc(dfof_avg_runs(:,:,1))
+
 %% cell list by property
 
-vis_driven_ad = sum(sig_ttest_ad,2)>0; vis_driven_noad = sum(sig_ttest_noad,2)>0;
-vis_driven = vis_driven_ad | vis_driven_noad;
-vis_driven_cell_list = find(vis_driven); % vis-driven cells are activated by adapter or no-ad targ
+ncell
 
-nrun = 1000;
-ori_closeness = sort(abs(ori_pref_runs - ori_pref_cells_merge(:,1)), 2); % sort each row aka cell
+vis_driven_ad = sum(sig_ttest_ad,2)>0; vis_driven_noad = sum(sig_ttest_noad,2)>0;
+vis_driven = vis_driven_ad | vis_driven_noad; % vis-driven cells are activated by adapter or no-ad targ
+ncell_vis_driven = length(find(vis_driven))
+
+nrun = size(ori_pref_runs,2);
+ori_closeness = sort(abs(ori_pref_runs - mean(ori_pref_runs,2)), 2); % sort each row aka cell
 percentile_threshold = 0.90;
 percentile_idx = percentile_threshold * nrun;
 ori_perc = ori_closeness(:, percentile_idx);
-good_fit_cell = ori_perc<22.5;
+good_fit_cell = ori_perc < (180/ndelta);
 ncell_good_fit = sum(good_fit_cell)
 
-sharp_cell = fit_param_merge(:, 3, 1) > 3;
-ncell_sharp = sum(sharp_cell)
-
-best_cell = vis_driven & sharp_cell & good_fit_cell;
-best_cell_list = find(best_cell);
-ncell_best = length(best_cell_list)
+best_cell = vis_driven & good_fit_cell;
+ncell_best = length(find(best_cell))
 
 %% resp to with-adapter 0-deg targ 
 
@@ -284,166 +358,11 @@ for icell = 1 : ncell
         resp_ste_tg0(icell, igap) = std(resp_win{1,igap}) / sqrt(length(resp_win{1,igap}));
         cp_win_tg0{icell, igap} = [base_win{1,igap}, resp_win{1,igap}];
 
-        dfof_avg_tg0(icell, igap) = mean( (resp_win{1,igap} - base_win{1,igap}) ./ mean(base_win{1,igap}) );
-        dfof_ste_tg0(icell, igap) = std( (resp_win{1,igap} - base_win{1,igap}) ./ mean(base_win{1,igap}) ) / sqrt(ntrial_cond);
+        dfof_avg_tg0(icell, igap) = mean( resp_win{1,igap} - base_win{1,igap} );
+        dfof_ste_tg0(icell, igap) = std( resp_win{1,igap} - base_win{1,igap} ) / sqrt(ntrial_cond);
     end
 end
-% save resp_ad_targ0deg.mat dfof_avg_tg0 dfof_ste_tg0 cp_win_tg0 base_avg_tg0 resp_avg_tg0 resp_ste_tg0 sig_ttest_tg0 p_ttest_tg0
-
-%% Fig 1E: compare ad_resp vs 0-deg targ_resp_250/750 of vis_driven cells
-% buggy
-
-ori_pref_cells = ori_pref_cells_merge(:,1);
-pref_0_cell = find(ori_pref_cells > (delta_list(end-1) + delta_list(end))/2 | ori_pref_cells < delta_list(1)/2);
-pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0); % dfof should >0
-pref_0_cell = pref_0_cell( dfof_avg_ad(pref_0_cell)>0 ); % dfof should >0
-pref_0_cell = intersect(pref_0_cell, vis_driven_cell_list);
-
-[count, idx] = histc(dfof_avg_ad(pref_0_cell),0:0.02:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
-count_nonzero_id = find(count~=0);
-% histogram(dfof_avg_ad(pref_0_cell))
-resp_bin_ad = accumarray(idx(:), dfof_avg_ad(pref_0_cell),[],@mean)
-resp_bin_tg = [];
-resp_bin_std = []; 
-resp_bin_ste = zeros(length(count),2);
-resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@mean);
-resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@mean);
-resp_bin_std(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@std);
-resp_bin_std(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@std);
-resp_bin_ste(count~=0, :) = resp_bin_std(count~=0, :) ./ sqrt(count(count~=0)) % use std or ste?
-
-figure
-scatter(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, 'b.'); hold on 
-scatter(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, 'r.')
-errorbar(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, resp_bin_std(:,1), 'b', 'LineStyle','none');
-errorbar(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, resp_bin_std(:,2), 'r', 'LineStyle','none');
-for itext = 1 : length(count_nonzero_id)
-    text(resp_bin_ad(count_nonzero_id(itext)), ...
-        resp_bin_tg(count_nonzero_id(itext),2)./resp_bin_ad(count_nonzero_id(itext)) + resp_bin_std(count_nonzero_id(itext),2) + 0.02, ...
-        ['n=', num2str(count(count_nonzero_id(itext)))], 'HorizontalAlignment', 'center')
-end
-% ylim([0,1])
-legend('isi 250', 'isi 750')
-% saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
-% close
-
-%% Fig 1C (approx): time course of adaptation recovery for all cells
-% buggy. smth wrong w dfof_avg_tg0?
-
-isi_sec = [0.250, 0.750, 4];
-norm_targ_resp_mean = [mean((dfof_avg_tg0(vis_driven,1)./dfof_avg_ad(vis_driven))), ...
-    mean(dfof_avg_tg0(vis_driven,2)./dfof_avg_ad(vis_driven)), 1];
-
-scatter(isi_sec, norm_targ_resp_mean, 'r*'); hold on
-f2 = fit(isi_sec', norm_targ_resp_mean','exp1')
-plot(f2, 'b')
-% xlim([0,4+0.5])
-% ylim([0,1+0.3])
-xlabel('ISI (s)')
-ylabel('normalized dF/F')
-legend off
-% saveas(gcf, ['Fig1C time course of adaptation recovery of vis-driven cells.jpg'])
-% close
-
-%% trial trace by cond or trace noad, converted to dfof
-
-trace_cond = cell(ncell, ndelta, ngap); 
-for icell = 1 : ncell    
-for idelta = 1 : ndelta 
-    id_delta = find(delta_seq == delta_list(idelta));
-    
-    for igap =  1 : ngap 
-        idx = intersect(intersect(id_gaps{igap}, id_delta), id_ad); % with-ad, specific isi & ori
-        range_trace = [1 : max(trial_len_list)]; 
-        trace_cond{icell, idelta, igap} = squeeze(tc_trial_align_ad(icell, idx, range_trace)); % [ntrial, trial_len]
-    end
-end
-end
-
-trace_no_ad = cell(ncell, ndelta, ngap); 
-for icell = 1 : ncell    
-for idelta = 1 : ndelta 
-    id_delta = find(delta_seq == delta_list(idelta));
-    
-    for igap =  1 : ngap 
-        idx = intersect(intersect(id_gaps{igap}, id_delta), id_noad); % no-ad, merge isi & specific ori
-        range_trace = [1 : max(trial_len_list)]; 
-        trace_no_ad{icell, idelta, igap} = squeeze(tc_trial_align_targ(icell, idx, range_trace)); 
-    end
-end
-end
-
-
-trace_noad_dfof = cell(ncell, ndelta); trace_cond_dfof = cell(ncell, ndelta, ngap);
-
-for icell = 1:ncell
-for idelta = 1:ndelta
-    trace_base = nanmean(trace_no_ad{icell, idelta}(:, 1:3), 2);
-    trace_noad_dfof{icell, idelta} = (trace_no_ad{icell, idelta} - trace_base) ./ trace_base;
-end
-end
-
-for icell = 1:ncell
-for idelta = 1:ndelta
-    for igap = 1:ngap
-        trace_base = nanmean(trace_cond{icell, idelta, igap}(:, 1:3), 2);
-        trace_cond_dfof{icell, idelta, igap} = (trace_cond{icell, idelta, igap} - trace_base) ./ trace_base;
-    end
-end
-end
-
-% cd C:\Users\lan\Documents\repos\inter\code
-% save trace_by_cond.mat trace_cond trace_no_ad 
-% save trace_by_cond_dfof.mat trace_cond_dfof trace_noad_dfof
-
-%% Fig 2B: cell resp by dir & condition (no_ad, 750, 250) for "best cells"
-
-cell_list_now = vis_driven_cell_list;
-for ii = 1 %: length(cell_list_now)
-icell = cell_list_now(ii);
-trace_no_ad_avg = []; trace_cond_avg_750 = []; trace_cond_avg_250 = [];
-
-for idelta = 1 : ndelta
-    trace_no_ad_avg(idelta, :) = nanmean(trace_noad_dfof{icell, idelta}, 1);
-    trace_cond_avg_750(idelta, :) = nanmean(trace_cond_dfof{icell, idelta, 2}, 1);
-    trace_cond_avg_250(idelta, :) = nanmean(trace_cond_dfof{icell, idelta, 1}, 1);
-end
-
-adjusted_trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
-trace_no_ad_avg = [trace_no_ad_avg(end,:); trace_no_ad_avg]; % wrap around
-trace_no_ad_avg = trace_no_ad_avg(:, 1:adjusted_trace_len); % trim
-trace_cond_avg_750 = [trace_cond_avg_750(end,:); trace_cond_avg_750]; 
-trace_cond_avg_750 = trace_cond_avg_750(:, 1:adjusted_trace_len);
-trace_cond_avg_250 = [trace_cond_avg_250(end,:); trace_cond_avg_250]; 
-trace_cond_avg_250 = trace_cond_avg_250(:, 1:adjusted_trace_len);
-
-x = [length(trace_no_ad_avg), length(trace_cond_avg_750), length(trace_cond_avg_250)];
-xmax = max(x);
-y = [trace_no_ad_avg, trace_cond_avg_750, trace_cond_avg_250];
-ymin = min(y(:));
-ymax = max(y(:)) + 0.05 * (max(y(:)) - min(y(:)));
-
-figure('units','normalized','outerposition',[0 0 1/2 1]);
-for col = 1 : 3
-    for idelta = 1 : (ndelta+1)
-        subplot(ndelta+1, 3, col + 3*(idelta-1));
-        if col == 1, plot(trace_no_ad_avg(idelta, :)) 
-            if idelta == 1, title('no adapter'), end
-        elseif col == 2, plot(trace_cond_avg_750(idelta, :))
-             if idelta == 1, title('isi 750'), end
-        elseif col == 3, plot(trace_cond_avg_250(idelta, :))
-             if idelta == 1, title('isi 250'), end
-        end
-%         axis off
-        xlim([0, xmax])
-        ylim([ymin, ymax])
-        xticks(0 : 30 : xmax)
-        yticks(round(ymin*10)/10 : 0.3 : round(ymax*10)/10)
-    end
-end
-% saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
-% close    
-end
+% save resp_ad_targ0.mat dfof_avg_tg0 dfof_ste_tg0 cp_win_tg0 base_avg_tg0 resp_avg_tg0 resp_ste_tg0 sig_ttest_tg0 p_ttest_tg0
 
 %% resp to with-ad targ by cond (dir & isi)
 
@@ -493,10 +412,10 @@ end
 
 %% tuning curve fit by cond
 
-dfof_avg_750 = dfof_avg_cond(:,:,2);
-dfof_ste_750 = dfof_ste_cond(:,:,2);
-cp_win_750 = cp_win_cond(:,:,2);
-sig_ttest_750 = sig_ttest_cond(:,:,2);
+dfof_avg_750 = dfof_avg_cond(:,:,1);
+dfof_ste_750 = dfof_ste_cond(:,:,1);
+cp_win_750 = cp_win_cond(:,:,1);
+sig_ttest_750 = sig_ttest_cond(:,:,1);
 fit_param_750 = pi * ones(ncell, 7);
 for icell = 1 : ncell
     theta = deg2rad(delta_list);
@@ -510,10 +429,10 @@ ori_pref = rad2deg(u1_hat_cells);
 ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref > 180) = ori_pref(ori_pref > 180) - 180;
 ori_pref_cells_750 = ori_pref;
 
-dfof_avg_250 = dfof_avg_cond(:,:,1);
-dfof_ste_250 = dfof_ste_cond(:,:,1);
-cp_win_250 = cp_win_cond(:,:,1);
-sig_ttest_250 = sig_ttest_cond(:,:,1);
+dfof_avg_250 = dfof_avg_cond(:,:,2);
+dfof_ste_250 = dfof_ste_cond(:,:,2);
+cp_win_250 = cp_win_cond(:,:,2);
+sig_ttest_250 = sig_ttest_cond(:,:,2);
 fit_param_250 = pi * ones(ncell, 7);
 for icell = 1 : ncell
     theta = deg2rad(delta_list);
@@ -544,6 +463,170 @@ fit_param_merge = cat(3, fit_param_noad, fit_param_750, fit_param_250);
 ori_pref_cells_merge = cat(2, ori_pref_cells_noad, ori_pref_cells_750, ori_pref_cells_250);
 
 % save ori_across_cells_cond.mat dfof_avg_merge dfof_ste_merge fit_param_merge ori_pref_cells_merge
+
+%% Fig 1E: compare ad_resp vs 0-deg targ_resp_750/250 of vis_driven cells
+% buggy: why is resp_tg/resp_ad larger than 1???
+
+ori_pref_cells_noad = ori_pref_cells_merge(:,1);
+pref_0_cell = find(ori_pref_cells_noad > (delta_list(end-1) + delta_list(end))/2 | ori_pref_cells_noad < delta_list(1)/2);
+pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0); % dfof should >0
+pref_0_cell = pref_0_cell( dfof_avg_ad(pref_0_cell)>0 ); % dfof should >0
+pref_0_cell = intersect(pref_0_cell, vis_driven_cell_list);
+
+[count, idx] = histc(dfof_avg_ad(pref_0_cell), 0:0.05:ceil(max(dfof_avg_ad(pref_0_cell))*10)/10);
+count_nonzero_id = find(count~=0);
+% histogram(dfof_avg_ad(pref_0_cell), 8)
+resp_bin_ad = accumarray(idx(:), dfof_avg_ad(pref_0_cell),[],@mean)
+resp_bin_tg = [];
+resp_bin_std = []; 
+resp_bin_ste = zeros(length(count),2);
+resp_bin_tg(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@mean);
+resp_bin_tg(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@mean)
+resp_bin_std(:,1) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,1),[],@std);
+resp_bin_std(:,2) = accumarray(idx(:),dfof_avg_tg0(pref_0_cell,2),[],@std);
+% resp_bin_ste(count~=0, :) = resp_bin_std(count~=0, :) ./ sqrt(count(count~=0)); % use std or ste?
+
+figure
+scatter(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, 'b.'); hold on 
+scatter(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, 'r.')
+errorbar(resp_bin_ad, resp_bin_tg(:,1)./resp_bin_ad, resp_bin_std(:,1), 'b', 'LineStyle','none');
+errorbar(resp_bin_ad, resp_bin_tg(:,2)./resp_bin_ad, resp_bin_std(:,2), 'r', 'LineStyle','none');
+for itext = 1 : length(count_nonzero_id)
+    text(resp_bin_ad(count_nonzero_id(itext)), ...
+        resp_bin_tg(count_nonzero_id(itext),2)./resp_bin_ad(count_nonzero_id(itext)) - resp_bin_std(count_nonzero_id(itext),2) - 0.1, ...
+        ['n=', num2str(count(count_nonzero_id(itext)))], 'HorizontalAlignment', 'center')
+end
+ylim([0,3])
+legend('isi 750', 'isi 250')
+% saveas(gcf, ['Fig1E cells prefer 0 deg binned by ad-resp.jpg'])
+% close
+
+%% Fig 1C (approx): time course of adaptation recovery for all cells
+% buggy, same as Fig 1E.
+
+isi_sec = [4, 0.750, 0.250];
+norm_targ_resp_mean = [1, mean((dfof_avg_tg0(vis_driven,1)./dfof_avg_ad(vis_driven))), ...
+    mean(dfof_avg_tg0(vis_driven,2)./dfof_avg_ad(vis_driven))];
+
+scatter(isi_sec, norm_targ_resp_mean, 'r*'); hold on
+f2 = fit(isi_sec', norm_targ_resp_mean', 'exp1')
+plot(f2, 'b')
+xlim([0, 4.5])
+ylim([0, 1.5])
+xlabel('ISI (s)')
+ylabel('normalized dF/F')
+legend off
+% saveas(gcf, ['Fig1C time course of adaptation recovery of vis-driven cells.jpg'])
+% close
+
+%% trial trace by cond or trace noad, converted to dfof
+
+trace_cond_dfof = cell(ncell, ndelta, ngap); 
+for icell = 1 : ncell    
+for idelta = 1 : ndelta 
+    id_delta = find(delta_seq == delta_list(idelta));
+    
+    for igap =  1 : ngap 
+        idx = intersect(intersect(id_gaps{igap}, id_delta), id_ad); % with-ad, specific isi, specific ori
+        range_trace = [1 : max(trial_len_list)]; 
+        trace_cond_dfof{icell, idelta, igap} = squeeze(tc_trial_align_ad(icell, idx, range_trace)); % [ntrial, trial_len]
+    end
+end
+end
+
+trace_noad_dfof = cell(ncell, ndelta); 
+for icell = 1 : ncell    
+for idelta = 1 : ndelta 
+    id_delta = find(delta_seq == delta_list(idelta));
+    idx = intersect(id_delta, id_noad); % no-ad / merge isi, & specific ori
+    range_trace = [1 : max(trial_len_list)]; 
+    trace_noad_dfof{icell, idelta} = squeeze(tc_trial_align_targ(icell, idx, range_trace)); 
+end
+end
+
+% save trace_by_cond_dfof.mat trace_cond_dfof trace_noad_dfof
+
+%% Fig 2B: cell resp by dir & condition (no_ad, 750, 250) for "best cells"
+
+cell_list_now = vis_driven_cell_list;
+for ii = 1 : length(cell_list_now)
+icell = cell_list_now(ii);
+trace_noad_avg = []; trace_cond_avg_750 = []; trace_cond_avg_250 = [];
+
+for idelta = 1 : ndelta
+    trace_noad_avg(idelta, :) = nanmean(trace_noad_dfof{icell, idelta}, 1);
+    trace_cond_avg_750(idelta, :) = nanmean(trace_cond_dfof{icell, idelta, 1}, 1);
+    trace_cond_avg_250(idelta, :) = nanmean(trace_cond_dfof{icell, idelta, 2}, 1);
+end
+
+adjusted_trace_len = 3.5 * frame_rate; % trace len 3.5 s according to Jin2019 Fig 2B
+trace_noad_avg = [trace_noad_avg(end,:); trace_noad_avg]; % wrap around
+trace_noad_avg = trace_noad_avg(:, 1:adjusted_trace_len); % trim
+trace_cond_avg_750 = [trace_cond_avg_750(end,:); trace_cond_avg_750]; 
+trace_cond_avg_750 = trace_cond_avg_750(:, 1:adjusted_trace_len);
+trace_cond_avg_250 = [trace_cond_avg_250(end,:); trace_cond_avg_250]; 
+trace_cond_avg_250 = trace_cond_avg_250(:, 1:adjusted_trace_len);
+
+x = [length(trace_noad_avg), length(trace_cond_avg_750), length(trace_cond_avg_250)];
+xmax = max(x);
+y = [trace_noad_avg, trace_cond_avg_750, trace_cond_avg_250];
+ymin = min(y(:));
+ymax = max(y(:)) + 0.05 * (max(y(:)) - min(y(:)));
+
+figure('units','normalized','outerposition',[0 0 1/2 1]);
+for col = 1 : 3
+    for idelta = 1 : (ndelta+1)
+        subplot(ndelta+1, 3, col + 3*(idelta-1));
+        if col == 1, plot(trace_noad_avg(idelta, :)) 
+            if idelta == 1, title('no adapter'), end
+        elseif col == 2, plot(trace_cond_avg_750(idelta, :))
+             if idelta == 1, title('isi 750'), end
+        elseif col == 3, plot(trace_cond_avg_250(idelta, :))
+             if idelta == 1, title('isi 250'), end
+        end
+%         axis off
+        xlim([0, xmax])
+        ylim([ymin, ymax])
+        xticks(0 : 30 : xmax)
+        yticks(round(ymin*10)/10 : 0.3 : round(ymax*10)/10)
+    end
+end
+saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
+close    
+end
+
+%% adp san check
+% smth is very wrong. adp causes facilitation for 75% cells?
+
+cell_list_now = vis_driven_cell_list;
+adp_ratio = zeros(length(cell_list_now), ndelta, ngap);
+
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+% for icell = 1:ncell
+    for idelta = 1:ndelta
+        id_delta = find(delta_seq == delta_list(idelta));
+        for igap = 1:ngap
+            idx_now_ad = intersect(intersect(id_gaps{igap}, id_delta), id_ad);
+            idx_now_noad = intersect(id_delta, id_noad);
+            dfof_equiv_ad = mean(squeeze(tc_trial_align_targ(icell, idx_now_ad, 9:11)),2);
+            dfof_equiv_noad = mean(squeeze(tc_trial_align_targ(icell, idx_now_noad, 9:11)),2);
+            adp_ratio(ii, idelta, igap) = mean(dfof_equiv_ad) / mean(dfof_equiv_noad);
+        end
+    end
+end
+
+sum(adp_ratio(:)>-Inf)
+sum(adp_ratio(:)>1)
+sum(adp_ratio(:)<=1)
+
+histogram(adp_ratio(:))
+line([1, 1], [0, 300], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
+xlabel('with-adapter / no-adapter resp to same targ with same isi')
+ylabel('count across cell ori isi')
+
+% squeeze(adp_ratio(1,:,:))
+% imagesc(squeeze(adp_ratio(1,:,:))); colorbar
 
 %% Fig 2C: tuning curve fit by condition (noad / 750 / 250) for vis-driven cells
 
@@ -656,7 +739,7 @@ end
 line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 % ylim([-1, 0.2])
 xlim([0-5, 90+5])
-legend('isi 750', 'isi 250', 'Location', 'southeast')
+legend('isi 750', 'isi 250', 'Location', 'southwest')
 xlabel('|Test - Adapter| (deg)')
 ylabel('delta norm dF/F')
 % saveas(gcf, ['response changes w targ-ad distance.jpg'])
@@ -825,12 +908,11 @@ for igap = 1 : ngap
     errorbar(ori_pref_binned_list, ori_pref_shift_avg(:, igap), ori_pref_shift_ste(:, igap),...
         'color', color_list{igap}) %, 'LineStyle','none')
 end
-% line([0-5, 180+5], [1, 1], 'Color', 'g', 'LineWidth', 1);
+line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 xlim([0-5, 90+5])
 legend('isi 750', 'isi 250', 'Location','southeast')
 
 %% Fig 2G: OSI changes w |ori_pref - ori_ad| distance
-
 
 cell_list_now = find(vis_driven & good_fit_cell);
 osi_shift = [];
@@ -879,4 +961,5 @@ for igap = 1 : ngap
 end
 xlim([0-5, 90+5])
 legend('isi 750', 'isi 250', 'Location','southeast')
+line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 
