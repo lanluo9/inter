@@ -608,7 +608,7 @@ end
 % is this normal???
 
 % with-adapter / no-adapter resp to same targ with same isi
-cell_list_now = vis_driven_cell_list;
+cell_list_now = pref_0_cell;
 adp_ratio = zeros(length(cell_list_now), ndelta, ngap);
 
 for ii = 1 : length(cell_list_now)
@@ -628,25 +628,30 @@ for ii = 1 : length(cell_list_now)
 end
 
 all = sum(adp_ratio(:)>-Inf)
+outlier_facil = find(adp_ratio > mean(adp_ratio(:) + 3*std(adp_ratio(:))) | adp_ratio < mean(adp_ratio(:) - 3*std(adp_ratio(:))))
 facilitated = sum(adp_ratio(:)>0)
-outlier_facil = find(adp_ratio>100)
 inhibited = sum(adp_ratio(:)<=0)
 
-% subplot(1,2,1)
+adp_ratio(outlier_facil) = NaN;
+nanmean(adp_ratio(:))
+nanstd(adp_ratio(:))
+
+t750 = squeeze(adp_ratio(:,:,1));
+t250 = squeeze(adp_ratio(:,:,2));
+errorbar(nanmean(t750, 1), nanstd(t750, 1), 'b'); hold on;
+errorbar(nanmean(t250, 1), nanstd(t250, 1), 'r');
+line([0,9], [0, 0], 'Color', 'g', 'LineWidth', 1);
+
+figure
+subplot(1,2,1)
 histogram(adp_ratio(:))
 % line([0, 0], [0, 900], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
 xlabel('adp index')
 ylabel('count across cell ori isi')
-% xlim([-100,100])
 
-% squeeze(adp_ratio(1,:,:))
-% imagesc(squeeze(adp_ratio(1,:,:))); colorbar
-% imagesc(squeeze(adp_ratio(:,:,2))); colorbar
-% histogram(adp_ratio(:,:,2))
 
-%%
 % check only with-ad targ0 vs ad || with-ad targ0 vs no-ad targ0
-cell_list_now = vis_driven_cell_list;
+cell_list_now = pref_0_cell;
 adp_ratio_targ0 = zeros(length(cell_list_now), ngap);
 
 for ii = 1 : length(cell_list_now)
@@ -669,13 +674,17 @@ for ii = 1 : length(cell_list_now)
 end
 
 all = sum(adp_ratio_targ0(:)>-Inf)
+outlier_facil0 = find(adp_ratio_targ0 > mean(adp_ratio_targ0(:) + 3*std(adp_ratio_targ0(:))))
 facilitated = sum(adp_ratio_targ0(:)>0)
-outlier_facil0 = find(adp_ratio_targ0>10)
 inhibited = sum(adp_ratio_targ0(:)<=0)
 
-% subplot(1,2,2)
+adp_ratio_targ0(outlier_facil0) = NaN;
+nanmean(adp_ratio_targ0, 1)
+nanstd(adp_ratio_targ0, 1)
+
+subplot(1,2,2)
 histogram(adp_ratio_targ0(:))
-line([0, 0], [0, 50], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
+% line([0, 0], [0, 50], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
 xlabel('adaptation index')
 ylabel('count across cell ori isi')
 
@@ -684,8 +693,9 @@ ylabel('count across cell ori isi')
 theta_finer = deg2rad(0:1:179);
 subplot_title = {'control', 'isi 750 ms', 'isi 250 ms'};
 
-cell_list_now = vis_driven_cell_list;
-for ii = 1 %: length(cell_list_now)
+% cell_list_now = vis_driven_cell_list;
+cell_list_now = find(good_fit_cell);
+for ii = 2 % 1 : length(cell_list_now)
     icell = cell_list_now(ii);
     figure('units','normalized','outerposition',[0 0 1/2 1]);
     
