@@ -1,0 +1,28 @@
+x = 0:0.01:100000;
+y = log(x)/log(500) + 0.25;
+plot(x,y)
+
+data = table(isi_sec', norm_targ_resp_mean');
+% Define the model as Y = a + exp(-b*x)
+% x((:, 1) is actually X and x(:, 2) is actually Y - the first and second columns of the table.
+modelfun = @(param, data) param(1) - param(2) * exp(param(3) * data(:, 1));  
+param_init = [1, .5, 6]; % init guess values 
+mdl = fitnlm(data, modelfun, param_init);
+% Now the model creation is done and the coefficients have been determined.
+% YAY!!!!
+
+% Extract the coefficient values from the the model object.
+% The actual coefficients are in the "Estimate" column of the "Coefficients" table that's part of the mode.
+coefficients = mdl.Coefficients{:, 'Estimate'}
+% Create smoothed/regressed data using the model:
+yFitted = coefficients(1) * exp(-coefficients(2)*X) + coefficients(3);
+% Now we're done and we can plot the smooth model as a red line going through the noisy blue markers.
+hold on;
+plot(X, yFitted, 'r-', 'LineWidth', 2);
+grid on;
+title('Exponential Regression with fitnlm()');
+xlabel('X');
+ylabel('Y');
+% legendHandle = legend('Noisy Y', 'Fitted Y', 'Location', 'north');
+% legendHandle.FontSize = 30;
+formulaString = sprintf('Y = %.3f * exp(-%.3f * X) + %.3f', coefficients(1), coefficients(2), coefficients(3))

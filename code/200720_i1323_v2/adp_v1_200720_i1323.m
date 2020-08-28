@@ -11,36 +11,34 @@ mworks_fn = fullfile(fn_base, 'Behavior\Data');
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
 % need automation here. import excel
-date = '200720';
+date = '200728';
+mouse = '1324';
 ImgFolder = '003';
-time = strvcat('1133'); 
-mouse = 'i1323';
+time = strvcat('1308'); 
 frame_rate = 30;
-result_folder = 'C:\Users\lan\Documents\repos\inter\code\200720_i1323_v3';
 
+imouse = ['i', mouse];
+result_folder = 'C:\Users\lan\Documents\repos\inter\code\200720_i1323_v3';
 run_str = catRunName(ImgFolder, 1);
-datemouse = [date '_' mouse];
-datemouserun = [date '_' mouse '_' run_str];
+datemouse = [date '_' imouse];
+datemouserun = [date '_' imouse '_' run_str];
 fnout = fullfile(ll_fn, 'Analysis\2P\', datemouserun); 
 
 %% load data
 
-fName = fullfile(mworks_fn, ['data-' mouse '-' date '-' time '.mat']);
+fName = fullfile(mworks_fn, ['data-' imouse '-' date '-' time '.mat']);
 load(fName); % load behavior data "input"
 
-CD = fullfile(data_fn, mouse, date, ImgFolder);
+CD = fullfile(data_fn, imouse, date, ImgFolder);
 cd(CD);
 imgMatFile = [ImgFolder '_000_000.mat'];
 load(imgMatFile); % load 2P img metadata "info"
 
-mouse = '1323';
-datemouse = [date '_' mouse];
-datemouserun = [date '_' mouse '_' run_str];
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
 load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course including fake targ resp
+% fix bug here: tc folder in Analysis naming convention
 
 cd C:\Users\lan\Documents\repos\inter\code\
-
 % load ori_across_bootstrap_runs_with_replace.mat
 % load ori_across_cells_cond.mat
 % load resp_noad_targ.mat
@@ -136,7 +134,7 @@ t_tg = squeeze(nanmean(t(:,:), 1));
 plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
-% saveas(gcf, ['aligned_tc_zoomin', num2str(icell)], 'jpg')
+saveas(gcf, ['aligned_tc_zoomin', num2str(icell)], 'jpg')
 disp('select base vs resp window accordingly, and edit below')
 
 %% index of trials
@@ -257,13 +255,13 @@ set(gcf, 'Position', get(0, 'Screensize'));
 
 %% find good_fit_cells w bootstrap using new dfof
 
+nrun = 1000;
 dfof_avg_runs = pi * ones(ncell, ndelta, nrun);
 dfof_ste_runs = pi * ones(ncell, ndelta, nrun);
 fit_param_runs = pi * ones(ncell, 7, nrun);
 ori_pref_runs = pi * ones(ncell, nrun);
 
 theta = deg2rad(delta_list);
-nrun = 1000;
 disp('start bootstrap runs')
 for irun = 1 : nrun
     disp(num2str(irun))
@@ -314,6 +312,7 @@ ncell
 
 vis_driven_ad = sum(sig_ttest_ad,2)>0; vis_driven_noad = sum(sig_ttest_noad,2)>0;
 vis_driven = vis_driven_ad | vis_driven_noad; % vis-driven cells are activated by adapter or no-ad targ
+vis_driven_cell_list = find(vis_driven);
 ncell_vis_driven = length(find(vis_driven))
 
 nrun = size(ori_pref_runs,2);
@@ -406,8 +405,6 @@ for idelta = 1 : ndelta
     end
 end
 end
-
-% cd C:\Users\lan\Documents\repos\inter\code
 % save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
 
 %% tuning curve fit by cond
@@ -503,16 +500,27 @@ legend('isi 750', 'isi 250')
 
 %% Fig 1C (approx): time course of adaptation recovery for all cells
 % buggy, same as Fig 1E.
+% switched to median bc of super negative outlier
 
 isi_sec = [4, 0.750, 0.250];
-norm_targ_resp_mean = [1, mean((dfof_avg_tg0(vis_driven,1)./dfof_avg_ad(vis_driven))), ...
-    mean(dfof_avg_tg0(vis_driven,2)./dfof_avg_ad(vis_driven))];
+norm_targ_resp_mean = [1, median((dfof_avg_tg0(vis_driven,1)./dfof_avg_ad(vis_driven))), ...
+    median(dfof_avg_tg0(vis_driven,2)./dfof_avg_ad(vis_driven))];
 
-scatter(isi_sec, norm_targ_resp_mean, 'r*'); hold on
-f2 = fit(isi_sec', norm_targ_resp_mean', 'exp1')
-plot(f2, 'b')
+data = table(isi_sec', norm_targ_resp_mean');
+modelfun = @(param, data) 1 - param(1) * exp(param(2) * data(:, 1)); % Y = 1 - y0 * exp(k*x)
+param_init = [0.75, -2]; % init guess values 
+mdl = fitnlm(data, modelfun, param_init);
+param = mdl.Coefficients{:, 'Estimate'}
+x = 0:0.01:4
+yfit_decay = 1 - param(1) * exp(param(2) * x);
+
+scatter(isi_sec, norm_targ_resp_mean)
+hold on;
+plot(x, yfit_decay, 'r-');
+grid on;
+% formulaString = sprintf('Y = 1 - %.3f * exp(%.3f * X)', param_decay(1), param_decay(2))
 xlim([0, 4.5])
-ylim([0, 1.5])
+ylim([0, 1.3])
 xlabel('ISI (s)')
 ylabel('normalized dF/F')
 legend off
@@ -549,7 +557,7 @@ end
 %% Fig 2B: cell resp by dir & condition (no_ad, 750, 250) for "best cells"
 
 cell_list_now = vis_driven_cell_list;
-for ii = 1 : length(cell_list_now)
+for ii = 1 %: length(cell_list_now)
 icell = cell_list_now(ii);
 trace_noad_avg = []; trace_cond_avg_750 = []; trace_cond_avg_250 = [];
 
@@ -591,8 +599,8 @@ for col = 1 : 3
         yticks(round(ymin*10)/10 : 0.3 : round(ymax*10)/10)
     end
 end
-saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
-close    
+% saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
+% close    
 end
 
 %% adp san check
@@ -611,22 +619,24 @@ for ii = 1 : length(cell_list_now)
             idx_now_noad = intersect(id_delta, id_noad);
             dfof_equiv_ad = mean(squeeze(tc_trial_align_targ(icell, idx_now_ad, 9:11)),2);
             dfof_equiv_noad = mean(squeeze(tc_trial_align_targ(icell, idx_now_noad, 9:11)),2);
-            adp_ratio(ii, idelta, igap) = mean(dfof_equiv_ad) / mean(dfof_equiv_noad);
+            adp_ratio(ii, idelta, igap) = (mean(dfof_equiv_ad) - mean(dfof_equiv_noad)) / mean(dfof_equiv_noad);
         end
     end
 end
 
 sum(adp_ratio(:)>-Inf)
-sum(adp_ratio(:)>1)
-sum(adp_ratio(:)<=1)
+sum(adp_ratio(:)>0)
+sum(adp_ratio(:)<=0)
 
 histogram(adp_ratio(:))
-line([1, 1], [0, 300], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
+line([0, 0], [0, 300], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
 xlabel('with-adapter / no-adapter resp to same targ with same isi')
 ylabel('count across cell ori isi')
 
 % squeeze(adp_ratio(1,:,:))
 % imagesc(squeeze(adp_ratio(1,:,:))); colorbar
+% imagesc(squeeze(adp_ratio(:,:,2))); colorbar
+% histogram(adp_ratio(:,:,2))
 
 %% Fig 2C: tuning curve fit by condition (noad / 750 / 250) for vis-driven cells
 
