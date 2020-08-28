@@ -118,8 +118,8 @@ tc_trial_base_avg = mean(tc_trial_base, 3);
 
 for icell = 1:ncell
     for itrial = 1:ntrial
-        tc_trial_align_ad(icell, itrial, :) = tc_trial_align_ad(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :);
-        tc_trial_align_targ(icell, itrial, :) = tc_trial_align_targ(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :);
+        tc_trial_align_ad(icell, itrial, :) = tc_trial_align_ad(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :) -1;
+        tc_trial_align_targ(icell, itrial, :) = tc_trial_align_targ(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :) -1;
     end
 end
 
@@ -304,6 +304,7 @@ subplot(1,2,1)
 imagesc(dfof_avg_noad); colorbar
 subplot(1,2,2)
 imagesc(mean(dfof_avg_runs, 3)); colorbar
+set(gcf, 'Position', get(0, 'Screensize'));
 % imagesc(dfof_avg_runs(:,:,1))
 
 %% cell list by property
@@ -499,7 +500,6 @@ legend('isi 750', 'isi 250')
 % close
 
 %% Fig 1C (approx): time course of adaptation recovery for all cells
-% buggy, same as Fig 1E.
 % switched to median bc of super negative outlier
 
 isi_sec = [4, 0.750, 0.250];
@@ -517,7 +517,7 @@ yfit_decay = 1 - param(1) * exp(param(2) * x);
 scatter(isi_sec, norm_targ_resp_mean)
 hold on;
 plot(x, yfit_decay, 'r-');
-grid on;
+grid on; grid minor
 % formulaString = sprintf('Y = 1 - %.3f * exp(%.3f * X)', param_decay(1), param_decay(2))
 xlim([0, 4.5])
 ylim([0, 1.3])
@@ -596,7 +596,7 @@ for col = 1 : 3
         xlim([0, xmax])
         ylim([ymin, ymax])
         xticks(0 : 30 : xmax)
-        yticks(round(ymin*10)/10 : 0.3 : round(ymax*10)/10)
+        yticks(round(ymin*10)/10 : round((ymax-ymin)*10)/20 : round(ymax*10)/10)
     end
 end
 % saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
@@ -604,8 +604,10 @@ end
 end
 
 %% adp san check
-% smth is very wrong. adp causes facilitation for 75% cells?
+% suspicious: dfof_equiv_noad avg get super close to 0, bc it contains lots of negative dfof
+% is this normal???
 
+% with-adapter / no-adapter resp to same targ with same isi
 cell_list_now = vis_driven_cell_list;
 adp_ratio = zeros(length(cell_list_now), ndelta, ngap);
 
@@ -617,26 +619,65 @@ for ii = 1 : length(cell_list_now)
         for igap = 1:ngap
             idx_now_ad = intersect(intersect(id_gaps{igap}, id_delta), id_ad);
             idx_now_noad = intersect(id_delta, id_noad);
-            dfof_equiv_ad = mean(squeeze(tc_trial_align_targ(icell, idx_now_ad, 9:11)),2);
-            dfof_equiv_noad = mean(squeeze(tc_trial_align_targ(icell, idx_now_noad, 9:11)),2);
-            adp_ratio(ii, idelta, igap) = (mean(dfof_equiv_ad) - mean(dfof_equiv_noad)) / mean(dfof_equiv_noad);
+            dfof_equiv_ad = mean(squeeze(tc_trial_align_targ(icell, idx_now_ad, 9:11)),2) - mean(squeeze(tc_trial_align_targ(icell, idx_now_ad, 1:3)),2);
+            dfof_equiv_noad = mean(squeeze(tc_trial_align_targ(icell, idx_now_noad, 9:11)),2) - mean(squeeze(tc_trial_align_targ(icell, idx_now_noad, 1:3)),2);
+            adp_ratio(ii, idelta, igap) = mean(dfof_equiv_ad) / mean(dfof_equiv_noad) - 1;
+%             adp_ratio(ii, idelta, igap) = mean(dfof_equiv_ad(dfof_equiv_ad>0)) / mean(dfof_equiv_noad(dfof_equiv_noad>0)) - 1;
         end
     end
 end
 
-sum(adp_ratio(:)>-Inf)
-sum(adp_ratio(:)>0)
-sum(adp_ratio(:)<=0)
+all = sum(adp_ratio(:)>-Inf)
+facilitated = sum(adp_ratio(:)>0)
+outlier_facil = find(adp_ratio>100)
+inhibited = sum(adp_ratio(:)<=0)
 
+% subplot(1,2,1)
 histogram(adp_ratio(:))
-line([0, 0], [0, 300], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
-xlabel('with-adapter / no-adapter resp to same targ with same isi')
+% line([0, 0], [0, 900], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
+xlabel('adp index')
 ylabel('count across cell ori isi')
+% xlim([-100,100])
 
 % squeeze(adp_ratio(1,:,:))
 % imagesc(squeeze(adp_ratio(1,:,:))); colorbar
 % imagesc(squeeze(adp_ratio(:,:,2))); colorbar
 % histogram(adp_ratio(:,:,2))
+
+%%
+% check only with-ad targ0 vs ad || with-ad targ0 vs no-ad targ0
+cell_list_now = vis_driven_cell_list;
+adp_ratio_targ0 = zeros(length(cell_list_now), ngap);
+
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+% for icell = 1:ncell
+    for idelta = 8 % targ0 only! adp is ori-specific
+        id_delta = find(delta_seq == delta_list(idelta));
+        for igap = 1:ngap
+            idx_now_ad_targ = intersect(intersect(id_gaps{igap}, id_delta), id_ad);
+%             idx_now_noad_targ = intersect(id_delta, id_noad);
+            dfof_equiv_ad_targ = mean(squeeze(tc_trial_align_targ(icell, idx_now_ad_targ, 9:11)),2)...
+                               - mean(squeeze(tc_trial_align_targ(icell, idx_now_ad_targ, 1:3)),2);
+            dfof_equiv_ad = mean(squeeze(tc_trial_align_ad(icell, idx_now_ad_targ, 9:11)),2)...
+                          - mean(squeeze(tc_trial_align_ad(icell, idx_now_ad_targ, 1:3)),2);
+%             dfof_equiv_noad_targ = mean(squeeze(tc_trial_align_targ(icell, idx_now_noad_targ, 9:11)),2) - mean(squeeze(tc_trial_align_targ(icell, idx_now_noad_targ, 1:3)),2);
+%             adp_ratio_targ0(ii, igap) = mean(dfof_equiv_ad_targ(dfof_equiv_ad_targ>0)) / mean(dfof_equiv_ad(dfof_equiv_ad>0)) - 1;
+            adp_ratio_targ0(ii, igap) = mean(dfof_equiv_ad_targ) / mean(dfof_equiv_ad) - 1;
+        end
+    end
+end
+
+all = sum(adp_ratio_targ0(:)>-Inf)
+facilitated = sum(adp_ratio_targ0(:)>0)
+outlier_facil0 = find(adp_ratio_targ0>10)
+inhibited = sum(adp_ratio_targ0(:)<=0)
+
+% subplot(1,2,2)
+histogram(adp_ratio_targ0(:))
+line([0, 0], [0, 50], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
+xlabel('adaptation index')
+ylabel('count across cell ori isi')
 
 %% Fig 2C: tuning curve fit by condition (noad / 750 / 250) for vis-driven cells
 
