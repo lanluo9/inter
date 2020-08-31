@@ -18,11 +18,13 @@ dataset_list.date = [200803, 200804, 200806,...
 dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 %% iterate thru datasets
-iset = 1;
-% for iset = 1 : length(dataset_list.date)
-    date = num2str(dataset_list.date(iset));
-    mouse = num2str(dataset_list.mouse(iset));
-% end
+
+for iset = 1 : length(dataset_list.date)
+iset
+date = num2str(dataset_list.date(iset))
+mouse = num2str(dataset_list.mouse(iset))
+area = dataset_list.area{1,iset}
+
 imouse = ['i', mouse];
 xls_dir = fullfile(data_fn, imouse, date);
 cd(xls_dir)
@@ -56,7 +58,6 @@ cd(result_folder);
 
 %% dataset params
 
-clc
 ntrial = input.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps % final trial discarded bc too few frames
 [nframe, ncell] = size(npSub_tc); % nframe * ncell
 
@@ -154,9 +155,10 @@ plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b');
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
 saveas(gcf, ['aligned_tc_zoomin'], 'jpg')
-disp('select base vs resp window accordingly, and edit below')
 
-peak_window = 9:11;
+prompt = 'base window = 1:3. what is resp window? ';
+range_targ_resp = input(prompt)
+
 ca_latency = 8; % monitor stim onset in frame #1 lead to neural signal in frame #9
 
 %% find vis-driven & good-fit
@@ -252,7 +254,6 @@ set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['visual_driven_cells_adapter.jpg'])
 close
 
-cd ..
 save resp_noad_targ.mat dfof_avg_noad dfof_ste_noad sig_ttest_noad 
 save resp_ad.mat dfof_avg_ad dfof_ste_ad sig_ttest_ad 
 
@@ -302,6 +303,7 @@ for irun = 1 : nrun
         ori_pref_runs(icell, irun) = ori_pref;
     end
 end
+cd(result_folder)
 save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
 
 % % sanity check
@@ -315,34 +317,6 @@ save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs or
 else
     load(bootstrap_file)
 end
-
-%% cell list by property
-
-ncell
-vis_driven_noad = sum(sig_ttest_noad,2)>0; sum(sum(sig_ttest_noad,2)>0) % ncells responsive to >= 1 targ ori: 81/97
-vis_driven_ad = sum(sig_ttest_ad,2)>0; sum(sum(sig_ttest_ad,2)>0) % ncells responsive to ad: 86/97
-vis_driven = vis_driven_ad | vis_driven_noad; % vis-driven cells are activated by adapter or no-ad targ
-vis_driven_cell_list = find(vis_driven);
-ncell_vis_driven = length(find(vis_driven))
-
-nrun = size(ori_pref_runs,2);
-ori_closeness = sort(abs(ori_pref_runs - mean(ori_pref_runs,2)), 2); % sort each row aka cell
-percentile_threshold = 0.90;
-percentile_idx = percentile_threshold * nrun;
-ori_perc = ori_closeness(:, percentile_idx);
-good_fit_cell = ori_perc < (180/ndelta);
-ncell_good_fit = sum(good_fit_cell)
-
-best_cell = vis_driven & good_fit_cell;
-ncell_best = length(find(best_cell))
-
-ori_pref_cells_noad = ori_pref_cells_merge(:,1);
-pref_0_cell = find(ori_pref_cells_noad > (delta_list(end-1) + delta_list(end))/2 | ori_pref_cells_noad < delta_list(1)/2);
-pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0); % dfof should >0
-pref_0_cell = pref_0_cell( dfof_avg_ad(pref_0_cell)>0 ); % dfof should >0
-pref_0_cell = intersect(pref_0_cell, vis_driven_cell_list);
-
-save cell_property.mat vis_driven_noad vis_driven_ad vis_driven good_fit_cell best_cell
 
 %% get dfof & fit of noad_750_250
 
@@ -384,6 +358,7 @@ for idelta = 1 : ndelta
     end
 end
 end
+cd(fullfile(result_folder, 'pre-processing'))
 save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond
 
 % tuning curve fit by cond
@@ -431,6 +406,7 @@ dfof_ste_merge = cat(3, dfof_ste_noad, dfof_ste_750, dfof_ste_250);
 fit_param_merge = cat(3, fit_param_noad, fit_param_750, fit_param_250);
 ori_pref_cells_merge = cat(2, ori_pref_cells_noad, ori_pref_cells_750, ori_pref_cells_250);
 
+cd(result_folder)
 save dfof_fit_noad_750_250.mat dfof_avg_merge dfof_ste_merge fit_param_merge ori_pref_cells_merge
 
 %% trial trace by cond or trace noad, converted to dfof
@@ -460,88 +436,32 @@ end
 
 save trace_noad_750_250.mat trace_cond_dfof trace_noad_dfof
 
-%% adaptation index
+%% cell list by property
 
-% with-adapter / no-adapter resp to same targ with same isi
-cell_list_now = find(vis_driven);
+ncell
+vis_driven_noad = sum(sig_ttest_noad,2)>0; sum(sum(sig_ttest_noad,2)>0) % ncells responsive to >= 1 targ ori: 81/97
+vis_driven_ad = sum(sig_ttest_ad,2)>0; sum(sum(sig_ttest_ad,2)>0) % ncells responsive to ad: 86/97
+vis_driven = vis_driven_ad | vis_driven_noad; % vis-driven cells are activated by adapter or no-ad targ
+vis_driven_cell_list = find(vis_driven);
+ncell_vis_driven = length(find(vis_driven))
 
-adp_ratio = zeros(length(cell_list_now), ndelta, ngap);
-for ii = 1 : length(cell_list_now)
-    icell = cell_list_now(ii);
-    for idelta = 1:ndelta
-        id_delta = find(delta_seq == delta_list(idelta));
-        for igap = 1:ngap
-            idx_now_ad = intersect(intersect(id_gaps{igap}, id_delta), id_ad);
-            idx_now_noad = intersect(id_delta, id_noad);
-            dfof_equiv_ad = mean(squeeze(tc_trial_align_targ(icell, idx_now_ad, 9:11)),2) - mean(squeeze(tc_trial_align_targ(icell, idx_now_ad, 1:3)),2);
-            dfof_equiv_noad = mean(squeeze(tc_trial_align_targ(icell, idx_now_noad, 9:11)),2) - mean(squeeze(tc_trial_align_targ(icell, idx_now_noad, 1:3)),2);
-            adp_ratio(ii, idelta, igap) = mean(dfof_equiv_ad) / mean(dfof_equiv_noad) - 1;
-%             adp_ratio(ii, idelta, igap) = mean(dfof_equiv_ad(dfof_equiv_ad>0)) / mean(dfof_equiv_noad(dfof_equiv_noad>0)) - 1;
-        end
-    end
+nrun = size(ori_pref_runs,2);
+ori_closeness = sort(abs(ori_pref_runs - mean(ori_pref_runs,2)), 2); % sort each row aka cell
+percentile_threshold = 0.90;
+percentile_idx = percentile_threshold * nrun;
+ori_perc = ori_closeness(:, percentile_idx);
+good_fit_cell = ori_perc < (180/ndelta);
+ncell_good_fit = sum(good_fit_cell)
+
+best_cell = vis_driven & good_fit_cell;
+ncell_best = length(find(best_cell))
+
+ori_pref_cells_noad = ori_pref_cells_merge(:,1);
+pref_0_cell = find(ori_pref_cells_noad > (delta_list(end-1) + delta_list(end))/2 | ori_pref_cells_noad < delta_list(1)/2);
+% pref_0_cell = pref_0_cell( dfof_avg_tg0(pref_0_cell,1)>0 & dfof_avg_tg0(pref_0_cell,2)>0); % dfof should >0
+% pref_0_cell = pref_0_cell( dfof_avg_ad(pref_0_cell)>0 ); % dfof should >0
+pref_0_cell = intersect(pref_0_cell, vis_driven_cell_list);
+
+save cell_property.mat vis_driven_noad vis_driven_ad vis_driven good_fit_cell best_cell pref_0_cell
+
 end
-
-all = sum(adp_ratio(:)>-Inf)
-outlier_facil = find(adp_ratio > mean(adp_ratio(:) + 3*std(adp_ratio(:))) | adp_ratio < mean(adp_ratio(:) - 3*std(adp_ratio(:))))
-facilitated = sum(adp_ratio(:)>0)
-inhibited = sum(adp_ratio(:)<=0)
-
-adp_ratio(outlier_facil) = NaN;
-nanmean(adp_ratio(:))
-nanstd(adp_ratio(:))
-
-% t750 = squeeze(adp_ratio(:,:,1));
-% t250 = squeeze(adp_ratio(:,:,2));
-% errorbar(nanmean(t750, 1), nanstd(t750, 1), 'b'); hold on;
-% errorbar(nanmean(t250, 1), nanstd(t250, 1), 'r');
-% line([0,9], [0, 0], 'Color', 'g', 'LineWidth', 1);
-% xlabel('ori');ylabel('adp ratio')
-
-figure
-% subplot(1,2,1)
-histogram(adp_ratio(:), 30)
-yl = ylim;
-line([0, 0], [0, yl(2)], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
-xlabel('adp index')
-ylabel('count across cell ori isi')
-
-%%
-% check only with-ad targ0 vs ad || with-ad targ0 vs no-ad targ0
-cell_list_now = pref_0_cell;
-
-adp_ratio_targ0 = zeros(length(cell_list_now), ngap);
-for ii = 1 : length(cell_list_now)
-    icell = cell_list_now(ii);
-% for icell = 1:ncell
-    for idelta = 8 % targ0 only! adp is ori-specific
-        id_delta = find(delta_seq == delta_list(idelta));
-        for igap = 1:ngap
-            idx_now_ad_targ = intersect(intersect(id_gaps{igap}, id_delta), id_ad);
-%             idx_now_noad_targ = intersect(id_delta, id_noad);
-            dfof_equiv_ad_targ = mean(squeeze(tc_trial_align_targ(icell, idx_now_ad_targ, 9:11)),2)...
-                               - mean(squeeze(tc_trial_align_targ(icell, idx_now_ad_targ, 1:3)),2);
-            dfof_equiv_ad = mean(squeeze(tc_trial_align_ad(icell, idx_now_ad_targ, 9:11)),2)...
-                          - mean(squeeze(tc_trial_align_ad(icell, idx_now_ad_targ, 1:3)),2);
-%             dfof_equiv_noad_targ = mean(squeeze(tc_trial_align_targ(icell, idx_now_noad_targ, 9:11)),2) - mean(squeeze(tc_trial_align_targ(icell, idx_now_noad_targ, 1:3)),2);
-%             adp_ratio_targ0(ii, igap) = mean(dfof_equiv_ad_targ(dfof_equiv_ad_targ>0)) / mean(dfof_equiv_ad(dfof_equiv_ad>0)) - 1;
-            adp_ratio_targ0(ii, igap) = mean(dfof_equiv_ad_targ) / mean(dfof_equiv_ad) - 1;
-        end
-    end
-end
-
-all = sum(adp_ratio_targ0(:)>-Inf)
-outlier_facil0 = find(adp_ratio_targ0 > mean(adp_ratio_targ0(:) + 3*std(adp_ratio_targ0(:))))
-facilitated = sum(adp_ratio_targ0(:)>0)
-inhibited = sum(adp_ratio_targ0(:)<=0)
-
-adp_ratio_targ0(outlier_facil0) = NaN;
-nanmean(adp_ratio_targ0, 1)
-nanstd(adp_ratio_targ0, 1)
-
-subplot(1,2,2)
-histogram(adp_ratio_targ0(:), 10)
-yl = ylim;
-line([0, 0], [0, yl(2)], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
-xlabel('adp index')
-ylabel('count across cell ori isi')
-

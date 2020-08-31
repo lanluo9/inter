@@ -3,6 +3,7 @@
 close all
 clear
 clc
+cd C:\Users\lan\Documents\repos\inter\code
 
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 ll_fn = fullfile(fn_base, 'home\lan'); 
@@ -19,17 +20,19 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 %% iterate thru datasets
 
-for iset = 1 : length(dataset_list.date)
-    
-date = num2str(dataset_list.date(iset));
-mouse = num2str(dataset_list.mouse(iset));
+for iset = 6 : length(dataset_list.date)
+iset
+date = num2str(dataset_list.date(iset))
+mouse = num2str(dataset_list.mouse(iset))
+area = dataset_list.area{1,iset}
 
 imouse = ['i', mouse];
 xls_dir = fullfile(data_fn, imouse, date);
 cd(xls_dir)
 xls_file = dir('*.xlsx'); 
+clear dataset_meta
 dataset_meta = readtable(xls_file.name); 
-time = dataset_meta.(8){end};
+time = dataset_meta.(8){end}
 ImgFolder = dataset_meta.(1){end}(1:3);
 frame_rate = str2num(dataset_meta.(5){end});
 
@@ -40,6 +43,8 @@ areamousedate = [dataset_list.area{1,iset} '_' imouse '_' date];
 
 fName = fullfile(mworks_fn, ['data-' imouse '-' date '-' time '.mat']);
 load(fName); % load behavior data "input"
+input_behav = input;
+clear input
 
 CD = fullfile(data_fn, imouse, date, ImgFolder);
 cd(CD);
@@ -57,26 +62,25 @@ cd(result_folder);
 
 %% dataset params
 
-clc
-ntrial = input.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps % final trial discarded bc too few frames
+ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps % final trial discarded bc too few frames
 [nframe, ncell] = size(npSub_tc); % nframe * ncell
 
-cStimOn = double(cell2mat(input.cStimOn)); cStimOff = double(cell2mat(input.cStimOff));
-cTarget = celleqel2mat_padded(input.cTargetOn); cTarget = double(cTarget);
+cStimOn = double(cell2mat(input_behav.cStimOn)); cStimOff = double(cell2mat(input_behav.cStimOff));
+cTarget = celleqel2mat_padded(input_behav.cTargetOn); cTarget = double(cTarget);
 
 adapter_stim_len = min(unique(cStimOff - cStimOn)); % adapter = 3-4 frames, rounded from 100 ms
 isi_len = unique(cTarget - cStimOff); % ISI = 8 or 22-23 frames, rounded up from 250 or 750 ms
-targ_stim_len = floor(input.targetOnTimeMs / frame_rate); % target = 3-4 frames, rounded from 100 ms
+targ_stim_len = floor(input_behav.targetOnTimeMs / frame_rate); % target = 3-4 frames, rounded from 100 ms
 iti_len = unique(cStimOn(2:end) - (cTarget(1:end-1) + 3)); % ITI = 192-193-194 frames, 6.4-6.5 s?
 trial_len_list = unique(diff(cStimOn)); % 6.9 or 7.4s
 
-targCon = celleqel2mat_padded(input.tGratingContrast); unique(targCon); % target contrast 1
-adapterCon = celleqel2mat_padded(input.tBaseGratingContrast); unique(adapterCon); % adapter contrast 0 or 1
+targCon = celleqel2mat_padded(input_behav.tGratingContrast); unique(targCon); % target contrast 1
+adapterCon = celleqel2mat_padded(input_behav.tBaseGratingContrast); unique(adapterCon); % adapter contrast 0 or 1
 
-adapterDir = celleqel2mat_padded(input.tBaseGratingDirectionDeg);
+adapterDir = celleqel2mat_padded(input_behav.tBaseGratingDirectionDeg);
 dirs = unique(adapterDir); % adapter dir === 0
 ndir = length(dirs);
-delta_seq = celleqel2mat_padded(input.tGratingDirectionDeg);
+delta_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg);
 delta_list = unique(delta_seq); % target 8 dir (actually ori): 22.5-180. equivalent to diff from adapter
 % fix bug later: need to convert 180 to 0
 ndelta = length(delta_list); 
@@ -128,9 +132,10 @@ end
 t = squeeze(nanmean(squeeze(tc_trial_base(:,:,:)), 1)); 
 t_base = squeeze(nanmean(t(:,:), 1)); 
 plot(t_base, 'k');
-CD = fullfile(result_folder, areamousedate, 'pre-processing');
-if ~exist(CD); mkdir(CD); end
-cd(CD);
+
+result_sub = fullfile(result_folder, 'pre-processing');
+if ~exist(result_sub); mkdir(result_sub); end
+cd(result_sub)
 saveas(gcf, ['trial base'], 'jpg')
 close 
 
@@ -155,10 +160,11 @@ plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b');
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
 saveas(gcf, ['aligned_tc_zoomin'], 'jpg')
-disp('select base vs resp window accordingly, and edit below')
 
-peak_window = 9:11;
-ca_latency = 8; % monitor stim onset in frame #1 lead to neural signal in frame #9
+prompt = 'base window = 1:3. what is resp window? ';
+range_base = [1:3]; 
+range_resp = input(prompt)
+close
 
 %% find vis-driven & good-fit
 
@@ -178,11 +184,8 @@ for icell = 1 : ncell
         idx = intersect(intersect(id_gaps{igap}, id_delta), id_noad); % use only no-adapter trials with 1 ISI & 1 ori
         ntrial_cond = length(idx); 
         
-        range_adapt_base = [1:3]; 
-        range_targ_resp = [9:11]; % ref section: find base & resp window in aligned tc
-
-        base_win = [base_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_adapt_base)),2)]; % avg over window -> [ntrial_ori, 1]
-        resp_win = [resp_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_targ_resp)),2)];
+        base_win = [base_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_base)),2)]; % avg over window -> [ntrial_ori, 1]
+        resp_win = [resp_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_resp)),2)];
     end
         
     [sig_ttest_noad(icell, idelta), p_ttest_noad(icell, idelta)] = ttest(base_win, resp_win,...
@@ -205,6 +208,7 @@ subplot(1,2,2)
 imagesc(p_ttest_noad(:,:,1)); colorbar
 title('p value')
 set(gcf, 'Position', get(0, 'Screensize'));
+
 saveas(gcf, ['visual_driven_cells_noad_targ.jpg'])
 close
 
@@ -223,12 +227,9 @@ for icell = 1 : ncell
     for igap =  1 : ngap 
         idx = intersect(intersect(id_gaps{igap}, id_delta), id_ad); % use only with-adapter trials with 1 ISI & 1 ori
         ntrial_cond = length(idx); 
-        
-        range_adapt_base = [1:3]; 
-        range_targ_resp = [9:11]; 
 
-        base_win = [base_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_adapt_base)),2)]; % avg over window -> [ntrial_ori, 1]
-        resp_win = [resp_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_targ_resp)),2)];
+        base_win = [base_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_base)),2)]; % avg over window -> [ntrial_ori, 1]
+        resp_win = [resp_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_resp)),2)];
     end
         
     [sig_ttest_ad(icell, idelta), p_ttest_ad(icell, idelta)] = ttest(base_win, resp_win,...
@@ -282,9 +283,9 @@ for irun = 1 : nrun
             idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
 
             % well-fit for no-ad only
-            base_win = squeeze(tc_trial_align_targ(icell, idx_run, 1:3));
+            base_win = squeeze(tc_trial_align_targ(icell, idx_run, range_base));
             base_win = mean(base_win, 2); % avg over window -> [ntrial, 1]
-            resp_win = squeeze(tc_trial_align_targ(icell, idx_run, 9:11));
+            resp_win = squeeze(tc_trial_align_targ(icell, idx_run, range_resp));
             resp_win = mean(resp_win, 2);
 
             dfof_avg_runs(icell, idelta, irun) = mean( resp_win - base_win );
@@ -328,10 +329,8 @@ for idelta = 1 : ndelta
         idx = intersect(intersect(id_gaps{igap}, id_delta), id_ad); % with-ad, specific isi & ori
         ntrial_cond = length(idx); 
         
-        range_adapt_base = [1:3]; 
-        range_targ_resp = [9:11];
-        base_cond{icell, idelta, igap} = mean(squeeze(tc_trial_align_targ(icell, idx, range_adapt_base)),2); % avg over window -> [ntrial_ori, 1]
-        resp_cond{icell, idelta, igap} = mean(squeeze(tc_trial_align_targ(icell, idx, range_targ_resp)),2);
+        base_cond{icell, idelta, igap} = mean(squeeze(tc_trial_align_targ(icell, idx, range_base)),2); % avg over window -> [ntrial_ori, 1]
+        resp_cond{icell, idelta, igap} = mean(squeeze(tc_trial_align_targ(icell, idx, range_resp)),2);
     end
 end
 end
