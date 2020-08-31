@@ -20,7 +20,7 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 %% iterate thru datasets
 
-for iset = 6 : length(dataset_list.date)
+for iset = 1 : length(dataset_list.date)
 iset
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset))
