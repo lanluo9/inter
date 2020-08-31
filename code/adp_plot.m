@@ -59,7 +59,7 @@ for ii = 1 : length(cell_list_now)
 end
 
 % with-ad targ0 vs no-ad targ0
-cell_list_now = set{iset, 1}.pref_0_cell;
+% cell_list_now = set{iset, 1}.pref_0_cell; % only a subpop. perhaps doesn't matter bc Jin2019 Fig1D
 adp_ratio_targ0 = zeros(length(cell_list_now), ngap);
 
 for ii = 1 : length(cell_list_now)
@@ -92,5 +92,77 @@ adp(iset).adp_ratio_a0t0 = adp_ratio_a0t0;
 
 end
 
+%% adp by area: violin plot and avg-sem
+
+by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
+by_indiv_id = {[1,2,3], [4,5,6], [7,8]}; nindiv = length(by_indiv_id);
+
+for iarea = 1 : narea
+    area_set_seq = by_area_id{iarea};
+    adp_ratio_now = cell(1,2);
+    
+    for igap = 1 : ngap
+    for iset = 1 : length(area_set_seq)
+        temp = adp(area_set_seq(iset)).adp_ratio(:,:,igap); 
+        temp = mean(temp,2);
+        temp = temp(:);
+        adp_ratio_now{igap} = [adp_ratio_now{igap}; temp];
+    end
+    end
+    adp_area(iarea).adp_ratio = adp_ratio_now;
+    
+    area_name = convertCharsToStrings(dataset_list.area{1,iarea});
+    adp_area(iarea).name = repmat(area_name, length(adp_ratio_now{igap}), 1);
+end
+
+cd(result_prefix)
+isi_str = {'isi 750', 'isi 250'}
+
+figure('units','normalized','outerposition',[0 0 1 1]);
+for igap = 1:ngap
+    hAx(igap) = subplot(1,2,igap)
+    values = [adp_area(1).adp_ratio{1, igap}; adp_area(2).adp_ratio{1, igap};...
+        adp_area(3).adp_ratio{1, igap}];
+    outlier = find(values > mean(values(:) + std(values(:))) ...
+        | values < mean(values(:) - std(values(:))));
+    values(outlier) = NaN;
+
+    names = [adp_area(1).name; adp_area(2).name; adp_area(3).name];
+    vs = violinplot(values, names, 'ShowMean', true, 'GroupOrder', {'V1','LM','LI'});
+    ylabel(['adaptation index: ', isi_str{igap}]);
+    xlim([0.5, 3.5])
+    line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
+end
+% saveas(gcf, ['adp idx across area w outlier'], 'jpg'); close
+% ylim(hAx,[-4, 4])
+% saveas(gcf, ['adp idx across area no outlier'], 'jpg'); close
+ylim(hAx,[-1, 1])
+% saveas(gcf, ['adp idx across area zoom in'], 'jpg'); close 
+
+%%
+
+for igap = 1:ngap
+    for iarea = 1:narea
+        temp = adp_area(iarea).adp_ratio{1, igap}; 
+        outlier = find(temp > mean(temp(:) + std(temp(:))) | temp < mean(temp(:) - std(temp(:))));
+        temp(outlier) = NaN;
+        adp_area_avg(iarea, igap) = nanmean(temp);
+        adp_area_ste(iarea, igap) = nanstd(temp) ./ length(temp(~isnan(temp)));
+    end
+end
+
+% color_list = {[24,95,173], [17,174,207], [176,111,175]}
+color_list = {[0,0,1], [1,0,0]};
+for igap = 1:ngap
+    h{igap,1} = scatter(1:3, adp_area_avg(:, igap), 5, color_list{igap}, 'filled'); hold on
+    errorbar(1:3, adp_area_avg(:, igap), adp_area_ste(:, igap), 'color', color_list{igap}, 'LineStyle','none')
+end
+line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
+xticks([1:3]); xticklabels({'V1', 'LM', 'LI'})
+ylabel(['adaptation index']);
+legend([h{1,1},h{2,1}], 'isi 750', 'isi 250'); legend boxoff
+xlim([0.5, 3.5])
+ylim([-0.6, 0.1])
+saveas(gcf, ['adp idx across area avg sem'], 'jpg'); close 
 
 
