@@ -316,3 +316,38 @@ xlim([0.5, 8.5])
 
 %% trace grand average for area or for mouse
 
+trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
+ndelta = 8;
+trace = struct;
+for iset = 1:nset
+    trace_cell = [];
+    for igap = 1:ngap
+        tt = set{iset, 4}.trace_cond_dfof(:,:,igap); % trace_cond_dfof is from tc_trial_align_ad
+        trace_over_deltas = cell(size(tt,1),1);
+        
+        for icell = 1:size(tt,1)
+            for idelta = 1:ndelta
+                trace_over_deltas{icell,1} = [trace_over_deltas{icell,1}; tt{icell,idelta}];
+            end
+            trace_cell{iset, igap} = mean(trace_over_deltas{icell,1}, 1);
+        end
+        
+        trace(iset).trace_dfof{igap,1} = trace_cell{iset, igap};
+        trace(iset).ncell = size(trace_over_deltas,1);
+    end
+end
+
+%%
+
+by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
+igap = 2; % plot only isi 250
+trace_area_avg = cell(narea, 1);
+for iarea = 1 : narea
+    area_set_seq = by_area_id{iarea};
+    
+    for iset = 1 : length(area_set_seq)
+        trace_area_avg{iarea,1} = trace_area_avg{iarea,1} + ...
+            trace(area_set_seq(iset)).trace_dfof{igap,1} .* trace(area_set_seq(iset)).ncell;
+    end
+    
+end
