@@ -13,7 +13,12 @@ errorbar(ori_pref_binned_list, osi_shift_avg(:, igap), osi_shift_ste(:, igap),..
         'color', color_list{igap} , 'LineStyle','none')
 legend('isi 750', 'isi 250', 'Location','southeast')
 
-    
+for itext = 1 : length(dis_list)
+    text(dis_list(itext), ...
+       dfof_dis_norm_avg(itext, 1) + dfof_dis_norm_ste(itext, 1) + 0.02, ...
+        ['n=', num2str(ntrial_dis(itext))], 'HorizontalAlignment', 'center')
+end
+
 %% preference setting
 % evaluate selection: Ctrl + Shift + E
 % command window wrap lines

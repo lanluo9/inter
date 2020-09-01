@@ -305,7 +305,7 @@ classdef Violin < handle
         function set.ShowMean(obj, yesno)
             if ~isempty(obj.MeanPlot)
                 if yesno
-                    obj.MeanPlot.Visible = 'on';
+                    obj.MeanPlot.Visible = 'off';
                 else
                     obj.MeanPlot.Visible = 'off';
                 end
@@ -337,7 +337,7 @@ classdef Violin < handle
             isscalarlogical = @(x) (islogical(x) & isscalar(x));
             p.addParameter('ShowData', true, isscalarlogical);
             p.addParameter('ShowNotches', false, isscalarlogical);
-            p.addParameter('ShowMean', true, isscalarlogical);
+            p.addParameter('ShowMean', false, isscalarlogical);
 
             p.parse(data, pos, varargin{:});
             results = p.Results;
