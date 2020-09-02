@@ -36,6 +36,8 @@ for iset = 1 : nset
 end
 
 %% adaptation index
+% adp plots & trace: take only vis_driven_ad cells & only resp_targ0
+% refer to Jin2020 Fig 3D & 4B
 
 ndelta = 8;
 ngap = 2;
@@ -345,42 +347,130 @@ xlim([0.5, 8.5])
 
 %% two-way ANOVA across areas & mice
 
-
+% cannot do 2 way anova bc: missing data in LI 1324, unequal sample size across area-mouse
+% https://www.r-bloggers.com/r-tutorial-series-two-way-anova-with-unequal-sample-sizes/
 
 %% trace grand average for area or for mouse
 
-trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
-ndelta = 8;
 trace = struct;
+
 for iset = 1:nset
     trace_cell = [];
+    cell_list_now = find(set{iset, 1}.vis_driven_ad); % only use ad(0) vis-driven cells
+    
     for igap = 1:ngap
-        tt = set{iset, 4}.trace_cond_dfof(:,:,igap); % trace_cond_dfof is from tc_trial_align_ad
-        trace_over_deltas = cell(size(tt,1),1);
+        trace_targ0 = set{iset, 4}.trace_cond_dfof(:,8,igap); % only use targ0
         
-        for icell = 1:size(tt,1)
-            for idelta = 1:ndelta
-                trace_over_deltas{icell,1} = [trace_over_deltas{icell,1}; tt{icell,idelta}];
-            end
-            trace_cell{iset, igap} = mean(trace_over_deltas{icell,1}, 1);
+        for ii = 1 : length(cell_list_now)
+            icell = cell_list_now(ii);
+            trace_targ0_avg(icell,:) = nanmean(trace_targ0{icell,1},1);
         end
         
-        trace(iset).trace_dfof{igap,1} = trace_cell{iset, igap};
-        trace(iset).ncell = size(trace_over_deltas,1);
+        trace(iset).ncell = length(cell_list_now);
+        trace(iset).trace_avg{igap,1} = nanmean(trace_targ0_avg,1);
+        trace(iset).trace_ste{igap,1} = nanstd(trace_targ0_avg,1) ./ trace(iset).ncell;
+        
     end
 end
 
-%%
+%% trace for area
 
 by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
 igap = 2; % plot only isi 250
-trace_area_avg = cell(narea, 1);
+trace_area_avg = [];
+
 for iarea = 1 : narea
     area_set_seq = by_area_id{iarea};
+    trace_area_sets = []; 
+    ncell_sum = 0;
     
     for iset = 1 : length(area_set_seq)
-        trace_area_avg{iarea,1} = trace_area_avg{iarea,1} + ...
-            trace(area_set_seq(iset)).trace_dfof{igap,1} .* trace(area_set_seq(iset)).ncell;
+        trace_area_sets = [trace_area_sets; ...
+            trace(area_set_seq(iset)).trace_avg{igap,1} .* trace(area_set_seq(iset)).ncell];
+        ncell_sum = ncell_sum + trace(area_set_seq(iset)).ncell;
     end
+    trace_area_avg(iarea,:) = sum(trace_area_sets,1) ./ ncell_sum;
     
 end
+
+trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
+for iarea = 1 : narea
+    plot(trace_area_avg(iarea, 1:trace_len)); hold on
+    xlim([0, 105])
+end
+legend('V1', 'LM', 'LI', 'Location','northeast'); legend boxoff
+saveas(gcf, ['trace across area'], 'jpg'); close
+
+%% trace for mouse
+
+by_mouse_id = {[1,2,3], [4,5,6], [7,8]}; nmouse = length(by_mouse_id);
+igap = 2; % plot only isi 250
+trace_mouse_avg = [];
+
+for imouse = 1 : nmouse
+    mouse_set_seq = by_mouse_id{imouse};
+    trace_mouse_sets = []; 
+    ncell_sum = 0;
+    
+    for iset = 1 : length(mouse_set_seq)
+        trace_mouse_sets = [trace_mouse_sets; ...
+            trace(mouse_set_seq(iset)).trace_avg{igap,1} .* trace(mouse_set_seq(iset)).ncell];
+        ncell_sum = ncell_sum + trace(mouse_set_seq(iset)).ncell;
+    end
+    trace_mouse_avg(imouse,:) = sum(trace_mouse_sets,1) ./ ncell_sum;
+    
+end
+
+trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
+for imouse = 1 : nmouse
+    plot(trace_mouse_avg(imouse, 1:trace_len)); hold on
+
+end
+xlim([0, 105]); yl = ylim; ylim([0, yl(2)])
+legend('1322', '1323', '1324', 'Location','northeast'); legend boxoff
+saveas(gcf, ['trace across mouse'], 'jpg'); close
+
+%% trace for area but list mouse
+
+by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
+igap = 2; % plot only isi 250
+% trace_area_avg = [];
+
+for iarea = 1 : narea
+    area_set_seq = by_area_id{iarea};
+    trace_area_sets = []; 
+    ncell_sum = 0;
+    
+    for iset = 1 : length(area_set_seq)
+        trace_area_sets = [trace_area_sets; ...
+            trace(area_set_seq(iset)).trace_avg{igap,1}];
+%         ncell_sum = ncell_sum + trace(area_set_seq(iset)).ncell;
+    end
+    trace_area_mouse{iarea} = trace_area_sets;
+    
+end
+
+area_str = {'V1', 'LM', 'LI'};
+figure('units','normalized','outerposition',[0 0 1 1]);
+for iarea = 1 : narea
+    subplot(1,3,iarea)
+    for imouse = 1:size(trace_area_mouse{1,iarea},1)
+        plot(trace_area_mouse{1,iarea}(imouse, 1:trace_len)); hold on
+    end
+    xlim([0, 105])
+    ylim([0, 0.2])
+    xticks(50); 
+    xticklabels(area_str{iarea})
+    if iarea == 3
+        legend('1322', '1323', 'Location','northeast'); 
+    else
+        legend('1322', '1323', '1324', 'Location','northeast'); 
+    end
+    legend boxoff
+end
+% saveas(gcf, ['trace across area-mouse'], 'jpg'); close
+
+%% 
+% take only vis_driven & good_fit cells
+% refer to Jin2019 Fig 2D-G
+

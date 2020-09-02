@@ -103,7 +103,7 @@ for iarea = 1 : narea
     
     for igap = 1 : ngap
     for iset = 1 : length(area_set_seq)
-        tt = adp(area_set_seq(iset)).adp_ratio_a0t0(:,:,igap); 
+        tt = adp(area_set_seq(iset)).adp_ratio_targ0(:,:,igap); 
         tt = mean(tt,2);
         tt = tt(:);
         adp_ratio_now{igap} = [adp_ratio_now{igap}; tt];
@@ -137,12 +137,14 @@ for igap = 1:ngap
     
 %     yl = ylim;
     for itext = 1 : length(ncell_area)
-        text(itext, -6 + 0.5, ...
+        text(itext, -10 + 0.5, ...
             ['n=', num2str(ncell_area(itext))], 'HorizontalAlignment', 'center')
     end
 end
-ylim(hAx,[-6, 7])
-saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
+% ylim(hAx,[-6, 7])
+% saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
+% ylim(hAx,[-10, 10])
+% saveas(gcf, ['adp ratio targ0 across areas violin'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
@@ -163,7 +165,7 @@ for igap = 1:ngap
 end
 yl = ylim;
 for itext = 1 : length(ncell_area)
-    text(itext, yl(1) + 0.05, ...
+    text(itext, yl(1) + 0.1, ...
         ['n=', num2str(ncell_area(itext))], 'HorizontalAlignment', 'center')
 end
 line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
@@ -171,6 +173,7 @@ xticks([1:3]); xticklabels({'V1', 'LM', 'LI'})
 ylabel(['adaptation index']);
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','east'); legend boxoff
 xlim([0.5, 3.5])
+% saveas(gcf, ['adp ratio a0t0 across areas avg sem'], 'jpg'); close 
 % saveas(gcf, ['adp ratio targ0 across areas avg sem'], 'jpg'); close 
 
 %% adp by mouse
@@ -217,7 +220,10 @@ for igap = 1:ngap
             ['n=', num2str(ncell_mouse(itext))], 'HorizontalAlignment', 'center')
     end
 end
-ylim(hAx,[-10, 10])
+% ylim(hAx,[-6, 7])
+% saveas(gcf, ['adp ratio a0t0 across mouse'], 'jpg'); close 
+
+% ylim(hAx,[-10, 10])
 % saveas(gcf, ['adp ratio targ0 across mouse'], 'jpg'); close 
 
 %%
@@ -236,17 +242,18 @@ for igap = 1:ngap
     h{igap,1} = scatter(1:3, adp_mouse_avg(:, igap), 5, color_list{igap}, 'filled'); hold on
     errorbar(1:3, adp_mouse_avg(:, igap), adp_mouse_ste(:, igap), 'color', color_list{igap}, 'LineStyle','none')
 end
-yl = ylim;
+% yl = ylim;
 for itext = 1 : length(ncell_mouse)
-    text(itext, yl(1) + 0.05, ...
+    text(itext, 0.1 - 0.05, ...
         ['n=', num2str(ncell_mouse(itext))], 'HorizontalAlignment', 'center')
 end
 line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
 xticks([1:3]); xticklabels({'1322','1323','1324'})
 ylabel(['adaptation index']);
-legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','east'); legend boxoff
+legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend boxoff
 xlim([0.5, 3.5])
-% ylim([-0.5, 0.5])
+ylim([-0.55, 0.5])
+% saveas(gcf, ['adp ratio a0t0 across mouse avg sem'], 'jpg'); close 
 % saveas(gcf, ['adp ratio targ0 across mouse avg sem'], 'jpg'); close 
 
 %% adp by area but list mouse
@@ -264,7 +271,7 @@ for i = 1 : length(area_mouse_id)
     adp_ratio_now = cell(1,2);
     
     for igap = 1 : ngap
-        tt = adp(iset).adp_ratio(:,:,igap); 
+        tt = adp(iset).adp_ratio_a0t0(:,:,igap); 
         tt = mean(tt,2);
         adp_ratio_now{igap} = tt(:);
     end
@@ -274,40 +281,42 @@ for i = 1 : length(area_mouse_id)
     adp_set(iset).name = repmat(area_name, length(adp_ratio_now{igap}), 1);
 end
 
-cd(result_prefix)
-isi_str = {'isi 750', 'isi 250'};
-
 figure('units','normalized','outerposition',[0 0 1 1]);
 for igap = 1:ngap
     hAx(igap) = subplot(2,1,igap);
-    values = []; names = [];
+    values = []; ncell_set = []; names = [];
     
     for iset = 1:nset
         values = [values; adp_set(iset).adp_ratio{1, igap}];
-        outlier = find(values > 10 | values < -10);
-%         outlier = find(values > mean(values(:) + std(values(:))) | values < mean(values(:) - std(values(:))));
+%         outlier = find(abs(values) > 10);
+        outlier = find(values > mean(values(:) + std(values(:))) | values < mean(values(:) - std(values(:))));
         values(outlier) = NaN;
-        names = [names; adp_set(iset).name];
+        ncell_set = [ncell_set; length(adp_set(iset).name)];
+        names = [names; strrep(adp_set(iset).name, '_13', '.')];
     end
     
-    vs = violinplot(values, names, 'GroupOrder', {'V1_1322', 'V1_1323', 'V1_1324', ...
-        'LM_1322', 'LM_1323', 'LM_1324',  'LI_1322', 'LI_1323'});
+    vs = violinplot(values, names, 'GroupOrder', {'V1.22', 'V1.23', 'V1.24', ...
+        'LM.22', 'LM.23', 'LM.24',  'LI.22', 'LI.23'}); hold on
     ylabel(['adaptation index: ', isi_str{igap}]);
     xlim([0.5, 8.5])
     line([0.5, 8.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
+    
+    for itext = 1 : length(ncell_set)
+        text(itext, -5 + 0.5, ...
+            ['n=', num2str(ncell_set(area_mouse_id(itext)))], 'HorizontalAlignment', 'center')
+    end
 end
-ylim(hAx,[-10, 10])
-% saveas(gcf, ['adp idx across area-mouse w outlier zoom in'], 'jpg'); 
-% ylim(hAx,[-5, 5])
-% saveas(gcf, ['adp idx across area-mouse no outlier'], 'jpg'); 
-% ylim(hAx,[-2, 2])
-% saveas(gcf, ['adp idx across area-mouse no outlier zoom in'], 'jpg'); close 
+ylim(hAx,[-5, 5])
+% ylim(hAx,[-10, 10])
+% saveas(gcf, ['adp ratio a0t0 across area-mouse zoom in'], 'jpg'); close 
+% saveas(gcf, ['adp ratio targ0 across area-mouse zoom in'], 'jpg'); close 
 
+%%
 for igap = 1:ngap
     for iset = 1:nset
         tt = adp_set(iset).adp_ratio{1, igap}; 
-%         outlier = find(tt > mean(tt(:) + std(tt(:))) | tt < mean(tt(:) - std(tt(:))));
-        outlier = find(tt > 10 | tt < -10);
+        outlier = find(tt > mean(tt(:) + std(tt(:))) | tt < mean(tt(:) - std(tt(:))));
+%         outlier = find(abs(tt) > 10);
         tt(outlier) = NaN;
         adp_set_avg(iset, igap) = nanmean(tt);
         adp_set_ste(iset, igap) = nanstd(tt) ./ length(tt(~isnan(tt)));
@@ -320,48 +329,130 @@ for igap = 1:ngap
     h{igap,1} = scatter(1:8, adp_set_avg(area_mouse_id, igap), 5, color_list{igap}, 'filled'); hold on
     errorbar(1:8, adp_set_avg(area_mouse_id, igap), adp_set_ste(area_mouse_id, igap), 'color', color_list{igap}, 'LineStyle','none')
 end
+yl = ylim;
+for itext = 1 : length(ncell_set)
+    text(itext, yl(1) + 0.2, ...
+        ['n=', num2str(ncell_set(area_mouse_id(itext)))], 'HorizontalAlignment', 'center')
+end
 line([0.5, 8.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
 xticks([1:8]); xticklabels({'V1.1322', '23', '24', ...
         'LM.1322', '23', '24',  'LI.1322', '23'})
 ylabel(['adaptation index']);
-legend([h{1,1},h{2,1}], 'isi 750', 'isi 250'); legend boxoff
+legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northwest'); legend boxoff
 xlim([0.5, 8.5])
-% saveas(gcf, ['adp idx across area-mouse avg sem'], 'jpg'); close
+% saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
+% saveas(gcf, ['adp ratio targ0 across area-mouse avg sem'], 'jpg'); close
+
+%% two-way ANOVA across areas & mice
+
+% cannot do 2 way anova bc: missing data in LI 1324, unequal sample size across area-mouse
+% https://www.r-bloggers.com/r-tutorial-series-two-way-anova-with-unequal-sample-sizes/
 
 %% trace grand average for area or for mouse
 
-trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
-ndelta = 8;
 trace = struct;
+
 for iset = 1:nset
     trace_cell = [];
+    cell_list_now = find(set{iset, 1}.vis_driven_ad); % only use ad(0) vis-driven cells
+    
     for igap = 1:ngap
-        tt = set{iset, 4}.trace_cond_dfof(:,:,igap); % trace_cond_dfof is from tc_trial_align_ad
-        trace_over_deltas = cell(size(tt,1),1);
+        trace_targ0 = set{iset, 4}.trace_cond_dfof(:,8,igap); % only use targ0
         
-        for icell = 1:size(tt,1)
-            for idelta = 1:ndelta
-                trace_over_deltas{icell,1} = [trace_over_deltas{icell,1}; tt{icell,idelta}];
-            end
-            trace_cell{iset, igap} = mean(trace_over_deltas{icell,1}, 1);
+        for ii = 1 : length(cell_list_now)
+            icell = cell_list_now(ii);
+            trace_targ0_avg(icell,:) = nanmean(trace_targ0{icell,1},1);
         end
         
-        trace(iset).trace_dfof{igap,1} = trace_cell{iset, igap};
-        trace(iset).ncell = size(trace_over_deltas,1);
+        trace(iset).ncell = length(cell_list_now);
+        trace(iset).trace_avg{igap,1} = nanmean(trace_targ0_avg,1);
+        trace(iset).trace_ste{igap,1} = nanstd(trace_targ0_avg,1) ./ trace(iset).ncell;
+        
     end
 end
 
-%%
+%% trace for area
 
 by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
 igap = 2; % plot only isi 250
-trace_area_avg = cell(narea, 1);
+trace_area_avg = [];
+
 for iarea = 1 : narea
     area_set_seq = by_area_id{iarea};
+    trace_area_sets = []; 
+    ncell_sum = 0;
     
     for iset = 1 : length(area_set_seq)
-        trace_area_avg{iarea,1} = trace_area_avg{iarea,1} + ...
-            trace(area_set_seq(iset)).trace_dfof{igap,1} .* trace(area_set_seq(iset)).ncell;
+        trace_area_sets = [trace_area_sets; ...
+            trace(area_set_seq(iset)).trace_avg{igap,1} .* trace(area_set_seq(iset)).ncell];
+        ncell_sum = ncell_sum + trace(area_set_seq(iset)).ncell;
     end
+    trace_area_avg(iarea,:) = sum(trace_area_sets,1) ./ ncell_sum;
     
 end
+
+trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
+for iarea = 1 : narea
+    plot(trace_area_avg(iarea, 1:trace_len)); hold on
+    xlim([0, 105])
+end
+legend('V1', 'LM', 'LI', 'Location','northeast'); legend boxoff
+saveas(gcf, ['trace across area'], 'jpg'); close
+
+%% trace for mouse
+
+by_mouse_id = {[1,2,3], [4,5,6], [7,8]}; nmouse = length(by_mouse_id);
+igap = 2; % plot only isi 250
+trace_mouse_avg = [];
+
+for imouse = 1 : nmouse
+    mouse_set_seq = by_mouse_id{imouse};
+    trace_mouse_sets = []; 
+    ncell_sum = 0;
+    
+    for iset = 1 : length(mouse_set_seq)
+        trace_mouse_sets = [trace_mouse_sets; ...
+            trace(mouse_set_seq(iset)).trace_avg{igap,1} .* trace(mouse_set_seq(iset)).ncell];
+        ncell_sum = ncell_sum + trace(mouse_set_seq(iset)).ncell;
+    end
+    trace_mouse_avg(imouse,:) = sum(trace_mouse_sets,1) ./ ncell_sum;
+    
+end
+
+trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
+for imouse = 1 : nmouse
+    plot(trace_mouse_avg(imouse, 1:trace_len)); hold on
+
+end
+xlim([0, 105]); yl = ylim; ylim([0, yl(2)])
+legend('1322', '1323', '1324', 'Location','northeast'); legend boxoff
+saveas(gcf, ['trace across mouse'], 'jpg'); close
+
+%% trace for area but list mouse
+
+by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
+igap = 2; % plot only isi 250
+% trace_area_avg = [];
+
+for iarea = 1 : narea
+    area_set_seq = by_area_id{iarea};
+    trace_area_sets = []; 
+    ncell_sum = 0;
+    
+    for iset = 1 : length(area_set_seq)
+        trace_area_sets = [trace_area_sets; ...
+            trace(area_set_seq(iset)).trace_avg{igap,1}];
+%         ncell_sum = ncell_sum + trace(area_set_seq(iset)).ncell;
+    end
+    trace_area_mouse{iarea} = trace_area_sets;
+    
+end
+
+%%
+for iarea = 1 : narea
+    subplot(1,3,iarea)
+    plot(trace_area_mouse{iarea, 1:trace_len)); hold on
+    xlim([0, 105])
+end
+legend('V1', 'LM', 'LI', 'Location','northeast'); legend boxoff
+saveas(gcf, ['trace across area'], 'jpg'); close
