@@ -62,14 +62,12 @@ end
 
 % with-ad targ0 vs no-ad targ0
 adp_ratio_targ0 = zeros(length(cell_list_now), 1, ngap);
-
 for ii = 1 : length(cell_list_now)
     icell = cell_list_now(ii);
     idelta = 8; % targ0 only! adp is ori-specific
     for igap = 1:ngap
         dfof_equiv_ad_targ = set{iset, 2}.dfof_avg_merge(icell, idelta, igap+1); %750-250
         dfof_equiv_noad_targ = set{iset, 2}.dfof_avg_merge(icell, idelta, 1);
-%         dfof_equiv_noad_targ = mean(squeeze(tc_trial_align_targ(icell, idx_now_noad_targ, 9:11)),2) - mean(squeeze(tc_trial_align_targ(icell, idx_now_noad_targ, 1:3)),2);
         adp_ratio_targ0(ii, 1, igap) = dfof_equiv_ad_targ / dfof_equiv_noad_targ - 1;
     end
 end
@@ -93,6 +91,12 @@ adp(iset).adp_ratio_a0t0 = adp_ratio_a0t0;
 
 end
 
+%% san check for a0t0
+
+t = adp(5).adp_ratio_a0t0(:,:,1);
+t2 = adp(5).adp_ratio_a0t0(:,:,2);
+histogram(t(abs(t)<40),100); hold on; histogram(-1*t2(abs(t2)<40),100)
+
 %% adp by area
 % violin plot and avg-sem
 % use adp_ratio_a0t0 or adp_ratio_targ0?
@@ -105,7 +109,7 @@ for iarea = 1 : narea
     
     for igap = 1 : ngap
     for iset = 1 : length(area_set_seq)
-        tt = adp(area_set_seq(iset)).adp_ratio_targ0(:,:,igap); 
+        tt = adp(area_set_seq(iset)).adp_ratio_a0t0(:,:,igap); 
         tt = mean(tt,2);
         tt = tt(:);
         adp_ratio_now{igap} = [adp_ratio_now{igap}; tt];
@@ -376,7 +380,7 @@ end
 %% trace for area
 
 by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
-igap = 2; % plot only isi 250
+igap = 1; % plot only isi 250
 trace_area_avg = [];
 
 for iarea = 1 : narea
