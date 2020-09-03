@@ -466,7 +466,7 @@ legend('1322', '1323', '1324', 'Location','northeast'); legend boxoff
 %% trace for area but list mouse
 
 by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
-igap = 1; % plot only isi 250
+igap = 2; % plot only isi 250
 % trace_area_avg = [];
 
 for iarea = 1 : narea
@@ -484,7 +484,7 @@ for iarea = 1 : narea
 end
 
 area_str = {'V1', 'LM', 'LI'};
-figure('units','normalized','outerposition',[0 0 1 1]);
+figure('units','normalized','outerposition',[0 0 1 1/2]);
 for iarea = 1 : narea
     subplot(1,3,iarea)
     for imouse = 1:size(trace_area_mouse{1,iarea},1)
