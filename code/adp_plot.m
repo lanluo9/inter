@@ -170,14 +170,13 @@ for igap = 1:ngap
     
 %     yl = ylim;
     for itext = 1 : length(ncell_area)
-        text(itext, -10 + 0.5, ...
+        text(itext, -2 + 0.2, ...
             ['n=', num2str(ncell_area(itext))], 'HorizontalAlignment', 'center')
     end
 end
-% ylim(hAx,[-1, 1])
+ylim(hAx,[-2, 2])
 % saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
-% ylim(hAx,[-10, 10])
-% saveas(gcf, ['adp ratio targ0 across areas violin'], 'jpg'); close 
+
 
 %%
 for igap = 1:ngap
@@ -249,11 +248,11 @@ for igap = 1:ngap
     xlim([0.5, 3.5])
     line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
     for itext = 1 : length(ncell_mouse)
-        text(itext, -10 + 0.5, ...
+        text(itext, -2 + 0.2, ...
             ['n=', num2str(ncell_mouse(itext))], 'HorizontalAlignment', 'center')
     end
 end
-% ylim(hAx,[-6, 7])
+ylim(hAx,[-2, 2])
 % saveas(gcf, ['adp ratio a0t0 across mouse'], 'jpg'); close 
 
 % ylim(hAx,[-10, 10])
@@ -336,11 +335,11 @@ for igap = 1:ngap
     
 %     yl = ylim;
     for itext = 1 : length(ncell_set)
-        text(itext, -4 + 0.5, ...
+        text(itext, 2 - 0.2, ...
             ['n=', num2str(ncell_set(area_mouse_id(itext)))], 'HorizontalAlignment', 'center')
     end
 end
-ylim(hAx,[-4, 3])
+ylim(hAx,[-2, 2])
 % ylim(hAx,[-10, 10])
 % saveas(gcf, ['adp ratio a0t0 across area-mouse zoom in'], 'jpg'); close 
 % saveas(gcf, ['adp ratio targ0 across area-mouse zoom in'], 'jpg'); close 
@@ -362,6 +361,7 @@ for igap = 1:ngap
     h{igap,1} = scatter(1:8, adp_set_avg(area_mouse_id, igap), 5, color_list{igap}, 'filled'); hold on
     errorbar(1:8, adp_set_avg(area_mouse_id, igap), adp_set_ste(area_mouse_id, igap), 'color', color_list{igap}, 'LineStyle','none')
 end
+ylim([-1.5, 1.5])
 yl = ylim;
 for itext = 1 : length(ncell_set)
     text(itext, yl(1) + 0.1, ...
@@ -387,26 +387,24 @@ trace = struct;
 
 for iset = 1:nset
 %     trace_cell = [];
-    cell_list_now = find(set{iset, 1}.vis_driven_ad); % only use ad(0) vis-driven cells
+%     cell_list_now = find(set{iset, 1}.vis_driven_ad); % only use ad(0) vis-driven cells
     
-    for igap = 1:ngap
-        trace_targ0 = set{iset, 4}.trace_cond_dfof(:,8,igap); % only use targ0
+%     for igap = 1:ngap
+%         trace_targ0 = set{iset, 4}.trace_cond_dfof(:,8,igap); % only use targ0
         
-        for ii = 1 : length(cell_list_now)
-            icell = cell_list_now(ii);
-            trace_targ0_avg(icell,:) = nanmean(trace_targ0{icell,1},1);
-        end
+%         for ii = 1 : length(cell_list_now)
+%             icell = cell_list_now(ii);
+%             trace_targ0_avg(icell,:) = nanmean(trace_targ0{icell,1},1);
+%         end
         
-        trace(iset).ncell = length(cell_list_now);
-        trace(iset).trace_avg{igap,1} = nanmean(trace_targ0_avg,1);
-        trace(iset).trace_ste{igap,1} = nanstd(trace_targ0_avg,1) ./ sqrt(trace(iset).ncell);
+        trace(iset).ncell = size(set{iset, 5}.trace_targ0_750, 1);
+        trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750,1);
+        trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250,1);
+%         trace(iset).trace_ste{1,1} = nanstd(set{iset, 5}.trace_targ0_750,1) ./ sqrt(trace(iset).ncell);
+%         trace(iset).trace_ste{2,1} = nanstd(set{iset, 5}.trace_targ0_250,1) ./ sqrt(trace(iset).ncell);
         
-    end
+%     end
 end
-
-%%
-
-set{iset, 4}.trace_cond_dfof(:,8,igap)
 
 %% trace for area
 
@@ -434,12 +432,12 @@ for iarea = 1 : narea
     xlim([0, 105])
 end
 legend('V1', 'LM', 'LI', 'Location','northeast'); legend boxoff
-% saveas(gcf, ['trace across area'], 'jpg'); close
+% saveas(gcf, ['trace across area isi ', num2str(igap)], 'jpg'); close
 
 %% trace for mouse
 
 by_mouse_id = {[1,2,3], [4,5,6], [7,8]}; nmouse = length(by_mouse_id);
-igap = 1; % plot only isi 250
+igap = 2; % plot only isi 250
 trace_mouse_avg = [];
 
 for imouse = 1 : nmouse
@@ -463,7 +461,7 @@ for imouse = 1 : nmouse
 end
 xlim([0, 105]); yl = ylim; ylim([0, yl(2)])
 legend('1322', '1323', '1324', 'Location','northeast'); legend boxoff
-% saveas(gcf, ['trace across mouse'], 'jpg'); close
+% saveas(gcf, ['trace across mouse isi ', num2str(igap)], 'jpg'); close
 
 %% trace for area but list mouse
 
@@ -493,7 +491,7 @@ for iarea = 1 : narea
         plot(trace_area_mouse{1,iarea}(imouse, 1:trace_len)); hold on
     end
     xlim([0, 105])
-    ylim([0, 0.2])
+    ylim([-0.05, 0.21])
     xticks(50); 
     xticklabels(area_str{iarea})
     if iarea == 3
@@ -503,7 +501,7 @@ for iarea = 1 : narea
     end
     legend boxoff
 end
-% saveas(gcf, ['trace across area-mouse'], 'jpg'); close
+% saveas(gcf, ['trace across area-mouse isi ', num2str(igap)], 'jpg'); close
 
 %% 
 % take only vis_driven & good_fit cells
