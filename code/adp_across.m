@@ -3,7 +3,7 @@
 close all
 clear
 clc
-cd C:\Users\lan\Documents\repos\inter\code
+cd C:\Users\lan\Documents\repos\inter\mat
 
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 ll_fn = fullfile(fn_base, 'home\lan'); 
@@ -53,9 +53,9 @@ load(imgMatFile); % load 2P img metadata "info"
 
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
 load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % load time course including fake targ resp
-% fix bug later: tc folder vs retinotopy folder in Analysis naming convention
+% fix bug later: retinotopy folder in Analysis naming convention should adhere to tc folder
 
-result_prefix = 'C:\Users\lan\Documents\repos\inter\code\';
+result_prefix = 'C:\Users\lan\Documents\repos\inter\mat\';
 result_folder = fullfile(result_prefix, areamousedate);
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder);
@@ -91,7 +91,7 @@ isi_list = cTarget - cStimOff;
 ngap = length(unique(cTarget - cStimOn));
 
 id_750 = find(isi_list > mean(isi_list)); id_750(id_750 > ntrial) = [];
-id_250 = find(isi_list < mean(isi_list)); id_750(id_750 > ntrial) = [];
+id_250 = find(isi_list < mean(isi_list)); id_250(id_250 > ntrial) = [];
 id_gaps = {id_750, id_250}; 
 id_noad = intersect(find(targCon == 1),find(adapterCon == 0)); id_noad(id_noad > ntrial) = [];
 id_ad = intersect(find(targCon == 1),find(adapterCon == 1)); id_ad(id_ad > ntrial) = [];
@@ -137,7 +137,7 @@ result_sub = fullfile(result_folder, 'pre-processing');
 if ~exist(result_sub); mkdir(result_sub); end
 cd(result_sub)
 % saveas(gcf, ['trial base'], 'jpg')
-close 
+% close 
 
 tc_trial_base_avg = mean(tc_trial_base, 3);
 
@@ -160,6 +160,18 @@ plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b');
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
 % saveas(gcf, ['aligned_tc_zoomin'], 'jpg')
+
+% t = squeeze(nanmean(squeeze(tc_trial_align_ad(:,:,:)), 1));
+% t_ad = squeeze(nanmean(t(:,:), 1)); 
+% t = squeeze(nanmean(squeeze(tc_trial_align_targ(:,id_750,:)), 1)); 
+% t_tg_750 = squeeze(nanmean(t(:,:), 1)); 
+% t = squeeze(nanmean(squeeze(tc_trial_align_targ(:,id_250,:)), 1)); 
+% t_tg_250 = squeeze(nanmean(t(:,:), 1)); 
+% 
+% plot(t_ad(1:range), 'r'); hold on; plot(t_tg_750(1:range), 'b'); plot(t_tg_250(1:range), 'g'); 
+% grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
+% legend('ad align', 'targ align 750', 'targ align 250')
+
 
 range_base = [1:3]; 
 range_resp = [9:12];
@@ -190,7 +202,7 @@ for icell = 1 : ncell
     end
         
     [sig_ttest_noad(icell, idelta), p_ttest_noad(icell, idelta)] = ttest(base_win, resp_win,...
-            'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+            'alpha',0.01./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
     base_avg_noad(icell, idelta) = mean(base_win); % avg over trials of same ori
     resp_avg_noad(icell, idelta) = mean(resp_win);
     resp_ste_noad(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
@@ -209,7 +221,6 @@ subplot(1,2,2)
 imagesc(p_ttest_noad(:,:,1)); colorbar
 title('p value')
 set(gcf, 'Position', get(0, 'Screensize'));
-
 % saveas(gcf, ['visual_driven_cells_noad_targ.jpg'])
 close
 
@@ -234,7 +245,7 @@ for icell = 1 : ncell
     end
         
     [sig_ttest_ad(icell, idelta), p_ttest_ad(icell, idelta)] = ttest(base_win, resp_win,...
-            'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+            'alpha',0.01./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
     base_avg_ad(icell, idelta) = mean(base_win); % avg over trials of same ori
     resp_avg_ad(icell, idelta) = mean(resp_win);
     resp_ste_ad(icell, idelta) = std(resp_win) / sqrt(length(resp_win));
@@ -346,7 +357,7 @@ for idelta = 1 : ndelta
         ntrial_cond = length(base_cond{icell, idelta, igap});
        [sig_ttest_cond(icell, idelta, igap), p_ttest_cond(icell, idelta, igap)] = ttest(base_cond{icell, idelta, igap}, ...
            resp_cond{icell, idelta, igap},...
-           'alpha',0.05./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
+           'alpha',0.01./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
             
         base_avg_cond(icell, idelta, igap) = mean(base_cond{icell, idelta, igap}); % avg over trials of same ori
         resp_avg_cond(icell, idelta, igap) = mean(resp_cond{icell, idelta, igap});
@@ -411,8 +422,6 @@ cd(result_folder)
 %% trial trace by cond or trace noad, converted to dfof
 
 trace_cond_dfof = cell(ncell, ndelta, ngap); 
-% trace_targ0_750 = zeros(ncell, 223);
-% trace_targ0_250 = zeros(ncell, 223);
 for icell = 1 : ncell    
 for idelta = 1 : ndelta 
     id_delta = find(delta_seq == delta_list(idelta));
@@ -423,8 +432,6 @@ for idelta = 1 : ndelta
         trace_cond_dfof{icell, idelta, igap} = squeeze(tc_trial_align_ad(icell, idx, range_trace)); % [ntrial, trial_len]
 %         trace_cond_targ0{icell, igap} = nanmean(trace_cond_dfof{icell, 8, igap},1);
     end
-%     trace_targ0_750(icell,:) = nanmean(trace_cond_dfof{icell, 8, 1},1);
-%     trace_targ0_250(icell,:) = nanmean(trace_cond_dfof{icell, 8, 2},1);
 end
 end
 
@@ -435,15 +442,14 @@ trace_targ0_750 = []; trace_targ0_250 = [];
 figure
 for ii = 1 : length(cell_list_now)
     icell = cell_list_now(ii);
-% for icell = 1 : ncell
     trace_targ0_750(ii,:) = nanmean(trace_cond_dfof{icell, 8, 1},1);
-%     trace_targ0_750 = mean(trace_targ0_750,1);
     trace_targ0_250(ii,:) = nanmean(trace_cond_dfof{icell, 8, 2},1);
 end
 plot(mean(trace_targ0_750,1)); hold on; plot(mean(trace_targ0_250,1));
-% cd C:\Users\lan\Documents\repos\inter\code
+% cd C:\Users\lan\Documents\repos\inter\mat
 % saveas(gcf, ['grand avg trace set ', num2str(iset)], 'jpg')
-save trace_targ0_isi.mat trace_targ0_750 trace_targ0_250
+close
+% save trace_targ0_isi.mat trace_targ0_750 trace_targ0_250
 
 trace_noad_dfof = cell(ncell, ndelta); 
 for icell = 1 : ncell    
@@ -454,11 +460,7 @@ for idelta = 1 : ndelta
     trace_noad_dfof{icell, idelta} = squeeze(tc_trial_align_targ(icell, idx, range_trace)); 
 end
 end
-
 % save trace_noad_750_250.mat trace_cond_dfof trace_noad_dfof
-
-%%
-
 
 %% cell list by property
 

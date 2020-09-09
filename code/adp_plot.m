@@ -3,7 +3,7 @@
 close all
 clear
 clc
-cd C:\Users\lan\Documents\repos\inter\code
+cd C:\Users\lan\Documents\repos\inter\mat
 
 dataset_list = struct;
 dataset_list.mouse = [1322,1322,1322, 1323,1323,1323, 1324,1324]; % i1324 200730 LI was given up
@@ -25,7 +25,7 @@ for iset = 1 : nset
     area = dataset_list.area{1,iset}
     areamousedate = [area '_' imouse '_' date];
 
-    result_prefix = 'C:\Users\lan\Documents\repos\inter\code\';
+    result_prefix = 'C:\Users\lan\Documents\repos\inter\mat\';
     result_folder{iset} = fullfile(result_prefix, areamousedate);
     cd(result_folder{iset});
 
@@ -176,7 +176,6 @@ for igap = 1:ngap
 end
 ylim(hAx,[-2, 2])
 % saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
-
 
 %%
 for igap = 1:ngap
