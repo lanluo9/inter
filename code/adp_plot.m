@@ -394,13 +394,16 @@ for iset = 1:nset
         trace(iset).ncell = size(set{iset, 5}.trace_targ0_750, 1) - nlow(iset);
         trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
         trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
+        
+        trace(iset).trace_std{1,1} = nanstd(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
+        trace(iset).trace_std{2,1} = nanstd(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
 end
 
 %% trace for area
 
 by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
-igap = 1; % plot isi 750 -> 250
-trace_area_avg = [];
+igap = 2; % plot isi 750 -> 250
+trace_area_avg = []; trace_area_sets_std = [];
 
 for iarea = 1 : narea
     area_set_seq = by_area_id{iarea};
@@ -414,19 +417,36 @@ for iarea = 1 : narea
     end
     trace_area_avg(iarea,:) = sum(trace_area_sets,1) ./ ncell_sum;
     
+    % possible bug: how to merge std?
+    for iset = 1 : length(area_set_seq)
+        trace_area_sets_std = [trace_area_sets_std; ...
+            trace(area_set_seq(iset)).trace_std{igap} ./ trace(area_set_seq(iset)).ncell];
+        ncell_sum = ncell_sum + trace(area_set_seq(iset)).ncell;
+    end
+    trace_area_std(iarea,:) = sum(trace_area_sets_std,1); % .* ncell_sum;
+    
 end
 
 trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
+color_list = {[0,0,1], [0,1,0], [1,0,0]};
 for iarea = 1 : narea
-    plot(trace_area_avg(iarea, 1:trace_len)); hold on
+    plot(1:trace_len, trace_area_avg(iarea, 1:trace_len), 'color',color_list{iarea}); hold on
     xlim([0, 105])
 end
 legend('V1', 'LM', 'LI', 'Location','northeast'); legend boxoff
+for iarea = 1 : narea
+    x = 1:trace_len; x2 = [x, fliplr(x)];
+    curve1 = trace_area_avg(iarea, 1:trace_len) + trace_area_std(iarea, 1:trace_len); curve2 = trace_area_avg(iarea, 1:trace_len) - trace_area_std(iarea, 1:trace_len);
+    inBetween = [curve1, fliplr(curve2)];
+    h = fill(x2, inBetween, color_list{iarea}, 'edgecolor','none'); 
+    h.FaceAlpha = 0.3;
+end
 % saveas(gcf, ['trace across area isi ', num2str(igap)], 'jpg'); close
 
 for iarea = 1:3
-    resp_ad(iarea) = max(trace_area_avg(iarea, 1:20)) - min(trace_area_avg(iarea, 1:20));
-    resp_ad_targ(iarea) = max(trace_area_avg(iarea, 21:60)) - min(trace_area_avg(iarea, 21:60));
+    resp_ad(iarea) = max(trace_area_avg(iarea, 1:15)) - min(trace_area_avg(iarea, 1:15));
+    resp_ad_targ(iarea) = max(trace_area_avg(iarea, 16:60)) - min(trace_area_avg(iarea, 16:40));
+    % bug here: should not use min. should be frame-confined
     adp_area_trace(iarea) = resp_ad_targ(iarea)/resp_ad(iarea) - 1;
 end
 adp_area_trace
@@ -435,7 +455,7 @@ adp_area_trace
 
 by_mouse_id = {[1,2,3], [4,5,6], [7,8]}; nmouse = length(by_mouse_id);
 igap = 2; 
-trace_mouse_avg = [];
+trace_mouse_avg = []; trace_mouse_sets_std = [];
 
 for imouse = 1 : nmouse
     mouse_set_seq = by_mouse_id{imouse};
@@ -444,25 +464,40 @@ for imouse = 1 : nmouse
     
     for iset = 1 : length(mouse_set_seq)
         trace_mouse_sets = [trace_mouse_sets; ...
-            trace(mouse_set_seq(iset)).trace_avg{igap,1} .* trace(mouse_set_seq(iset)).ncell];
+            trace(mouse_set_seq(iset)).trace_avg{igap} .* trace(mouse_set_seq(iset)).ncell];
         ncell_sum = ncell_sum + trace(mouse_set_seq(iset)).ncell;
     end
     trace_mouse_avg(imouse,:) = sum(trace_mouse_sets,1) ./ ncell_sum;
     
+    % possible bug: how to merge std?
+    for iset = 1 : length(mouse_set_seq)
+        trace_mouse_sets_std = [trace_mouse_sets_std; ...
+            trace(mouse_set_seq(iset)).trace_std{igap} ./ trace(mouse_set_seq(iset)).ncell];
+        ncell_sum = ncell_sum + trace(mouse_set_seq(iset)).ncell;
+    end
+    trace_mouse_std(imouse,:) = sum(trace_mouse_sets_std,1); % .* ncell_sum;
+    
 end
 
 trace_len = 3.5 * 30; % trace len 3.5 s according to Jin2019 Fig 2B
+color_list = {[0,0,1], [0,1,0], [1,0,0]};
 for imouse = 1 : nmouse
-    plot(trace_mouse_avg(imouse, 1:trace_len)); hold on
-
+    plot(1:trace_len, trace_mouse_avg(imouse, 1:trace_len), 'color',color_list{imouse}); hold on
+    xlim([0, 105])
 end
-xlim([0, 105]); yl = ylim; ylim([0, yl(2)])
 legend('1322', '1323', '1324', 'Location','northeast'); legend boxoff
-% saveas(gcf, ['trace across mouse isi ', num2str(igap)], 'jpg'); close
+for imouse = 1 : nmouse
+    x = 1:trace_len; x2 = [x, fliplr(x)];
+    curve1 = trace_mouse_avg(imouse, 1:trace_len) + trace_mouse_std(imouse, 1:trace_len); curve2 = trace_mouse_avg(imouse, 1:trace_len) - trace_mouse_std(imouse, 1:trace_len);
+    inBetween = [curve1, fliplr(curve2)];
+    h = fill(x2, inBetween, color_list{imouse}, 'edgecolor','none'); 
+    h.FaceAlpha = 0.3;
+end
+saveas(gcf, ['trace across mouse isi ', num2str(igap)], 'jpg'); close
 
 for imouse = 1:3
-    resp_ad(imouse) = max(trace_mouse_avg(imouse, 1:20)) - min(trace_mouse_avg(imouse, 1:20));
-    resp_ad_targ(imouse) = max(trace_mouse_avg(imouse, 21:60)) - min(trace_mouse_avg(imouse, 21:60));
+    resp_ad(imouse) = max(trace_mouse_avg(imouse, 1:15)) - min(trace_mouse_avg(imouse, 1:15));
+    resp_ad_targ(imouse) = max(trace_mouse_avg(imouse, 16:60)) - min(trace_mouse_avg(imouse, 16:40));
     adp_mouse_trace(imouse) = resp_ad_targ(imouse)/resp_ad(imouse) - 1;
 end
 adp_mouse_trace
