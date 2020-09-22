@@ -391,9 +391,9 @@ saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
 
 trace = struct;
 for iset = 1:nset
-        trace(iset).ncell = size(set{iset, 5}.trace_targ0_750, 1);
-        trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750,1);
-        trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250,1);
+        trace(iset).ncell = size(set{iset, 5}.trace_targ0_750, 1) - nlow(iset);
+        trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
+        trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
 end
 
 %% trace for area
@@ -424,10 +424,17 @@ end
 legend('V1', 'LM', 'LI', 'Location','northeast'); legend boxoff
 % saveas(gcf, ['trace across area isi ', num2str(igap)], 'jpg'); close
 
+for iarea = 1:3
+    resp_ad(iarea) = max(trace_area_avg(iarea, 1:20)) - min(trace_area_avg(iarea, 1:20));
+    resp_ad_targ(iarea) = max(trace_area_avg(iarea, 21:60)) - min(trace_area_avg(iarea, 21:60));
+    adp_area_trace(iarea) = resp_ad_targ(iarea)/resp_ad(iarea) - 1;
+end
+adp_area_trace
+
 %% trace for mouse
 
 by_mouse_id = {[1,2,3], [4,5,6], [7,8]}; nmouse = length(by_mouse_id);
-igap = 2; % plot only isi 250
+igap = 2; 
 trace_mouse_avg = [];
 
 for imouse = 1 : nmouse
@@ -453,11 +460,17 @@ xlim([0, 105]); yl = ylim; ylim([0, yl(2)])
 legend('1322', '1323', '1324', 'Location','northeast'); legend boxoff
 % saveas(gcf, ['trace across mouse isi ', num2str(igap)], 'jpg'); close
 
+for imouse = 1:3
+    resp_ad(imouse) = max(trace_mouse_avg(imouse, 1:20)) - min(trace_mouse_avg(imouse, 1:20));
+    resp_ad_targ(imouse) = max(trace_mouse_avg(imouse, 21:60)) - min(trace_mouse_avg(imouse, 21:60));
+    adp_mouse_trace(imouse) = resp_ad_targ(imouse)/resp_ad(imouse) - 1;
+end
+adp_mouse_trace
+
 %% trace for area but list mouse
 
 by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
-igap = 2; % plot only isi 250
-% trace_area_avg = [];
+igap = 1;
 
 for iarea = 1 : narea
     area_set_seq = by_area_id{iarea};
@@ -467,7 +480,6 @@ for iarea = 1 : narea
     for iset = 1 : length(area_set_seq)
         trace_area_sets = [trace_area_sets; ...
             trace(area_set_seq(iset)).trace_avg{igap,1}];
-%         ncell_sum = ncell_sum + trace(area_set_seq(iset)).ncell;
     end
     trace_area_mouse{iarea} = trace_area_sets;
     
@@ -481,7 +493,7 @@ for iarea = 1 : narea
         plot(trace_area_mouse{1,iarea}(imouse, 1:trace_len)); hold on
     end
     xlim([0, 105])
-    ylim([-0.05, 0.21])
+    ylim([-0.05, 0.25])
     xticks(50); 
     xticklabels(area_str{iarea})
     if iarea == 3
