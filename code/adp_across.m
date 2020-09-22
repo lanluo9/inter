@@ -136,8 +136,8 @@ plot(t_base, 'k');
 result_sub = fullfile(result_folder, 'pre-processing');
 if ~exist(result_sub); mkdir(result_sub); end
 cd(result_sub)
-% saveas(gcf, ['trial base'], 'jpg')
-% close 
+saveas(gcf, ['trial base'], 'jpg')
+close 
 
 tc_trial_base_avg = mean(tc_trial_base, 3);
 
@@ -159,7 +159,8 @@ t_tg = squeeze(nanmean(t(:,:), 1));
 plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
-% saveas(gcf, ['aligned_tc_zoomin'], 'jpg')
+saveas(gcf, ['aligned_tc_zoomin'], 'jpg')
+close
 
 % t = squeeze(nanmean(squeeze(tc_trial_align_ad(:,:,:)), 1));
 % t_ad = squeeze(nanmean(t(:,:), 1)); 
@@ -171,6 +172,21 @@ legend('ad align', 'targ align')
 % plot(t_ad(1:range), 'r'); hold on; plot(t_tg_750(1:range), 'b'); plot(t_tg_250(1:range), 'g'); 
 % grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 % legend('ad align', 'targ align 750', 'targ align 250')
+
+% % t = squeeze(nanmean(squeeze(tc_trial_align_ad(:,id_750,:)), 1));
+% % t_ad_750 = squeeze(nanmean(t(:,:), 1)); 
+% % t = squeeze(nanmean(squeeze(tc_trial_align_ad(:,id_250,:)), 1));
+% % t_ad_250 = squeeze(nanmean(t(:,:), 1)); 
+% % 
+% % t = squeeze(nanmean(squeeze(tc_trial_align_targ(:,id_750,:)), 1)); 
+% % t_tg_750 = squeeze(nanmean(t(:,:), 1)); 
+% % t = squeeze(nanmean(squeeze(tc_trial_align_targ(:,id_250,:)), 1)); 
+% % t_tg_250 = squeeze(nanmean(t(:,:), 1)); 
+% % 
+% % plot(t_ad_750(1:range), 'r'); hold on; plot(t_ad_250(1:range), 'r--'); 
+% % plot(t_tg_750(1:range), 'b'); plot(t_tg_250(1:range), 'g'); 
+% % grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
+% % legend('ad align 750', 'ad align 250', 'targ align 750', 'targ align 250')
 
 
 range_base = [1:3]; 
@@ -221,7 +237,7 @@ subplot(1,2,2)
 imagesc(p_ttest_noad(:,:,1)); colorbar
 title('p value')
 set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['visual_driven_cells_noad_targ.jpg'])
+saveas(gcf, ['visual_driven_cells_noad_targ.jpg'])
 close
 
 % vis-driven by ad
@@ -263,11 +279,11 @@ subplot(1,2,2)
 imagesc(p_ttest_ad(:,:,1)); colorbar
 title('p value')
 set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['visual_driven_cells_adapter.jpg'])
+saveas(gcf, ['visual_driven_cells_adapter.jpg'])
 close
 
-% save resp_noad_targ.mat dfof_avg_noad dfof_ste_noad sig_ttest_noad 
-% save resp_ad.mat dfof_avg_ad dfof_ste_ad sig_ttest_ad 
+save resp_noad_targ.mat dfof_avg_noad dfof_ste_noad sig_ttest_noad 
+save resp_ad.mat dfof_avg_ad dfof_ste_ad sig_ttest_ad 
 
 %% find good_fit_cells w bootstrap using new dfof
 
@@ -316,7 +332,7 @@ for irun = 1 : nrun
     end
 end
 cd(result_folder)
-% save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
+save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
 
 % % sanity check
 % subplot(1,2,1)
@@ -369,7 +385,7 @@ for idelta = 1 : ndelta
 end
 end
 cd(fullfile(result_folder, 'pre-processing'))
-% save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond
+save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond
 
 % tuning curve fit by cond
 dfof_avg_750 = dfof_avg_cond(:,:,1); dfof_ste_750 = dfof_ste_cond(:,:,1); 
@@ -417,7 +433,7 @@ fit_param_merge = cat(3, fit_param_noad, fit_param_750, fit_param_250);
 ori_pref_cells_merge = cat(2, ori_pref_cells_noad, ori_pref_cells_750, ori_pref_cells_250);
 
 cd(result_folder)
-% save dfof_fit_noad_750_250.mat dfof_avg_merge dfof_ste_merge fit_param_merge ori_pref_cells_merge
+save dfof_fit_noad_750_250.mat dfof_avg_merge dfof_ste_merge fit_param_merge ori_pref_cells_merge
 
 %% trial trace by cond or trace noad, converted to dfof
 
@@ -446,10 +462,12 @@ for ii = 1 : length(cell_list_now)
     trace_targ0_250(ii,:) = nanmean(trace_cond_dfof{icell, 8, 2},1);
 end
 plot(mean(trace_targ0_750,1)); hold on; plot(mean(trace_targ0_250,1));
-% cd C:\Users\lan\Documents\repos\inter\mat
-% saveas(gcf, ['grand avg trace set ', num2str(iset)], 'jpg')
-% close
-% save trace_targ0_isi.mat trace_targ0_750 trace_targ0_250
+cd C:\Users\lan\Documents\repos\inter\mat
+saveas(gcf, ['grand avg trace set ', num2str(iset)], 'jpg')
+close
+
+cd(result_folder)
+save trace_targ0_isi.mat trace_targ0_750 trace_targ0_250
 
 trace_noad_dfof = cell(ncell, ndelta); 
 for icell = 1 : ncell    
@@ -460,7 +478,7 @@ for idelta = 1 : ndelta
     trace_noad_dfof{icell, idelta} = squeeze(tc_trial_align_targ(icell, idx, range_trace)); 
 end
 end
-% save trace_noad_750_250.mat trace_cond_dfof trace_noad_dfof
+save trace_noad_750_250.mat trace_cond_dfof trace_noad_dfof
 
 %% cell list by property
 
@@ -488,6 +506,6 @@ pref_0_cell = find(ori_pref_cells_noad > (delta_list(end-1) + delta_list(end))/2
 % pref_0_cell = pref_0_cell( dfof_avg_ad(pref_0_cell)>0 ); % dfof should >0
 pref_0_cell = intersect(pref_0_cell, vis_driven_cell_list);
 
-% save cell_property.mat vis_driven_noad vis_driven_ad vis_driven good_fit_cell best_cell pref_0_cell
+save cell_property.mat vis_driven_noad vis_driven_ad vis_driven good_fit_cell best_cell pref_0_cell
 
 end

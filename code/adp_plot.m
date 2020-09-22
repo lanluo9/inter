@@ -84,13 +84,19 @@ for ii = 1 : length(cell_list_now)
     for igap = 1:ngap
         dfof_equiv_ad_targ(ii, igap) = set{iset, 2}.dfof_avg_merge(icell, idelta, igap+1); %750-250
         dfof_equiv_ad(ii, igap) = dfof_avg_ad(icell, idelta);
-        
-        low_ad_resp{iset} = logical(sum(abs(dfof_equiv_ad)<0.01,2)); 
-        nlow(iset) = sum(low_ad_resp{iset});
-        
+       
         adp_ratio_a0t0(ii, 1, igap) = dfof_equiv_ad_targ(ii, igap) / dfof_equiv_ad(ii, igap) - 1;
     end
 end
+
+% histogram(dfof_equiv_ad(:,1),100); hold on; grid minor
+% line([0.01, 0.01], [0, 4], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
+% line([-0.01, -0.01], [0, 4], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
+% xlabel('response to adapter')
+% ylabel('number of cells')
+
+low_ad_resp{iset} = logical(abs(dfof_equiv_ad(:,1))<0.01); % two col of dfof_equiv_ad are identical
+nlow(iset) = sum(low_ad_resp{iset});
 
 adp(iset).adp_ratio = adp_ratio;
 adp(iset).adp_ratio_targ0 = adp_ratio_targ0;
@@ -157,8 +163,9 @@ for igap = 1:ngap
     hAx(igap) = subplot(1,2,igap);
     values = [adp_area(1).adp_ratio{1, igap}; adp_area(2).adp_ratio{1, igap};...
         adp_area(3).adp_ratio{1, igap}];
-    outlier = find( abs(values) - mean(values(:)) > 3*std(values(:)) );
-    values(outlier) = NaN;
+%     histogram(values,100); close
+%     outlier = find( abs(values) - mean(values(:)) > 3*std(values(:)) );
+%     values(outlier) = NaN;
     
     ncell_area = [length(adp_area(1).name); length(adp_area(2).name); length(adp_area(3).name)];
 
@@ -174,15 +181,15 @@ for igap = 1:ngap
             ['n=', num2str(ncell_area(itext))], 'HorizontalAlignment', 'center')
     end
 end
-ylim(hAx,[-2, 2])
-% saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
+% ylim(hAx,[-2, 2])
+saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
     for iarea = 1:narea
         tt = adp_area(iarea).adp_ratio{1, igap}; 
-        outlier = find( abs(tt) - mean(tt(:)) > 3*std(tt(:)) );
-        tt(outlier) = NaN;
+%         outlier = find( abs(tt) - mean(tt(:)) > 3*std(tt(:)) );
+%         tt(outlier) = NaN;
         adp_area_avg(iarea, igap) = nanmean(tt);
         adp_area_ste(iarea, igap) = nanstd(tt) ./ sqrt(length(tt(~isnan(tt))));
     end
@@ -205,7 +212,7 @@ xticks([1:3]); xticklabels({'V1', 'LM', 'LI'})
 ylabel(['adaptation index']);
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','east'); legend boxoff
 xlim([0.5, 3.5])
-% saveas(gcf, ['adp ratio a0t0 across areas avg sem'], 'jpg'); close 
+saveas(gcf, ['adp ratio a0t0 across areas avg sem'], 'jpg'); close 
 % saveas(gcf, ['adp ratio targ0 across areas avg sem'], 'jpg'); close 
 
 %% adp by mouse
@@ -236,8 +243,8 @@ for igap = 1:ngap
     hAx(igap) = subplot(1,2,igap);
     values = [adp_mouse(1).adp_ratio{1, igap}; adp_mouse(2).adp_ratio{1, igap};...
         adp_mouse(3).adp_ratio{1, igap}];
-    outlier = find( abs(values) - mean(values(:)) > 3*std(values(:)) );
-    values(outlier) = NaN;
+%     outlier = find( abs(values) - mean(values(:)) > 3*std(values(:)) );
+%     values(outlier) = NaN;
 
     ncell_mouse = [length(adp_mouse(1).name); length(adp_mouse(2).name); length(adp_mouse(3).name)];
     names = [adp_mouse(1).name; adp_mouse(2).name; adp_mouse(3).name];
@@ -251,8 +258,8 @@ for igap = 1:ngap
             ['n=', num2str(ncell_mouse(itext))], 'HorizontalAlignment', 'center')
     end
 end
-ylim(hAx,[-2, 2])
-% saveas(gcf, ['adp ratio a0t0 across mouse'], 'jpg'); close 
+% ylim(hAx,[-2, 2])
+saveas(gcf, ['adp ratio a0t0 across mouse'], 'jpg'); close 
 
 % ylim(hAx,[-10, 10])
 % saveas(gcf, ['adp ratio targ0 across mouse'], 'jpg'); close 
@@ -261,8 +268,8 @@ ylim(hAx,[-2, 2])
 for igap = 1:ngap
     for imouse = 1:nmouse
         tt = adp_mouse(imouse).adp_ratio{1, igap}; 
-        outlier = find( abs(tt) - mean(tt(:)) > 3*std(tt(:)) );
-        tt(outlier) = NaN;
+%         outlier = find( abs(tt) - mean(tt(:)) > 3*std(tt(:)) );
+%         tt(outlier) = NaN;
         adp_mouse_avg(imouse, igap) = nanmean(tt);
         adp_mouse_ste(imouse, igap) = nanstd(tt) ./ sqrt(length(tt(~isnan(tt))));
     end
@@ -284,7 +291,7 @@ xticks([1:3]); xticklabels({'1322','1323','1324'})
 ylabel(['adaptation index']);
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','east'); legend boxoff
 xlim([0.5, 3.5])
-% saveas(gcf, ['adp ratio a0t0 across mouse avg sem'], 'jpg'); close 
+saveas(gcf, ['adp ratio a0t0 across mouse avg sem'], 'jpg'); close 
 % saveas(gcf, ['adp ratio targ0 across mouse avg sem'], 'jpg'); close 
 
 %% adp by area but list mouse
@@ -319,8 +326,8 @@ for igap = 1:ngap
     
     for iset = 1:nset
         values = [values; adp_set(iset).adp_ratio{1, igap}];
-        outlier = find( abs(values) - mean(values(:)) > 3*std(values(:)) );
-        values(outlier) = NaN;
+%         outlier = find( abs(values) - mean(values(:)) > 3*std(values(:)) );
+%         values(outlier) = NaN;
         
         ncell_set = [ncell_set; length(adp_set(iset).name)];
         names = [names; strrep(adp_set(iset).name, '_13', '.')];
@@ -340,15 +347,15 @@ for igap = 1:ngap
 end
 ylim(hAx,[-2, 2])
 % ylim(hAx,[-10, 10])
-% saveas(gcf, ['adp ratio a0t0 across area-mouse zoom in'], 'jpg'); close 
+saveas(gcf, ['adp ratio a0t0 across area-mouse zoom in'], 'jpg'); close 
 % saveas(gcf, ['adp ratio targ0 across area-mouse zoom in'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
     for iset = 1:nset
         tt = adp_set(iset).adp_ratio{1, igap}; 
-        outlier = find( abs(tt) - mean(tt(:)) > 3*std(tt(:)) );
-        tt(outlier) = NaN;
+%         outlier = find( abs(tt) - mean(tt(:)) > 3*std(tt(:)) );
+%         tt(outlier) = NaN;
         adp_set_avg(iset, igap) = nanmean(tt);
         adp_set_ste(iset, igap) = nanstd(tt) ./ sqrt(length(tt(~isnan(tt))));
     end
@@ -372,7 +379,7 @@ xticks([1:8]); xticklabels({'V1.1322', '23', '24', ...
 ylabel(['adaptation index']);
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northwest'); legend boxoff
 xlim([0.5, 8.5])
-% saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
+saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
 % saveas(gcf, ['adp ratio targ0 across area-mouse avg sem'], 'jpg'); close
 
 %% two-way ANOVA across areas & mice
@@ -383,26 +390,10 @@ xlim([0.5, 8.5])
 %% trace grand average for area or for mouse
 
 trace = struct;
-
 for iset = 1:nset
-%     trace_cell = [];
-%     cell_list_now = find(set{iset, 1}.vis_driven_ad); % only use ad(0) vis-driven cells
-    
-%     for igap = 1:ngap
-%         trace_targ0 = set{iset, 4}.trace_cond_dfof(:,8,igap); % only use targ0
-        
-%         for ii = 1 : length(cell_list_now)
-%             icell = cell_list_now(ii);
-%             trace_targ0_avg(icell,:) = nanmean(trace_targ0{icell,1},1);
-%         end
-        
         trace(iset).ncell = size(set{iset, 5}.trace_targ0_750, 1);
         trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750,1);
         trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250,1);
-%         trace(iset).trace_ste{1,1} = nanstd(set{iset, 5}.trace_targ0_750,1) ./ sqrt(trace(iset).ncell);
-%         trace(iset).trace_ste{2,1} = nanstd(set{iset, 5}.trace_targ0_250,1) ./ sqrt(trace(iset).ncell);
-        
-%     end
 end
 
 %% trace for area
