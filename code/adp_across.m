@@ -96,7 +96,7 @@ id_gaps = {id_750, id_250};
 id_noad = intersect(find(targCon == 1),find(adapterCon == 0)); id_noad(id_noad > ntrial) = [];
 id_ad = intersect(find(targCon == 1),find(adapterCon == 1)); id_ad(id_ad > ntrial) = [];
 
-%% align tc by stim onset or targ onset. normalize aligned tc by 1-sec-long "trial baseline"
+%% align tc by adapter onset or targ onset. normalize aligned tc by 1-sec-long "trial baseline"
 
 trial_len_ad = diff(cStimOn);
 tc_trial_align_ad = zeros(ncell, ntrial, max(trial_len_ad));
@@ -149,8 +149,8 @@ for icell = 1:ncell
 end
 
 %% find base & resp window in aligned tc
-range = 223; 
-% range = 50;
+% range = 223; 
+range = 50;
 t = squeeze(nanmean(squeeze(tc_trial_align_ad(:,:,:)), 1));
 t_ad = squeeze(nanmean(t(:,:), 1)); 
 t = squeeze(nanmean(squeeze(tc_trial_align_targ(:,:,:)), 1)); 
@@ -448,7 +448,7 @@ end
 plot(mean(trace_targ0_750,1)); hold on; plot(mean(trace_targ0_250,1));
 % cd C:\Users\lan\Documents\repos\inter\mat
 % saveas(gcf, ['grand avg trace set ', num2str(iset)], 'jpg')
-close
+% close
 % save trace_targ0_isi.mat trace_targ0_750 trace_targ0_250
 
 trace_noad_dfof = cell(ncell, ndelta); 
