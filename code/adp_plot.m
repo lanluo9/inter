@@ -98,21 +98,24 @@ end
 low_ad_resp{iset} = logical(abs(dfof_equiv_ad(:,1))<0.01); % two col of dfof_equiv_ad are identical
 nlow(iset) = sum(low_ad_resp{iset});
 
-adp(iset).adp_ratio = adp_ratio;
-adp(iset).adp_ratio_targ0 = adp_ratio_targ0;
+% adp(iset).adp_ratio = adp_ratio;
+% adp(iset).adp_ratio_targ0 = adp_ratio_targ0;
 adp(iset).adp_ratio_a0t0 = adp_ratio_a0t0;
 
 end
 
 for iset = 1 : nset
     adp_ratio_a0t0_high_ad = zeros(sum(~low_ad_resp{iset}),1,ngap);
-    
     for igap = 1:ngap
         high_ad_resp = ~low_ad_resp{iset};
         adp_ratio_a0t0_high_ad(:,1,igap) = adp(iset).adp_ratio_a0t0(high_ad_resp, 1, igap);
     end
-    
     adp(iset).adp_ratio_a0t0_high_ad = adp_ratio_a0t0_high_ad;
+    
+    for igap = 1:ngap
+        adp(iset).adp_pos{igap} = logical(adp_ratio_a0t0_high_ad(:,igap)>0);
+        adp(iset).adp_neg{igap} = logical(adp_ratio_a0t0_high_ad(:,igap)<0); % when adp inhibits response, as expected
+    end
 end
 
 %% san check for a0t0
@@ -391,12 +394,12 @@ saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
 
 trace = struct;
 for iset = 1:nset
-        trace(iset).ncell = size(set{iset, 5}.trace_targ0_750, 1) - nlow(iset);
-        trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
-        trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
-        
-        trace(iset).trace_std{1,1} = nanstd(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
-        trace(iset).trace_std{2,1} = nanstd(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
+    trace(iset).ncell = size(set{iset, 5}.trace_targ0_750, 1) - nlow(iset);
+    trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
+    trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
+
+    trace(iset).trace_std{1,1} = nanstd(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
+    trace(iset).trace_std{2,1} = nanstd(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
 end
 
 %% trace for area
