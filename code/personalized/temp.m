@@ -31,8 +31,8 @@ for iset = 1:nset
     trace(iset).ncell_neg = [sum(adp(iset).adp_neg{1}), sum(adp(iset).adp_neg{2})]; % why complimentary mirror?
     trace(iset).ncell_pos = [sum(adp(iset).adp_pos{1}), sum(adp(iset).adp_pos{2})];
     
-    trace(iset).trace_avg{1} = nanmean(set{iset, 5}.trace_targ0_750(adp(iset).adp_pos{1},:),1);
-    trace(iset).trace_avg{2} = nanmean(set{iset, 5}.trace_targ0_250(adp(iset).adp_pos{2},:),1);
+    trace(iset).trace_avg{1} = nanmean(set{iset, 5}.trace_targ0_750(adp(iset).adp_neg{1},:),1);
+    trace(iset).trace_avg{2} = nanmean(set{iset, 5}.trace_targ0_250(adp(iset).adp_neg{2},:),1);
 
 %     trace(iset).trace_std{1,1} = nanstd(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
 %     trace(iset).trace_std{2,1} = nanstd(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);

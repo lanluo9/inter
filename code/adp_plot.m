@@ -180,12 +180,12 @@ for igap = 1:ngap
     
 %     yl = ylim;
     for itext = 1 : length(ncell_area)
-        text(itext, -2 + 0.2, ...
+        text(itext, -3 + 0.5, ...
             ['n=', num2str(ncell_area(itext))], 'HorizontalAlignment', 'center')
     end
 end
 % ylim(hAx,[-2, 2])
-saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
@@ -204,7 +204,7 @@ for igap = 1:ngap
     h{igap,1} = scatter(1:3, adp_area_avg(:, igap), 5, color_list{igap}, 'filled'); hold on
     errorbar(1:3, adp_area_avg(:, igap), adp_area_ste(:, igap), 'color', color_list{igap}, 'LineStyle','none')
 end
-ylim([-1,1])
+ylim([-1.5,1.5])
 yl = ylim;
 for itext = 1 : length(ncell_area)
     text(itext, yl(1) + 0.1, ...
@@ -213,10 +213,10 @@ end
 line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
 xticks([1:3]); xticklabels({'V1', 'LM', 'LI'})
 ylabel(['adaptation index']);
-legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','east'); legend boxoff
+legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend boxoff
 xlim([0.5, 3.5])
-saveas(gcf, ['adp ratio a0t0 across areas avg sem'], 'jpg'); close 
-% saveas(gcf, ['adp ratio targ0 across areas avg sem'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across areas avg sem'], 'jpg'); close 
+% % saveas(gcf, ['adp ratio targ0 across areas avg sem'], 'jpg'); close 
 
 %% adp by mouse
 
@@ -257,15 +257,16 @@ for igap = 1:ngap
     xlim([0.5, 3.5])
     line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
     for itext = 1 : length(ncell_mouse)
-        text(itext, -2 + 0.2, ...
+        text(itext, -3 + 0.5, ...
             ['n=', num2str(ncell_mouse(itext))], 'HorizontalAlignment', 'center')
     end
 end
-% ylim(hAx,[-2, 2])
-saveas(gcf, ['adp ratio a0t0 across mouse'], 'jpg'); close 
+yl = ylim;
+ylim(hAx,[-3, yl(2)])
+% saveas(gcf, ['adp ratio a0t0 across mouse'], 'jpg'); close 
 
 % ylim(hAx,[-10, 10])
-% saveas(gcf, ['adp ratio targ0 across mouse'], 'jpg'); close 
+% % saveas(gcf, ['adp ratio targ0 across mouse'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
@@ -283,7 +284,7 @@ for igap = 1:ngap
     h{igap,1} = scatter(1:3, adp_mouse_avg(:, igap), 5, color_list{igap}, 'filled'); hold on
     errorbar(1:3, adp_mouse_avg(:, igap), adp_mouse_ste(:, igap), 'color', color_list{igap}, 'LineStyle','none')
 end
-ylim([-0.5, 0.5])
+ylim([-1, 1])
 yl = ylim;
 for itext = 1 : length(ncell_mouse)
     text(itext, yl(1) + 0.05, ...
@@ -292,10 +293,10 @@ end
 line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
 xticks([1:3]); xticklabels({'1322','1323','1324'})
 ylabel(['adaptation index']);
-legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','east'); legend boxoff
+legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend boxoff
 xlim([0.5, 3.5])
-saveas(gcf, ['adp ratio a0t0 across mouse avg sem'], 'jpg'); close 
-% saveas(gcf, ['adp ratio targ0 across mouse avg sem'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across mouse avg sem'], 'jpg'); close 
+% % saveas(gcf, ['adp ratio targ0 across mouse avg sem'], 'jpg'); close 
 
 %% adp by area but list mouse
 
@@ -344,14 +345,14 @@ for igap = 1:ngap
     
 %     yl = ylim;
     for itext = 1 : length(ncell_set)
-        text(itext, 2 - 0.2, ...
+        text(itext, 6, ...
             ['n=', num2str(ncell_set(area_mouse_id(itext)))], 'HorizontalAlignment', 'center')
     end
 end
-ylim(hAx,[-2, 2])
+ylim(hAx,[-3, 6.5])
 % ylim(hAx,[-10, 10])
-saveas(gcf, ['adp ratio a0t0 across area-mouse zoom in'], 'jpg'); close 
-% saveas(gcf, ['adp ratio targ0 across area-mouse zoom in'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across area-mouse zoom in'], 'jpg'); close 
+% % saveas(gcf, ['adp ratio targ0 across area-mouse zoom in'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
@@ -382,8 +383,8 @@ xticks([1:8]); xticklabels({'V1.1322', '23', '24', ...
 ylabel(['adaptation index']);
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northwest'); legend boxoff
 xlim([0.5, 8.5])
-saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
-% saveas(gcf, ['adp ratio targ0 across area-mouse avg sem'], 'jpg'); close
+% saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
+% % saveas(gcf, ['adp ratio targ0 across area-mouse avg sem'], 'jpg'); close
 
 %% two-way ANOVA across areas & mice
 
@@ -444,7 +445,7 @@ for iarea = 1 : narea
     h = fill(x2, inBetween, color_list{iarea}, 'edgecolor','none'); 
     h.FaceAlpha = 0.3;
 end
-% saveas(gcf, ['trace across area isi ', num2str(igap)], 'jpg'); close
+% % saveas(gcf, ['trace across area isi ', num2str(igap)], 'jpg'); close
 
 for iarea = 1:3
     resp_ad(iarea) = max(trace_area_avg(iarea, 1:15)) - min(trace_area_avg(iarea, 1:15));
@@ -496,7 +497,7 @@ for imouse = 1 : nmouse
     h = fill(x2, inBetween, color_list{imouse}, 'edgecolor','none'); 
     h.FaceAlpha = 0.3;
 end
-saveas(gcf, ['trace across mouse isi ', num2str(igap)], 'jpg'); close
+% saveas(gcf, ['trace across mouse isi ', num2str(igap)], 'jpg'); close
 
 for imouse = 1:3
     resp_ad(imouse) = max(trace_mouse_avg(imouse, 1:15)) - min(trace_mouse_avg(imouse, 1:15));
@@ -541,7 +542,7 @@ for iarea = 1 : narea
     end
     legend boxoff
 end
-% saveas(gcf, ['trace across area-mouse isi ', num2str(igap)], 'jpg'); close
+% % saveas(gcf, ['trace across area-mouse isi ', num2str(igap)], 'jpg'); close
 
 %% 
 % take only vis_driven & good_fit cells
