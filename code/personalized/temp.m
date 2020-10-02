@@ -1,6 +1,23 @@
+%% adp_ratio_a0t0_high_ad wrong
 
-histogram(adp(iset).adp_ratio_a0t0_high_ad, 100)
+% wth = {}; wth2 = {};
+for iset = 1:nset
+    tt = squeeze(adp(iset).adp_ratio_a0t0_high_ad);
+    wth2{iset} = tt(:,1)./tt(:,2)
+    
+    tt = squeeze(adp(iset).adp_ratio_a0t0);
+    wth{iset} = tt(:,1)./tt(:,2)
+end
 
+%% mirror dfof_equiv_ad_targ wrt to resp_ad
+
+tt = dfof_equiv_ad_targ - dfof_equiv_ad
+sum(tt,2)
+
+tt = dfof_equiv_ad_targ ./ dfof_equiv_ad - 1
+sum(tt,2)
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% trace grand average for area or for mouse
 
 trace = struct;
