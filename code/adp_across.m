@@ -256,8 +256,8 @@ for icell = 1 : ncell
         idx = intersect(intersect(id_gaps{igap}, id_delta), id_ad); % use only with-adapter trials with 1 ISI & 1 ori
         ntrial_cond = length(idx); 
 
-        base_win = [base_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_base)),2)]; % avg over window -> [ntrial_ori, 1]
-        resp_win = [resp_win; mean(squeeze(tc_trial_align_targ(icell, idx, range_resp)),2)];
+        base_win = [base_win; mean(squeeze(tc_trial_align_ad(icell, idx, range_base)),2)]; % avg over window -> [ntrial_ori, 1]
+        resp_win = [resp_win; mean(squeeze(tc_trial_align_ad(icell, idx, range_resp)),2)];
     end
         
     [sig_ttest_ad(icell, idelta), p_ttest_ad(icell, idelta)] = ttest(base_win, resp_win,...
@@ -346,7 +346,7 @@ else
     load(bootstrap_file)
 end
 
-%% get dfof & fit of noad_750_250
+%% get dfof & fit of [noad, 750, 250]
 
 base_cond = cell(ncell, ndelta, ngap); resp_cond = cell(ncell, ndelta, ngap);
 for icell = 1 : ncell

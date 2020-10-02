@@ -17,6 +17,11 @@ sum(tt,2)
 tt = dfof_equiv_ad_targ ./ dfof_equiv_ad - 1
 sum(tt,2)
 
+%% check from adp_across (mat generator)
+
+dfof_equiv_ad_targ = squeeze(dfof_avg_merge(:, 8, 2:3)); %750-250
+dfof_equiv_ad(ii, igap) = dfof_avg_ad(icell, idelta);
+
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% trace grand average for area or for mouse
 
