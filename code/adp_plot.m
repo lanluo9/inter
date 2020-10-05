@@ -543,14 +543,9 @@ end
 % % % saveas(gcf, ['trace across area-mouse isi ', num2str(igap)], 'jpg'); close
 %}
 
-%% two-way ANOVA across areas & mice
+%% 3-way anova for area mouse isi & multiple comparison
 
-% cannot(?) do 2 way anova bc: missing data in LI 1324, unequal sample size across area-mouse
-% https://www.r-bloggers.com/r-tutorial-series-two-way-anova-with-unequal-sample-sizes/
-
-% try n-way anova
 cd C:\Users\lan\Documents\repos\inter\mat
-
 adp_ratio_seq = []; ncell_set = [];
 for igap = 1:ngap
     for iset = 1:nset
@@ -576,15 +571,19 @@ for iset = 1 : nset*2
     end
 end
 
-%%
-p_anova_n = anovan(adp_ratio_seq,{area_seq mouse_seq isi_seq}, 'model',3, 'varnames',{'area', 'mouse', 'isi'})
-p_anova_n = anovan(adp_ratio_seq,{area_seq mouse_seq}, 'model',2, 'varnames',{'area', 'mouse'})
-p_anova_n = anovan(adp_ratio_seq,{area_seq isi_seq}, 'model',2, 'varnames',{'area', 'isi'})
+% p_anova_n = anovan(adp_ratio_seq,{area_seq mouse_seq isi_seq}, 'model',3, 'varnames',{'area', 'mouse', 'isi'})
+% p_anova_n = anovan(adp_ratio_seq,{area_seq mouse_seq}, 'model',2, 'varnames',{'area', 'mouse'})
+% p_anova_n = anovan(adp_ratio_seq,{area_seq isi_seq}, 'model',2, 'varnames',{'area', 'isi'})
 
 [p,tbl,stats] = anovan(adp_ratio_seq,{area_seq mouse_seq isi_seq},'model','interaction',...
     'varnames',{'area', 'mouse', 'isi'});
-results = multcompare(stats,'Dimension',[1 2])
-results = multcompare(stats,'Dimension',[1 3])
+% saveas(gcf, ['anovan area-mouse-isi'], 'jpg'); close
+
+% results = multcompare(stats,'Dimension',[1 2])
+% results = multcompare(stats,'Dimension',[1 3])
+results = multcompare(stats,'Dimension',[1 2 3])
+set(gcf, 'Position', get(0, 'Screensize'));
+% saveas(gcf, ['multcompare area-mouse-isi'], 'png'); close
 
 %% 
 % take only vis_driven & good_fit cells
