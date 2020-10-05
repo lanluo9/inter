@@ -43,6 +43,7 @@ ndelta = 8;
 ngap = 2;
 
 adp = struct;
+low_ad_resp = {};
 for iset = 1 : nset
     cell_list_now = find(set{iset, 1}.vis_driven_ad); 
     
@@ -90,14 +91,14 @@ end
 % xlabel('response to adapter')
 % ylabel('number of cells')
 
-% low_ad_resp{iset} = logical(abs(dfof_equiv_ad(:,1))<0.01); % two col of dfof_equiv_ad are identical
-low_ad_resp{iset} = logical(abs(dfof_equiv_noad_targ(:,1))<0.01); % two col of dfof_equiv_ad are identical
+low_ad_resp{iset} = logical(abs(dfof_equiv_ad(:,1))<0.01); % two col of dfof_equiv_ad are identical
+% low_ad_resp{iset} = logical(abs(dfof_equiv_noad_targ(:,1))<0.01); 
 nlow(iset) = sum(low_ad_resp{iset});
 
 % adp(iset).adp_ratio = adp_ratio;
 % adp(iset).adp_ratio_targ0 = adp_ratio_targ0;
-adp(iset).adp_ratio_a0t0 = adp_ratio_targ0;
-% adp(iset).adp_ratio_a0t0 = adp_ratio_a0t0;
+% adp(iset).adp_ratio_a0t0 = adp_ratio_targ0;
+adp(iset).adp_ratio_a0t0 = adp_ratio_a0t0;
 
 end
 
@@ -182,7 +183,7 @@ for igap = 1:ngap
     end
 end
 % ylim(hAx,[-2, 2])
-saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across areas violin'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
@@ -212,8 +213,8 @@ xticks([1:3]); xticklabels({'V1', 'LM', 'LI'})
 ylabel(['adaptation index']);
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend boxoff
 xlim([0.5, 3.5])
-saveas(gcf, ['adp ratio a0t0 across areas avg sem'], 'jpg'); close 
-% saveas(gcf, ['adp ratio targ0 across areas avg sem'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across areas avg sem'], 'jpg'); close 
+% % saveas(gcf, ['adp ratio targ0 across areas avg sem'], 'jpg'); close 
 
 %% adp by mouse
 
@@ -260,10 +261,10 @@ for igap = 1:ngap
 end
 yl = ylim;
 ylim(hAx,[-3, yl(2)])
-saveas(gcf, ['adp ratio a0t0 across mouse'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across mouse'], 'jpg'); close 
 
 % ylim(hAx,[-10, 10])
-% saveas(gcf, ['adp ratio targ0 across mouse'], 'jpg'); close 
+% % saveas(gcf, ['adp ratio targ0 across mouse'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
@@ -292,8 +293,8 @@ xticks([1:3]); xticklabels({'1322','1323','1324'})
 ylabel(['adaptation index']);
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend boxoff
 xlim([0.5, 3.5])
-saveas(gcf, ['adp ratio a0t0 across mouse avg sem'], 'jpg'); close 
-% saveas(gcf, ['adp ratio targ0 across mouse avg sem'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across mouse avg sem'], 'jpg'); close 
+% % saveas(gcf, ['adp ratio targ0 across mouse avg sem'], 'jpg'); close 
 
 %% adp by area but list mouse
 
@@ -348,8 +349,8 @@ for igap = 1:ngap
 end
 ylim(hAx,[-3, 6.5])
 % ylim(hAx,[-10, 10])
-saveas(gcf, ['adp ratio a0t0 across area-mouse zoom in'], 'jpg'); close 
-% saveas(gcf, ['adp ratio targ0 across area-mouse zoom in'], 'jpg'); close 
+% saveas(gcf, ['adp ratio a0t0 across area-mouse zoom in'], 'jpg'); close 
+% % saveas(gcf, ['adp ratio targ0 across area-mouse zoom in'], 'jpg'); close 
 
 %%
 for igap = 1:ngap
@@ -380,8 +381,8 @@ xticks([1:8]); xticklabels({'V1.1322', '23', '24', ...
 ylabel(['adaptation index']);
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northwest'); legend boxoff
 xlim([0.5, 8.5])
-saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
-% saveas(gcf, ['adp ratio targ0 across area-mouse avg sem'], 'jpg'); close
+% saveas(gcf, ['adp ratio a0t0 across area-mouse avg sem'], 'jpg'); close
+% % saveas(gcf, ['adp ratio targ0 across area-mouse avg sem'], 'jpg'); close
 
 %% trace grand average for area or for mouse
 
@@ -449,7 +450,7 @@ for igap = 1 : ngap
     title([isi_str{igap}])
 
 end
-saveas(gcf, ['trace across area'], 'jpg'); close
+% saveas(gcf, ['trace across area'], 'jpg'); close
 
 %{
 %% trace for mouse
@@ -494,7 +495,7 @@ for imouse = 1 : nmouse
     h = fill(x2, inBetween, color_list{imouse}, 'edgecolor','none'); 
     h.FaceAlpha = 0.3;
 end
-% saveas(gcf, ['trace across mouse isi ', num2str(igap)], 'jpg'); close
+% % saveas(gcf, ['trace across mouse isi ', num2str(igap)], 'jpg'); close
 
 for imouse = 1:3
     resp_ad(imouse) = max(trace_mouse_avg(imouse, 1:15)) - min(trace_mouse_avg(imouse, 1:15));
@@ -539,13 +540,51 @@ for iarea = 1 : narea
     end
     legend boxoff
 end
-% % saveas(gcf, ['trace across area-mouse isi ', num2str(igap)], 'jpg'); close
+% % % saveas(gcf, ['trace across area-mouse isi ', num2str(igap)], 'jpg'); close
 %}
 
 %% two-way ANOVA across areas & mice
 
-% cannot do 2 way anova bc: missing data in LI 1324, unequal sample size across area-mouse
+% cannot(?) do 2 way anova bc: missing data in LI 1324, unequal sample size across area-mouse
 % https://www.r-bloggers.com/r-tutorial-series-two-way-anova-with-unequal-sample-sizes/
+
+% try n-way anova
+cd C:\Users\lan\Documents\repos\inter\mat
+
+adp_ratio_seq = []; ncell_set = [];
+for igap = 1:ngap
+    for iset = 1:nset
+        append_seq = squeeze(adp(iset).adp_ratio_a0t0_high_ad(:,1,igap));
+        ncell_set(iset) = length(append_seq);
+        adp_ratio_seq = [adp_ratio_seq; append_seq];
+    end
+end
+
+ncell_set2 = [ncell_set, ncell_set];
+list_area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM',...
+             'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
+list_mouse = {'1322','1322','1322', '1323','1323','1323', '1324','1324',...
+              '1322','1322','1322', '1323','1323','1323', '1324','1324'};
+list_isi = {'750','750','750','750', '750','750','750','750',... 
+            '250','250','250','250', '250','250','250','250'};
+area_seq = char; mouse_seq = char; isi_seq = char; 
+for iset = 1 : nset*2
+    for icell = 1 : ncell_set2(iset)
+        area_seq = [area_seq; list_area{iset}];
+        mouse_seq = [mouse_seq; list_mouse{iset}];
+        isi_seq = [isi_seq; list_isi{iset}];
+    end
+end
+
+%%
+p_anova_n = anovan(adp_ratio_seq,{area_seq mouse_seq isi_seq}, 'model',3, 'varnames',{'area', 'mouse', 'isi'})
+p_anova_n = anovan(adp_ratio_seq,{area_seq mouse_seq}, 'model',2, 'varnames',{'area', 'mouse'})
+p_anova_n = anovan(adp_ratio_seq,{area_seq isi_seq}, 'model',2, 'varnames',{'area', 'isi'})
+
+[p,tbl,stats] = anovan(adp_ratio_seq,{area_seq mouse_seq isi_seq},'model','interaction',...
+    'varnames',{'area', 'mouse', 'isi'});
+results = multcompare(stats,'Dimension',[1 2])
+results = multcompare(stats,'Dimension',[1 3])
 
 %% 
 % take only vis_driven & good_fit cells
