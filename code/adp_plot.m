@@ -389,8 +389,12 @@ xlim([0.5, 8.5])
 trace = struct;
 for iset = 1:nset
     trace(iset).ncell = size(set{iset, 5}.trace_targ0_750, 1) - nlow(iset);
-    trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
-    trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
+    trace(iset).trace_set = cell(2,1);
+    trace(iset).trace_set{1,1} = [trace(iset).trace_set{1,1}; set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:)];
+    trace(iset).trace_set{2,1} = [trace(iset).trace_set{2,1}; set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:)];
+
+%     trace(iset).trace_avg{1,1} = nanmean(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
+%     trace(iset).trace_avg{2,1} = nanmean(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
 %     trace(iset).trace_std{1,1} = nanstd(set{iset, 5}.trace_targ0_750(~low_ad_resp{iset},:),1);
 %     trace(iset).trace_std{2,1} = nanstd(set{iset, 5}.trace_targ0_250(~low_ad_resp{iset},:),1);
 

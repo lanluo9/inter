@@ -68,7 +68,11 @@ ijroot = 'C:\ProgramFiles\ImageJ';
 coreInitJavaPath(svnroot,ijroot);
 coreInitMatlabPath(svnroot,ijroot);
 disp('imageJ added')
+
+cd C:\Users\lan\Documents\repos\inter\code\
+disp('directory set home')
 disp(' ')
+clc
 
 %% saving var
 save('data_reg.mat', 'data_reg', '-v7.3') % force save >2GB .mat
