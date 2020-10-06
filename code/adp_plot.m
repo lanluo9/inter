@@ -584,7 +584,7 @@ end
 % results = multcompare(stats,'Dimension',[1 3])
 results = multcompare(stats,'Dimension',[1 2 3])
 set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['multcompare area-mouse-isi'], 'png'); close
+% saveas(gcf, ['multcompare area-mouse-isi'], 'jpg'); close
 
 %% 
 % take only vis_driven & good_fit cells
