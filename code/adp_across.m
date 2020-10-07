@@ -136,11 +136,9 @@ plot(t_base, 'k');
 result_sub = fullfile(result_folder, 'pre-processing');
 if ~exist(result_sub); mkdir(result_sub); end
 cd(result_sub)
-saveas(gcf, ['trial base'], 'jpg')
-close 
+% saveas(gcf, ['trial base'], 'jpg'); close 
 
 tc_trial_base_avg = mean(tc_trial_base, 3);
-
 for icell = 1:ncell
     for itrial = 1:ntrial
         tc_trial_align_ad(icell, itrial, :) = tc_trial_align_ad(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :) -1;
