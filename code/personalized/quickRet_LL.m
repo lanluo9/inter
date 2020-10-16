@@ -1,13 +1,13 @@
 % select 1 position w low SNR & clustered cells
 
-clear all
+clear 
 close all
 clc
 
-date = '200806';
-mouse = '1322';
-ImgFolder = '002';
-time = '1123';
+date = '201015';
+mouse = '1328';
+ImgFolder = '001';
+time = '1302';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -146,8 +146,8 @@ expt_input = concatenateDataBlocks(temp);
         end
         
         if strcmp(rc.name,'lan')
-            mkdir(['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:)]);
-            print(['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:) '\' date '_' mouse '_' ImgFolder(irun,:) '_retinotopy.pdf'], '-dpdf','-bestfit')
+            mkdir(['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\' date '_' imouse '\' date '_' imouse '_' ImgFolder(irun,:)]);
+            print(['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\' date '_' imouse '\' date '_' imouse '_' ImgFolder(irun,:) '\' date '_' imouse '_' ImgFolder(irun,:) '_retinotopy.pdf'], '-dpdf','-bestfit')
             set(gcf, 'Position', get(0, 'Screensize'));
 %         elseif strcmp(rc.name,'robin')
 %             mkdir(['R:\home\robin\Imaging\Analysis\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:)]);
@@ -228,7 +228,7 @@ expt_input = concatenateDataBlocks(temp);
 %         if ~exist(fullfile(rc.ashleyAnalysis,mouse,'two-photon imaging',date,ImgFolder))
 %             mkdir(fullfile(rc.ashleyAnalysis,mouse,'two-photon imaging',date,ImgFolder))
 %         end
-    print(['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:) '\' date '_' mouse '_' ImgFolder(irun,:) '_FOV.pdf'], '-dpdf','-bestfit')
+    print(['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\' date '_' imouse '\' date '_' imouse '_' ImgFolder(irun,:) '\' date '_' imouse '_' ImgFolder(irun,:) '_FOV.pdf'], '-dpdf','-bestfit')
 %     elseif strcmp(rc.name,'robin')
 %            print(['R:\home\robin\Imaging\Analysis\' date '_' mouse '\' date '_' mouse '_' ImgFolder(irun,:) '\' date '_' mouse '_' ImgFolder(irun,:) '_FOV.pdf'], '-dpdf','-bestfit')
     end
