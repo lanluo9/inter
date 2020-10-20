@@ -134,7 +134,7 @@ t_tg = squeeze(nanmean(t(:,:), 1));
 plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
-saveas(gcf, ['aligned_tc_zoomin', num2str(icell)], 'jpg')
+% saveas(gcf, ['aligned_tc_zoomin', num2str(icell)], 'jpg')
 disp('select base vs resp window accordingly, and edit below')
 
 %% index of trials
@@ -188,7 +188,7 @@ for icell = 1 : ncell
 end
 end
 vis_driven_noad = sum(sig_ttest_noad,2)>0;
-% save resp_noad_targ.mat dfof_avg_noad dfof_ste_noad cp_win_noad base_avg_noad resp_avg_noad resp_ste_noad sig_ttest_noad p_ttest_noad
+% % save resp_noad_targ.mat dfof_avg_noad dfof_ste_noad cp_win_noad base_avg_noad resp_avg_noad resp_ste_noad sig_ttest_noad p_ttest_noad
 
 sum(sum(sig_ttest_noad,2)>0) % ncells responsive to >= 1 targ ori: 84/103
 figure
@@ -199,7 +199,7 @@ subplot(1,2,2)
 imagesc(p_ttest_noad(:,:,1)); colorbar
 title('p value')
 set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['visual_driven_cells_noad_targ.jpg'])
+% % saveas(gcf, ['visual_driven_cells_noad_targ.jpg'])
 % close
 
 %%
@@ -240,7 +240,7 @@ for icell = 1 : ncell
 end
 end
 vis_driven_ad = sum(sig_ttest_ad,2)>0;
-% save resp_ad.mat dfof_avg_ad dfof_ste_ad cp_win_ad base_avg_ad resp_avg_ad resp_ste_ad sig_ttest_ad p_ttest_ad
+% % save resp_ad.mat dfof_avg_ad dfof_ste_ad cp_win_ad base_avg_ad resp_avg_ad resp_ste_ad sig_ttest_ad p_ttest_ad
 
 sum(sum(sig_ttest_ad,2)>0) % ncells responsive to >= 1 targ ori: 84/103
 subplot(1,2,1)
@@ -250,7 +250,7 @@ subplot(1,2,2)
 imagesc(p_ttest_ad(:,:,1)); colorbar
 title('p value')
 set(gcf, 'Position', get(0, 'Screensize'));
-% saveas(gcf, ['visual_driven_cells_adapter.jpg'])
+% % saveas(gcf, ['visual_driven_cells_adapter.jpg'])
 % close
 
 % %% find good_fit_cells w bootstrap using new dfof
@@ -297,7 +297,7 @@ set(gcf, 'Position', get(0, 'Screensize'));
 %         ori_pref_runs(icell, irun) = ori_pref;
 %     end
 % end
-% % save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
+% % % save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
 % 
 % % sanity check
 % subplot(1,2,1)
@@ -309,7 +309,7 @@ set(gcf, 'Position', get(0, 'Screensize'));
 
 %% cell list by property
 
-load('C:\Users\lan\Documents\repos\inter\code\200728_i1324_V1\ori_across_bootstrap_runs.mat')
+load('C:\Users\lan\Documents\repos\inter\mat\V1_i1324_200728\ori_across_bootstrap_runs.mat')
 ncell
 
 vis_driven_ad = sum(sig_ttest_ad,2)>0; vis_driven_noad = sum(sig_ttest_noad,2)>0;
@@ -363,7 +363,7 @@ for icell = 1 : ncell
         dfof_ste_tg0(icell, igap) = std( resp_win{1,igap} - base_win{1,igap} ) / sqrt(ntrial_cond);
     end
 end
-% save resp_ad_targ0.mat dfof_avg_tg0 dfof_ste_tg0 cp_win_tg0 base_avg_tg0 resp_avg_tg0 resp_ste_tg0 sig_ttest_tg0 p_ttest_tg0
+% % save resp_ad_targ0.mat dfof_avg_tg0 dfof_ste_tg0 cp_win_tg0 base_avg_tg0 resp_avg_tg0 resp_ste_tg0 sig_ttest_tg0 p_ttest_tg0
 
 %% resp to with-ad targ by cond (dir & isi)
 
@@ -407,7 +407,7 @@ for idelta = 1 : ndelta
     end
 end
 end
-% save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
+% % save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond cp_win_cond base_avg_cond resp_avg_cond resp_ste_cond sig_ttest_cond p_ttest_cond
 
 %% tuning curve fit by cond
 
@@ -461,7 +461,7 @@ dfof_ste_merge = cat(3, dfof_ste_noad, dfof_ste_750, dfof_ste_250);
 fit_param_merge = cat(3, fit_param_noad, fit_param_750, fit_param_250);
 ori_pref_cells_merge = cat(2, ori_pref_cells_noad, ori_pref_cells_750, ori_pref_cells_250);
 
-% save ori_across_cells_cond.mat dfof_avg_merge dfof_ste_merge fit_param_merge ori_pref_cells_merge
+% % save ori_across_cells_cond.mat dfof_avg_merge dfof_ste_merge fit_param_merge ori_pref_cells_merge
 
 %% Fig 1E: compare ad_resp vs 0-deg targ_resp_750/250 of vis_driven cells
 % buggy: why is resp_tg/resp_ad larger than 1???
@@ -497,7 +497,7 @@ for itext = 1 : length(count_nonzero_id)
 end
 ylim([0,3])
 legend('isi 750', 'isi 250')
-% saveas(gcf, ['Fig 1E cells prefer 0 deg binned by ad-resp.jpg'])
+% % saveas(gcf, ['Fig 1E cells prefer 0 deg binned by ad-resp.jpg'])
 % close
 
 %% Fig 1C (approx): time course of adaptation recovery for all cells
@@ -525,7 +525,7 @@ ylim([0, 1.3])
 xlabel('ISI (s)')
 ylabel('normalized dF/F')
 legend off
-% saveas(gcf, ['Fig 1C time course of adaptation recovery of vis-driven cells.jpg'])
+% % saveas(gcf, ['Fig 1C time course of adaptation recovery of vis-driven cells.jpg'])
 % close
 
 %% trial trace by cond or trace noad, converted to dfof
@@ -553,7 +553,7 @@ for idelta = 1 : ndelta
 end
 end
 
-% save trace_by_cond_dfof.mat trace_cond_dfof trace_noad_dfof
+% % save trace_by_cond_dfof.mat trace_cond_dfof trace_noad_dfof
 
 %% Fig 2B: cell resp by dir & condition (no_ad, 750, 250) for "best cells"
 
@@ -600,7 +600,7 @@ for col = 1 : 3
         yticks(round(ymin*10)/10 : round((ymax-ymin)*10)/20 : round(ymax*10)/10)
     end
 end
-% saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
+% % saveas(gcf, ['dfof trace ', num2str(icell), '.jpg'])
 % close    
 end
 
@@ -743,7 +743,7 @@ for row = 1 : 3
     ylabel('dF/F')
     title(subplot_title{row})
 end
-%     saveas(gcf, ['ori tuning across cond cell ', num2str(icell)], 'jpg')
+%     % saveas(gcf, ['ori tuning across cond cell ', num2str(icell)], 'jpg')
 %     close
 end
 
@@ -819,7 +819,7 @@ legend('isi 750', 'isi 250', 'Location', 'southeast'); legend boxoff
 xlabel('|Test - Adapter| (deg)')
 ylabel('delta norm dF/F')
 title(['n = ', num2str(ncell_now), ' cells'])
-% saveas(gcf, ['Fig 2D response changes w targ-ad distance.jpg'])
+% % saveas(gcf, ['Fig 2D response changes w targ-ad distance.jpg'])
 % close
 
 % % mark trial number of each distance
@@ -897,7 +897,7 @@ legend('isi 750', 'isi 250', 'Location','southeast')
 xlabel('|Pref - Adapter| (deg)')
 ylabel('norm pred peak resp')
 grid on; grid minor
-% saveas(gcf, ['Fig 2E response changes w pref-ad distance.jpg'])
+% % saveas(gcf, ['Fig 2E response changes w pref-ad distance.jpg'])
 % close
 
 %% Fig 2F: ori_pref changes w |ori_pref - ori_ad| distance
@@ -948,7 +948,7 @@ line([0-5, 180+5], [0, 0], 'Color', 'g', 'LineWidth', 1);
 xlim([0-5, 90+5])
 ylim([-10, 20])
 legend('isi 750', 'isi 250', 'Location','southeast')
-% saveas(gcf, ['Fig 2F pref ori changes w pref-ad distance.jpg'])
+% % saveas(gcf, ['Fig 2F pref ori changes w pref-ad distance.jpg'])
 % close
 
 %% Fig 2G: OSI changes w |ori_pref - ori_ad| distance

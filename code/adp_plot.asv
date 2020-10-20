@@ -86,20 +86,14 @@ for ii = 1 : length(cell_list_now)
     end
 end
 
-dfof_equiv_ad_targ_ns = []; dfof_equiv_ad_ns = []; adp_ratio_a0t0_ns = [];
 for ii = 1 : length(cell_list_ns)
     icell_ns = cell_list_ns(ii);
-    idelta = 8; % targ0 only! adp is ori-specific
     for igap = 1:ngap
-        dfof_equiv_ad_targ_ns(ii, igap) = set{iset, 2}.dfof_avg_merge(icell_ns, idelta, igap+1); %750-250
         dfof_equiv_ad_ns(ii, igap) = dfof_avg_ad(icell_ns, idelta);
-        adp_ratio_a0t0_ns(ii, 1, igap) = dfof_equiv_ad_targ_ns(ii, igap) / dfof_equiv_ad_ns(ii, igap) - 1;
     end
 end
-adp_sig(iset).dfof_equiv_ad_ns = dfof_equiv_ad_ns(:,1);
-adp_sig(iset).dfof_equiv_ad = dfof_equiv_ad(:,1);
-adp_sig(iset).adp_vis_driven = squeeze(adp_ratio_a0t0);
-adp_sig(iset).adp_ns = squeeze(adp_ratio_a0t0_ns);
+adp(iset).adp_ratio_a0t0 = adp_ratio_a0t0;
+
 
 % histogram(dfof_equiv_ad(:,1),100); hold on; grid minor
 % line([0.01, 0.01], [0, 4], 'Color', 'g', 'LineWidth',1, 'LineStyle','--');
@@ -133,11 +127,6 @@ for iset = 1 : nset
         adp(iset).adp_neg{igap} = logical(adp_ratio_a0t0_high_ad(:,igap)<0); % when adp inhibits response, as expected
     end
 end
-
-%% why ttest<0.01 cannot kick out all outliers
-
-
-
 
 %% san check for a0t0
 
