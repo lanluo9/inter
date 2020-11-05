@@ -611,4 +611,5 @@ set(gcf, 'Position', get(0, 'Screensize'));
 % take only vis_driven & good_fit cells
 % refer to Jin2019 Fig 2D-G
 
+%% Fig 2D
 
