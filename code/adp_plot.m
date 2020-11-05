@@ -136,8 +136,43 @@ end
 
 %% why ttest<0.01 cannot kick out all outliers
 
+by_area_id = {[1,4,7], [2,5,8], [3,6]}; narea = length(by_area_id);
 
+clear adp_sig_area
+for iarea = 1 : narea
+    area_set_seq = by_area_id{iarea};
+    adp_sig_area(iarea).dfof_equiv_ad_ns = [];
+    adp_sig_area(iarea).dfof_equiv_ad = [];
+    adp_sig_area(iarea).adp_vis_driven = [];
+    adp_sig_area(iarea).adp_ns = [];
+    
+    for iset = 1 : length(area_set_seq)
+        adp_sig_area(iarea).dfof_equiv_ad_ns = [adp_sig_area(iarea).dfof_equiv_ad_ns; ...
+            adp_sig(area_set_seq(iset)).dfof_equiv_ad_ns];
+        adp_sig_area(iarea).dfof_equiv_ad = [adp_sig_area(iarea).dfof_equiv_ad; ...
+            adp_sig(area_set_seq(iset)).dfof_equiv_ad];
+        
+        adp_sig_area(iarea).adp_vis_driven = [adp_sig_area(iarea).adp_vis_driven; ...
+            adp_sig(area_set_seq(iset)).adp_vis_driven(:,2)];
+        adp_sig_area(iarea).adp_ns = [adp_sig_area(iarea).adp_ns; ...
+            adp_sig(area_set_seq(iset)).adp_ns(:,2)];
+    end
+end
 
+for iarea = 1 : narea
+    figure('units','normalized','outerposition',[0 0 1 1]);
+    subplot(2,1,1)
+    histogram(adp_sig_area(iarea).dfof_equiv_ad, 'BinWidth',0.02); hold on; % nbin 25
+    histogram(adp_sig_area(iarea).dfof_equiv_ad_ns, 'BinWidth',0.02)
+    legend('vis driven resp ad', 'ns resp ad')
+    
+    subplot(2,1,2)
+    histogram(adp_sig_area(iarea).adp_vis_driven, 'BinWidth',1); hold on; 
+    histogram(adp_sig_area(iarea).adp_ns, 'BinWidth',1)  % nbin 50
+    legend('vis driven adp', 'ns adp')
+    
+    saveas(gcf, ['ttest adp for area ', num2str(iarea)], 'jpg')
+end
 
 %% san check for a0t0
 
@@ -611,5 +646,44 @@ set(gcf, 'Position', get(0, 'Screensize'));
 % take only vis_driven & good_fit cells
 % refer to Jin2019 Fig 2D-G
 
-%% Fig 2D
+%% Fig 2D across areas
+
+diff_dis = struct;
+% low_tg0_noad = {};
+
+for iset = 1 : nset
+    cell_list_now = find(set{iset, 1}.vis_driven); 
+    resp_diff_dis = zeros(length(cell_list_now), ngap);
+    
+load(fullfile(result_folder{iset}, 'pre-processing', 'resp_ad.mat'))
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    for idelta = 1:ndelta
+    for igap = 1:ngap
+        resp_tg_advsnoad = set{iset, 2}.dfof_avg_merge(icell, idelta, igap+1) - set{iset, 2}.dfof_avg_merge(icell, idelta, 1); 
+        resp_tg0_noad = set{iset, 2}.dfof_avg_merge(icell, 8, 1);
+        resp_diff_dis(ii, idelta, igap) = resp_tg_advsnoad / resp_tg0_noad;
+    end
+    end
+end
+
+% low_tg0_noad{iset} = logical(abs(dfof_equiv_ad(:,1))<0.01...
+%     | abs(resp_diff_dis(:, 1))>2 | abs(resp_diff_dis(:, 2))>2); % w hard threshold to evict posthoc outliers
+% nlow(iset) = sum(low_tg0_noad{iset});
+
+diff_dis(iset).resp_diff_dis = resp_diff_dis;
+end
+
+% for iset = 1 : nset
+%     adp_ratio_a0t0_high_ad = zeros(sum(~low_tg0_noad{iset}),1,ngap);
+%     for igap = 1:ngap
+%         high_ad_resp = ~low_tg0_noad{iset};
+%         adp_ratio_a0t0_high_ad(:,1,igap) = diff_dis(iset).adp_ratio_a0t0(high_ad_resp, 1, igap);
+%     end
+%     diff_dis(iset).adp_ratio_a0t0_high_ad = adp_ratio_a0t0_high_ad;
+% end
+
+delta_list = 22.5:22.5:180;
+delta_list(delta_list==180) = 0;
+dis_list = delta_list; dis_list(dis_list>90) = 180 - dis_list(dis_list>90);
 
