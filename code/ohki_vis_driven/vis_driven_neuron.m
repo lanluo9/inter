@@ -229,9 +229,13 @@ for ii = 1 : length(cell_list_now)
     end
 end
 
+y = adp_a0t0(:,1);
+x = dfof_equiv_ad(:,1);
+scatter(x,y); hold on
 y = adp_a0t0(:,2);
 x = dfof_equiv_ad(:,2);
 scatter(x,y); hold on
+legend('isi 750', 'isi 250')
 yline(1, 'r'); yline(0, 'g'); yline(-1, 'b')
 xlabel('resp ad'); ylabel('adp a0t0')
 % set(gcf, 'Position', get(0, 'Screensize'))
