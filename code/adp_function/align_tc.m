@@ -1,4 +1,5 @@
-function tc_align = align_tc(landmark, npSub_tc, ncell, ntrial)
+function tc_align = align_tc(landmark, npSub_tc)
+global ntrial ncell
 
 % input: 
 %     "landmark" = align by adapter or target. array of frame numbers

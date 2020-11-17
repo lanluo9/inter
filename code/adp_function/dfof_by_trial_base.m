@@ -1,16 +1,13 @@
-function dfof_align = dfof_by_trial_base(tc_aligned, npSub_tc, frame_ad, frame_rate, ncell, ntrial)
+function dfof_align = dfof_by_trial_base(tc_aligned, npSub_tc, frame_ad)
+global ntrial ncell frame_rate
 
-%{
-
-input: 
-    tc_aligned by ad or tg. ncell x ntrial x trial_len
-    npSub_tc. nframe x ncell
-    frame_ad as end point of trial-specific baseline
-    frame_rate, ncell, ntrial
-output:
-    dfof_align = (tc - base) / base. ncell x ntrial x trial_len
-
-%}
+% input: 
+%     tc_aligned by ad or tg. ncell x ntrial x trial_len
+%     npSub_tc. nframe x ncell
+%     frame_ad as end point of trial-specific baseline
+%     frame_rate, ncell, ntrial
+% output:
+%     dfof_align = (tc - base) / base. ncell x ntrial x trial_len
 
 trial_base_len = frame_rate * 1; % 30 frame/sec * 1 sec
 tc_trial_base = zeros(ncell, ntrial, trial_base_len);
