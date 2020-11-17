@@ -16,8 +16,8 @@ dataset_list.date = [200803, 200804, 200806,...
                     200728, 200729];
 dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
-% for iset = 1 : length(dataset_list.date)
-iset = 1;
+for iset = 2 : length(dataset_list.date)
+iset
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset))
 area = dataset_list.area{1,iset}
@@ -154,7 +154,7 @@ plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b');
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize'));
 legend('ad align', 'targ align')
 % saveas(gcf, ['aligned_tc_zoomin'], 'jpg')
-% close
+close
 
 range_base = [1:3]; 
 range_resp = [9:12];
@@ -165,6 +165,7 @@ range_resp = [9:12];
 %% find vis-driven cell: 1-way anova for baseline vs any stim (ad*1, tg*8ori)
 % vis driven by: ad | noad_tg
 
+clear vis_cell p_anova1
 for icell = 1 : ncell
     base = tc_trial_base_avg(icell, :)';
     noad_tg = mean(squeeze(tc_trial_align_targ_raw(icell, id_noad, range_resp)),2);
@@ -176,49 +177,96 @@ for icell = 1 : ncell
 end
 vis_cell = p_anova1<0.01;
 
-%% find vis trial: amp threshold
-% for ad | noad_tg. same as vis_cell criteria
+cd(result_folder);
+save vis_cell.mat vis_cell
 
-for icell = 1 : ncell
-for itrial = 1 : ntrial
-    if ismember(itrial, id_ad)
-        resp = mean(squeeze(tc_trial_align_ad_raw(icell, itrial, range_resp)));
-    elseif ismember(itrial, id_noad)
-        resp = mean(squeeze(tc_trial_align_targ_raw(icell, itrial, range_resp)));
-    end
-    base = tc_trial_base_avg(icell, itrial);
-    
-    amp(icell, itrial) = (resp - base) / base;
-end
-end
-
-percent_vis_trial = [];
-for amp_th = 0:0.001:0.1 % amplitude threshold 
-    vis_trial = amp >= amp_th;
-    percent_vis_trial = [percent_vis_trial; sum(vis_trial(:)) / icell / itrial];
-end
-scatter([0:0.001:0.1], percent_vis_trial); ylim([0,1])
-
-amp_th = 0.1; 
-vis_trial = amp >= amp_th;
-% histogram(amp,100)
-% nvis_trial = sum(vis_trial,2); histogram(nvis_trial(vis_cell),100)
+% %% find vis trial: amp threshold
+% % for ad | noad_tg. same as vis_cell criteria
+% 
+% for icell = 1 : ncell
+% for itrial = 1 : ntrial
+%     if ismember(itrial, id_ad)
+%         resp = mean(squeeze(tc_trial_align_ad_raw(icell, itrial, range_resp)));
+%     elseif ismember(itrial, id_noad)
+%         resp = mean(squeeze(tc_trial_align_targ_raw(icell, itrial, range_resp)));
+%     end
+%     base = tc_trial_base_avg(icell, itrial);
+%     
+%     amp(icell, itrial) = (resp - base) / base;
+% end
+% end
+% 
+% percent_vis_trial = [];
+% for amp_th = 0:0.001:0.1 % amplitude threshold 
+%     vis_trial = amp >= amp_th;
+%     percent_vis_trial = [percent_vis_trial; sum(vis_trial(:)) / icell / itrial];
+% end
+% scatter([0:0.001:0.1], percent_vis_trial); ylim([0,1])
+% 
+% amp_th = 0.1; 
+% vis_trial = amp >= amp_th;
+% % histogram(amp,100)
+% % nvis_trial = sum(vis_trial,2); histogram(nvis_trial(vis_cell),100)
 
 %% set hard threshold: scatter (amp_th or resp_ad) vs adp 
 % vis_cell, vis_trial, adp_a0t0 (ad -> ad_tg0)
 
-adp_ratio_a0t0 = zeros(length(cell_list_now), 1, ngap);
-load(fullfile(result_folder{iset}, 'pre-processing', 'resp_ad.mat'))
+cell_list_now = find(vis_cell);
+cd pre-processing\
+load('resp_ad.mat', 'dfof_avg_ad')
+cd ..
+load('dfof_fit_noad_750_250.mat', 'dfof_avg_merge')
+
+clear adp_a0t0
 for ii = 1 : length(cell_list_now)
     icell = cell_list_now(ii);
-    idelta = 8; % targ0 only! adp is ori-specific
+    idelta = 8; % targ0 only: adp is ori-specific
+    
     for igap = 1:ngap
-        dfof_equiv_ad_targ(ii, igap) = set{iset, 2}.dfof_avg_merge(icell, idelta, igap+1); %750-250
+        dfof_equiv_ad_targ(ii, igap) = dfof_avg_merge(icell, idelta, igap+1); %750-250
         dfof_equiv_ad(ii, igap) = dfof_avg_ad(icell, idelta);
-        adp_ratio_a0t0(ii, 1, igap) = dfof_equiv_ad_targ(ii, igap) / dfof_equiv_ad(ii, igap) - 1;
+        adp_a0t0(ii, igap) = dfof_equiv_ad_targ(ii, igap) / dfof_equiv_ad(ii, igap) - 1;
     end
 end
 
+y = adp_a0t0(:,2);
+x = dfof_equiv_ad(:,2);
+scatter(x,y); hold on
+yline(1, 'r'); yline(0, 'g'); yline(-1, 'b')
+xlabel('resp ad'); ylabel('adp a0t0')
+% set(gcf, 'Position', get(0, 'Screensize'))
+saveas(gcf, ['find resp_ad threshold', num2str(icell)], 'jpg')
+xlim([0,0.05])
+saveas(gcf, ['find resp_ad threshold zoom in', num2str(icell)], 'jpg')
+
+prompt = 'normal adp range 0 to -1. set threshold to filter out low adapter response: ';
+threshold = input(prompt); close
+% threshold = 0.02;
+for igap = 1:ngap
+    adp_a0t0_th(:,igap) = adp_a0t0(dfof_equiv_ad(:,igap) >= threshold, igap);
+end
+
+figure('units','normalized','outerposition',[0 0 1 1]);
+subplot(2,1,1)
+histogram(adp_a0t0(:,1),20); hold on; histogram(adp_a0t0(:,2),20)
+xlabel('adp a0t0 before thresholding'); ylabel('cell count')
+legend('isi 750', 'isi 250')
+subplot(2,1,2)
+histogram(adp_a0t0_th(:,1),20); hold on; histogram(adp_a0t0_th(:,2),20)
+xlabel('adp a0t0 after thresholding'); ylabel('cell count')
+legend('isi 750', 'isi 250')
+saveas(gcf, ['resp_ad thresholding effect on adp dist', num2str(icell)], 'jpg')
+
+save adp_w_thresh.mat adp_a0t0_th adp_a0t0 threshold
+
+% subplot(1,2,1)
+% vs = violinplot(adp_a0t0); hold on
+% yline(0, 'g'); ylim([-4,8])
+% subplot(1,2,2)
+% vs = violinplot(adp_a0t0_th); hold on
+% yline(0, 'g'); ylim([-4,8])
+
+%%%%%
 % id_tg0 = find(delta_seq==180);
 % for icell = 1 : ncell
 % for igap = 1 : ngap
@@ -243,3 +291,4 @@ end
 % % plot(tt)
 % 
 % %% ad_tg0 vs noad_tg0
+end
