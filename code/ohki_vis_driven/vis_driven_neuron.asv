@@ -163,20 +163,14 @@ range_resp = [9:12];
 % close
 
 %% find vis-driven cell: 1-way anova for baseline vs any stim (ad*1, tg*8ori)
-% vis driven by: ad | noad_tg
 
-for icell = 1 : ncell
+for icell = 1 %: ncell
     base = tc_trial_base_avg(icell, :)';
     noad_tg = mean(squeeze(tc_trial_align_targ_raw(icell, id_noad, range_resp)),2);
     ad = mean(squeeze(tc_trial_align_ad_raw(icell, id_ad, range_resp)),2);
     resp_first = [ad; noad_tg];
     
-    y = [base, resp_first];
-    p_anova1(icell) = anova1(y); close all
+    y = [base];
+    p = anova1(y)
 end
-vis_cell = p_anova1<0.01;
-
-%% find sig trial: ttest & amp threshold
-% sig resp for: ad | noad_tg. same as vis_cell criteria
-
 

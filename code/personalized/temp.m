@@ -101,3 +101,12 @@ legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend bo
 xlim([0.5, 3.5])
 % saveas(gcf, ['adp ratio a0t0 across areas avg sem'], 'jpg'); close 
 % % saveas(gcf, ['adp ratio targ0 across areas avg sem'], 'jpg'); close 
+
+
+%%
+
+y = meshgrid(1:5);
+rng default; % For reproducibility
+y = y + normrnd(0,1,5,5);
+p = anova1(y)
+
