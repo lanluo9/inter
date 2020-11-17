@@ -176,7 +176,52 @@ for icell = 1 : ncell
 end
 vis_cell = p_anova1<0.01;
 
-%% find sig trial: ttest & amp threshold
-% sig resp for: ad | noad_tg. same as vis_cell criteria
+%% find vis trial: amp threshold
+% for ad | noad_tg. same as vis_cell criteria
+
+for icell = 1 : ncell
+for itrial = 1 : ntrial
+    if ismember(itrial, id_ad)
+        resp = mean(squeeze(tc_trial_align_ad_raw(icell, itrial, range_resp)));
+    elseif ismember(itrial, id_noad)
+        resp = mean(squeeze(tc_trial_align_targ_raw(icell, itrial, range_resp)));
+    end
+    base = tc_trial_base_avg(icell, itrial);
+    
+    amp(icell, itrial) = (resp - base) / base;
+end
+end
+
+percent_vis_trial = [];
+for amp_th = 0:0.001:0.1 % amplitude threshold 
+    vis_trial = amp >= amp_th;
+    percent_vis_trial = [percent_vis_trial; sum(vis_trial(:)) / icell / itrial];
+end
+scatter([0:0.001:0.1], percent_vis_trial); ylim([0,1])
+
+amp_th = 0.1; 
+vis_trial = amp >= amp_th;
+% histogram(amp,100)
+% nvis_trial = sum(vis_trial,2); histogram(nvis_trial(vis_cell),100)
+
+%% set hard threshold: scatter (amp_th or resp_ad) vs adp 
+% vis_cell, vis_trial, adp_a0t0 (ad to ad_tg0)
+
+id_tg0 = find(delta_seq==180);
+for icell = 1 : ncell
+for igap = 1 : ngap
+    idx = intersect(intersect(id_gaps{igap}, id_ad), find(vis_trial(icell,:)));
+    idx = intersect(idx, id_tg0); length(idx)
+    
+    ad = mean(squeeze(tc_trial_align_ad(icell, idx, range_resp)),2);
+    tg0 = mean(squeeze(tc_trial_align_targ(icell, idx, range_resp)),2);
+    adp_cell_trial = (tg0 - ad) ./ ad;
+    
+    adp_a0t0(icell, igap) = nanmean(adp_cell_trial);
+    adp_a0t0_std(icell, igap) = nanstd(adp_cell_trial);
+end
+end
+adp_a0t0 = adp_a0t0(vis_cell, :);
+adp_a0t0_std = adp_a0t0_std(vis_cell, :);
 
 
