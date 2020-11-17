@@ -217,11 +217,13 @@ for igap = 1 : ngap
     tg0 = mean(squeeze(tc_trial_align_targ(icell, idx, range_resp)),2);
     adp_cell_trial = (tg0 - ad) ./ ad;
     
-    adp_a0t0(icell, igap) = mean(adp_cell_trial);
+    adp_a0t0(icell, igap) = nanmean(adp_cell_trial);
     adp_a0t0_std(icell, igap) = nanstd(adp_cell_trial);
 end
 end
 adp_a0t0 = adp_a0t0(vis_cell, :);
 adp_a0t0_std = adp_a0t0_std(vis_cell, :);
 
-
+%%
+tt = squeeze(tc_trial_align_targ(icell, idx, range_resp));
+tt = mean(

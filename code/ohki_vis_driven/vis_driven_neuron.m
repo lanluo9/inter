@@ -205,23 +205,41 @@ vis_trial = amp >= amp_th;
 % nvis_trial = sum(vis_trial,2); histogram(nvis_trial(vis_cell),100)
 
 %% set hard threshold: scatter (amp_th or resp_ad) vs adp 
-% vis_cell, vis_trial, adp_a0t0 (ad to ad_tg0)
+% vis_cell, vis_trial, adp_a0t0 (ad -> ad_tg0)
 
-id_tg0 = find(delta_seq==180);
-for icell = 1 : ncell
-for igap = 1 : ngap
-    idx = intersect(intersect(id_gaps{igap}, id_ad), find(vis_trial(icell,:)));
-    idx = intersect(idx, id_tg0); length(idx)
-    
-    ad = mean(squeeze(tc_trial_align_ad(icell, idx, range_resp)),2);
-    tg0 = mean(squeeze(tc_trial_align_targ(icell, idx, range_resp)),2);
-    adp_cell_trial = (tg0 - ad) ./ ad;
-    
-    adp_a0t0(icell, igap) = nanmean(adp_cell_trial);
-    adp_a0t0_std(icell, igap) = nanstd(adp_cell_trial);
+adp_ratio_a0t0 = zeros(length(cell_list_now), 1, ngap);
+load(fullfile(result_folder{iset}, 'pre-processing', 'resp_ad.mat'))
+for ii = 1 : length(cell_list_now)
+    icell = cell_list_now(ii);
+    idelta = 8; % targ0 only! adp is ori-specific
+    for igap = 1:ngap
+        dfof_equiv_ad_targ(ii, igap) = set{iset, 2}.dfof_avg_merge(icell, idelta, igap+1); %750-250
+        dfof_equiv_ad(ii, igap) = dfof_avg_ad(icell, idelta);
+        adp_ratio_a0t0(ii, 1, igap) = dfof_equiv_ad_targ(ii, igap) / dfof_equiv_ad(ii, igap) - 1;
+    end
 end
-end
-adp_a0t0 = adp_a0t0(vis_cell, :);
-adp_a0t0_std = adp_a0t0_std(vis_cell, :);
 
-
+% id_tg0 = find(delta_seq==180);
+% for icell = 1 : ncell
+% for igap = 1 : ngap
+%     idx = intersect(intersect(id_gaps{igap}, id_ad), find(vis_trial(icell,:)));
+%     idx = intersect(idx, id_tg0); length(idx)
+%     
+%     ad = mean(squeeze(tc_trial_align_ad(icell, idx, range_resp)),2);
+%     tg0 = mean(squeeze(tc_trial_align_targ(icell, idx, range_resp)),2);
+%     
+% %     ad = median(ad); tg0 = median(tg0);
+%     adp_cell_trial = (tg0 - ad) ./ ad;
+%     
+%     adp_a0t0(icell, igap) = nanmedian(adp_cell_trial);
+%     adp_a0t0_std(icell, igap) = nanstd(adp_cell_trial);
+% end
+% end
+% adp_a0t0 = adp_a0t0(vis_cell, :);
+% adp_a0t0_std = adp_a0t0_std(vis_cell, :);
+% 
+% % tt = squeeze(tc_trial_align_ad(icell, idx, 1:50));
+% % tt = squeeze(mean(tt,1));
+% % plot(tt)
+% 
+% %% ad_tg0 vs noad_tg0
