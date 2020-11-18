@@ -20,7 +20,9 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 % for iset = 1 : length(dataset_list.date)
 iset = 1
-global nori ori_seq ori_list nisi id_isi id_noad id_ad id_noad_isi range_base range_resp ncell ntrial frame_rate % declare all global var for single dataset
+
+global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
+global frame_rate range_base range_resp ncell ntrial nori nisi 
 
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
@@ -33,21 +35,24 @@ area = dataset_list.area{1,iset}
 ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps % final trial discarded bc too few frames
 [nframe, ncell] = size(npSub_tc);
 
-contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); unique(contrast_ad); 
-id_noad = find(contrast_ad == 0); id_noad(id_noad > ntrial) = []; 
-id_ad = find(contrast_ad == 1); id_ad(id_ad > ntrial) = [];
-
-ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg);
-ori_seq(ori_seq == 180) = 0;
-ori_list = unique(ori_seq); nori = length(ori_list); 
+contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
+id_noad = find(contrast_ad == 0); id_noad(id_noad > ntrial) = []; id_ad = find(contrast_ad == 1); 
 
 frame_ad = double(cell2mat(input_behav.cStimOn)); frame_ad_off = double(cell2mat(input_behav.cStimOff));
 frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
 isi_seq = frame_tg - frame_ad_off; 
 nisi = length(unique(frame_tg - frame_ad));
-id_750 = find(isi_seq > mean(isi_seq)); id_750(id_750 > ntrial) = []; id_250 = find(isi_seq < mean(isi_seq)); id_250(id_250 > ntrial) = [];
-id_isi = {id_750, id_250}; 
-id_noad_isi = {id_noad, id_750, id_250};
+id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
+id_ad750 = intersect(id_noad, id_750); id_ad250 = intersect(id_noad, id_250);
+id_isi2 = {id_ad750, id_ad250}; 
+id_isi3 = {id_noad, id_ad750, id_ad250};
+
+ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); ori_seq(ori_seq == 180) = 0;
+ori_list = unique(ori_seq); 
+nori = length(ori_list); id_ori = cell(nori, 1);
+for iori  = 1 : nori
+    id_ori{iori} = find(ori_seq == ori_list(iori)); 
+end
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof

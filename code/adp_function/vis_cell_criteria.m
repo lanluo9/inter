@@ -7,7 +7,7 @@ function [sig_vis, p_vis, dfof_avg] = vis_cell_criteria(dfof_align, compared_obj
 % input: dfof_align by ad or tg, linked w/ compared_obj = 'ad' or 'tg_any'. sig_alpha = sig threshold
 % output: sig_vis & p_vis. dfof_avg for ad or noad-tg (all oris)
 
-global nori ori_seq ori_list nisi id_isi id_noad id_ad range_base range_resp ncell
+global nori id_ori nisi id_isi id_noad id_ad range_base range_resp ncell
 
 % sig_vis = pi * ones(ncell, nori); p_vis = pi * ones(ncell, nori);
 % base_avg = pi * ones(ncell, nori); resp_avg = pi * ones(ncell, nori); 
@@ -35,10 +35,10 @@ case 'tg_any' % vis-driven by any noad targ: 1-way t-test w bonferonni correctio
         base_win = []; resp_win = [];
 
     for iori = 1 : nori
-        id_ori = find(ori_seq == ori_list(iori));
+        id_iori = id_ori{iori};
 
         for iisi =  1 : nisi 
-            idx = intersect(intersect(id_isi{iisi}, id_ori), id_noad); % noad trials with 1 ISI & 1 ori
+            idx = intersect(intersect(id_isi{iisi}, id_iori), id_noad); % noad trials with 1 ISI & 1 ori
     %         ntrial_cond = length(idx); 
             base_win = [base_win; mean(squeeze(dfof_align(icell, idx, range_base)),2)]; 
             resp_win = [resp_win; mean(squeeze(dfof_align(icell, idx, range_resp)),2)];
