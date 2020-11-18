@@ -20,24 +20,21 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 % for iset = 1 : length(dataset_list.date)
 iset = 1
+global nori ori_seq ori_list nisi id_isi id_noad id_ad range_base range_resp ncell ntrial frame_rate % declare all global var for single dataset
+
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
 area = dataset_list.area{1,iset}
-
-global frame_rate
-[npSub_tc, frame_rate, input_behav, info, result_folder] = ...
-    load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+[npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
 
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
 
-global ntrial ncell 
 ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps % final trial discarded bc too few frames
 [nframe, ncell] = size(npSub_tc);
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); unique(contrast_ad); 
 id_noad = find(contrast_ad == 0); id_noad(id_noad > ntrial) = []; id_ad = find(contrast_ad == 1); id_ad(id_ad > ntrial) = [];
-
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg);
 ori_seq(ori_seq == 180) = 0;
 ori_list = unique(ori_seq); nori = length(ori_list); 
@@ -70,6 +67,76 @@ grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad alig
 range_base = 1:3; range_resp = 9:12;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
-%% visually driven cell
+%% visually driven cells
+% cells responsive to ad / noad tg (all oris)
 
 sig_alpha = 0.01;
+[sig_vis_ad, p_vis_ad, dfof_ad] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
+[sig_vis_noad_tg, p_vis_noad_tg, dfof_noad_tg] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
+vis_cell_ad = sig_vis_ad';
+vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
+
+% find(vis_cell_ad==0) % not vis driven by ad
+% find(vis_cell_noad_tg==0) % not vis driven by noad tg
+% find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
+
+%% well-fit cells
+
+bootstrap_file = fullfile(result_folder, 'ori_across_bootstrap_runs.mat');
+if exist(bootstrap_file)
+    load(bootstrap_file)
+    
+elseif ~exist(bootstrap_file)
+    
+nrun = 1000;
+dfof_avg_runs = pi * ones(ncell, nori, nrun); dfof_ste_runs = pi * ones(ncell, nori, nrun);
+fit_param_runs = pi * ones(ncell, 7, nrun); 
+ori_pref_runs = pi * ones(ncell, nrun);
+
+theta = deg2rad(ori_list);
+disp('start bootstrap runs')
+for irun = 1 : nrun
+    disp(num2str(irun))
+
+    for icell = 1 : ncell        
+        for iori = 1 : nori
+            idx = find(ori_seq == ori_list(iori)); 
+            idx = intersect(idx, id_noad);
+            
+            ntrials_ori_noad = length(idx);
+            bootstrap_draw = round(ntrials_ori_noad * 0.7);
+            idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
+
+            % well-fit for no-ad only
+            base_win = squeeze(tc_trial_align_targ(icell, idx_run, range_base));
+            base_win = mean(base_win, 2); % avg over window -> [ntrial, 1]
+            resp_win = squeeze(tc_trial_align_targ(icell, idx_run, range_resp));
+            resp_win = mean(resp_win, 2);
+
+            dfof_avg_runs(icell, iori, irun) = mean( resp_win - base_win );
+            dfof_ste_runs(icell, iori, irun) = std( resp_win - base_win ) ./ sqrt(ntrials_ori_noad);
+        end
+        
+        data = dfof_avg_runs(icell, :, irun); 
+        [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
+        fit_param_runs(icell, :, irun) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+    %   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+
+        ori_pref = rad2deg(u1_hat);
+        ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
+        ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+        ori_pref_runs(icell, irun) = ori_pref;
+    end
+end
+cd(result_folder)
+save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
+
+% % sanity check
+% subplot(1,2,1)
+% imagesc(dfof_avg_noad); colorbar
+% subplot(1,2,2)
+% imagesc(mean(dfof_avg_runs, 3)); colorbar
+% set(gcf, 'Position', get(0, 'Screensize'));
+% % imagesc(dfof_avg_runs(:,:,1))
+
+end
