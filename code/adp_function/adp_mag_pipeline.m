@@ -20,7 +20,7 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 % for iset = 1 : length(dataset_list.date)
 iset = 1
-global nori ori_seq ori_list nisi id_isi id_noad id_ad range_base range_resp ncell ntrial frame_rate % declare all global var for single dataset
+global nori ori_seq ori_list nisi id_isi id_noad id_ad id_noad_isi range_base range_resp ncell ntrial frame_rate % declare all global var for single dataset
 
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
@@ -34,7 +34,9 @@ ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2
 [nframe, ncell] = size(npSub_tc);
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); unique(contrast_ad); 
-id_noad = find(contrast_ad == 0); id_noad(id_noad > ntrial) = []; id_ad = find(contrast_ad == 1); id_ad(id_ad > ntrial) = [];
+id_noad = find(contrast_ad == 0); id_noad(id_noad > ntrial) = []; 
+id_ad = find(contrast_ad == 1); id_ad(id_ad > ntrial) = [];
+
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg);
 ori_seq(ori_seq == 180) = 0;
 ori_list = unique(ori_seq); nori = length(ori_list); 
@@ -45,6 +47,7 @@ isi_seq = frame_tg - frame_ad_off;
 nisi = length(unique(frame_tg - frame_ad));
 id_750 = find(isi_seq > mean(isi_seq)); id_750(id_750 > ntrial) = []; id_250 = find(isi_seq < mean(isi_seq)); id_250(id_250 > ntrial) = [];
 id_isi = {id_750, id_250}; 
+id_noad_isi = {id_noad, id_750, id_250};
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
@@ -86,53 +89,13 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
 if exist(bootstrap_file, 'file'); load(bootstrap_file)
 else
-    cd(result_folder); nrun = 1000;
-    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun);
+    cd(result_folder); nrun = 1000; save_flag = 1;
+    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag);
 end
 % sum(well_fit_cell)
 
 %% response to adapter & targets
 % dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
 
-base_cond = cell(ncell, nori, nisi); resp_cond = cell(ncell, nori, nisi);
-for icell = 1 : ncell
-for iori = 1 : nori 
-    id_ori = find(ori_seq == ori_list(iori));    
-for iisi =  1 : nisi 
-    idx = intersect(intersect(id_isi{iisi}, id_ori), id_ad); ntrial_cond = length(idx); 
-    base_cond{icell, iori, iisi} = mean(squeeze(dfof_align_tg(icell, idx, range_base)),2); 
-    resp_cond{icell, iori, iisi} = mean(squeeze(dfof_align_tg(icell, idx, range_resp)),2);
-end
-end
-end
 
-% sig_ttest_cond = pi * ones(ncell, nori, nisi); p_ttest_cond = pi * ones(ncell, nori, nisi);
-base_avg_cond = pi * ones(ncell, nori, nisi); resp_avg_cond = pi * ones(ncell, nori, nisi); % resp_ste_cond = pi * ones(ncell, nori, nisi); 
-dfof_avg_cond = pi * ones(ncell, nori, nisi); dfof_ste_cond = pi * ones(ncell, nori, nisi); 
-for icell = 1 : ncell
-for iori = 1 : nori 
-    for iisi =  1 : nisi
-        ntrial_cond = length(base_cond{icell, iori, iisi});
-%        [sig_ttest_cond(icell, iori, iisi), p_ttest_cond(icell, iori, iisi)] = ttest(base_cond{icell, iori, iisi}, ...
-%            resp_cond{icell, iori, iisi},...
-%            'alpha',0.01./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
-            
-        base_avg_cond(icell, iori, iisi) = mean(base_cond{icell, iori, iisi}); 
-        resp_avg_cond(icell, iori, iisi) = mean(resp_cond{icell, iori, iisi});
-%         resp_ste_cond(icell, iori, iisi) = std(resp_cond{icell, iori, iisi}) / sqrt(ntrial_cond);
-
-        dfof_avg_cond(icell, iori, iisi) = mean( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} );
-        dfof_ste_cond(icell, iori, iisi) = std( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} ) / sqrt(ntrial_cond);
-    end
-end
-end
-cd(fullfile(result_folder, 'pre-processing'))
-save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond
-
-
-dfof_avg_merge = cat(3, dfof_avg_noad, dfof_avg_750, dfof_avg_250);
-dfof_ste_merge = cat(3, dfof_ste_noad, dfof_ste_750, dfof_ste_250);
-
-cd(result_folder)
-save dfof_noad_750_250.mat dfof_avg_merge dfof_ste_merge
 

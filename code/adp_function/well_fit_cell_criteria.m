@@ -1,4 +1,4 @@
-function well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun)
+function well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag)
 
 % define well-fit: noad-tg, 90% bootstraps within 22.5 deg of all-trials-included fit
 % default bootstrap nrun = 1000
@@ -39,7 +39,7 @@ for icell = 1 : ncell
 end
 end
 
-save fit_bootstrap.mat fit_param_runs ori_pref_runs
+if save_flag; save fit_bootstrap.mat fit_param_runs ori_pref_runs; end
 
 ori_distance = abs(ori_pref_runs - mean(ori_pref_runs,2));
 ori_distance(ori_distance > 90) = ori_distance(ori_distance > 90) - 90; % distance btw oris <= 90. flip those too large
