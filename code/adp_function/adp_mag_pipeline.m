@@ -81,62 +81,58 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
 
 %% well-fit cells
+% cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
-bootstrap_file = fullfile(result_folder, 'ori_across_bootstrap_runs.mat');
-if exist(bootstrap_file)
-    load(bootstrap_file)
-    
-elseif ~exist(bootstrap_file)
-    
-nrun = 1000;
-dfof_avg_runs = pi * ones(ncell, nori, nrun); dfof_ste_runs = pi * ones(ncell, nori, nrun);
-fit_param_runs = pi * ones(ncell, 7, nrun); 
-ori_pref_runs = pi * ones(ncell, nrun);
+bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
+if exist(bootstrap_file, 'file'); load(bootstrap_file)
+else
+    cd(result_folder); nrun = 1000;
+    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun);
+end
+% sum(well_fit_cell)
 
-theta = deg2rad(ori_list);
-disp('start bootstrap runs')
-for irun = 1 : nrun
-    disp(num2str(irun))
+%% response to adapter & targets
+% dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
 
-    for icell = 1 : ncell        
-        for iori = 1 : nori
-            idx = find(ori_seq == ori_list(iori)); 
-            idx = intersect(idx, id_noad);
+base_cond = cell(ncell, nori, nisi); resp_cond = cell(ncell, nori, nisi);
+for icell = 1 : ncell
+for iori = 1 : nori 
+    id_ori = find(ori_seq == ori_list(iori));    
+for iisi =  1 : nisi 
+    idx = intersect(intersect(id_isi{iisi}, id_ori), id_ad); ntrial_cond = length(idx); 
+    base_cond{icell, iori, iisi} = mean(squeeze(dfof_align_tg(icell, idx, range_base)),2); 
+    resp_cond{icell, iori, iisi} = mean(squeeze(dfof_align_tg(icell, idx, range_resp)),2);
+end
+end
+end
+
+% sig_ttest_cond = pi * ones(ncell, nori, nisi); p_ttest_cond = pi * ones(ncell, nori, nisi);
+base_avg_cond = pi * ones(ncell, nori, nisi); resp_avg_cond = pi * ones(ncell, nori, nisi); % resp_ste_cond = pi * ones(ncell, nori, nisi); 
+dfof_avg_cond = pi * ones(ncell, nori, nisi); dfof_ste_cond = pi * ones(ncell, nori, nisi); 
+for icell = 1 : ncell
+for iori = 1 : nori 
+    for iisi =  1 : nisi
+        ntrial_cond = length(base_cond{icell, iori, iisi});
+%        [sig_ttest_cond(icell, iori, iisi), p_ttest_cond(icell, iori, iisi)] = ttest(base_cond{icell, iori, iisi}, ...
+%            resp_cond{icell, iori, iisi},...
+%            'alpha',0.01./(ntrial_cond - 1), 'tail', 'left'); % sig = base<resp, Bonferroni correction
             
-            ntrials_ori_noad = length(idx);
-            bootstrap_draw = round(ntrials_ori_noad * 0.7);
-            idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
+        base_avg_cond(icell, iori, iisi) = mean(base_cond{icell, iori, iisi}); 
+        resp_avg_cond(icell, iori, iisi) = mean(resp_cond{icell, iori, iisi});
+%         resp_ste_cond(icell, iori, iisi) = std(resp_cond{icell, iori, iisi}) / sqrt(ntrial_cond);
 
-            % well-fit for no-ad only
-            base_win = squeeze(tc_trial_align_targ(icell, idx_run, range_base));
-            base_win = mean(base_win, 2); % avg over window -> [ntrial, 1]
-            resp_win = squeeze(tc_trial_align_targ(icell, idx_run, range_resp));
-            resp_win = mean(resp_win, 2);
-
-            dfof_avg_runs(icell, iori, irun) = mean( resp_win - base_win );
-            dfof_ste_runs(icell, iori, irun) = std( resp_win - base_win ) ./ sqrt(ntrials_ori_noad);
-        end
-        
-        data = dfof_avg_runs(icell, :, irun); 
-        [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(theta, data);
-        fit_param_runs(icell, :, irun) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
-    %   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
-
-        ori_pref = rad2deg(u1_hat);
-        ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180;
-        ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
-        ori_pref_runs(icell, irun) = ori_pref;
+        dfof_avg_cond(icell, iori, iisi) = mean( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} );
+        dfof_ste_cond(icell, iori, iisi) = std( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} ) / sqrt(ntrial_cond);
     end
 end
-cd(result_folder)
-save ori_across_bootstrap_runs.mat dfof_avg_runs dfof_ste_runs fit_param_runs ori_pref_runs
-
-% % sanity check
-% subplot(1,2,1)
-% imagesc(dfof_avg_noad); colorbar
-% subplot(1,2,2)
-% imagesc(mean(dfof_avg_runs, 3)); colorbar
-% set(gcf, 'Position', get(0, 'Screensize'));
-% % imagesc(dfof_avg_runs(:,:,1))
-
 end
+cd(fullfile(result_folder, 'pre-processing'))
+save resp_ad_targ.mat dfof_avg_cond dfof_ste_cond
+
+
+dfof_avg_merge = cat(3, dfof_avg_noad, dfof_avg_750, dfof_avg_250);
+dfof_ste_merge = cat(3, dfof_ste_noad, dfof_ste_750, dfof_ste_250);
+
+cd(result_folder)
+save dfof_noad_750_250.mat dfof_avg_merge dfof_ste_merge
+
