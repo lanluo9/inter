@@ -461,8 +461,8 @@ for ii = 1 : length(cell_list_now)
 end
 plot(mean(trace_targ0_750,1)); hold on; plot(mean(trace_targ0_250,1));
 cd C:\Users\lan\Documents\repos\inter\mat
-saveas(gcf, ['grand avg trace set ', num2str(iset)], 'jpg')
-close
+% saveas(gcf, ['grand avg trace set ', num2str(iset)], 'jpg')
+% close
 
 cd(result_folder)
 save trace_targ0_isi.mat trace_targ0_750 trace_targ0_250

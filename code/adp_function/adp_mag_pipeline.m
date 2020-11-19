@@ -20,9 +20,10 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 % for iset = 1 : length(dataset_list.date)
 iset = 1
+save_flag = 1; % toggle this to save/skip all .mat creation below
 
 global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
-global frame_rate range_base range_resp ncell ntrial nisi nori ori_list
+global frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
 
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
@@ -32,8 +33,7 @@ area = dataset_list.area{1,iset}
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
 
-ntrial = input_behav.trialSinceReset - 1; 
-% 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps 
+ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps 
 % final trial discarded bc too few frames
 [nframe, ncell] = size(npSub_tc);
 
@@ -50,6 +50,8 @@ id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = [];
 id_ad750 = intersect(id_noad, id_750); id_ad250 = intersect(id_noad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
+
+trial_len_max = max(unique(diff(frame_ad)));
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); ori_seq(ori_seq == 180) = 0;
 ori_seq(end) = [];
@@ -80,11 +82,20 @@ grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad alig
 range_base = 1:3; range_resp = 9:12;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
+%% response to adapter & targets. trace 
+
+% dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
+[dfof_ad, dfof_ad_ste] = dfof_resp(dfof_align_ad, 'ad', save_flag);
+[dfof_tg, dfof_tg_ste] = dfof_resp(dfof_align_tg, 'tg', save_flag);
+
+% trace = ncell x nori x nisi3 [noad 750 250]
+[trace_avg, trace_sem]= trace_grand_avg(dfof_align_ad, save_flag);
+
 %% visually driven cells
 % cells responsive to ad / noad tg (all oris)
 
 sig_alpha = 0.01;
-[sig_vis_ad, p_vis_ad, dfof_ad] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
+[sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
 [sig_vis_noad_tg, p_vis_noad_tg, dfof_noad_tg] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
 vis_cell_ad = sig_vis_ad';
 vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
@@ -92,6 +103,10 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 % find(vis_cell_ad==0) % not vis driven by ad
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
 % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
+
+%% fit tuning of cells
+
+
 
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
@@ -103,9 +118,4 @@ else
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag);
 end
 % sum(well_fit_cell)
-
-%% response to adapter & targets
-% dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
-
-
 
