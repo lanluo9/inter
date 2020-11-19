@@ -29,6 +29,7 @@ date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
 area = dataset_list.area{1,iset}
 [npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+cd(result_folder)
 
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
@@ -96,17 +97,13 @@ range_base = 1:3; range_resp = 9:12;
 
 sig_alpha = 0.01;
 [sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
-[sig_vis_noad_tg, p_vis_noad_tg, dfof_noad_tg] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
+[sig_vis_noad_tg, p_vis_noad_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
 vis_cell_ad = sig_vis_ad';
 vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 
 % find(vis_cell_ad==0) % not vis driven by ad
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
 % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
-
-%% fit tuning of cells
-
-
 
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
@@ -119,3 +116,10 @@ else
 end
 % sum(well_fit_cell)
 
+%% tuning bias after adp | Jin2019 Fig 2F
+% fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
+[fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
+
+% x axis: absolute distance btw ori_pref vs ad
+dis_list = ori_list;
+dis_list = 90 - dis_list(dis_list > 90);
