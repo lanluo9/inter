@@ -129,4 +129,4 @@ dis_pref = ori_pref(well_fit_cell,:);
 dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
 dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
 
-nbin = 3; 
+% nbin = 3; 
