@@ -76,6 +76,7 @@ clc
 
 %% saving var
 save('data_reg.mat', 'data_reg', '-v7.3') % force save >2GB .mat
+save('fit_bootstrap.mat', 'well_fit_cell', '-append') % append var to saved mat
 
 %% search field name in struct
 

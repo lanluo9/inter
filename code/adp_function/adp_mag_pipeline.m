@@ -109,7 +109,7 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
 bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-if exist(bootstrap_file, 'file'); load(bootstrap_file)
+if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
 else
     cd(result_folder); nrun = 1000; save_flag = 1;
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag);
@@ -121,5 +121,9 @@ end
 [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
 % x axis: absolute distance btw ori_pref vs ad
-dis_list = ori_list;
-dis_list = 90 - dis_list(dis_list > 90);
+dis_list = ori_list; dis_seq = ori_seq;
+ndis = unique(dis_list);
+dis_list(dis_list > 90) = 90 - dis_list(dis_list > 90); dis_seq(dis_seq > 90) = 90 - dis_seq(dis_seq > 90);
+for idis  = 1 : ndis
+    id_dis{idis} = find(dis_seq == dis_list(idis)); 
+end
