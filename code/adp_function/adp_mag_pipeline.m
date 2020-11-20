@@ -120,10 +120,13 @@ end
 % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
 [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
-% x axis: absolute distance btw ori_pref vs ad
-dis_list = ori_list; dis_seq = ori_seq;
-ndis = unique(dis_list);
-dis_list(dis_list > 90) = 90 - dis_list(dis_list > 90); dis_seq(dis_seq > 90) = 90 - dis_seq(dis_seq > 90);
-for idis  = 1 : ndis
-    id_dis{idis} = find(dis_seq == dis_list(idis)); 
-end
+dis_pref_bin = dis_pref(well_fit_cell,1);
+dis_pref_bin(dis_pref_bin < 22.5) = 0; 
+dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
+dis_pref_bin(dis_pref_bin > 67.5) = 90; 
+
+dis_pref = ori_pref(well_fit_cell,:); 
+dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
+dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
+
+nbin = 3; 
