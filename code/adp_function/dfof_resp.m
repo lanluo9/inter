@@ -1,4 +1,4 @@
-function [dfof_avg_cond, dfof_ste_cond] = dfof_resp(dfof_align, resp_win, save_flag)
+function [dfof_avg_cond, dfof_sem_cond] = dfof_resp(dfof_align, resp_win, save_flag)
 
 % input: dfof_align by ad or tg, linked w/ resp_win 'ad' or 'tg'. save_flag to save mat
 % output: dfof avg & sem 
@@ -10,7 +10,7 @@ global ncell nori nisi id_isi3 id_ori id_ad range_base range_resp
 switch resp_win
 case 'ad'
     base = cell(ncell, 1); resp = cell(ncell, 1);
-    dfof_avg_cond = pi * ones(ncell, 1); dfof_ste_cond = pi * ones(ncell, 1); 
+    dfof_avg_cond = pi * ones(ncell, 1); dfof_sem_cond = pi * ones(ncell, 1); 
 
     for icell = 1 : ncell
         base{icell} = mean(squeeze(dfof_align(icell, id_ad, range_base)),2); 
@@ -18,7 +18,7 @@ case 'ad'
 
         ntrial_ad = length(base{icell});
         dfof_avg_cond(icell) = mean( resp{icell} - base{icell} );
-        dfof_ste_cond(icell) = std( resp{icell} - base{icell} ) / sqrt(ntrial_ad);
+        dfof_sem_cond(icell) = std( resp{icell} - base{icell} ) / sqrt(ntrial_ad);
     end
 
     if save_flag; save dfof_ad.mat dfof_avg_cond dfof_ste_cond; end
@@ -26,7 +26,7 @@ case 'ad'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 case 'tg'
     base_cond = cell(ncell, nori, nisi); resp_cond = cell(ncell, nori, nisi);
-    dfof_avg_cond = pi * ones(ncell, nori, nisi); dfof_ste_cond = pi * ones(ncell, nori, nisi); 
+    dfof_avg_cond = pi * ones(ncell, nori, nisi); dfof_sem_cond = pi * ones(ncell, nori, nisi); 
 
     for icell = 1 : ncell
     for iori = 1 : nori 
@@ -37,7 +37,7 @@ case 'tg'
 
         ntrial_cond = length(base_cond{icell, iori, iisi});
         dfof_avg_cond(icell, iori, iisi) = mean( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} );
-        dfof_ste_cond(icell, iori, iisi) = std( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} ) / sqrt(ntrial_cond);
+        dfof_sem_cond(icell, iori, iisi) = std( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} ) / sqrt(ntrial_cond);
     end
     end
     end

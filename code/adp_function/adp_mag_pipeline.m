@@ -86,8 +86,8 @@ range_base = 1:3; range_resp = 9:12;
 %% response to adapter & targets. trace 
 
 % dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
-[dfof_ad, dfof_ad_ste] = dfof_resp(dfof_align_ad, 'ad', save_flag);
-[dfof_tg, dfof_tg_ste] = dfof_resp(dfof_align_tg, 'tg', save_flag);
+[dfof_ad, dfof_ad_sem] = dfof_resp(dfof_align_ad, 'ad', save_flag);
+[dfof_tg, dfof_tg_sem] = dfof_resp(dfof_align_tg, 'tg', save_flag);
 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem]= trace_grand_avg(dfof_align_ad, save_flag);
@@ -129,4 +129,13 @@ dis_pref = ori_pref(well_fit_cell,:);
 dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
 dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
 
-% nbin = 3; 
+bin_list = unique(dis_pref_bin); nbin = length(unique(dis_pref_bin)); 
+for ibin = 1:nbin
+    for iisi = 1:nisi
+        x = bin_list(ibin);
+        y = mean(dis_pref_change(dis_pref_bin == x, iisi));
+    end
+end
+
+
+
