@@ -120,22 +120,26 @@ end
 % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
 [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
+% y axis: change of distance of pref ori from adapter after adaptation (with_ad - no_ad)
+dis_pref = ori_pref(well_fit_cell,:); 
+dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
+dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
+
+% x axis: sort distance into 3 bins
 dis_pref_bin = dis_pref(well_fit_cell,1);
 dis_pref_bin(dis_pref_bin < 22.5) = 0; 
 dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
 dis_pref_bin(dis_pref_bin > 67.5) = 90; 
 
-dis_pref = ori_pref(well_fit_cell,:); 
-dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
-dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
-
+%%
 bin_list = unique(dis_pref_bin); nbin = length(unique(dis_pref_bin)); 
-for ibin = 1:nbin
-    for iisi = 1:nisi
-        x = bin_list(ibin);
-        y = mean(dis_pref_change(dis_pref_bin == x, iisi));
+x = []; y = [];
+for ibin = 1 : nbin
+    for iisi = 1 : nisi
+        x(ibin) = bin_list(ibin);
+        y(ibin, iisi) = mean(dis_pref_change(dis_pref_bin == x(ibin), iisi));
     end
 end
-
+y
 
 

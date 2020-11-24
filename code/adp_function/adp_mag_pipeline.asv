@@ -29,7 +29,7 @@ date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
 area = dataset_list.area{1,iset}
 [npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
-cd(result_folder
+cd(result_folder)
 
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
@@ -86,8 +86,8 @@ range_base = 1:3; range_resp = 9:12;
 %% response to adapter & targets. trace 
 
 % dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
-[dfof_ad, dfof_ad_ste] = dfof_resp(dfof_align_ad, 'ad', save_flag);
-[dfof_tg, dfof_tg_ste] = dfof_resp(dfof_align_tg, 'tg', save_flag);
+[dfof_ad, dfof_ad_sem] = dfof_resp(dfof_align_ad, 'ad', save_flag);
+[dfof_tg, dfof_tg_sem] = dfof_resp(dfof_align_tg, 'tg', save_flag);
 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem]= trace_grand_avg(dfof_align_ad, save_flag);
@@ -105,19 +105,38 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
 % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
 
-%% fit tuning of cells
-% tuning under conditions: noad vs ad750 vs ad250
-% ori_pref bias after adp
-[fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
-
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
 bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-if exist(bootstrap_file, 'file'); load(bootstrap_file)
+if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
 else
     cd(result_folder); nrun = 1000; save_flag = 1;
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag);
 end
 % sum(well_fit_cell)
+
+%% tuning bias after adp | Jin2019 Fig 2F
+% fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
+[fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
+
+% binning pref dir into 
+dis_pref_bin = dis_pref(well_fit_cell,1);
+dis_pref_bin(dis_pref_bin < 22.5) = 0; 
+dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
+dis_pref_bin(dis_pref_bin > 67.5) = 90; 
+
+dis_pref = ori_pref(well_fit_cell,:); 
+dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
+dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
+
+bin_list = unique(dis_pref_bin); nbin = length(unique(dis_pref_bin)); 
+for ibin = 1:nbin
+    for iisi = 1:nisi
+        x = bin_list(ibin);
+        y = mean(dis_pref_change(dis_pref_bin == x, iisi));
+    end
+end
+
+
 
