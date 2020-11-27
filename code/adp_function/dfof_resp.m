@@ -21,7 +21,7 @@ case 'ad'
         dfof_sem_cond(icell) = std( resp{icell} - base{icell} ) / sqrt(ntrial_ad);
     end
 
-    if save_flag; save dfof_ad.mat dfof_avg_cond dfof_ste_cond; end
+    if save_flag; save dfof_ad.mat dfof_avg_cond dfof_sem_cond; end
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 case 'tg'
@@ -42,6 +42,6 @@ case 'tg'
     end
     end
 
-    if save_flag; save dfof_tg.mat dfof_avg_cond dfof_ste_cond; end
+    if save_flag; save dfof_tg.mat dfof_avg_cond dfof_sem_cond; end
 
 end

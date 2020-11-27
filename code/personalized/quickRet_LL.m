@@ -4,10 +4,9 @@ clear
 close all
 clc
 
-date = '201119';
+date = '201127'; time = '1356';
 mouse = '1328';
 ImgFolder = '001';
-time = '1519';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -36,6 +35,16 @@ irun = 1;
 
     nframes = info.config.frames;
     data_temp = sbxread([ImgFolder(irun,:) '_000_000'],0,nframes);
+    
+% date = '201127'; time = '1356';
+% mouse = '1328';
+% ImgFolder = '001';
+% Error using sbxread (line 91)
+% Cannot read frame.  Index range likely outside of bounds.
+% 
+% Error in quickRet_LL (line 37)
+%     data_temp = sbxread([ImgFolder(irun,:) '_000_000'],0,nframes);
+    
     fprintf(['Loaded ' num2str(nframes) ' frames \r\n'])
 
     if size(data_temp,1) > 1
