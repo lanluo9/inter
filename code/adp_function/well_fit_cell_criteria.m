@@ -11,7 +11,7 @@ fit_param_runs = pi * ones(ncell, 7, nrun); ori_pref_runs = pi * ones(ncell, nru
 if nargin == 1; nrun = 1000; end
 disp('start bootstrap runs')
 for irun = 1 : nrun
-    disp(num2str(irun))
+    if ~mod(irun, 50); disp(num2str(irun)); end
 
 for icell = 1 : ncell        
     for iori = 1 : nori

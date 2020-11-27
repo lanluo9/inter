@@ -18,9 +18,9 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 %% load [xls, timecourse, stim]
 
-for iset = 2 : length(dataset_list.date)
+for iset = 1 : length(dataset_list.date)
 iset
-save_flag = 1; % toggle this to save/skip all .mat creation below
+save_flag = 0; % toggle this to save/skip all .mat creation below
 
 clear id_ad id_noad id_isi2 id_isi3 id_ori
 clear frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
@@ -80,7 +80,7 @@ t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t
 t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
 range = 50; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
-saveas(gcf, 'dfof align zoomin', 'jpg'); close
+if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end; close
 
 range_base = 1:3; range_resp = 9:12;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
@@ -88,8 +88,9 @@ range_base = 1:3; range_resp = 9:12;
 %% response to adapter & targets. get trace 
 
 % dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
-[dfof_ad, dfof_ad_sem] = dfof_resp(dfof_align_ad, 'ad', save_flag);
-[dfof_tg, dfof_tg_sem] = dfof_resp(dfof_align_tg, 'tg', save_flag);
+[dfof_ad, dfof_ad_sem] = dfof_resp(dfof_align_ad, 'ad', 0); % if save_flag = 1, then save dfof_ad vs dfof_tg separately
+[dfof_tg, dfof_tg_sem] = dfof_resp(dfof_align_tg, 'tg', 0);
+if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_tg dfof_tg_sem; end
 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem]= trace_grand_avg(dfof_align_ad, save_flag);
@@ -100,7 +101,7 @@ range_base = 1:3; range_resp = 9:12;
 sig_alpha = 0.01;
 [sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
 [sig_vis_noad_tg, p_vis_noad_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
-vis_cell_ad = sig_vis_ad';
+vis_cell_ad = logical(sig_vis_ad');
 vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 
 % find(vis_cell_ad==0) % not vis driven by ad
@@ -122,33 +123,11 @@ end
 % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
 [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
-%% tuning bias after adp | Jin2019 Fig 2F
-% % y axis: change of distance of pref ori from adapter after adaptation (with_ad - no_ad)
-% dis_pref = ori_pref(well_fit_cell,:); 
-% dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
-% dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
-% 
-% % x axis: sort distance into 3 bins
-% dis_pref_bin = dis_pref(:,1);
-% dis_pref_bin(dis_pref_bin < 22.5) = 0; 
-% dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
-% dis_pref_bin(dis_pref_bin > 67.5) = 90; 
-% 
-% % histogram(dis_pref_change((dis_pref_bin==0),2),53) % dist of 0 bin: not very pos (repulsive)
-% 
-% bin_list = unique(dis_pref_bin); nbin = length(unique(dis_pref_bin)); 
-% x = []; y = [];
-% for ibin = 1 : nbin
-%     for iisi = 1 : nisi
-%         x(ibin) = bin_list(ibin);
-%         y(ibin, iisi) = mean(dis_pref_change(dis_pref_bin == x(ibin), iisi));
-%         y2(ibin, iisi) = median(dis_pref_change(dis_pref_bin == x(ibin), iisi));
-%     end
-% end
-
 %% cell property
 
-save cell_property.mat vis_cell_ad vis_cell_noad_tg sig_vis_ad sig_vis_noad_tg...
+if save_flag
+    save cell_property.mat vis_cell_ad vis_cell_noad_tg sig_vis_ad sig_vis_noad_tg...
     well_fit_cell ori_pref
+end
 
 end

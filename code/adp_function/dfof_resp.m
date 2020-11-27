@@ -1,4 +1,4 @@
-function [dfof_avg_cond, dfof_sem_cond] = dfof_resp(dfof_align, resp_win, save_flag)
+function [dfof_avg, dfof_sem] = dfof_resp(dfof_align, resp_win, save_flag)
 
 % input: dfof_align by ad or tg, linked w/ resp_win 'ad' or 'tg'. save_flag to save mat
 % output: dfof avg & sem 
@@ -10,23 +10,26 @@ global ncell nori nisi id_isi3 id_ori id_ad range_base range_resp
 switch resp_win
 case 'ad'
     base = cell(ncell, 1); resp = cell(ncell, 1);
-    dfof_avg_cond = pi * ones(ncell, 1); dfof_sem_cond = pi * ones(ncell, 1); 
+    dfof_avg = pi * ones(ncell, 1); dfof_sem = pi * ones(ncell, 1); 
 
     for icell = 1 : ncell
         base{icell} = mean(squeeze(dfof_align(icell, id_ad, range_base)),2); 
         resp{icell} = mean(squeeze(dfof_align(icell, id_ad, range_resp)),2);
 
         ntrial_ad = length(base{icell});
-        dfof_avg_cond(icell) = mean( resp{icell} - base{icell} );
-        dfof_sem_cond(icell) = std( resp{icell} - base{icell} ) / sqrt(ntrial_ad);
+        dfof_avg(icell) = mean( resp{icell} - base{icell} );
+        dfof_sem(icell) = std( resp{icell} - base{icell} ) / sqrt(ntrial_ad);
     end
+    
+    dfof_ad_avg = dfof_avg;
+    dfof_ad_sem = dfof_sem;
 
-    if save_flag; save dfof_ad.mat dfof_avg_cond dfof_sem_cond; end
+    if save_flag; save dfof_ad.mat dfof_ad_avg dfof_ad_sem; end
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 case 'tg'
     base_cond = cell(ncell, nori, nisi); resp_cond = cell(ncell, nori, nisi);
-    dfof_avg_cond = pi * ones(ncell, nori, nisi); dfof_sem_cond = pi * ones(ncell, nori, nisi); 
+    dfof_avg = pi * ones(ncell, nori, nisi); dfof_sem = pi * ones(ncell, nori, nisi); 
 
     for icell = 1 : ncell
     for iori = 1 : nori 
@@ -36,12 +39,15 @@ case 'tg'
         resp_cond{icell, iori, iisi} = mean(squeeze(dfof_align(icell, idx, range_resp)),2);
 
         ntrial_cond = length(base_cond{icell, iori, iisi});
-        dfof_avg_cond(icell, iori, iisi) = mean( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} );
-        dfof_sem_cond(icell, iori, iisi) = std( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} ) / sqrt(ntrial_cond);
+        dfof_avg(icell, iori, iisi) = mean( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} );
+        dfof_sem(icell, iori, iisi) = std( resp_cond{icell, iori, iisi} - base_cond{icell, iori, iisi} ) / sqrt(ntrial_cond);
     end
     end
     end
 
-    if save_flag; save dfof_tg.mat dfof_avg_cond dfof_sem_cond; end
+    dfof_tg_avg = dfof_avg;
+    dfof_tg_sem = dfof_sem;
+
+    if save_flag; save dfof_tg.mat dfof_tg_avg dfof_tg_sem; end
 
 end
