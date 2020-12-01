@@ -33,6 +33,7 @@ for iset = 1 : nset
     set(iset).cell_property = load('cell_property.mat');
     set(iset).trace_aligned = load('trace_aligned.mat');    
 end
+cd C:\Users\lan\Documents\repos\inter\plot\
 
 %% adaptation magnitude (using vis_cell_ad before thresholding)
 % adp_mag = dfof_withad_tg0 vs dfof_ad
@@ -125,7 +126,7 @@ legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend bo
 
 %% tuning bias after adp | Jin2019 Fig 2F
 
-dis_pref_merge = []; area_merge = [];
+dis_pref = []; area_merge = [];
 for iset = 1 : nset
     well_fit_cell = set(iset).cell_property.well_fit_cell;
     ncell_set = sum(well_fit_cell); % qualified cell per set
@@ -134,8 +135,8 @@ for iset = 1 : nset
     temp = ones(ncell_set,1) * areacode;
     area_merge = [area_merge; temp];
     
-    temp = set(iset).cell_property.ori_pref(well_fit_cell);
-    dis_pref_merge = [dis_pref_merge; temp];    
+    temp = set(iset).cell_property.ori_pref(well_fit_cell, :);
+    dis_pref = [dis_pref; temp];    
 end
 
 % y axis: change of distance of pref ori from adapter after adaptation (with_ad - no_ad)
@@ -143,19 +144,47 @@ dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
 dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
 % x axis: sort distance into 3 bins
 dis_pref_bin = dis_pref(:,1);
-dis_pref_bin(dis_pref_bin < 22.5) = 0; 
+dis_pref_bin(dis_pref_bin < 22.5) = 0; dis_pref_bin(dis_pref_bin > 67.5) = 90; 
 dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
-dis_pref_bin(dis_pref_bin > 67.5) = 90; 
+
+T_dis = table(area_merge, dis_pref_bin, dis_pref_change);
+stat_dis = grpstats(T_dis,{'area_merge', 'dis_pref_bin'},{'mean','sem', 'min','max'},...
+    'DataVars','dis_pref_change')
+
+[stat_mean_dis,stat_median_dis]= grpstats(dis_pref_change,dis_pref_bin, ...
+    {'mean',@(dis_pref_change)  prctile(dis_pref_change,50)})
+
+%% plot for V1 only (low ncell for LM & LI)
+
+dis_pref_change_v1 = dis_pref_change(area_merge==1,:);
+dis_pref_bin_v1 = dis_pref_bin(area_merge==1,:);
+
+T_dis_v1 = table(dis_pref_bin_v1, dis_pref_change_v1);
+stat_dis = grpstats(T_dis_v1,{'dis_pref_bin_v1'},{'mean','sem', 'min','max'},...
+    'DataVars','dis_pref_change_v1')
+
+[stat_mean_dis_v1, stat_median_dis_v1]= grpstats(dis_pref_change_v1, dis_pref_bin_v1, ...
+    {'mean',@(dis_pref_change_v1)  prctile(dis_pref_change_v1,50)})
 
 %%
-% histogram(dis_pref_change((dis_pref_bin==0),2),53) % dist of 0 bin: not very pos (repulsive)
 
-bin_list = unique(dis_pref_bin); nbin = length(unique(dis_pref_bin)); 
-x = []; y = [];
-for ibin = 1 : nbin
-    for iisi = 1 : nisi
-        x(ibin) = bin_list(ibin);
-        y(ibin, iisi) = mean(dis_pref_change(dis_pref_bin == x(ibin), iisi));
-        y2(ibin, iisi) = median(dis_pref_change(dis_pref_bin == x(ibin), iisi));
-    end
+adp_area_avg = stat_dis.mean_dis_pref_change_v1; adp_area_sem = stat_dis.sem_dis_pref_change_v1;
+ncell_area = stat_dis.GroupCount;
+color_list = {[0,0,1], [1,0,0]}; clear h; figure
+for iisi = 1:2
+    h{iisi,1} = scatter(1:3, adp_area_avg(:, iisi), 5, color_list{iisi}, 'filled'); hold on
+    errorbar(1:3, adp_area_avg(:, iisi), adp_area_sem(:, iisi), 'color', color_list{iisi}, 'LineStyle','none')
 end
+
+ylim([-10,10]); 
+yl = ylim;
+for itext = 1:3
+    text(itext, yl(1) + 1, ...
+        ['n=', num2str(ncell_area(itext))], 'HorizontalAlignment', 'center')
+end
+line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
+xlim([0.5, 3.5]); xticks(1:3); xticklabels({'0', '45', '90'}); 
+xlabel('|pref - adapter|')
+ylabel('delta pref ori');
+legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend boxoff
+% saveas(gcf, ['distance of pref ori from adapter bef or after adaptation'], 'jpg'); close
