@@ -50,7 +50,7 @@ isi_seq = frame_tg - frame_ad_off;
 nisi = length(unique(frame_tg - frame_ad));
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
 id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
-id_ad750 = intersect(id_noad, id_750); id_ad250 = intersect(id_noad, id_250);
+id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
 
@@ -88,7 +88,7 @@ range_base = 1:3; range_resp = 9:12;
 %% response to adapter & targets. get trace 
 
 % dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
-[dfof_ad, dfof_ad_sem] = dfof_resp(dfof_align_ad, 'ad', 0); % if save_flag = 1, then save dfof_ad vs dfof_tg separately
+[dfof_ad, dfof_ad_sem] = dfof_resp(dfof_align_ad, 'ad', 0); % 0 to prevent saving dfof_ad vs dfof_tg separately
 [dfof_tg, dfof_tg_sem] = dfof_resp(dfof_align_tg, 'tg', 0);
 if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_tg dfof_tg_sem; end
 
@@ -112,11 +112,11 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
 bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
-else
+% if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
+% else
     cd(result_folder); nrun = 1000; save_flag = 1;
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag);
-end
+% end
 % sum(well_fit_cell)
 
 %% fit tuning
@@ -127,7 +127,7 @@ end
 
 if save_flag
     save cell_property.mat vis_cell_ad vis_cell_noad_tg sig_vis_ad sig_vis_noad_tg...
-    well_fit_cell ori_pref
+    ori_pref well_fit_cell
 end
 
 end

@@ -37,25 +37,30 @@ end
 %% adaptation magnitude
 % adp_mag = dfof_withad_tg0 vs dfof_ad
 
-dfof_wad_tg0_merge = []; dfof_ad_merge = []; areacode_merge = [];
+dfof_wad_tg0_merge = []; dfof_ad_merge = []; area_merge = [];
 for iset = 1 : nset
     vis_cell_ad = set(iset).cell_property.vis_cell_ad;
     ncell_set = sum(vis_cell_ad); % qualified cell per set
     
     areacode = dataset_list.areacode{iset};
     temp = ones(ncell_set,1) * areacode;
-    areacode_merge = [areacode_merge; temp];
+    area_merge = [area_merge; temp];
     
     temp = set(iset).dfof.dfof_ad(vis_cell_ad);
-    dfof_ad_merge = [dfof_ad_merge; temp];
-    
-    temp = squeeze(set(iset).dfof.dfof_tg(vis_cell_ad, 1, 2:3)); % target ori=0
+    dfof_ad_merge = [dfof_ad_merge; temp];    
+    temp = squeeze(set(iset).dfof.dfof_tg(vis_cell_ad, 1, 2:3)); % target ori=0, with ad
     dfof_wad_tg0_merge = [dfof_wad_tg0_merge; temp];
 end
+adp_a0t0_merge = dfof_wad_tg0_merge ./ dfof_ad_merge - 1;
 
+T = table(area_merge, adp_a0t0_merge);
+stat_adp = grpstats(T,{'area_merge'},{'mean','sem', 'min','max'},'DataVars','adp_a0t0_merge')
 
+[stat_mean,stat_median]= grpstats(adp_a0t0_merge,area_merge, ...
+    {'mean',@(adp_a0t0_merge)  prctile(adp_a0t0_merge,50)});
 
-% adp_mag = dfof_withad_tg0 vs dfof_noad_tg0
+%% test necessity of thresholding (even after vis_cell_ad ensures dfof_ad)
+
 
 
 %% tuning bias after adp | Jin2019 Fig 2F

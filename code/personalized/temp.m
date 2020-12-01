@@ -1,8 +1,7 @@
+% plot trace by isi
 
-x = []; y = [];
-for ibin = 1 : nbin
-    for iisi = 1 : nisi
-        x(ibin) = bin_list(ibin);
-        y(ibin, iisi) = mean(dis_pref_change(dis_pref_bin == x, iisi));
-    end
+trace_no_ori = mean(trace_avg,2);
+for iisi = 1:3
+    trace_avg()
+    
 end
