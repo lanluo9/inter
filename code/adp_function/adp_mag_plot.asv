@@ -59,8 +59,9 @@ stat_adp = grpstats(T,{'area_merge'},{'mean','sem', 'min','max'},'DataVars','adp
 [stat_mean,stat_median]= grpstats(adp_a0t0_merge,area_merge, ...
     {'mean',@(adp_a0t0_merge)  prctile(adp_a0t0_merge,50)});
 
-%% test necessity of thresholding
+%% test necessity of thresholding (even after vis_cell_ad ensures dfof_ad)
 
+% B. create a moving standard deviation of adaptation index as a function of adapter dF/F response to see when variance becomes large- probably use a threshold 0.03-0.05
 
 
 %% tuning bias after adp | Jin2019 Fig 2F
