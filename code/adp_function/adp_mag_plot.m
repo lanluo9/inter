@@ -78,8 +78,9 @@ subplot(2,1,2)
 adp_std_750 = movstd(adp_sort_ad(:,2), rolling_win); plot(adp_std_750); hold on;
 adp_std_250 = movstd(adp_sort_ad(:,3), rolling_win); plot(adp_std_250); grid minor; yline(1, 'g');
 title('adp moving std'); ylim([0,2])
+% saveas(gcf, ['adp movmean movstd across dfof_ad'], 'jpg'); close
 
-cutoff_index = 50;
+cutoff_index = 90; % or 50
 dfof_ad_cutoff = adp_sort_ad(cutoff_index, 1);
 disp(['movmean diverge bc isi & movstd decrease til <1. threshold determined: ' num2str(dfof_ad_cutoff)])
 
@@ -88,15 +89,15 @@ disp(['movmean diverge bc isi & movstd decrease til <1. threshold determined: ' 
 area_co = area_merge(dfof_ad_merge >= dfof_ad_cutoff);
 adp_a0t0_co = adp_a0t0_merge((dfof_ad_merge >= dfof_ad_cutoff), :);
 T_co = table(area_co, adp_a0t0_co);
-stat_adp_cutoff = grpstats(T_co,{'area_co'},{'mean','sem', 'min','max'},'DataVars','adp_a0t0_co')
+stat_adp_co = grpstats(T_co,{'area_co'},{'mean','sem', 'min','max'},'DataVars','adp_a0t0_co')
 
 [stat_mean_co,stat_median_co]= grpstats(adp_a0t0_co, area_co, ...
     {'mean',@(adp_a0t0_co)  prctile(adp_a0t0_co,50)})
 
 %% plot
 
-adp_area_avg = stat_adp_cutoff.mean_adp_a0t0_cutoff; adp_area_sem = stat_adp_cutoff.sem_adp_a0t0_cutoff;
-ncell_area_co = stat_adp_cutoff.GroupCount;
+adp_area_avg = stat_adp_co.mean_adp_a0t0_co; adp_area_sem = stat_adp_co.sem_adp_a0t0_co;
+ncell_area_co = stat_adp_co.GroupCount;
 color_list = {[0,0,1], [1,0,0]}; clear h; figure
 for iisi = 1:2
     h{iisi,1} = scatter(1:3, adp_area_avg(:, iisi), 5, color_list{iisi}, 'filled'); hold on
@@ -120,27 +121,44 @@ end
 line([0.5, 3.5], [0, 0], 'Color', [0.7,0.7,0.7], 'LineWidth',1, 'LineStyle','--');
 xlim([0.5, 3.5]); xticks(1:3); xticklabels({'V1', 'LM', 'LI'}); ylabel('adaptation index');
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend boxoff
+% saveas(gcf, ['adp mag bef or after more thresholding dfof_ad'], 'jpg'); close
 
 %% tuning bias after adp | Jin2019 Fig 2F
-% % y axis: change of distance of pref ori from adapter after adaptation (with_ad - no_ad)
-% dis_pref = ori_pref(well_fit_cell,:); 
-% dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
-% dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
-% 
-% % x axis: sort distance into 3 bins
-% dis_pref_bin = dis_pref(:,1);
-% dis_pref_bin(dis_pref_bin < 22.5) = 0; 
-% dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
-% dis_pref_bin(dis_pref_bin > 67.5) = 90; 
-% 
-% % histogram(dis_pref_change((dis_pref_bin==0),2),53) % dist of 0 bin: not very pos (repulsive)
-% 
-% bin_list = unique(dis_pref_bin); nbin = length(unique(dis_pref_bin)); 
-% x = []; y = [];
-% for ibin = 1 : nbin
-%     for iisi = 1 : nisi
-%         x(ibin) = bin_list(ibin);
-%         y(ibin, iisi) = mean(dis_pref_change(dis_pref_bin == x(ibin), iisi));
-%         y2(ibin, iisi) = median(dis_pref_change(dis_pref_bin == x(ibin), iisi));
-%     end
-% end
+
+% dfof_wad_tg0_merge = []; dfof_ad_merge = []; area_merge = [];
+for iset = 1 : nset
+    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    ncell_set = sum(well_fit_cell); % qualified cell per set
+    
+    areacode = dataset_list.areacode{iset};
+    temp = ones(ncell_set,1) * areacode;
+    area_merge = [area_merge; temp];
+    
+    temp = set(iset).dfof.dfof_ad(vis_cell_ad);
+    dfof_ad_merge = [dfof_ad_merge; temp];    
+    temp = squeeze(set(iset).dfof.dfof_tg(vis_cell_ad, 1, 2:3)); % target ori=0, with ad
+    dfof_wad_tg0_merge = [dfof_wad_tg0_merge; temp];
+end
+
+% y axis: change of distance of pref ori from adapter after adaptation (with_ad - no_ad)
+dis_pref = ori_pref(well_fit_cell,:); 
+dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
+dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
+
+% x axis: sort distance into 3 bins
+dis_pref_bin = dis_pref(:,1);
+dis_pref_bin(dis_pref_bin < 22.5) = 0; 
+dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
+dis_pref_bin(dis_pref_bin > 67.5) = 90; 
+
+% histogram(dis_pref_change((dis_pref_bin==0),2),53) % dist of 0 bin: not very pos (repulsive)
+
+bin_list = unique(dis_pref_bin); nbin = length(unique(dis_pref_bin)); 
+x = []; y = [];
+for ibin = 1 : nbin
+    for iisi = 1 : nisi
+        x(ibin) = bin_list(ibin);
+        y(ibin, iisi) = mean(dis_pref_change(dis_pref_bin == x(ibin), iisi));
+        y2(ibin, iisi) = median(dis_pref_change(dis_pref_bin == x(ibin), iisi));
+    end
+end
