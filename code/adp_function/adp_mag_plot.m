@@ -125,7 +125,7 @@ legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend bo
 
 %% tuning bias after adp | Jin2019 Fig 2F
 
-% dfof_wad_tg0_merge = []; dfof_ad_merge = []; area_merge = [];
+dis_pref_merge = []; area_merge = [];
 for iset = 1 : nset
     well_fit_cell = set(iset).cell_property.well_fit_cell;
     ncell_set = sum(well_fit_cell); % qualified cell per set
@@ -134,23 +134,20 @@ for iset = 1 : nset
     temp = ones(ncell_set,1) * areacode;
     area_merge = [area_merge; temp];
     
-    temp = set(iset).dfof.dfof_ad(vis_cell_ad);
-    dfof_ad_merge = [dfof_ad_merge; temp];    
-    temp = squeeze(set(iset).dfof.dfof_tg(vis_cell_ad, 1, 2:3)); % target ori=0, with ad
-    dfof_wad_tg0_merge = [dfof_wad_tg0_merge; temp];
+    temp = set(iset).cell_property.ori_pref(well_fit_cell);
+    dis_pref_merge = [dis_pref_merge; temp];    
 end
 
 % y axis: change of distance of pref ori from adapter after adaptation (with_ad - no_ad)
-dis_pref = ori_pref(well_fit_cell,:); 
 dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
 dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
-
 % x axis: sort distance into 3 bins
 dis_pref_bin = dis_pref(:,1);
 dis_pref_bin(dis_pref_bin < 22.5) = 0; 
 dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
 dis_pref_bin(dis_pref_bin > 67.5) = 90; 
 
+%%
 % histogram(dis_pref_change((dis_pref_bin==0),2),53) % dist of 0 bin: not very pos (repulsive)
 
 bin_list = unique(dis_pref_bin); nbin = length(unique(dis_pref_bin)); 
