@@ -69,21 +69,55 @@ adp_sort_ad = sortrows(adp_sort_ad, 1);
 % scatter(adp_sort_ad(:,1), adp_sort_ad(:,3));
 
 rolling_win = 20;
-
 figure('units','normalized','outerposition',[0 0 1 1]);
-subplot(2,1,1)
-adp_mean_750 = movmean(adp_sort_ad(:,2), rolling_win); plot(adp_mean_750); hold on;
-adp_mean_250 = movmean(adp_sort_ad(:,3), rolling_win); plot(adp_mean_250); grid minor; yline(0, 'g');
-title('adp moving mean'); ylim([-1,1])
-subplot(2,1,2)
+subplot(3,1,1)
+adp_mean_750 = movmean(adp_sort_ad(:,2), rolling_win); plot(adp_mean_750, 'b'); hold on;
+adp_mean_250 = movmean(adp_sort_ad(:,3), rolling_win); plot(adp_mean_250, 'r'); 
+grid minor; yline(0, 'g'); xlabel('cells sorted by adapter response')
+ylabel('adp moving mean'); ylim([-1,1])
+subplot(3,1,2)
 adp_std_750 = movstd(adp_sort_ad(:,2), rolling_win); plot(adp_std_750); hold on;
 adp_std_250 = movstd(adp_sort_ad(:,3), rolling_win); plot(adp_std_250); grid minor; yline(1, 'g');
-title('adp moving std'); ylim([0,2])
-% saveas(gcf, ['adp movmean movstd across dfof_ad'], 'jpg'); close
+ylabel('adp moving std'); ylim([0,2])
+subplot(3,1,3)
+scatter(adp_sort_ad(:,1),adp_sort_ad(:,2),20,'MarkerFaceColor','b','MarkerEdgeColor','b',...
+    'MarkerFaceAlpha',.2,'MarkerEdgeAlpha',.2); hold on
+scatter(adp_sort_ad(:,1),adp_sort_ad(:,3),20,'MarkerFaceColor','r','MarkerEdgeColor','r',...
+    'MarkerFaceAlpha',.2,'MarkerEdgeAlpha',.2); grid minor;
+xlabel('adapter response'); ylabel('adaptation index')
+saveas(gcf, ['adp movmean movstd across dfof_ad & scatter'], 'jpg'); close
 
 cutoff_index = 90; % or 50
 dfof_ad_cutoff = adp_sort_ad(cutoff_index, 1);
 disp(['movmean diverge bc isi & movstd decrease til <1. threshold determined: ' num2str(dfof_ad_cutoff)])
+
+%% map scatter x axis onto mov mean std
+rolling_win = 20;
+figure('units','normalized','outerposition',[0 0 1 1]);
+subplot(2,1,1)
+adp_mean_750 = movmean(adp_sort_ad(:,2), rolling_win); plot(adp_sort_ad(:,1), adp_mean_750, 'b'); hold on;
+adp_mean_250 = movmean(adp_sort_ad(:,3), rolling_win); plot(adp_sort_ad(:,1), adp_mean_250, 'r'); 
+grid minor; yline(0, 'g'); xlabel('adapter response')
+ylabel('adp moving mean'); ylim([-1,1])
+subplot(2,1,2)
+adp_std_750 = movstd(adp_sort_ad(:,2), rolling_win); plot(adp_sort_ad(:,1), adp_std_750); hold on;
+adp_std_250 = movstd(adp_sort_ad(:,3), rolling_win); plot(adp_sort_ad(:,1), adp_std_250); grid minor; yline(1, 'g');
+ylabel('adp moving std'); ylim([0,2])
+saveas(gcf, ['adp movmean movstd across dfof_ad all'], 'jpg'); close
+
+zoomto_idx = find(adp_sort_ad(:,1) > 0.05, 1);
+rolling_win = 20;
+figure('units','normalized','outerposition',[0 0 1 1]);
+subplot(2,1,1)
+adp_mean_750 = movmean(adp_sort_ad(:,2), rolling_win); plot(adp_sort_ad(1:zoomto_idx,1), adp_mean_750(1:zoomto_idx), 'b'); hold on;
+adp_mean_250 = movmean(adp_sort_ad(:,3), rolling_win); plot(adp_sort_ad(1:zoomto_idx,1), adp_mean_250(1:zoomto_idx), 'r'); 
+grid minor; yline(0, 'g'); xlabel('adapter response')
+ylabel('adp moving mean'); ylim([-1,1])
+subplot(2,1,2)
+adp_std_750 = movstd(adp_sort_ad(:,2), rolling_win); plot(adp_sort_ad(1:zoomto_idx,1), adp_std_750(1:zoomto_idx)); hold on;
+adp_std_250 = movstd(adp_sort_ad(:,3), rolling_win); plot(adp_sort_ad(1:zoomto_idx,1), adp_std_250(1:zoomto_idx)); grid minor; yline(1, 'g');
+ylabel('adp moving std'); ylim([0,2])
+saveas(gcf, ['adp movmean movstd across dfof_ad zoomin'], 'jpg'); close
 
 %% adp after thresholding
 
@@ -188,3 +222,26 @@ xlabel('|pref - adapter|')
 ylabel('delta pref ori');
 legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend boxoff
 % saveas(gcf, ['distance of pref ori from adapter bef or after adaptation'], 'jpg'); close
+
+%% LM & LI less ori-tuned
+% proportion of well_fit_cell in vis_cell_noad_tg
+
+well_fit_merge = []; well_fit_check = []; area_merge = [];
+for iset = 1 : nset
+    vis_noad_tg(iset) = sum(set(iset).cell_property.vis_cell_noad_tg);
+    areacode(iset) = dataset_list.areacode{iset};
+    
+    temp = set(iset).cell_property.well_fit_cell(set(iset).cell_property.vis_cell_noad_tg);
+    well_fit(iset) = sum(temp);   
+end
+well_fit_ratio = well_fit ./ vis_noad_tg;
+
+T = table(areacode', well_fit_ratio', well_fit_ratio_check');
+stat_adp = grpstats(T,{'Var1'},{'mean','sem'},'DataVars','Var2')
+
+[stat_mean,stat_median]= grpstats(well_fit_ratio,areacode, {'mean',@(well_fit_ratio)  prctile(well_fit_ratio,50)})
+% interestingly, proportion of vis_ad cells in all cells
+% & proportion of well-fit cells in vis_noad_tg cells 
+% both double down as we proceed from V1 to LM to LI
+
+
