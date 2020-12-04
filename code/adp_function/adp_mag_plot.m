@@ -97,6 +97,10 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 subplot(2,1,1)
 adp_mean_750 = movmean(adp_sort_ad(:,2), rolling_win); plot(adp_sort_ad(:,1), adp_mean_750, 'b'); hold on;
 adp_mean_250 = movmean(adp_sort_ad(:,3), rolling_win); plot(adp_sort_ad(:,1), adp_mean_250, 'r'); 
+scatter(adp_sort_ad(:,1),adp_mean_750,10,'MarkerFaceColor','b','MarkerEdgeColor','b',...
+    'MarkerFaceAlpha',.2,'MarkerEdgeAlpha',.2); hold on
+scatter(adp_sort_ad(:,1),adp_mean_250,10,'MarkerFaceColor','r','MarkerEdgeColor','r',...
+    'MarkerFaceAlpha',.2,'MarkerEdgeAlpha',.2); 
 grid minor; yline(0, 'g'); xlabel('adapter response')
 ylabel('adp moving mean'); ylim([-1,1])
 subplot(2,1,2)
@@ -111,6 +115,10 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 subplot(2,1,1)
 adp_mean_750 = movmean(adp_sort_ad(:,2), rolling_win); plot(adp_sort_ad(1:zoomto_idx,1), adp_mean_750(1:zoomto_idx), 'b'); hold on;
 adp_mean_250 = movmean(adp_sort_ad(:,3), rolling_win); plot(adp_sort_ad(1:zoomto_idx,1), adp_mean_250(1:zoomto_idx), 'r'); 
+scatter(adp_sort_ad(1:zoomto_idx,1),adp_mean_750(1:zoomto_idx),30,'MarkerFaceColor','b','MarkerEdgeColor','b',...
+    'MarkerFaceAlpha',.2,'MarkerEdgeAlpha',.2); hold on
+scatter(adp_sort_ad(1:zoomto_idx,1),adp_mean_250(1:zoomto_idx),30,'MarkerFaceColor','r','MarkerEdgeColor','r',...
+    'MarkerFaceAlpha',.2,'MarkerEdgeAlpha',.2); 
 grid minor; yline(0, 'g'); xlabel('adapter response')
 ylabel('adp moving mean'); ylim([-1,1])
 subplot(2,1,2)
@@ -236,8 +244,8 @@ for iset = 1 : nset
 end
 well_fit_ratio = well_fit ./ vis_noad_tg;
 
-T = table(areacode', well_fit_ratio', well_fit_ratio_check');
-stat_adp = grpstats(T,{'Var1'},{'mean','sem'},'DataVars','Var2')
+T = table(areacode', well_fit_ratio');
+stat_adp = grpstats(T,{'Var1'},{'mean','sem','max','min'},'DataVars','Var2')
 
 [stat_mean,stat_median]= grpstats(well_fit_ratio,areacode, {'mean',@(well_fit_ratio)  prctile(well_fit_ratio,50)})
 % interestingly, proportion of vis_ad cells in all cells
