@@ -252,4 +252,4 @@ stat_adp = grpstats(T,{'Var1'},{'mean','sem','max','min'},'DataVars','Var2')
 % & proportion of well-fit cells in vis_noad_tg cells 
 % both double down as we proceed from V1 to LM to LI
 
-
+%% OSI? SNR?
