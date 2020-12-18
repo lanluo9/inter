@@ -30,10 +30,20 @@ set = struct;
 for iset = 1 : nset
     cd(result_folder{iset});
     set(iset).dfof = load('dfof.mat');
-    set(iset).cell_property = load('cell_property.mat');
-    set(iset).trace_aligned = load('trace_aligned.mat');    
+    set(iset).cell_property = load('cell_property_loose.mat');
+    set(iset).trace_aligned = load('trace_aligned.mat');
+    set(iset).fit_tuning = load('fit_tuning_isi3.mat');
 end
 cd C:\Users\lan\Documents\repos\inter\plot\
+
+%% transfer
+
+% for iset = 1 : nset
+%     dfof_ad_cells = [dfof_ad_cells; set(iset).dfof.dfof_ad];
+%     dfof_tg_cells = [dfof_tg_cells; set(iset).dfof.dfof_tg];
+% end
+
+% save set.mat set
 
 %% adaptation magnitude (using vis_cell_ad before thresholding)
 % adp_mag = dfof_withad_tg0 vs dfof_ad
@@ -168,7 +178,7 @@ legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend bo
 
 %% tuning bias after adp | Jin2019 Fig 2F
 
-dis_pref = []; area_merge = [];
+ori_pref = []; area_merge = [];
 for iset = 1 : nset
     well_fit_cell = set(iset).cell_property.well_fit_cell;
     ncell_set = sum(well_fit_cell); % qualified cell per set
@@ -178,14 +188,14 @@ for iset = 1 : nset
     area_merge = [area_merge; temp];
     
     temp = set(iset).cell_property.ori_pref(well_fit_cell, :);
-    dis_pref = [dis_pref; temp];    
+    ori_pref = [ori_pref; temp];    
 end
 
 % y axis: change of distance of pref ori from adapter after adaptation (with_ad - no_ad)
-dis_pref(dis_pref > 90) = abs(dis_pref(dis_pref > 90) - 180);
-dis_pref_change = dis_pref(:,2:3) - dis_pref(:,1);
+ori_pref(ori_pref > 90) = abs(ori_pref(ori_pref > 90) - 180);
+dis_pref_change = ori_pref(:,2:3) - ori_pref(:,1);
 % x axis: sort distance into 3 bins
-dis_pref_bin = dis_pref(:,1);
+dis_pref_bin = ori_pref(:,1);
 dis_pref_bin(dis_pref_bin < 22.5) = 0; dis_pref_bin(dis_pref_bin > 67.5) = 90; 
 dis_pref_bin(dis_pref_bin >= 22.5 & dis_pref_bin <= 67.5) = 45; 
 
@@ -233,6 +243,7 @@ legend([h{1,1},h{2,1}], 'isi 750', 'isi 250', 'Location','northeast'); legend bo
 
 %% LM & LI less ori-tuned
 % proportion of well_fit_cell in vis_cell_noad_tg
+% somehow not affected by von mises fit k upper bound at all!
 
 well_fit_merge = []; well_fit_check = []; area_merge = [];
 for iset = 1 : nset
@@ -252,4 +263,132 @@ stat_adp = grpstats(T,{'Var1'},{'mean','sem','max','min'},'DataVars','Var2')
 % & proportion of well-fit cells in vis_noad_tg cells 
 % both double down as we proceed from V1 to LM to LI
 
-%% OSI? SNR?
+for iarea = 1 : 3
+    well_fit_area(iarea) = sum(well_fit(areacode == iarea));
+    vis_noad_tg_area(iarea) = sum(vis_noad_tg(areacode == iarea));
+    well_fit_ratio_(iarea) = sum(well_fit(areacode == iarea)) ./ sum(vis_noad_tg(areacode == iarea));
+end
+
+
+%% OSI by area
+% OSI = diff(pref, ortho) / sum(pref, ortho) 
+
+area_merge = []; ori_pref = []; ori_orth = []; 
+dfof_pref = []; dfof_orth = [];
+ori_round_to = 0 : 22.5 : 157.5;
+
+for iset = 1 : nset
+    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    ncell_set(iset) = sum(well_fit_cell); 
+    areacode = dataset_list.areacode{iset};
+    temp = ones(ncell_set(iset),1) * areacode;
+    area_merge = [area_merge; temp];
+    
+    temp = set(iset).cell_property.ori_pref(well_fit_cell, 1);
+    temp = interp1(ori_round_to,ori_round_to,temp, 'nearest','extrap');
+    ori_pref = [ori_pref; temp];
+    temp2 = temp + 90; temp2(temp2>=180) = temp2(temp2>=180) - 180;
+    ori_orth = [ori_orth; temp2];
+    
+    for icell = 1 : ncell_set(iset)
+        cell_idx = max(find(well_fit_cell, icell));
+        ori_pref_idx = find(ori_round_to == temp(icell));
+        ori_orth_idx = find(ori_round_to == temp2(icell));
+        dfof_pref_cell = set(iset).dfof.dfof_tg(cell_idx, ori_pref_idx, 1);
+        dfof_orth_cell = set(iset).dfof.dfof_tg(cell_idx, ori_orth_idx, 1);
+        dfof_pref = [dfof_pref; dfof_pref_cell];
+        dfof_orth = [dfof_orth; dfof_orth_cell];
+    end
+end
+OSI = (dfof_pref - dfof_orth) ./ (dfof_pref + dfof_orth);
+
+T = table(area_merge, OSI);
+stat_adp = grpstats(T,{'area_merge'},{'mean','sem','max','min'},'DataVars','OSI')
+
+[stat_mean,stat_median]= grpstats(OSI,area_merge, {'mean',@(OSI)  prctile(OSI,50)})
+
+% save OSI_area.mat area_merge OSI
+
+%% circular variance by area
+
+ori_list = 0 : 22.5 : 157.5;
+area_merge = []; dfof_tg_ori = [];
+
+for iset = 1 : nset
+    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    ncell_set(iset) = sum(well_fit_cell); 
+    areacode = dataset_list.areacode{iset};
+    temp = ones(ncell_set(iset),1) * areacode;
+    area_merge = [area_merge; temp];
+    
+    temp = squeeze(set(iset).dfof.dfof_tg(well_fit_cell, :, 1));
+    temp = round(temp * 1000); temp(temp<0) = 0;
+    dfof_tg_ori = [dfof_tg_ori; temp];
+end
+% OSI = (dfof_pref - dfof_orth) ./ (dfof_pref + dfof_orth);
+
+% save CirVar_area.mat area_merge dfof_tg_ori
+
+%% SNR by area
+% std/mean of dfof_ori_pref (noad tg)
+
+area_merge = []; ori_pref = []; dfof_pref_avg = []; dfof_pref_std = [];
+ori_round_to = 0 : 22.5 : 157.5;
+
+for iset = 1 : nset
+    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    ncell_set(iset) = sum(well_fit_cell); 
+    areacode = dataset_list.areacode{iset};
+    temp = ones(ncell_set(iset),1) * areacode;
+    area_merge = [area_merge; temp];
+    
+    temp = set(iset).cell_property.ori_pref(well_fit_cell, 1);
+    temp = interp1(ori_round_to,ori_round_to,temp, 'nearest','extrap');
+    ori_pref = [ori_pref; temp];
+    
+    for icell = 1 : ncell_set(iset)
+        cell_idx = max(find(well_fit_cell, icell));
+        ori_pref_idx = find(ori_round_to == temp(icell));
+        dfof_pref_cell = set(iset).dfof.dfof_tg(cell_idx, ori_pref_idx, 1);
+        dfof_pref_avg = [dfof_pref_avg; dfof_pref_cell];
+        dfof_pref_std_cell = set(iset).dfof.dfof_tg_std(cell_idx, ori_pref_idx, 1);
+        dfof_pref_std = [dfof_pref_std; dfof_pref_std_cell];
+    end
+end
+coeff_var = dfof_pref_std ./ dfof_pref_avg;
+well_fit_flag = coeff_var; well_fit_flag(:) = 1;
+
+% save CV_area_well_fit.mat area_merge coeff_var
+
+%%
+
+area_merge_not = []; ori_pref = []; dfof_pref_avg = []; dfof_pref_std = [];
+ori_round_to = 0 : 22.5 : 157.5;
+
+for iset = 1 : nset
+    not_well_fit_cell = ~set(iset).cell_property.well_fit_cell;
+    ncell_set(iset) = sum(not_well_fit_cell); 
+    areacode = dataset_list.areacode{iset};
+    temp = ones(ncell_set(iset),1) * areacode;
+    area_merge_not = [area_merge_not; temp];
+    
+    temp = set(iset).cell_property.ori_pref(not_well_fit_cell, 1);
+    temp = interp1(ori_round_to,ori_round_to,temp, 'nearest','extrap');
+    ori_pref = [ori_pref; temp];
+    
+    for icell = 1 : ncell_set(iset)
+        cell_idx = max(find(not_well_fit_cell, icell));
+        ori_pref_idx = find(ori_round_to == temp(icell));
+        dfof_pref_cell = set(iset).dfof.dfof_tg(cell_idx, ori_pref_idx, 1);
+        dfof_pref_avg = [dfof_pref_avg; dfof_pref_cell];
+        dfof_pref_std_cell = set(iset).dfof.dfof_tg_std(cell_idx, ori_pref_idx, 1);
+        dfof_pref_std = [dfof_pref_std; dfof_pref_std_cell];
+    end
+end
+coeff_var_not = dfof_pref_std ./ dfof_pref_avg;
+well_fit_flag_not = coeff_var_not; well_fit_flag_not(:) = 0;
+
+area = [area_merge; area_merge_not]; well_fit = [well_fit_flag; well_fit_flag_not];
+CV = [coeff_var; coeff_var_not];
+
+save CV_area.mat area well_fit CV

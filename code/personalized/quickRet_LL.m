@@ -4,8 +4,8 @@ clear
 close all
 clc
 
-date = '201209'; 
-time = '1534';
+date = '201217'; 
+time = '1413';
 ImgFolder = '001';
 mouse = '1329';
 

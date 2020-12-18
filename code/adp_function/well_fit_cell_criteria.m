@@ -45,6 +45,6 @@ percentile_threshold = 0.90; percentile_idx = percentile_threshold * nrun;
 ori_perc = ori_distance(:, percentile_idx);
 well_fit_cell = ori_perc < (180 / nori);
 
-if save_flag; save fit_bootstrap.mat fit_param_runs ori_pref_runs well_fit_cell; end
+if save_flag; save fit_bootstrap_loose.mat fit_param_runs ori_pref_runs well_fit_cell; end
 
 
