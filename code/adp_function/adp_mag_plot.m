@@ -336,7 +336,7 @@ area_merge = []; ori_pref = []; dfof_pref_avg = []; dfof_pref_std = [];
 ori_round_to = 0 : 22.5 : 157.5;
 
 for iset = 1 : nset
-    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    well_fit_cell = set(iset).cell_property.well_fit_cell & set(iset).cell_property.vis_cell_noad_tg;
     ncell_set(iset) = sum(well_fit_cell); 
     areacode = dataset_list.areacode{iset};
     temp = ones(ncell_set(iset),1) * areacode;
@@ -358,15 +358,13 @@ end
 coeff_var = dfof_pref_std ./ dfof_pref_avg;
 well_fit_flag = coeff_var; well_fit_flag(:) = 1;
 
-% save CV_area_well_fit.mat area_merge coeff_var
-
 %%
 
 area_merge_not = []; ori_pref = []; dfof_pref_avg = []; dfof_pref_std = [];
 ori_round_to = 0 : 22.5 : 157.5;
 
 for iset = 1 : nset
-    not_well_fit_cell = ~set(iset).cell_property.well_fit_cell;
+    not_well_fit_cell = set(iset).cell_property.vis_cell_noad_tg & ~set(iset).cell_property.well_fit_cell;
     ncell_set(iset) = sum(not_well_fit_cell); 
     areacode = dataset_list.areacode{iset};
     temp = ones(ncell_set(iset),1) * areacode;
