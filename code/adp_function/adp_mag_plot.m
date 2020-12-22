@@ -389,4 +389,6 @@ well_fit_flag_not = coeff_var_not; well_fit_flag_not(:) = 0;
 area = [area_merge; area_merge_not]; well_fit = [well_fit_flag; well_fit_flag_not];
 CV = [coeff_var; coeff_var_not];
 
-save CV_area.mat area well_fit CV
+% save CV_area.mat area well_fit CV
+
+

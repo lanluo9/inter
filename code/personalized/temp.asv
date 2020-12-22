@@ -20,5 +20,4 @@ for iset = 1 : nset
     resp_tg = [resp_tg; tt];
 end
 
-resp_tg_collapse_ori = mean(resp_tg, 2);
-save amp_area.mat area_ad resp_ad area_tg resp_tg resp_tg_collapse_ori
+resp_tg_all_ori
