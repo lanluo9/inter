@@ -64,3 +64,7 @@ area = [area_merge; area_merge_not]; well_fit = [well_fit_flag; well_fit_flag_no
 OSI_all = [OSI; OSI_not];
 
 % save OSI_area_vis.mat area well_fit OSI_all
+
+
+% save set.mat set
+
