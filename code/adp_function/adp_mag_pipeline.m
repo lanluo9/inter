@@ -89,11 +89,9 @@ range_base = 1:3; range_resp = 9:12;
 %% response to adapter & targets. get trace 
 % dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
 
-save_flag = 1;
 [dfof_ad, dfof_ad_sem, dfof_ad_std] = dfof_resp(dfof_align_ad, 'ad', 0); % 0 to prevent saving dfof_ad vs dfof_tg separately
 [dfof_tg, dfof_tg_sem, dfof_tg_std] = dfof_resp(dfof_align_tg, 'tg', 0);
 if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
-save_flag = 0;
 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem]= trace_grand_avg(dfof_align_ad, save_flag);
@@ -114,12 +112,12 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
-bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
-else
+% bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
+% if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
+% else
     cd(result_folder); nrun = 1000; save_flag = 1;
-    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag);
-end
+    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); save_flag = 0;
+% end
 % sum(well_fit_cell)
 
 %% fit tuning

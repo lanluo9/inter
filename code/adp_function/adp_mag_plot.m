@@ -30,8 +30,10 @@ set = struct;
 for iset = 1 : nset
     cd(result_folder{iset});
     set(iset).dfof = load('dfof.mat');
+    set(iset).trace = load('trace_aligned.mat');
+    
     set(iset).cell_property = load('cell_property_loose.mat');
-    set(iset).trace_aligned = load('trace_aligned.mat');
+    set(iset).fit_bootstrap = load('fit_bootstrap_loose.mat');
     set(iset).fit_tuning = load('fit_tuning_isi3.mat');
 end
 cd C:\Users\lan\Documents\repos\inter\plot\
@@ -415,3 +417,43 @@ end
 
 resp_tg_collapse_ori = mean(resp_tg, 2);
 % save amp_area.mat area_ad resp_ad area_tg resp_tg resp_tg_collapse_ori
+
+%% SSE & R2 by area
+area = []; 
+R2 = []; SSE = [];
+
+for iset = 1 : nset
+    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    ncell_set(iset) = sum(well_fit_cell); 
+    areacode = dataset_list.areacode{iset};
+    tt = ones(ncell_set(iset),1) * areacode;
+    area = [area; tt];
+    
+    tt = set(iset).fit_tuning.fit_param(well_fit_cell, end, 1);
+    R2 = [R2; tt];
+    tt = set(iset).fit_tuning.fit_param(well_fit_cell, end-1, 1);
+    SSE = [SSE; tt];
+end
+
+% save R2_SSE_area.mat area R2 SSE
+
+%% ori_perc by area
+area = []; 
+ori_perc = [];
+
+for iset = 1 : nset
+    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    ncell_set(iset) = sum(well_fit_cell); 
+    areacode = dataset_list.areacode{iset};
+    tt = ones(ncell_set(iset),1) * areacode;
+    area = [area; tt];
+    
+%     tt = set(iset).fit_tuning.fit_param(well_fit_cell, end, 1);
+%     R2 = [R2; tt];
+end
+
+% save R2_SSE_area.mat area R2 SSE
+
+%% ori_perc vs OSI
+
+

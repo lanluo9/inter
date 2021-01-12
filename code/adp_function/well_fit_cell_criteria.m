@@ -11,7 +11,7 @@ fit_param_runs = pi * ones(ncell, 7, nrun); ori_pref_runs = pi * ones(ncell, nru
 if nargin == 1; nrun = 1000; end
 disp('start bootstrap runs')
 for irun = 1 : nrun
-    if ~mod(irun, 50); disp(num2str(irun)); end
+    if ~mod(irun, 100); disp(num2str(irun)); end
 
 for icell = 1 : ncell        
     for iori = 1 : nori
@@ -45,6 +45,8 @@ percentile_threshold = 0.90; percentile_idx = percentile_threshold * nrun;
 ori_perc = ori_distance(:, percentile_idx);
 well_fit_cell = ori_perc < (180 / nori);
 
-if save_flag; save fit_bootstrap_loose.mat fit_param_runs ori_pref_runs well_fit_cell; end
+if save_flag
+    save fit_bootstrap_90perc.mat fit_param_runs ori_pref_runs well_fit_cell ori_perc; 
+end
 
 
