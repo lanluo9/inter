@@ -33,7 +33,7 @@ for iset = 1 : nset
     set(iset).trace = load('trace_aligned.mat');
     
     set(iset).cell_property = load('cell_property_loose.mat');
-    set(iset).fit_bootstrap = load('fit_bootstrap_loose.mat');
+    set(iset).fit_bootstrap = load('fit_bootstrap_90perc.mat');
     set(iset).fit_tuning = load('fit_tuning_isi3.mat');
 end
 cd C:\Users\lan\Documents\repos\inter\plot\
@@ -437,7 +437,7 @@ end
 
 % save R2_SSE_area.mat area R2 SSE
 
-%% ori_perc by area
+%% ori_perc of well-fit by area
 area = []; 
 ori_perc = [];
 
@@ -448,11 +448,28 @@ for iset = 1 : nset
     tt = ones(ncell_set(iset),1) * areacode;
     area = [area; tt];
     
-%     tt = set(iset).fit_tuning.fit_param(well_fit_cell, end, 1);
-%     R2 = [R2; tt];
+    tt = set(iset).fit_bootstrap.ori_perc(well_fit_cell, 1);
+    ori_perc = [ori_perc; tt];
 end
 
-% save R2_SSE_area.mat area R2 SSE
+% save ori_perc_area.mat area ori_perc
+
+%% ori_perc of all by area
+area = []; 
+ori_perc_all = [];
+
+for iset = 1 : nset
+    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    ncell_set(iset) = length(well_fit_cell); 
+    areacode = dataset_list.areacode{iset};
+    tt = ones(ncell_set(iset),1) * areacode;
+    area = [area; tt];
+    
+    tt = set(iset).fit_bootstrap.ori_perc(:, 1);
+    ori_perc_all = [ori_perc_all; tt];
+end
+
+save ori_perc_all_area.mat area ori_perc_all
 
 %% ori_perc vs OSI
 
