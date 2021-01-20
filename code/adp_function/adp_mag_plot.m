@@ -437,6 +437,25 @@ end
 
 % save R2_SSE_area.mat area R2 SSE
 
+%% SSE & R2 of all by area
+area = []; 
+R2 = []; SSE = [];
+
+for iset = 1 : nset
+    well_fit_cell = set(iset).cell_property.well_fit_cell;
+    ncell_set(iset) = length(well_fit_cell); 
+    areacode = dataset_list.areacode{iset};
+    tt = ones(ncell_set(iset),1) * areacode;
+    area = [area; tt];
+    
+    tt = set(iset).fit_tuning.fit_param(:, end, 1);
+    R2 = [R2; tt];
+    tt = set(iset).fit_tuning.fit_param(:, end-1, 1);
+    SSE = [SSE; tt];
+end
+
+% save R2_SSE_all_area.mat area R2 SSE
+
 %% ori_perc of well-fit by area
 area = []; 
 ori_perc = [];
