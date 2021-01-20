@@ -2,14 +2,14 @@
 clear all
 clc
 
-date = '200806';
+date = '200803';
 mouse = 'i1322';
-ImgFolder = strvcat('003');
-time = strvcat('1139');
+ImgFolder = strvcat('002');
+time = strvcat('1140');
 frame_rate = 30;
 
 doFromRef = 0;
-ref = strvcat('002'); % what is ref?
+ref = strvcat('001'); % what is ref?
 nrun = size(ImgFolder,1);
 run_str = catRunName(ImgFolder, nrun);
 LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
@@ -87,10 +87,14 @@ toc
 
 %% Choose register interval
 nep = floor(size(data,3)./10000);
-[n n2] = subplotn(nep);
-figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
+[n, n2] = subplotn(nep);
+figure('units','normalized','outerposition',[0 0 1 1]);
+for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
-data_avg = mean(data(:,:,40001:40500),3);
+select = 4;
+start_idx = select * 10000 + 1;
+stop_idx = select * 10000 + 500;
+data_avg = mean(data(:,:,start_idx:stop_idx),3);
 
 %% Register data
 
