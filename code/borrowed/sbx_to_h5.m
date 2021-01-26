@@ -1,12 +1,8 @@
 function sbx_to_h5(fname,varargin)
  
-% sbx2h5
-% Generates h5 file from sbx files
+% sbx2h5: Generates h5 file from sbx
+% input: fname is a string, i.e. '002_000_000' for 002_000_000.sbx
 % https://scanbox.org/2018/08/29/using-suite2p-with-scanbox/
-
-% dir = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan\Data\2P_images\i1322\200803\002\';
-% fname = '002_000_000';
-% fname = [dir, fname];
 
 fnh = [fname ,'.h5']; 
 z = sbxread(fname,1,1);
