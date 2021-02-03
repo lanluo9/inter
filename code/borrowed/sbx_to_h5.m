@@ -4,6 +4,9 @@ function sbx_to_h5(fname,varargin)
 % input: fname is a string, i.e. '002_000_000' for 002_000_000.sbx
 % https://scanbox.org/2018/08/29/using-suite2p-with-scanbox/
 
+% cd Z:\All_Staff\home\lan\Data\2P_images\i1324\200728\003
+% sbx_to_h5('003_000_000')
+
 fnh = [fname ,'.h5']; 
 z = sbxread(fname,1,1);
 global info;
@@ -16,7 +19,7 @@ end
  
 k = 0;
 done = 0; 
-blksize = 200; % block size
+blksize = 1000; % block size original 200 
 to_read = min(blksize,N-k);
  
 while(~done && to_read>0)
