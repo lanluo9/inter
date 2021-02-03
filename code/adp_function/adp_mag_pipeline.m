@@ -18,7 +18,7 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 %% load [xls, timecourse, stim]
 
-for iset = 1 : length(dataset_list.date)
+for iset = 1 %: length(dataset_list.date)
 iset
 save_flag = 0; % toggle this to save/skip all .mat creation below
 
