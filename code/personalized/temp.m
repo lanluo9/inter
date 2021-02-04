@@ -89,7 +89,25 @@ load suite2p_reg_mean_img.mat
 cd Z:\All_Staff\home\lan\Analysis\2P\200803_1322\200803_1322_runs-002
 load 200803_i1322_runs-002_mask_cell_addfake.mat
 
-cell_mask_orig = [];
-% [out, cell_mask_align_w_suite2p] = stackRegister_MA(cell_mask_orig, [],[],out)  % add shift to cell mask
+cell_mask_orig = mask_np;
+[out2, cell_mask_align_w_suite2p] = stackRegister_MA(cell_mask_orig, [],[],out);  % add shift to cell mask
 
 
+[out3, cell_mask_align_w_suite2p_2] = stackRegister_MA(mask_cell, [],[],out);
+imagesc(cell_mask_align_w_suite2p_2)
+
+save mask_cell_shift_align.mat cell_mask_align_w_suite2p_2 out out2 out3
+
+%%
+
+tt = cell_mask_align_w_suite2p_2;
+% histogram(cell_mask_align_w_suite2p_2(:),10)
+
+
+tt2 = tt;
+tt2(tt2<3) = nan;
+
+tt2(~isnan(tt2)) = 1;
+imagesc(tt2)
+
+% save mask_cell_shift_flat.mat tt2
