@@ -99,19 +99,17 @@ imagesc(cell_mask_align_w_suite2p_2)
 save mask_cell_shift_align.mat cell_mask_align_w_suite2p_2 out out2 out3
 
 %%
+
 tt = log10(cell_mask_align_w_suite2p_2);
 histogram(tt(:),50)
 
+
 %%
+
 tt2 = cell_mask_align_w_suite2p_2;
-tt2(tt2<3) = nan;
+tt2(tt2<2) = nan;
 
 tt2(~isnan(tt2)) = 1;
-imagesc(tt2); set(gcf, 'Position', get(0, 'Screensize'));
+imagesc(tt2)
 
-% save mask_cell_shift_flat2.mat tt2
-
-%% register btw data_avg (1 single frame, replicated twice) vs suite2p mean img
-
-
-
+% save mask_cell_shift_flat.mat tt2
