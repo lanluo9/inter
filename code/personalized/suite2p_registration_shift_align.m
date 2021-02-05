@@ -1,11 +1,3 @@
-%%
-
-% subplot(1,2,1)
-% imagesc(data_avg)
-% subplot(1,2,2)
-% imagesc(reg_img_mean)
-% set(gcf, 'Position', get(0, 'Screensize'));
-
 %% get path names
 clear all
 clc
@@ -81,7 +73,18 @@ toc
 
 %% register btw data_avg (1 single frame, replicated twice) vs suite2p mean img
 
-data_avg = mean(data, 3);
+% data_avg = mean(data, 3);
+
+nep = floor(size(data,3)./10000);
+[n, n2] = subplotn(nep);
+figure('units','normalized','outerposition',[0 0 1 1]);
+for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
+
+select = 4;
+start_idx = select * 10000 + 1;
+stop_idx = select * 10000 + 500;
+data_avg = mean(data(:,:,start_idx:stop_idx),3);
+
 imagesc(data_avg);
 data_avg_stack = cat(3, data_avg, data_avg);
 
@@ -93,14 +96,11 @@ load suite2p_reg_mean_img.mat
 cd Z:\All_Staff\home\lan\Analysis\2P\200803_1322\200803_1322_runs-002
 load 200803_i1322_runs-002_mask_cell_addfake.mat
 
-% cell_mask_orig = mask_np;
-% [out2, cell_mask_align_w_suite2p] = stackRegister_MA(cell_mask_orig, [],[],out);  % add shift to cell mask
-
-
 [out2, mask_align] = stackRegister_MA(mask_cell, [],[],out);
 imagesc(mask_align)
 
-% save mask_cell_shift_align.mat cell_mask_align_w_suite2p_2 out out2 out3
+cd C:\Users\lan\Documents\repos\inter\code\py_playground
+save mask_cell_shift_align.mat mask_align
 
 %%
 tt = log10(mask_align);
