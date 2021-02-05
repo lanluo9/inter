@@ -79,27 +79,37 @@ clear data_temp
 clear temp
 toc
 
-%%
+%% register btw data_avg (1 single frame, replicated twice) vs suite2p mean img
+
+% data_avg = mean(data, 3);
+select = 4;
+start_idx = select * 10000 + 1;
+stop_idx = select * 10000 + 500;
+data_avg = mean(data(:,:,start_idx:stop_idx),3);
+
+imagesc(data_avg);
+data_avg_stack = cat(3, data_avg, data_avg);
+
 cd C:\Users\lan\Documents\repos\inter\code\py_playground
 load suite2p_reg_mean_img.mat
-
-[out, data_reg] = stackRegister(data, reg_img_mean);    % out=shift
+[out, data_reg] = stackRegister(data_avg_stack, reg_img_mean);    % out=shift
 
 %%
 cd Z:\All_Staff\home\lan\Analysis\2P\200803_1322\200803_1322_runs-002
 load 200803_i1322_runs-002_mask_cell_addfake.mat
 
-cell_mask_orig = mask_np;
-[out2, cell_mask_align_w_suite2p] = stackRegister_MA(cell_mask_orig, [],[],out);  % add shift to cell mask
+% cell_mask_orig = mask_np;
+% [out2, cell_mask_align_w_suite2p] = stackRegister_MA(cell_mask_orig, [],[],out);  % add shift to cell mask
 
 
-[out3, cell_mask_align_w_suite2p_2] = stackRegister_MA(mask_cell, [],[],out);
-imagesc(cell_mask_align_w_suite2p_2)
+[out2, mask_align] = stackRegister_MA(mask_cell, [],[],out);
+imagesc(mask_align)
 
-save mask_cell_shift_align.mat cell_mask_align_w_suite2p_2 out out2 out3
+cd C:\Users\lan\Documents\repos\inter\code\py_playground
+save mask_cell_shift_align.mat mask_align
 
 %%
-tt = log10(cell_mask_align_w_suite2p_2);
+tt = log10(mask_align);
 histogram(tt(:),50)
 
 %%
@@ -111,7 +121,6 @@ imagesc(tt2); set(gcf, 'Position', get(0, 'Screensize'));
 
 % save mask_cell_shift_flat2.mat tt2
 
-%% register btw data_avg (1 single frame, replicated twice) vs suite2p mean img
 
 
 
