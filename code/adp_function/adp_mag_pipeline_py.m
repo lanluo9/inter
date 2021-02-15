@@ -121,14 +121,15 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+% von mises k upper bound is now 20
 
-% bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-% if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
-% else
+bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
+if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
+else
     cd(result_folder); nrun = 1000; save_flag = 1;
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); save_flag = 0;
-% end
-% sum(well_fit_cell)
+end
+sum(well_fit_cell) / length(well_fit_cell)
 
 %% fit tuning
 % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
