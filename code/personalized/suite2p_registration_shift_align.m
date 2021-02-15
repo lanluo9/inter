@@ -77,8 +77,8 @@ toc
 
 nep = floor(size(data,3)./10000);
 [n, n2] = subplotn(nep);
-figure('units','normalized','outerposition',[0 0 1 1]);
-for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
+% figure('units','normalized','outerposition',[0 0 1 1]);
+% for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
 select = 4;
 start_idx = select * 10000 + 1;
@@ -100,14 +100,14 @@ load 200803_i1322_runs-002_mask_cell_addfake.mat
 imagesc(mask_align)
 
 cd C:\Users\lan\Documents\repos\inter\code\py_playground
-save mask_cell_shift_align.mat mask_align
+save mask_cell_shift_align.mat mask_align out
 
 %%
 tt = log10(mask_align);
 histogram(tt(:),50)
 
 %%
-tt2 = cell_mask_align_w_suite2p_2;
+tt2 = mask_align;
 tt2(tt2<3) = nan;
 
 tt2(~isnan(tt2)) = 1;

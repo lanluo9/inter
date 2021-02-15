@@ -21,10 +21,10 @@ end
 t = squeeze(nanmean(squeeze(tc_trial_base(:,:,:)), 1)); 
 t_base = squeeze(nanmean(t(:,:), 1)); 
 alarm = (max(t_base) - min(t_base)) / min(t_base);
-if alarm >= 0.05; disp('trial base fluctuate too much!'); end
+if alarm >= 0.05; disp('trial baseline fluctuates too much!'); end
 % plot(t_base, 'k'); % saveas(gcf, ['trial base'], 'jpg'); close 
 
-tc_trial_base_avg = mean(tc_trial_base, 3);
+tc_trial_base_avg = nanmean(tc_trial_base, 3);
 dfof_align = zeros(ncell, ntrial, size(tc_aligned, 3));
 for icell = 1:ncell
 for itrial = 1:ntrial
