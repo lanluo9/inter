@@ -1,37 +1,37 @@
-% tt = mean(mean(trace_avg, 2),1)
+close all
+clear
+clc
+cd C:\Users\lan\Documents\repos\inter\mat
 
-% tt = cellfun(@mean, trace_avg);
-% t = squeeze(nanmean(tt, 2));
+dataset_list = struct;
+dataset_list.mouse = [1322,1322,1322, 1323,1323,1323, 1324,1324]; % i1324 200730 LI was given up
+dataset_list.date = [200803, 200804, 200806, ...
+                    200720, 200721, 200723, ...
+                    200728, 200729];
+dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
+dataset_list.areacode = {1,2,3, 1,2,3, 1,2};
 
-% tt = squeeze(sum(tc_align_ad,3));
+nset = length(dataset_list.date);
+result_folder = cell(nset, 1);
+for iset = 1 : nset
+    date = num2str(dataset_list.date(iset))
+    mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse]
+    area = dataset_list.area{1,iset}
+    areamousedate = [area '_' imouse '_' date];
+    result_prefix = 'C:\Users\lan\Documents\repos\inter\mat\';
+    result_folder{iset} = fullfile(result_prefix, areamousedate);
+end
 
-% tt = isnan(npSub_tc);
-% imagesc(tt)
+%% load 
 
-tt = isnan(dfof_align_ad);
-imshow3D(tt);
-set(gcf, 'Position', get(0, 'Screensize'));
-
-%%
-
-t = sum(nansum(dfof_align_ad,3),2);
-t = isnan(t);
-find(t)
-
-%%
-
-tt = squeeze(dfof_align_ad(1103,:,:));
-imagesc(tt)
-%%
-tt = squeeze(tc_align_ad(1103,:,:));
-imagesc(tt)
-
-%%
-
-t = squeeze(npSub_tc(:,1103));
-
-%%
-ttt = sum(npSub_tc,1);
-void_id = (ttt==0);
-tc_corrected = npSub_tc(:, ~void_id);
+set = struct;
+for iset = 1 : nset
+    cd(result_folder{iset});
+    set(iset).dfof = load('dfof.mat');
+    set(iset).trace = load('trace_aligned.mat');
+    
+    set(iset).cell_property = load('cell_property_loose.mat');
+%     set(iset).fit_bootstrap = load('fit_bootstrap_loose.mat');
+    set(iset).fit_tuning = load('fit_tuning_isi3.mat');
+end
 
