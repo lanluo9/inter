@@ -1,4 +1,4 @@
-function bwOut = imCellEditInteractive(fovImg, bwCell, zoomToAxis, cellRadius)
+function bwOut = imCellEditInteractiveLG_LL(fovImg, bwCell, zoomToAxis, cellRadius)
 %IMCELLEDITINTERACTIVE Add cells to a cell mask interactively
 %  BWOUT = IMCELLEDITINTERACTIVE(FOVIMG, BWCELL, ZOOMTOAXIS, CELLRADIUS)
 %
