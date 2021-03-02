@@ -38,7 +38,7 @@ cd(result_folder)
 cd C:\Users\lan\Documents\repos\inter\code\py_playground
 load f_neuron.mat
 npSub_tc = f_neuron';
-cd C:\Users\lan\Documents\repos\inter\mat\V1_i1322_200803_py
+cd C:\Users\lan\Documents\repos\inter\mat\V1_i1322_200803_py_subpil
 
 void_id = sum(npSub_tc,1)==0; % some neurons' tc is always 0, no idea why
 npSub_tc = npSub_tc(:, ~void_id);
@@ -123,12 +123,13 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 % von mises k upper bound is now 20
 
-bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
-else
-    cd(result_folder); nrun = 1000; save_flag = 1;
+% bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
+% if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
+% else
+%     cd(result_folder); 
+    nrun = 1000; save_flag = 1;
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); save_flag = 0;
-end
+% end
 sum(well_fit_cell) / length(well_fit_cell)
 
 %% fit tuning
