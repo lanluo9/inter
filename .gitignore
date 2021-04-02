@@ -5,3 +5,4 @@ debug.log
 f_neuron.mat
 npSub_tc_fake.mat
 tc_align_ad.mat
+trace_avg.mat

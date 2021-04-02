@@ -414,7 +414,7 @@ save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_
 clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_data_temp mask_exp data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
 
 % neuropil subtraction
-down = 5;
+down = 5; % down sampling
 sz = size(data_reg);
 data_tc = stackGetTimeCourses(data_reg, mask_cell);
 data_reg_down  = stackGroupProject(data_reg,down);

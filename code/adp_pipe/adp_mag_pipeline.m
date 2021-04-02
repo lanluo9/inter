@@ -23,9 +23,9 @@ iset
 save_flag = 0; % toggle this to save/skip all .mat creation below
 
 clear id_ad id_noad id_isi2 id_isi3 id_ori
-clear frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
+clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
 global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
-global frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
+global frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
 
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
@@ -54,7 +54,7 @@ id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
 
-trial_len_max = max(unique(diff(frame_ad)));
+trial_len_min = min(unique(diff(frame_ad)));
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); ori_seq(ori_seq == 180) = 0;
 ori_seq(end) = [];
