@@ -160,13 +160,6 @@ LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
 % trial type = [noad, 750, 250] x [ori 1-8]
 % take original OR dfof movie to average over reps of same trial type
 
-% % data_reg = ny * nx * nframe
-% npSub_tc = reshape(data_reg, [size(data_reg,1)*size(data_reg,2), size(data_reg,3)]);
-% clear data_reg
-% npSub_tc = npSub_tc'; % fake npSub_tc = nframe x npixel 
-% save('npSub_tc_fake.mat', 'npSub_tc', '-v7.3') % force save >2GB .mat
-tic; load npSub_tc_fake.mat; toc
-
 save_flag = 0; % toggle this to save/skip all .mat creation below
 clear id_ad id_noad id_isi2 id_isi3 id_ori
 clear frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
@@ -179,10 +172,19 @@ ll_fn = fullfile(fn_base, 'home\lan');
 data_fn = fullfile(ll_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
-[~, frame_rate, input_behav, info, ~] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+[frame_rate, input_behav, info, ~] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+
+% % data_reg = ny * nx * nframe
+% npSub_tc = reshape(data_reg, [size(data_reg,1)*size(data_reg,2), size(data_reg,3)]);
+% clear data_reg
+% npSub_tc = npSub_tc'; % fake npSub_tc = nframe x npixel 
+% save('npSub_tc_fake.mat', 'npSub_tc', '-v7.3') % force save >2GB .mat
 
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
+
+% npSub_tc = [];
+tic; load npSub_tc_fake.mat; toc
 
 ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps 
 % final trial discarded bc too few frames
@@ -229,14 +231,14 @@ clear tc_align_ad
 % save('trace_avg.mat', 'trace_avg', '-v7.3') % force save >2GB .mat
 % toc
 
-%%
 ny = 264; nx = 796; npix = ny*nx; % data = 264 x 796 x 100000
 tic
-fake_movie = reshape(trace_avg, [npix, nori*nisi*trial_len_min]);
+fake_movie = reshape(trace_avg, [npix, nori*size(trace_avg,3)*trial_len_min]);
 disp('first reshape')
 fake_movie = reshape(fake_movie, [ny, nx, size(fake_movie,2)]);
 disp('second reshape')
 toc
+size(fake_movie)
 
 tic
 save('fake_movie.mat', 'fake_movie', '-v7.3') % force save >2GB .mat
