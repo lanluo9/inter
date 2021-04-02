@@ -216,11 +216,14 @@ end
 tic
 tc_align_ad = align_tc(frame_ad, npSub_tc);
 toc
-save('tc_align_ad.mat', 'tc_align_ad', '-v7.3') % force save >2GB .mat
 
-% dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
+%%
+tic
+save('tc_align_ad.mat', 'tc_align_ad', '-v7.3') % force save >2GB .mat
+toc
+
 range_base = 1:3; range_resp = 9:12;
 
 tic
-[trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, save_flag);
+[trace_avg, trace_sem] = trace_grand_avg(tc_align_ad, save_flag);
 toc

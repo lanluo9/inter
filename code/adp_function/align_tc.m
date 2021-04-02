@@ -10,9 +10,7 @@ global ntrial ncell
 %     tc_align = aligned by adapter or target. ncell x ntrial x trial_len
 
 trial_len = diff(landmark);
-
-% tc_align = zeros(ncell, ntrial, max(trial_len));
-tc_align = pi*ones(ncell, ntrial, min(trial_len));
+tc_align = zeros(ncell, ntrial, min(trial_len));
 
 % for icell = 1:ncell
 %     npSub_tc_cell = npSub_tc(:,icell);
@@ -27,6 +25,7 @@ tc_align = pi*ones(ncell, ntrial, min(trial_len));
 % end
 
 for itrial = 1:ntrial
+    if mod(itrial,10) ~= 0; disp(itrial); end
     start_id = landmark(itrial);
     tc_align(:, itrial, :) = npSub_tc(start_id : (start_id + min(trial_len) - 1), :)';
 end

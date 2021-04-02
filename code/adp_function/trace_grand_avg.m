@@ -11,7 +11,9 @@ trace_sem = zeros(ncell, nori, length(id_isi3), trial_len_max);
 
 % for icell = 1 : ncell    
 for iori = 1 : nori 
+    disp(iori)
     for iisi =  1 : length(id_isi3) 
+        disp(iisi)
         idx = intersect(id_ori{iori}, id_isi3{iisi}); 
         temp = squeeze(dfof_align_ad(:, idx, 1:trial_len_max));
         trace_avg(:, iori, iisi, :) = nanmean(temp, 1);
