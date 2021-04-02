@@ -12,18 +12,21 @@ data_fn = fullfile(user_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(user_fn, 'Analysis\2P');
 
+mouse_mat = strvcat('i674', 'i689', 'i696','i684','i711','i712','i574','i720','i738','i739','i745','i746');
+date_mat = strvcat('170324', '170323', '170323','170327','170503','170503','170510','170808','170810','170811','170816','170826');
+
 dataset_list = struct;
-dataset_list.mouse = [1322,1322,1322, 1323,1323,1323, 1324,1324]; % i1324 200730 LI was given up
-dataset_list.date = [200803, 200804, 200806,...
-                    200720, 200721, 200723, ...
-                    200728, 200729];
-dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
+dataset_list.mouse = [674,689,696,684,711,   712,574,720,738,739,   745,746]; 
+dataset_list.date = [170324,170323,170323,170327,170503,170503,170510,170808,170810,170811,170816,170826];
+dataset_list.area = {'V1','V1','V1','V1','V1',...
+                    'V1','V1','V1','V1','V1',...
+                    'V1','V1',};
 
 %% load [xls, timecourse, stim]
 
 for iset = 1 %: length(dataset_list.date)
 iset
-save_flag = 0; % toggle this to save/skip all .mat creation below
+save_flag = 1; % toggle this to save/skip all .mat creation below
 
 clear id_ad id_noad id_isi2 id_isi3 id_ori
 clear frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list

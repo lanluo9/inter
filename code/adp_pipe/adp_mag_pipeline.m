@@ -94,7 +94,7 @@ range_base = 1:3; range_resp = 9:12;
 if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
 
 % trace = ncell x nori x nisi3 [noad 750 250]
-[trace_avg, trace_sem]= trace_grand_avg(dfof_align_ad, save_flag);
+[trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, save_flag);
 
 %% visually driven cells
 % cells responsive to ad / noad tg (all oris)

@@ -4,10 +4,10 @@ clear
 close all
 clc
 
-date = '210325'; 
-time = '1315';
-ImgFolder = '001';
-mouse = '1338';
+date = '210401'; 
+time = '1147';
+ImgFolder = '002';
+mouse = '33303';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -18,6 +18,8 @@ run_str = ['runs-' ImgFolder(1,:)];
 if nrun>1
     run_str = [run_str '-' ImgFolder(nrun,:)];
 end
+
+% disp()
 
 %%
 disp('start quickRet')
