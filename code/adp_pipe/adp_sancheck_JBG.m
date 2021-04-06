@@ -36,7 +36,18 @@ global frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
 area = dataset_list.area{1,iset}
-[npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+
+CD = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lindsey\Analysis\2P\' date '_' imouse]
+t = ls(CD); CD2 = t(end,:); CD = [CD, '\', CD2]; cd(CD)
+ls *.mat
+temp = load([CD2 '_TCs.mat']); npSub_tc = temp.npSub_tc; clear temp
+
+fName = fullfile(mworks_fn, ['data-' imouse '-' date '-' num2str(time) '.mat']);
+temp = load(fName); % load behavior data "input"
+input_behav = temp.input; clear temp
+
+%%
+[~, frame_rate, input_behav, ~, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
 cd(result_folder)
 
 %% params & indexing trials

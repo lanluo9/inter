@@ -243,3 +243,10 @@ size(fake_movie)
 tic
 save('fake_movie.mat', 'fake_movie', '-v7.3') % force save >2GB .mat
 toc
+
+%%
+
+h5create('fake_movie.h5','/data',[ny, nx, size(fake_movie,3)])
+h5write('fake_movie.h5', '/data', fake_movie)
+h5disp('fake_movie.h5')
+

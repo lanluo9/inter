@@ -2,10 +2,10 @@
 clear all
 clc
 
-date = '200803';
-mouse = 'i1322';
-ImgFolder = strvcat('002');
-time = strvcat('1140');
+date = '210405';
+mouse = 'i33303';
+ImgFolder = strvcat('004');
+time = strvcat('1250');
 frame_rate = 30;
 
 doFromRef = 0;
@@ -91,7 +91,7 @@ nep = floor(size(data,3)./10000);
 figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
-select = 4;
+select = 3;
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);

@@ -1,5 +1,5 @@
-% function [npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area)
-function [frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area)
+function [npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area)
+% function [frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area)
 
 % input: 
 %     "data_fn" lab note xls
@@ -32,7 +32,7 @@ CD = fullfile(data_fn, imouse, date, ImgFolder); cd(CD);
 imgMatFile = [ImgFolder '_000_000.mat'];
 load(imgMatFile); % load 2P img metadata "info"
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
-% load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); 
+load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); 
 % fix bug later: retinotopy folder in Analysis naming convention should adhere to tc folder
 
 result_prefix = 'C:\Users\lan\Documents\repos\inter\mat\';
