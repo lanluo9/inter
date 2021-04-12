@@ -51,7 +51,10 @@ cd(result_folder);
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
 
-ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps 
+ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps
+if ntrial == 0
+    ntrial = min(input_behav.trialsSinceReset) - 1;
+end
 % final trial discarded bc too few frames
 [nframe, ncell] = size(npSub_tc);
 
@@ -97,8 +100,8 @@ t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t
 t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
 range = 50; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
-% if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
-% close
+if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
+close
 
 range_base = 1:3; range_resp = 10:13;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
@@ -135,9 +138,9 @@ bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
 if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
 else
     cd(result_folder); nrun = 1000; save_flag = 1;
-    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); save_flag = 0;
+    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
 end
-% sum(well_fit_cell)
+sum(well_fit_cell), length(well_fit_cell)
 
 %% fit tuning
 % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
