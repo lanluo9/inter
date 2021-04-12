@@ -211,20 +211,12 @@ cd(analysis_dir)
 saveas(gcf, ['find_ca_latency.jpg'])
 close
 
-data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:50)); grid on; grid minor
+data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:40)); grid on; grid minor
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['find_ca_latency_zoomin.jpg'])
 save find_ca_latency.mat data_trial_zoom_in data_trial
 disp('now manually update ca latency and adapted baseline window in next section')
 disp(' ')
-
-% %%
-% 
-% 
-% tt = tc_screen(cStart(1) : all_trial_len - mod(all_trial_len-cStart(1)+1, pretend_len));
-% temp = reshape(tt, [pretend_len, length(tt)/pretend_len]);
-% figure
-% plot(mean(temp, 2))
 
 %% calculate response
 % see data_trial_zoom_in
@@ -234,37 +226,23 @@ disp(' ')
 % data_adapter = frame #8-11
 % data_f2 (baseline after adaptation) = frame #14-16
 
-ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
+ca_latency = 5;
+% ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
 window_len = 3;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
 for itrial = 1:nTrials
-%     if ~isnan(cStart(itrial))
-        data_f(:,:,itrial) = mean(data_reg(:,:,cStart(itrial)-10:cStart(itrial)-1),3);
+        data_f(:,:,itrial) = mean(data_reg(:,:,...
+            cStart(itrial) - 10 : cStart(itrial) - 1),3);
+        
         data_adapter(:,:,itrial) = mean(data_reg(:,:,...
             cStimOn(itrial) + ca_latency : cStimOn(itrial) + ca_latency + window_len),3);
         
-%         if cStimOn(itrial) >= cStart(itrial) 
         data_f2(:,:,itrial) = mean(data_reg(:,:,...
-            cStimOn(itrial) + 14 :cStimOn(itrial) + 16),3);
-%         else
-%             data_base2(:,:,itrial) = nan(sz(1),sz(2));
-%         end
-%     else
-%         data_bef(:,:,itrial) = nan(sz(1),sz(2));
-%         data_adapter(:,:,itrial) = nan(sz(1),sz(2));
-% %         data_base2(:,:,itrial) = nan(sz(1),sz(2));
-%     end
-    
-%     if ~isnan(cTarget(itrial))
-%         if cTarget(itrial)+3 < sz(3)
-        data_targ(:,:,itrial) = mean(data_reg(:,:,cTarget(itrial)+ca_latency:cTarget(itrial)+ca_latency+window_len),3);
-%         else
-%             data_targ(:,:,itrial) = nan(sz(1),sz(2));
-%         end
-%     else
-%         data_targ(:,:,itrial) = nan(sz(1),sz(2));
-%     end
+            cTarget(itrial) - 3 :cTarget(itrial) - 1),3); % cTarget(itrial) + 14 :cTarget(itrial) + 16),3);
+
+        data_targ(:,:,itrial) = mean(data_reg(:,:,...
+            cTarget(itrial) + ca_latency : cTarget(itrial) + ca_latency + window_len),3);
 end
 
 data_adapter_dfof = (data_adapter-data_f)./data_f;

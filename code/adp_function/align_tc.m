@@ -25,7 +25,7 @@ tc_align = zeros(ncell, ntrial, min(trial_len));
 % end
 
 for itrial = 1:ntrial
-    if mod(itrial,10) ~= 0; disp([num2str(itrial),' trial out of ', num2str(ntrial)]); end
+%     if mod(itrial,10) == 0; disp([num2str(itrial),' trial out of ', num2str(ntrial)]); end
     start_id = landmark(itrial);
     tc_align(:, itrial, :) = npSub_tc(start_id : (start_id + min(trial_len) - 1), :)';
 end

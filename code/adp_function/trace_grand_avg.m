@@ -23,4 +23,4 @@ for iori = 1 : nori
 end
 % end
 
-% if save_flag; save trace_aligned.mat trace_avg trace_sem; end
+if save_flag; save trace_aligned.mat trace_avg trace_sem; end
