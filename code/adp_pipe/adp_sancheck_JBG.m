@@ -24,7 +24,7 @@ dataset_list.area = {'V1','V1','V1','V1','V1',...
 
 %% load [xls, timecourse, stim]
 
-for iset = 2 : length(dataset_list.date)
+for iset = 1 : length(dataset_list.date)
 iset
 save_flag = 1; % toggle this to save/skip all .mat creation below
 
@@ -51,11 +51,12 @@ cd(result_folder);
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
 
-ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps
-if ntrial == 0
-    ntrial = min(input_behav.trialsSinceReset) - 1;
-end
-% final trial discarded bc too few frames
+% ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps
+% if ntrial == 0
+%     ntrial = min(input_behav.trialsSinceReset) - 1;
+% end
+
+ntrial = length(input_behav.cStimOn) - 1 % final trial discarded bc too few frames
 [nframe, ncell] = size(npSub_tc);
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
