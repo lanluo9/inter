@@ -12,9 +12,9 @@ trace_sem = zeros(ncell, nori, length(id_isi3), trial_len_min);
 
 % for icell = 1 : ncell    
 for iori = 1 : nori 
-    disp(['ori # ', num2str(iori), ' of 8'])
+    % disp(['ori # ', num2str(iori), ' of 8'])
     for iisi =  1 : length(id_isi3) 
-        disp(['  isi # ', num2str(iisi), ' of 3'])
+        % disp(['  isi # ', num2str(iisi), ' of 3'])
         idx = intersect(id_ori{iori}, id_isi3{iisi}); 
         temp = squeeze(dfof_align_ad(:, idx, 1:trial_len_min));
         trace_avg(:, iori, iisi, :) = squeeze(nanmean(temp, 2));

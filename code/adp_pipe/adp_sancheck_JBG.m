@@ -37,7 +37,7 @@ date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
 area = dataset_list.area{1,iset}
 
-CD = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lindsey\Analysis\2P\' date '_' imouse]
+CD = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lindsey\Analysis\2P\' date '_' imouse];
 t = ls(CD); CD2 = t(end,:); CD = [CD, '\', CD2]; cd(CD)
 % ls *.mat
 temp = load([CD2 '_TCs.mat']); npSub_tc = temp.npSub_tc; clear temp
@@ -126,8 +126,7 @@ sig_alpha = 0.01;
 vis_cell_ad = logical(sig_vis_ad');
 vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 
-% sum(vis_cell_ad), length(vis_cell_ad)
-% sum(vis_cell_noad_tg), length(vis_cell_noad_tg)
+sum(vis_cell_ad), sum(vis_cell_noad_tg), length(vis_cell_noad_tg)
 % find(vis_cell_ad==0) % not vis driven by ad
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
 % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
@@ -135,12 +134,12 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
-bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
-if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
-else
+% bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
+% if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
+% else
     cd(result_folder); nrun = 1000; save_flag = 1;
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-end
+% end
 sum(well_fit_cell), length(well_fit_cell)
 
 %% fit tuning
