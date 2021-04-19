@@ -92,17 +92,15 @@ range_base = 1:3; range_resp = 9:12;
 sig_alpha = 0.01; resp_threshold = 0.1;
 [dfof_tg, dfof_tg_sem, dfof_tg_std, ori_driven, vis_driven] = ...
     dfof_tg_vis_ori_driven_ohki(dfof_align_tg, sig_alpha, resp_threshold);
-
-% subplot(1,2,1); imagesc(ori_driven)
-% subplot(1,2,2); imagesc(ori_driven(vis_driven>0, :))
-% t = sum(ori_driven,1); bar(t)
-
-vis_driven_cell = vis_driven>0;
-sum(vis_driven_cell)/length(vis_driven_cell)
-ori_driven_cell = vis_driven>0 & sum(ori_driven,2)>0;
-sum(ori_driven_cell)/length(ori_driven_cell)
-
 if save_flag; save dfof_tg.mat dfof_tg dfof_tg_sem dfof_tg_std; ...
-    save cell_property.mat ori_driven ori_driven_cell vis_driven vis_driven_cell; end 
+    save cell_property.mat ori_driven vis_driven; end 
+
+sum(vis_driven)/length(vis_driven)
+subplot(1,2,1); imagesc(ori_driven)
+subplot(1,2,2); imagesc(ori_driven(vis_driven>0, :))
+
+vis_driven_cell = 
+ori_driven_cell = vis_driven>0 & sum(ori_driven,2)>0;
+
 
 end
