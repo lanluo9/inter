@@ -28,8 +28,8 @@ for icell = 1 : ncell
         if dfof_tg_avg(icell, iori, 1) < resp_threshold; sig_ori_driven(icell, iori) = 0; end
         ori_resp = [ori_resp; resp_cond{icell, iori, 1}];
         ori_list = [ori_list; iori * ones(length(resp_cond{icell, iori, 1}))];
-        baseline = [baseline; (base_cond{icell, iori, 1})];
     end
+    baseline = [baseline; (base_cond{icell, :, 1})];
 end
 
 end
