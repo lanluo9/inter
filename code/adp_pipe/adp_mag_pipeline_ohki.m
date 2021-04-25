@@ -20,7 +20,7 @@ dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
 
 for iset = 1 : length(dataset_list.date)
 iset
-save_flag = 1; % toggle this to save/skip all .mat creation below
+save_flag = 0; % toggle this to save/skip all .mat creation below
 
 clear id_ad id_noad id_isi2 id_isi3 id_ori
 clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
@@ -77,32 +77,37 @@ dfof_align_tg = dfof_by_trial_base_ohki(tc_align_tg, npSub_tc, frame_ad);
 %% set resp window
 % find base window & resp window
 
-t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t(:,:), 1)); 
-t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
-range = 50; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
-grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
-if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end; close
+% t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t(:,:), 1)); 
+% t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
+% range = 50; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
+% grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
+% if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end; close
 
 range_base = 1:3; range_resp = 9:12;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% response to 8 ori targets. visually-driven & ori-driven cell
-% dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
+% % dfof_ad = ncell x 1. dfof_tg = ncell x nori x nisi
+% 
+% sig_alpha = 0.01; resp_threshold = 0.1;
+% [dfof_tg, dfof_tg_sem, dfof_tg_std, ori_driven, vis_driven] = ...
+%     dfof_tg_vis_ori_driven_ohki(dfof_align_tg, sig_alpha, resp_threshold);
+% 
+% % subplot(1,2,1); imagesc(ori_driven)
+% % subplot(1,2,2); imagesc(ori_driven(vis_driven>0, :))
+% % t = sum(ori_driven,1); bar(t)
+% 
+% vis_driven_cell = vis_driven>0;
+% sum(vis_driven_cell)/length(vis_driven_cell)
+% ori_driven_cell = vis_driven>0 & sum(ori_driven,2)>0;
+% sum(ori_driven_cell)/length(ori_driven_cell)
+% 
+% if save_flag; save dfof_tg.mat dfof_tg dfof_tg_sem dfof_tg_std; ...
+%     save cell_property.mat ori_driven ori_driven_cell vis_driven vis_driven_cell; end 
 
-sig_alpha = 0.01; resp_threshold = 0.1;
-[dfof_tg, dfof_tg_sem, dfof_tg_std, ori_driven, vis_driven] = ...
-    dfof_tg_vis_ori_driven_ohki(dfof_align_tg, sig_alpha, resp_threshold);
+%% response to no-ad targets, z-scored for each cell
 
-% subplot(1,2,1); imagesc(ori_driven)
-% subplot(1,2,2); imagesc(ori_driven(vis_driven>0, :))
-% t = sum(ori_driven,1); bar(t)
-
-vis_driven_cell = vis_driven>0;
-sum(vis_driven_cell)/length(vis_driven_cell)
-ori_driven_cell = vis_driven>0 & sum(ori_driven,2)>0;
-sum(ori_driven_cell)/length(ori_driven_cell)
-
-if save_flag; save dfof_tg.mat dfof_tg dfof_tg_sem dfof_tg_std; ...
-    save cell_property.mat ori_driven ori_driven_cell vis_driven vis_driven_cell; end 
+save_flag = 1;
+[dfof_tg_noad, z_score] = dfof_tg_noad_zscore_ohki(dfof_align_tg, save_flag);
 
 end

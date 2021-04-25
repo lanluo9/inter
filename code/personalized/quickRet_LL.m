@@ -4,9 +4,9 @@ clear
 close all
 clc
 
-date = '210419'; 
-time = '1309';
-ImgFolder = '004';
+date = '210422'; 
+time = '1222';
+ImgFolder = '003';
 mouse = '33303';
 
 imouse = ['i' mouse];

@@ -50,7 +50,7 @@ param.b0 = b0;
 
 step = 0;
 steps = (m+1)*K;
-h = waitbar(0, 'Now analyzing...');
+% h = waitbar(0, 'Now analyzing...');
 
 % set the filter bank
 for ii = 0: m
@@ -86,7 +86,7 @@ for ii = 0: m
         end
         
         step = step + 1;
-        waitbar(step / steps)
+%         waitbar(step / steps)
         res(ii+1, ll+1).even = even;
         res(ii+1, ll+1).odd  = odd;
     end
@@ -94,11 +94,11 @@ end
 % toc
 param.m = param.m+1;
 
-close(h);
+% close(h);
 
 
 %% reconstructioin
-%{
+% %{
 h = waitbar(0, 'Now reconstructing...');
 
 tmpImage = zeros(imageSize);
