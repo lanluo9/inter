@@ -472,7 +472,7 @@ end
 
 % save R2_SSE_area.mat area R2 SSE
 
-%% SSE & R2 of all by area
+%% SSE & R2 of all cells by area
 area = []; 
 R2 = []; SSE = [];
 
