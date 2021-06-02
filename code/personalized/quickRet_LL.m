@@ -4,10 +4,10 @@ clear
 close all
 clc
 
-date = '210506'; 
-time = '1219';
-ImgFolder = '003';
-mouse = '33303';
+date = '210602'; 
+time = '1114';
+ImgFolder = '001';
+mouse = '1338';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
