@@ -3,7 +3,7 @@ clear all
 clc
 
 master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
-irow = 10;
+irow = 11;
 mouse = master_xls.mouse(irow);
 imouse = ['i', num2str(mouse)];
 date = num2str(master_xls.date(irow));
@@ -22,7 +22,7 @@ ref = strvcat('001'); % what is ref?
 nrun = size(ImgFolder,1);
 run_str = catRunName(ImgFolder, nrun);
 
-%% load and register
+% %% load and register
 tic
 data = [];
 clear temp
@@ -80,21 +80,7 @@ clear data_temp
 clear temp
 toc
 
-% %% For behavior experiments
-% % Plot outcome by trial number
-% SIx = strcmp(input.trialOutcomeCell, 'success');
-% MIx = strcmp(input.trialOutcomeCell, 'ignore');
-% 
-% figure;
-% plot(smooth(SIx,10));
-% hold on
-% plot(smooth(MIx,10));
-% 
-% % Crop data and input struct
-% input = trialChopper(input,[1 200]);
-% data = data(:,:,input.counterValues{1}(1):input.counterValues{end}(end));
-
-%% Choose register interval
+% %% Choose register interval
 nep = floor(size(data,3)./10000);
 [n, n2] = subplotn(nep);
 figure('units','normalized','outerposition',[0 0 1 1]);
@@ -132,7 +118,7 @@ else
 end
 clear data out
 
-%% test stability
+% %% test stability
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data_reg(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_byFrame.pdf']),'-dpdf', '-bestfit')
@@ -141,14 +127,17 @@ figure; imagesq(mean(data_reg(:,:,1:10000),3)); truesize;
 set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_avg.pdf']),'-dpdf', '-bestfit')
 
-%% find activated cells
+% %% find activated cells
 
 % tCyc = cell2mat(input.tCyclesOn);
 cStart = cell2mat(input.cStimOn); % same as cStimOn
 cStimOn = cell2mat(input.cStimOn);
 cStimOff = cell2mat(input.cStimOff);
 cTarget = celleqel2mat_padded(input.cTargetOn); cTarget = int64(cTarget);
-nTrials = input.trialsSinceReset; % 464 = 32 types * 14.5 reps
+try nTrials = input.trialsSinceReset % 464 = 32 types * 14.5 reps
+catch
+    nTrials = input.trialSinceReset
+end
 sz = size(data_reg); % [y pixel * x pixel * nframe]
 
 data_f = zeros(sz(1),sz(2),nTrials);
@@ -156,48 +145,15 @@ data_adapter = zeros(sz(1),sz(2),nTrials);
 data_f2 = zeros(sz(1),sz(2),nTrials);
 data_targ = zeros(sz(1),sz(2),nTrials);
 
-%% trial design
+% %% trial design
 unique(cStimOff - cStimOn) % adapter = 3-4 frame. rounded from 100 ms?
 unique(cTarget - cStimOff) % ISI = 8 or 22-23 frame. rounded from 250? or 750 ms
-unique(cTarget - cStimOn)
-% target: 3-4 frame too
+unique(cTarget - cStimOn) % target: 3-4 frame too
 
-% % index2 = structfun(@(x) any(contains(x, 'Targ')), input);  sum(index2)
-% tt = fieldnames(input)
-% index = cellfun(@(x) any(contains(x, 'targ')),tt); sum(index)
-% id = find(index > 0);
-% for i = 1 : length(id)
-%     fprintf(['input.', tt{id(i)}])
-%     disp(' ')
-% end
-% 
-% input.cTargetOn 
-% % input.tSoundTargetAmplitude 
-% % input.doLinearTargetSpacing 
-% % input.soundTargetAmplitude 
-% % input.soundTargetStepsPerOctave 
-% input.block2TargetOnTimeMs % 100 ms -> thus also 3-4 frames
-% % input.block2SoundTargetAmplitude 
-% % input.block2SoundTargetStepsPerOctave 
-% input.doCustomTargetTime % 0
-% input.targetStimOnMs
-% input.targetOnTimeMs % 100 ms
+trial_len = diff(cStart); unique(trial_len)
+% histogram(trial_len)
 
-% %%
-% 
-trial_len = diff(cStart);
-unique(trial_len)
-histogram(trial_len)
-% 
-% pretend_len = 207;
-% tt = data_reg(:,:, 1 : sz(3) - mod(sz(3), pretend_len));
-% t = sz(3) - mod(sz(3), pretend_len);
-% tt = reshape(tt, [sz(1)*sz(2), pretend_len, t/pretend_len]);
-% tt_avg = mean(tt, 3);
-% 
-% imagesc(tt_avg(1:1000, :))
-
-%% determine ca signal latency (around 8 frames for this session)
+% %% determine ca signal latency (around 8 frames for this session)
 
 tc_screen = mean(mean(data_reg,1),2);
 tc_screen = squeeze(tc_screen);
@@ -235,8 +191,8 @@ disp(' ')
 % data_adapter = frame #8-11
 % data_f2 (baseline after adaptation) = frame #14-16
 
-ca_latency = 5;
-% ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
+% ca_latency = 5;
+ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
 window_len = 3;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
@@ -283,7 +239,7 @@ data_targ_dfof_fake = (data_targ-data_f)./data_f;
 % % input.block2GratingMaxDirectionStepDeg 
 % % input.block2GratingDirectionStepsPerOctave 
 
-%% plot response
+% %% plot response
 targCon = celleqel2mat_padded(input.tGratingContrast);
 unique(targCon) % target contrast 1
 if input.doRandCon
@@ -368,7 +324,7 @@ title('data dfof max')
 
 data_dfof = cat(3,data_dfof, data_dfof_max);
 
-%% cell segmentation 
+% %% cell segmentation 
 mask_exp = zeros(sz(1),sz(2));
 mask_all = zeros(sz(1), sz(2));
 mask_data = data_dfof;
@@ -395,7 +351,7 @@ saveas(gcf, ['mask_cell_addfake.jpg'])
 % bwout = imCellEditInteractive(data_dfof_max);
 % mask_cell = bwlabel(bwout);
 
-%% neuropil mask and subtraction
+% %% neuropil mask and subtraction
 mask_np = imCellNeuropil(mask_cell, 3, 5);
 save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_mask_cell_addfake.mat']), 'data_dfof', 'mask_cell', 'mask_np')
 clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_data_temp mask_exp data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
