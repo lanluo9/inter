@@ -2,25 +2,29 @@
 clear all
 clc
 
-master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
-irow = 10;
-mouse = master_xls.mouse(irow);
-imouse = ['i', num2str(mouse)];
-date = num2str(master_xls.date(irow));
-ImgFolder = master_xls.num(irow); ImgFolder = ImgFolder{1};
+date = '201015';
+mouse = 'i1328'; imouse = mouse;
+ImgFolder = '004';
 
-fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
-xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
+fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
+ll_fn = fullfile(fn_base, 'home\lan'); 
+data_fn = fullfile(ll_fn, 'Data\2P_images');
+
+xls_dir = fullfile(data_fn, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx'); clear dataset_meta
 dataset_meta = readtable(xls_file.name); 
-idx = find(all(ismember(cell2mat(dataset_meta.(1)),[ImgFolder,'_000_000']),2));
-time = num2str(dataset_meta.(8)(idx));
+
+index = find([C{:}] == 5);
+idx = find(ImgFolder)
+time = dataset_meta.(8)(end);
+% time = strvcat('1206');
 frame_rate = 30;
 
 doFromRef = 0;
 ref = strvcat('001'); % what is ref?
 nrun = size(ImgFolder,1);
 run_str = catRunName(ImgFolder, nrun);
+LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
 
 %% load and register
 tic
@@ -29,13 +33,12 @@ clear temp
 trial_n = [];
 offset = 0;
 for irun = 1:nrun
-    LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
-    CD = [LL_base '\Data\2P_images\' imouse '\' date '\' ImgFolder(irun,:)];
+    CD = [LL_base '\Data\2P_images\' mouse '\' date '\' ImgFolder(irun,:)];
 %     CD = [LL_base '\Data\2P_images\' date '_' mouse '\' ImgFolder(irun,:)];
     cd(CD);
     imgMatFile = [ImgFolder(irun,:) '_000_000.mat'];
     load(imgMatFile);
-    fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' imouse '-' date '-' time(irun,:) '.mat'];
+    fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' mouse '-' date '-' time(irun,:) '.mat'];
     load(fName);
     
     temp(irun) = input;
@@ -107,9 +110,9 @@ data_avg = mean(data(:,:,start_idx:stop_idx),3);
 
 %% Register data
 
-if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
-    load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'input')
+if exist(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str]))
+    load(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_reg_shifts.mat']))
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_input.mat']), 'input')
     [outs, data_reg]=stackRegister_MA(double(data),[],[],out);
     clear out outs
 elseif doFromRef
@@ -117,29 +120,29 @@ elseif doFromRef
     if size(ref,1)>1
         ref_str = [ref_str '-' ref(size(ref,1),:)];
     end
-    load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' ref_str], [date '_' imouse '_' ref_str '_reg_shifts.mat']))
+    load(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' ref_str], [date '_' mouse '_' ref_str '_reg_shifts.mat']))
     [out, data_reg] = stackRegister(data,data_avg);
-    mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
+    mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str]))
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
     %load(fullfile(LG_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' ref_str], [date '_' mouse '_' ref_str '_mask_cell.mat']))
     %load(fullfile(LG_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' ref_str], [date '_' mouse '_' ref_str '_trialData.mat']))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'input')
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_input.mat']), 'input')
 else
     tic; [out, data_reg] = stackRegister(data,data_avg); toc;
-    mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'input')
+    mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str]))
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_input.mat']), 'input')
 end
 clear data out
 
 %% test stability
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data_reg(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 set(gcf, 'Position', get(0, 'Screensize'));
-print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_byFrame.pdf']),'-dpdf', '-bestfit')
+print(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_FOV_byFrame.pdf']),'-dpdf', '-bestfit')
 
 figure; imagesq(mean(data_reg(:,:,1:10000),3)); truesize;
 set(gcf, 'Position', get(0, 'Screensize'));
-print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_avg.pdf']),'-dpdf', '-bestfit')
+print(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_FOV_avg.pdf']),'-dpdf', '-bestfit')
 
 %% find activated cells
 
@@ -215,7 +218,7 @@ end
 
 plot(mean(data_trial, 2))
 set(gcf, 'Position', get(0, 'Screensize'));
-analysis_dir = fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]);
+analysis_dir = fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str]);
 cd(analysis_dir)
 saveas(gcf, ['find_ca_latency.jpg'])
 close
@@ -397,7 +400,7 @@ saveas(gcf, ['mask_cell_addfake.jpg'])
 
 %% neuropil mask and subtraction
 mask_np = imCellNeuropil(mask_cell, 3, 5);
-save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_mask_cell_addfake.mat']), 'data_dfof', 'mask_cell', 'mask_np')
+save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_mask_cell_addfake.mat']), 'data_dfof', 'mask_cell', 'mask_np')
 clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_data_temp mask_exp data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
 
 % neuropil subtraction
@@ -428,6 +431,6 @@ np_w = 0.01*ind;
 npSub_tc = data_tc-bsxfun(@times,tcRemoveDC(np_tc),np_w);
 clear data_reg data_reg_down
 
-save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_TCs_addfake.mat']), 'data_tc', 'np_tc', 'npSub_tc')
+save(fullfile(LL_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_TCs_addfake.mat']), 'data_tc', 'np_tc', 'npSub_tc')
 clear data_tc data_tc_down np_tc np_tc_down mask_np mask_cell
 disp('TC extraction complete')

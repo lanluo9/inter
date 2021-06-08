@@ -4,10 +4,10 @@ clear
 close all
 clc
 
-date = '210602'; 
-time = '1114';
+date = '210603'; 
+time = '1150';
 ImgFolder = '001';
-mouse = '1338';
+mouse = '33303';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -59,7 +59,7 @@ irun = 1;
 %     fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\Behavior\Data\data-' mouse '-' date '-' time(irun,:) '.mat'];
     fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\Behavior\Data\data-i' mouse '-' date '-' time(irun,:) '.mat'];    
     end
-    
+        
     load(fName);
     expt_input = input;
     temp(irun) = expt_input;
