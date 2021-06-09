@@ -572,6 +572,7 @@ cd C:\Users\lan\Documents\repos\inter\plot\
 area_merge = []; vis = []; well_fit = []; ori_perc_all = [];
 R2 = []; SSE = []; sharp = [];
 ori_pref = []; ori_orth = []; dfof_pref = []; dfof_orth = []; dfof_pref_avg = []; dfof_pref_std = [];
+dfof_tg_ori = [];
 ori_round_to = 0 : 22.5 : 157.5;
 
 for iset = 1 : nset
@@ -598,6 +599,10 @@ for iset = 1 : nset
     tt = set(iset).fit_tuning.fit_param(:, end-1, 1);
     SSE = [SSE; tt];
     
+    temp = squeeze(set(iset).dfof.dfof_tg(:, :, 1));
+    temp = round(temp * 1000); temp(temp<0) = 0;
+    dfof_tg_ori = [dfof_tg_ori; temp]; clear temp
+    
     temp = set(iset).cell_property.ori_pref(:, 1);
     temp = interp1(ori_round_to,ori_round_to,temp, 'nearest','extrap');
     ori_pref = [ori_pref; temp];
@@ -622,6 +627,7 @@ for iset = 1 : nset
         dfof_pref_std_cell = set(iset).dfof.dfof_tg_std(icell, ori_pref_idx, 1);
         dfof_pref_std = [dfof_pref_std; dfof_pref_std_cell];
     end
+    
 end
 OSI = (dfof_pref - dfof_orth) ./ (dfof_pref + dfof_orth); % OSI = diff(pref, ortho) / sum(pref, ortho) 
 coeff_var = dfof_pref_std ./ dfof_pref_avg;
@@ -630,4 +636,5 @@ coeff_var = dfof_pref_std ./ dfof_pref_avg;
 % ori_perc_mat = 'C:\Users\lan\Documents\repos\inter\plot\CV SNR OSI R2 ori_perc by area - why HVA lack well fit\ori_perc_all_area.mat'
 % load(ori_perc_mat)
 
-save corr_well_fit_HVA_rerun.mat area_merge vis well_fit ori_perc_all R2 SSE sharp OSI coeff_var
+save corr_well_fit_HVA_w_cirvar.mat area_merge vis well_fit ori_perc_all ...
+    R2 SSE sharp OSI coeff_var dfof_tg_ori
