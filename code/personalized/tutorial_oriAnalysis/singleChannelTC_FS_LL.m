@@ -352,7 +352,7 @@ saveas(gcf, ['mask_cell_addfake.jpg'])
 % bwout = imCellEditInteractive(data_dfof_max);
 % mask_cell = bwlabel(bwout);
 
-% %% neuropil mask and subtraction
+%% neuropil mask and subtraction
 mask_np = imCellNeuropil(mask_cell, 3, 5);
 save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_mask_cell_addfake.mat']), 'data_dfof', 'mask_cell', 'mask_np')
 clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_data_temp mask_exp data_base data_base_dfof data_targ data_targ_dfof data_f data_base2 data_base2_dfof data_dfof_dir_all data_dfof_max data_dfof_targ data_avg data_dfof2_dir data_dfof_dir 
