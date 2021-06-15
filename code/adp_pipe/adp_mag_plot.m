@@ -557,7 +557,7 @@ end
 set = struct;
 for iset = 1 : nset
     cd(result_folder{iset});
-    set(iset).dfof = load('dfof.mat');
+    set(iset).dfof = load('dfof.mat');input.cStimOneOn
     set(iset).trace = load('trace_aligned.mat');
     
     set(iset).cell_property = load('cell_property_loose.mat');
