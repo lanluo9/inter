@@ -3,7 +3,7 @@ clear all
 clc
 
 master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
-irow = 14;
+irow = 15;
 mouse = master_xls.mouse(irow);
 imouse = ['i', num2str(mouse)];
 date = num2str(master_xls.date(irow));
@@ -88,7 +88,7 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
 %%
-select = 4;
+select = 5;
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
