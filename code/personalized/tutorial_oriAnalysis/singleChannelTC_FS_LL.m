@@ -193,8 +193,8 @@ disp(' ')
 % data_adapter = frame #8-11
 % data_f2 (baseline after adaptation) = frame #14-16
 
-% ca_latency = 5;
-ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
+% ca_latency = 5 or 8;
+ca_latency = 7; % = x-1. stim onset frame 1 -> signal received frame x
 window_len = 3;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
