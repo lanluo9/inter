@@ -3,7 +3,8 @@ clear all
 clc
 
 master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
-irow = 15;
+% irow = 15; % todo 16
+irow = 42;
 mouse = master_xls.mouse(irow);
 imouse = ['i', num2str(mouse)];
 date = num2str(master_xls.date(irow));
@@ -13,7 +14,7 @@ fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Da
 xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx'); clear dataset_meta
 dataset_meta = readtable(xls_file.name); 
-idx = find(all(ismember(cell2mat(dataset_meta.(1)),[ImgFolder,'_000_000']),2));
+idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
 time = num2str(dataset_meta.(8)(idx));
 frame_rate = 30;
 
@@ -88,7 +89,7 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
 %%
-select = 5;
+select = 4;
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
