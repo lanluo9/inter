@@ -3,7 +3,8 @@ clear all
 clc
 
 master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
-irow = 14;
+% irow = 15; % todo 16
+irow = 42;
 mouse = master_xls.mouse(irow);
 imouse = ['i', num2str(mouse)];
 date = num2str(master_xls.date(irow));
@@ -13,7 +14,7 @@ fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Da
 xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx'); clear dataset_meta
 dataset_meta = readtable(xls_file.name); 
-idx = find(all(ismember(cell2mat(dataset_meta.(1)),[ImgFolder,'_000_000']),2));
+idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
 time = num2str(dataset_meta.(8)(idx));
 frame_rate = 30;
 
@@ -43,8 +44,8 @@ for irun = 1:nrun
 
     
     fprintf(['Reading run ' num2str(irun) ', consisting of ' num2str(min(nframes)) ' frames \r\n'])
-%     data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
-    data_temp = sbxread(imgMatFile(1,1:11),0,100000);
+    data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+%     data_temp = sbxread(imgMatFile(1,1:11),0,100000);
     if size(data_temp,1)== 2
         data_temp = data_temp(1,:,:,:);
     end
@@ -88,7 +89,7 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
 %%
-select = 8;
+select = 4;
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
@@ -129,13 +130,13 @@ figure; imagesq(mean(data_reg(:,:,1:10000),3)); truesize;
 set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_avg.pdf']),'-dpdf', '-bestfit')
 
-% %% find activated cells
+%% find activated cells
 
 % tCyc = cell2mat(input.tCyclesOn);
-cStart = cell2mat(input.cStimOn); % same as cStimOn
-cStimOn = cell2mat(input.cStimOn);
-cStimOff = cell2mat(input.cStimOff);
-cTarget = celleqel2mat_padded(input.cTargetOn); cTarget = int64(cTarget);
+cStart = cell2mat(input.cStimOneOn); % same as cStimOn
+cStimOn = cell2mat(input.cStimOneOn);
+cStimOff = cell2mat(input.cStimOneOff);
+cTarget = celleqel2mat_padded(input.cStimTwoOn); cTarget = int64(cTarget);
 try nTrials = input.trialsSinceReset % 464 = 32 types * 14.5 reps
 catch
     nTrials = input.trialSinceReset
@@ -161,13 +162,13 @@ tc_screen = mean(mean(data_reg,1),2);
 tc_screen = squeeze(tc_screen);
 all_trial_len = sz(3) - cStart(1);
 
-data_trial = zeros(200, nTrials); % take 1-200 frame of every trial
+data_trial = zeros(min(unique(trial_len)), nTrials); % take 1-200 frame of every trial
 data_trial_real = zeros(max(trial_len), nTrials);
 whos tc_screen
 
 for it = 1:(nTrials-1)
     start_id = cStimOn(it);
-    data_trial(:,it) = tc_screen(start_id : start_id + 200 - 1);
+    data_trial(:,it) = tc_screen(start_id : start_id + min(unique(trial_len)) - 1);
     data_trial_real(:,it) = [tc_screen(start_id : start_id + trial_len(it) - 1); NaN(max(trial_len) - trial_len(it), 1)];
 end
 
@@ -193,9 +194,12 @@ disp(' ')
 % data_adapter = frame #8-11
 % data_f2 (baseline after adaptation) = frame #14-16
 
-% ca_latency = 5;
-ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
+% ca_latency = 5 or 8;
+ca_latency = 7; % = x-1. stim onset frame 1 -> signal received frame x
 window_len = 3;
+
+% ca_latency = 4;
+% window_len = 1;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
 for itrial = 1:nTrials
