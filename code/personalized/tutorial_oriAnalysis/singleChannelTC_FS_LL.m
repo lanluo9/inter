@@ -9,6 +9,7 @@ mouse = master_xls.mouse(irow);
 imouse = ['i', num2str(mouse)];
 date = num2str(master_xls.date(irow));
 ImgFolder = master_xls.num(irow); ImgFolder = ImgFolder{1};
+gcamp = master_xls.gcamp(irow); gcamp = gcamp{1};
 
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
 xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
@@ -330,7 +331,7 @@ title('data dfof max')
 
 data_dfof = cat(3,data_dfof, data_dfof_max);
 
-% %% cell segmentation 
+%% cell segmentation 
 mask_exp = zeros(sz(1),sz(2));
 mask_all = zeros(sz(1), sz(2));
 mask_data = data_dfof;
@@ -367,9 +368,15 @@ clear data_dfof data_dfof_avg max_dfof mask_data mask_all mask_data_temp mask_ex
 down = 5; % down sampling
 sz = size(data_reg);
 data_tc = stackGetTimeCourses(data_reg, mask_cell);
-data_reg_down  = stackGroupProject(data_reg,down);
-data_tc_down = stackGetTimeCourses(data_reg_down, mask_cell);
 nCells = size(data_tc,2)
+
+if strcmp(gcamp, '6s')
+    data_reg_down  = stackGroupProject(data_reg,down);
+    data_tc_down = stackGetTimeCourses(data_reg_down, mask_cell);
+elseif strcmp(gcamp, '8f')
+    
+%     data_reg_down  = stackGroupProject(data_reg,down);
+end
 
 np_tc = zeros(sz(3),nCells);
 np_tc_down = zeros(floor(sz(3)./down), nCells);
@@ -388,7 +395,7 @@ for i = 1:100
 end
 [max_skew, ind] =  max(x,[],1);
 np_w = 0.01*ind;
-npSub_tc = data_tc-bsxfun(@times,tcRemoveDC(np_tc),np_w);
+npSub_tc = data_tc - bsxfun(@times,tcRemoveDC(np_tc),np_w);
 clear data_reg data_reg_down
 
 save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_TCs_addfake.mat']), 'data_tc', 'np_tc', 'npSub_tc')
