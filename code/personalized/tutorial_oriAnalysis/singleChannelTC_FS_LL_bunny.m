@@ -4,7 +4,7 @@ clc
 
 master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
 % irow = 15; % todo 16
-irow = 42;
+irow = 32;
 mouse = master_xls.mouse(irow);
 imouse = ['i', num2str(mouse)];
 date = num2str(master_xls.date(irow));
@@ -217,26 +217,13 @@ for itrial = 1:nTrials
 end
 
 data_adapter_dfof = (data_adapter-data_f)./data_f;
-data_base2_dfof = (data_f2-data_f)./data_f;
+% data_base2_dfof = (data_f2-data_f)./data_f;
 data_targ_dfof = (data_targ-data_f2)./data_f2; 
 data_targ_dfof_fake = (data_targ-data_f)./data_f; 
 
 %% plot dfof for randStim1_doSameStim2 bunny
 
 assert(input.doRandStimOne == 1 & input.doSameStims == 1)
-% stim1_id = cell2mat(input.tstimOne); stim2_id = cell2mat(input.tstimTwo);
-% isi_seq = cell2mat(input.tisiTimeFrames) / frame_rate * 1000; % ISI in ms
-
-% targCon = celleqel2mat_padded(input.tGratingContrast);
-% unique(targCon) % target contrast 1
-% if input.doRandCon
-%     adapterCon = ones(size(targCon));
-% else
-%     adapterCon = celleqel2mat_padded(input.tBaseGratingContrast);
-% end
-% unique(adapterCon) % adapter contrast 0 or 1
-% ind_con = intersect(find(targCon == 1),find(adapterCon == 0));
-
 adapter_id = cell2mat(input.tstimOne);
 adapter_list = unique(adapter_id);
 n_adapter = length(adapter_list);
@@ -245,83 +232,47 @@ target_list = unique(target_id);
 n_target = length(target_list);
 
 data_dfof_ad = zeros(sz(1),sz(2),n_adapter);
-% data_dfof2_dir = zeros(sz(1),sz(2),n_adapter);
-% [~, ~] = subplotn(n_adapter);
-figure;
 for i_ad = 1:n_adapter
     ind = find(adapter_id == adapter_list(i_ad));
     data_dfof_ad(:,:,i_ad) = nanmean(data_adapter_dfof(:,:,ind),3);
-%     data_dfof2_dir(:,:,idir) = nanmean(data_base2_dfof(:,:,ind),3); 
 end
-
-figure
-imagesc(data_dfof_ad) % adapter (deg == 0) resp is ok
-title('data dfof dir')
-set(gcf, 'Position', get(0, 'Screensize'));
-% figure
-% imagesc(data_dfof2_dir) % but baseline2 shows bright cells, almost same as adapter resp
-% title('data dfof2 dir')
-% set(gcf, 'Position', get(0, 'Screensize'));
-
-% if sum(~isnan(data_dfof2_dir))>1
-%     data_dfof_dir_all = cat(3, data_dfof_ad, data_dfof2_dir);
-% else
-    data_dfof_dir_all = data_dfof_ad;
-% end
 
 data_dfof_targ = zeros(sz(1),sz(2),n_target);
 data_dfof_targ_fake = zeros(sz(1),sz(2),n_target);
-[n, n2] = subplotn(n_target);
-figure;
-for i_ad = 1:n_target
-    ind = find(target_id == target_list(i_ad));
-    data_dfof_targ(:,:,i_ad) = nanmean(data_targ_dfof(:,:,ind),3);
-    data_dfof_targ_fake(:,:,i_ad) = nanmean(data_targ_dfof_fake(:,:,ind),3);
-
-    subplot(n,n2,i_ad)
-%     imagesc(data_dfof_targ(:,:,idir)) % targ resp shows dim and blurry cells
-    imagesc(data_dfof_targ_fake(:,:,i_ad))
-    title(target_list(i_ad))
+for i_tg = 1:n_target
+    ind = find(target_id == target_list(i_tg));
+    data_dfof_targ(:,:,i_tg) = nanmean(data_targ_dfof(:,:,ind),3);
+    data_dfof_targ_fake(:,:,i_tg) = nanmean(data_targ_dfof_fake(:,:,ind),3);
 end
-set(gcf, 'Position', get(0, 'Screensize'));
-% data_dfof = cat(3,data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
-
-data_dfof_targ_noadapt = zeros(sz(1),sz(2),n_target);
-[n, n2] = subplotn(n_target);
-figure;
-for i_ad = 1:n_target
-    ind = find(target_id == target_list(i_ad) & adapterCon == 0);
-    data_dfof_targ_noadapt(:,:,i_ad) = nanmean(data_targ_dfof(:,:,ind),3);
-
-    subplot(n,n2,i_ad)
-    imagesc(data_dfof_targ_noadapt(:,:,i_ad))
-    title(target_list(i_ad))
-end
-set(gcf, 'Position', get(0, 'Screensize'));
-data_dfof = cat(3,data_dfof_targ_noadapt, data_dfof_targ_fake, data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
+data_dfof = cat(3, data_dfof_ad, data_dfof_targ, data_dfof_targ_fake);
 data_dfof_max = max(imfilter(data_dfof, myfilter),[],3);
-figure;
-imagesc(data_dfof_max)
-title('data dfof max')
 
-data_dfof = cat(3,data_dfof, data_dfof_max);
+% figure
+% imagesc(max(data_dfof_ad, [], 3)) 
+% title('data dfof ad max')
+% set(gcf, 'Position', get(0, 'Screensize'));
+% figure
+% imagesc(max(data_dfof_targ, [], 3)) 
+% title('data dfof tg max')
+% set(gcf, 'Position', get(0, 'Screensize'));
+% figure; imagesc(data_dfof_max)
+% title('data dfof max')
+
+data_dfof = cat(3,data_dfof, data_dfof_max); % adapter, targ, targ_fake, gaussian filter max proj
 
 %% cell segmentation 
 mask_exp = zeros(sz(1),sz(2));
 mask_all = zeros(sz(1), sz(2));
 mask_data = data_dfof;
-% mask_data = data_dfof_targ_fake;
 
 for iStim = 1:size(data_dfof,3)
-% for iStim = 1:size(data_dfof_targ_fake,3)
     mask_data_temp = mask_data(:,:,end+1-iStim);
     mask_data_temp(find(mask_exp >= 1)) = 0;
     
     fprintf('\n %d out of %d \n',iStim, size(data_dfof,3));
     bwout = imCellEditInteractiveLG_LL(mask_data_temp);
-%     bwout = imCellEditInteractive(mask_data_temp);
     mask_all = mask_all+bwout;
     mask_exp = imCellBuffer(mask_all,3)+mask_all;
     close all
@@ -332,9 +283,6 @@ figure; imagesc(mask_cell)
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['mask_cell_addfake.jpg'])
 disp('mask cell img saved')
-
-% bwout = imCellEditInteractive(data_dfof_max);
-% mask_cell = bwlabel(bwout);
 
 %% neuropil mask and subtraction
 mask_np = imCellNeuropil(mask_cell, 3, 5);
