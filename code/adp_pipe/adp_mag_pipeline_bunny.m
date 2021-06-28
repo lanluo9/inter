@@ -26,8 +26,8 @@ save_flag = 1; % toggle this to save/skip all .mat creation below
 
 clear id_ad id_noad id_isi2 id_isi3 id_ori
 clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
-global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
-global frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
+global id_ori % id_ad id_noad id_isi2 id_isi3
+global frame_rate range_base range_resp ncell ntrial trial_len_min nori ori_list % nisi
 
 % date = num2str(dataset_list.date(iset))
 % mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
@@ -47,25 +47,35 @@ ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2
 % final trial discarded bc too few frames
 [nframe, ncell] = size(npSub_tc);
 
-contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
-id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 
-id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = []; 
+adapter_id = cell2mat(input_behav.tstimOne); adapter_id = adapter_id(1:ntrial);
+adapter_list = unique(adapter_id); n_adapter = length(adapter_list);
+target_id = cell2mat(input_behav.tstimTwo); target_id = target_id(1:ntrial);
+target_list = unique(target_id); n_target = length(target_list);
+% verify randStim1_doSameStim2 protocol
+assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1)
+assert(sum(adapter_list == target_list) == length(adapter_list))
 
-frame_ad = double(cell2mat(input_behav.cStimOn)); frame_ad_off = double(cell2mat(input_behav.cStimOff));
-frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
+% contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
+% id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 
+% id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = []; 
+id_noad = []; id_ad = 1:ntrial; 
+
+frame_ad = double(cell2mat(input_behav.cStimOneOn)); frame_ad = frame_ad(1:ntrial);
+frame_ad_off = double(cell2mat(input_behav.cStimOneOn)); frame_ad_off = frame_ad_off(1:ntrial);
+frame_tg = double(celleqel2mat_padded(input_behav.cStimTwoOn)); frame_tg = frame_tg(1:ntrial);
 isi_seq = frame_tg - frame_ad_off; 
+trial_len_min = min(unique(diff(frame_ad)));
+
 nisi = length(unique(frame_tg - frame_ad));
-id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
-id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
+% id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
+% id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
+id_750 = []; id_250 = 1:ntrial; 
 id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
 
-trial_len_min = min(unique(diff(frame_ad)));
-
-ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); ori_seq(ori_seq == 180) = 0;
-ori_seq(end) = [];
-ori_list = unique(ori_seq); 
+ori_seq = adapter_id;
+ori_list = adapter_list; 
 nori = length(ori_list); id_ori = cell(nori, 1);
 for iori  = 1 : nori
     id_ori{iori} = find(ori_seq == ori_list(iori)); 
@@ -98,10 +108,13 @@ range_base = 1:3; range_resp = 9:12;
 
 [dfof_ad, dfof_ad_sem, dfof_ad_std] = dfof_resp(dfof_align_ad, 'ad', 0); % 0 to prevent saving dfof_ad vs dfof_tg separately
 [dfof_tg, dfof_tg_sem, dfof_tg_std] = dfof_resp(dfof_align_tg, 'tg', 0);
+dfof_tg = dfof_tg(:,:,3); dfof_tg_sem = dfof_tg_sem(:,:,3); dfof_tg_std = dfof_tg_std(:,:,3);
 if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
 
 % trace = ncell x nori x nisi3 [noad 750 250]
-[trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, save_flag);
+[trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
+trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:));
+if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 %% visually driven cells
 % cells responsive to ad / noad tg (all oris)
@@ -116,20 +129,21 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
 % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
 
-%% well-fit cells
-% cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+%%
+% %% well-fit cells
+% % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+% 
+% % bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
+% % if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
+% % else
+%     cd(result_folder); nrun = 1000; save_flag = 1;
+%     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
+% % end
+% % sum(well_fit_cell)
 
-% bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-% if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
-% else
-    cd(result_folder); nrun = 1000; save_flag = 1;
-    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-% end
-% sum(well_fit_cell)
-
-%% fit tuning
-% fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
-[fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
+% %% fit tuning
+% % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
+% [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
 %% cell property
 
