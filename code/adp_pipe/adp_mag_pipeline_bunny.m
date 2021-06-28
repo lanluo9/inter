@@ -26,8 +26,8 @@ save_flag = 1; % toggle this to save/skip all .mat creation below
 
 clear id_ad id_noad id_isi2 id_isi3 id_ori
 clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
-global id_ori % id_ad id_noad id_isi2 id_isi3
-global frame_rate range_base range_resp ncell ntrial trial_len_min nori ori_list % nisi
+global id_ori id_ad id_noad id_isi2 id_isi3
+global frame_rate range_base range_resp ncell ntrial trial_len_min nori ori_list nisi
 
 % date = num2str(dataset_list.date(iset))
 % mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
@@ -117,13 +117,22 @@ trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:))
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 %% visually driven cells
-% cells responsive to ad / noad tg (all oris)
+% cells responsive to adapter aka stimOne, categorized by adapter identity
 
 sig_alpha = 0.01;
-[sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
-[sig_vis_noad_tg, p_vis_noad_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
-vis_cell_ad = logical(sig_vis_ad');
-vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
+% [sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
+% vis_cell_ad = logical(sig_vis_ad');
+id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is for noad tg
+[sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'tg_any', sig_alpha);
+vis_cell_ad = logical(sum(sig_vis_ad, 2));
+
+sum(vis_cell_ad)/length(vis_cell_ad)
+sum(sig_vis_ad)/length(sig_vis_ad)
+histogram(sum(sig_vis_ad,2))
+
+if save_flag
+    save vis_driven.mat sig_vis_ad p_vis_ad vis_cell_ad
+end
 
 % find(vis_cell_ad==0) % not vis driven by ad
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
@@ -145,11 +154,11 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 % % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
 % [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
-%% cell property
-
-if save_flag
-    save cell_property_loose.mat vis_cell_ad vis_cell_noad_tg sig_vis_ad sig_vis_noad_tg...
-    ori_pref well_fit_cell
-end
+% %% cell property
+% 
+% if save_flag
+%     save cell_property_loose.mat vis_cell_ad vis_cell_noad_tg sig_vis_ad sig_vis_noad_tg...
+%     ori_pref well_fit_cell
+% end
 
 % end
