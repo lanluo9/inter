@@ -5,8 +5,8 @@ close all
 clc
 
 date = '210812'; 
-time = '1102';
-ImgFolder = '002';
+time = '1054';
+ImgFolder = '001';
 mouse = '1338';
 
 imouse = ['i' mouse];
