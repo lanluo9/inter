@@ -27,6 +27,9 @@ areamousedate = [area '_' imouse '_' date];
 fName = fullfile(mworks_fn, ['data-' imouse '-' date '-' num2str(time) '.mat']);
 temp = load(fName); % load behavior data "input"
 input_behav = temp.input; clear temp
+stim1 = input_behav.tstimOne; stim2 = input_behav.tstimTwo
+pwd
+save input_behav.mat stim1 stim2
 
 CD = fullfile(data_fn, imouse, date, ImgFolder); cd(CD);
 imgMatFile = [ImgFolder '_000_000.mat'];

@@ -22,7 +22,7 @@ master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_maste
 
 % for iset = 1 %: length(dataset_list.date)
 % iset
-save_flag = 1; % toggle this to save/skip all .mat creation below
+save_flag = 0; % toggle this to save/skip all .mat creation below
 
 clear id_ad id_noad id_isi2 id_isi3 id_ori
 clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
@@ -32,9 +32,10 @@ global frame_rate range_base range_resp ncell ntrial trial_len_min nori ori_list
 % date = num2str(dataset_list.date(iset))
 % mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
 % area = dataset_list.area{1,iset}
-irow = 32;
-mouse = master_xls.mouse(irow); imouse = ['i', num2str(mouse)];
+irow = 36; 
 date = num2str(master_xls.date(irow));
+assert(strcmp(date,'210616'))
+mouse = master_xls.mouse(irow); imouse = ['i', num2str(mouse)];
 area = master_xls.area(irow); area = area{1};
 
 [npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);

@@ -5,7 +5,7 @@ clc
 %%
 master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
 % irow = 15; % todo 16
-irow = 47; % date == 210506
+irow = 47; % date 
 mouse = master_xls.mouse(irow);
 imouse = ['i', num2str(mouse)];
 date = num2str(master_xls.date(irow));
