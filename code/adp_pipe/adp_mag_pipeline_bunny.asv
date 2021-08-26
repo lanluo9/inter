@@ -118,6 +118,18 @@ if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem 
 trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:));
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
+%% feature matrix 
+% ntrial x ncell matrix
+% plus side columns (img_id = 0-6, rep_num = 0 for ad | 1 for tg)
+
+% dfof_align_ad; % ncell x ntrial x trial_len
+% feature_matrix = 
+feature_ad = mean(dfof_align_ad(:,:,range_resp), 3) - mean(dfof_align_ad(:,:,range_base), 3)
+feature_ad = mean(dfof_align_ad(:,:,range_resp), 3) - mean(dfof_align_ad(:,:,range_base), 3)
+% - dfof_align_ad(:,:,range_base))
+
+
+
 %% visually driven cells
 % cells responsive to adapter aka stimOne, categorized by adapter identity
 
@@ -128,9 +140,9 @@ id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is fo
 [sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'tg_any', sig_alpha);
 vis_cell_ad = logical(sum(sig_vis_ad, 2));
 
-sum(vis_cell_ad)/length(vis_cell_ad) % vis driven by any stim
-sum(sig_vis_ad)/length(sig_vis_ad) % vis driven by each stim
-histogram(sum(sig_vis_ad,2)) % how many neurons respond to 0...7 stimuli?
+sum(vis_cell_ad)/length(vis_cell_ad)
+sum(sig_vis_ad)/length(sig_vis_ad)
+histogram(sum(sig_vis_ad,2))
 
 if save_flag
     save vis_driven.mat sig_vis_ad p_vis_ad vis_cell_ad
@@ -139,24 +151,6 @@ end
 % find(vis_cell_ad==0) % not vis driven by ad
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
 % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
-
-%% feature matrix 
-% ntrial x ncell matrix
-% side columns (img_id = 0-6, rep_num = 0 for ad | 1 for tg)
-
-% feature_matrix = 
-feature_ad = mean(dfof_align_ad(:,:,range_resp), 3) - mean(dfof_align_ad(:,:,range_base), 3);
-feature_ad = feature_ad';
-feature_tg = mean(dfof_align_tg(:,:,range_resp), 3) - mean(dfof_align_tg(:,:,range_base), 3);
-feature_tg = feature_tg';
-
-stim_id = double((adapter_id-1)');
-rep_num_0 = zeros(size(stim_id));
-rep_num_1 = ones(size(stim_id));
-adp_abs = 
-
-dim_red_ad = [stim_id, rep_num_0, feature_ad];
-dim_red_tg = [stim_id, rep_num_1, feature_tg];
 
 %%
 % %% well-fit cells

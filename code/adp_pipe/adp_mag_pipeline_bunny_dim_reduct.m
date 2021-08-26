@@ -32,7 +32,7 @@ global frame_rate range_base range_resp ncell ntrial trial_len_min nori ori_list
 % date = num2str(dataset_list.date(iset))
 % mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
 % area = dataset_list.area{1,iset}
-irow = find(master_xls.date == 210616); 
+irow = 36; 
 date = num2str(master_xls.date(irow));
 assert(strcmp(date,'210616'))
 mouse = master_xls.mouse(irow); imouse = ['i', num2str(mouse)];
@@ -54,7 +54,7 @@ target_id = cell2mat(input_behav.tstimTwo); target_id = target_id(1:ntrial);
 target_list = unique(target_id); n_target = length(target_list);
 % verify randStim1_doSameStim2 protocol
 assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1)
-assert(sum(adapter_id == target_id) == length(target_id))
+assert(sum(adapter_list == target_list) == length(adapter_list))
 
 % contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
 % id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 
@@ -98,8 +98,8 @@ t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t
 t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
 range = 50; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
-% if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
-% close
+if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
+close
 
 range_base = 1:3; range_resp = 9:12;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
@@ -128,9 +128,9 @@ id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is fo
 [sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'tg_any', sig_alpha);
 vis_cell_ad = logical(sum(sig_vis_ad, 2));
 
-sum(vis_cell_ad)/length(vis_cell_ad) % vis driven by any stim
-sum(sig_vis_ad)/length(sig_vis_ad) % vis driven by each stim
-histogram(sum(sig_vis_ad,2)) % how many neurons respond to 0...7 stimuli?
+sum(vis_cell_ad)/length(vis_cell_ad)
+sum(sig_vis_ad)/length(sig_vis_ad)
+histogram(sum(sig_vis_ad,2))
 
 if save_flag
     save vis_driven.mat sig_vis_ad p_vis_ad vis_cell_ad
@@ -139,24 +139,6 @@ end
 % find(vis_cell_ad==0) % not vis driven by ad
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
 % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
-
-%% feature matrix 
-% ntrial x ncell matrix
-% side columns (img_id = 0-6, rep_num = 0 for ad | 1 for tg)
-
-% feature_matrix = 
-feature_ad = mean(dfof_align_ad(:,:,range_resp), 3) - mean(dfof_align_ad(:,:,range_base), 3);
-feature_ad = feature_ad';
-feature_tg = mean(dfof_align_tg(:,:,range_resp), 3) - mean(dfof_align_tg(:,:,range_base), 3);
-feature_tg = feature_tg';
-
-stim_id = double((adapter_id-1)');
-rep_num_0 = zeros(size(stim_id));
-rep_num_1 = ones(size(stim_id));
-adp_abs = 
-
-dim_red_ad = [stim_id, rep_num_0, feature_ad];
-dim_red_tg = [stim_id, rep_num_1, feature_tg];
 
 %%
 % %% well-fit cells
