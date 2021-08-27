@@ -144,19 +144,23 @@ end
 % ntrial x ncell matrix
 % side columns (img_id = 0-6, rep_num = 0 for ad | 1 for tg)
 
-% feature_matrix = 
+% feature_matrix
 feature_ad = mean(dfof_align_ad(:,:,range_resp), 3) - mean(dfof_align_ad(:,:,range_base), 3);
 feature_ad = feature_ad';
 feature_tg = mean(dfof_align_tg(:,:,range_resp), 3) - mean(dfof_align_tg(:,:,range_base), 3);
 feature_tg = feature_tg';
 
 stim_id = double((adapter_id-1)');
-rep_num_0 = zeros(size(stim_id));
-rep_num_1 = ones(size(stim_id));
-adp_abs = 
+rep_num_0 = zeros(size(stim_id)); % rep0 = adapter
+rep_num_1 = ones(size(stim_id)); % rep1 = target
 
+% feature matrix with side columns
 dim_red_ad = [stim_id, rep_num_0, feature_ad];
 dim_red_tg = [stim_id, rep_num_1, feature_tg];
+
+% vis_cell_ad; % vis driven cells
+adp_abs = mean((feature_tg - feature_ad) ./ feature_ad, 1); % absolute adaptation index
+adp_abs = abs(adp_abs)'; % average adp over stimuli
 
 %%
 % %% well-fit cells
