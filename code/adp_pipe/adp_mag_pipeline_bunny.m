@@ -158,9 +158,12 @@ rep_num_1 = ones(size(stim_id)); % rep1 = target
 dim_red_ad = [stim_id, rep_num_0, feature_ad];
 dim_red_tg = [stim_id, rep_num_1, feature_tg];
 
-% vis_cell_ad; % vis driven cells
 adp_abs = mean((feature_tg - feature_ad) ./ feature_ad, 1); % absolute adaptation index
 adp_abs = abs(adp_abs)'; % average adp over stimuli
+histogram(adp_abs, 100)
+adp_vis = [vis_cell_ad, adp_abs];
+
+save dim_red.mat dim_red_ad feature_ad dim_red_tg feature_tg adp_vis
 
 %%
 % %% well-fit cells
