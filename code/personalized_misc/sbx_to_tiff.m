@@ -16,5 +16,6 @@ sz = size(data_temp);
 data = permute(data_temp, [2,3,4,1]);
 size(data)
 
-data_chunk = data(:, :, 1:1000);
-writetiff(data_chunk, 'Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\002.tiff')
+data_chunk = data(:, :, 1:1200); % tif size comparable w caiman demo data
+% fixme: chunk writetif -> concat tif in python
+writetiff(data_chunk, 'Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\002.tif')
