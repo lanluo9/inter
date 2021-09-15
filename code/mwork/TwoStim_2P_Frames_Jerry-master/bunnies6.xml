@@ -114,7 +114,7 @@
   <stimuli tag="Stimuli">
     <stimulus_group tag="images">
       <!-- load image stimuli -->
-      <range_replicator tag="New Replicator" from="0" to="30" step="1" variable="index">
+      <range_replicator tag="New Replicator" from="0" to="500" step="1" variable="index">
         <stimulus type="image_file" tag="image_${index}" path="Image/${index}.jpg" x_size="xSize" y_size="ySize" x_position="xPosition" y_position="yPosition" rotation="0.0" alpha_multiplier="1.0" deferred="explicit"/>
       </range_replicator>
       <!-- create photodiode stimuli -->
