@@ -154,7 +154,7 @@
               <action type="assignment" variable="tisiTimeMs" value="randIsiTimeStart + disc_rand(0, randIsiTimeInterval - 1) * randIsiTimeStep"/>
             </action>
             <action type="if" condition="doRandStimOne">
-                <action type="assignment" variable="tstimOne" value="tNStimAccepted"/>
+              <action type="assignment" variable="tstimOne" value="svStimNumber"/>
             </action>
             <action type="if" condition="doRandStimTwo">
               <action type="assignment" variable="tstimTwo" value="stimList[disc_rand(0, size(stimList) - 1)]"/>
