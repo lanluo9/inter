@@ -22,7 +22,7 @@ switch tHostname
             rc.lindseyAnalysis = fullfile(rootDir,'Analysis\2P');
             rc.data = fullfile(rootDir,'Data\2P_images');
             rc.ashleyAnalysis = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\all_staff\home\ashley\Analysis';
-        elseif contains(tUsername,'lan')
+        elseif contains(tUsername,'lan') 
             rc.name = 'lan';
             rootDir = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\all_staff\home\lan';
             rc.indexFilename = fullfile(rootDir, 'Analysis\Behavior\experimentIndexes\av-subj-days-lg.xls');

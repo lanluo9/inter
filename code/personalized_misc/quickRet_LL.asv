@@ -1,18 +1,16 @@
-% select 1 position w low SNR & clustered cells
+3% select 1 position w low SNR & clustered cells
 
 clear 
 close all
 clc
 
 date = '210922'; 
-time = '1353';
+time = '1055';
 ImgFolder = '001';
 mouse = '1339';
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
-rc.name = 'lan';
-
 doReg = 0;
 nrun = size(ImgFolder,1);
 subnum = mouse;
@@ -85,8 +83,7 @@ irun = 1;
 % end
 
 clear data_temp
-% expt_input = concatenateDataBlocks(temp);
-expt_input = temp;
+expt_input = concatenateDataBlocks(temp);
 
     nOn = input.nScansOn;
     nOff = input.nScansOff;
