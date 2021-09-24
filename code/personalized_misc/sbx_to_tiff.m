@@ -19,3 +19,4 @@ data = permute(data_temp, [3,2,4,1]); % flip to make nrow > ncol. for easy visua
 data = squeeze(data);
 saveastiff(data, ...
     'Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\002_multipage.tif');
+% takes 20h to convert 10K frame sbx
