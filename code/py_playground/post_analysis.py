@@ -104,7 +104,196 @@ def check_eval_results(cnm, idx):
                 print(red_start+f'Result: Component {idx[i]+1} got rejected because it met all lower, but no upper thresholds!\n\n'+red_end)
             else:
                 print('This should not appear, check code logic!\n\n')
+                
 
+def check_eval_results_LL(cnm, idx, print_score=False):
+    """Checks results of component evaluation and determines why the component got rejected or accepted
+
+    Args:
+        cnm:                caiman CNMF object containing estimates and evaluate_components() results
+
+        idx:                int or iterable (array, list...)
+                            index or list of indices of components to be checked
+
+    Returns:
+        snr, rval, cnn score of single cell
+    """
+    try:
+        iter(idx)
+        idx = list(idx)
+    except:
+        idx = [idx]
+
+    snr_min = cnm.params.quality['SNR_lowest']
+    snr_max = cnm.params.quality['min_SNR']
+    r_min = cnm.params.quality['rval_lowest']
+    r_max = cnm.params.quality['rval_thr']
+    cnn_min = cnm.params.quality['cnn_lowest']
+    cnn_max = cnm.params.quality['min_cnn_thr']
+
+    for i in range(len(idx)):
+        snr = cnm.estimates.SNR_comp[idx[i]]
+        r = cnm.estimates.r_values[idx[i]]
+        rval = r
+        cnn = cnm.estimates.cnn_preds[idx[i]]
+        cnn_round = str(round(cnn, 2))
+
+        red_start = '\033[1;31;49m'
+        red_end = '\033[0;39;49m'
+
+        green_start = '\033[1;32;49m'
+        green_end = '\033[0;39;49m'
+
+        upper_thresh_failed = 0
+        lower_thresh_failed = False
+
+        if print_score == True:
+            print(f'Checking component {idx[i]+1}...')
+            if idx[i] in cnm.estimates.idx_components:
+                print(green_start+f'\nComponent {idx[i]+1} got accepted, all lower threshold were passed!'+green_end+'\n\n\tUpper thresholds:\n')
+
+                if snr >= snr_max:
+                    print(green_start+f'\tSNR of {round(snr,2)} exceeds threshold of {snr_max}\n'+green_end)
+                else:
+                    print(f'\tSNR of {round(snr,2)} does not exceed threshold of {snr_max}\n')
+
+                if r >= r_max:
+                    print(green_start+f'\tR-value of {round(r,2)} exceeds threshold of {r_max}\n'+green_end)
+                else:
+                    print(f'\tR-value of {round(r,2)} does not exceed threshold of {r_max}\n')
+
+                if cnn >= cnn_max:
+                    print(green_start+'\tCNN-value of '+cnn_round+f' exceeds threshold of {cnn_max}\n'+green_end)
+                else:
+                    print('\tCNN-value of '+cnn_round+f' does not exceed threshold of {cnn_max}\n')
+                print(f'\n')
+
+            else:
+                print(f'\nComponent {idx[i] + 1} did not get accepted. \n\n\tChecking thresholds:\n')
+
+                if snr >= snr_max:
+                    print(green_start+f'\tSNR of {round(snr,2)} exceeds upper threshold of {snr_max}\n'+green_end)
+                elif snr >= snr_min and snr < snr_max:
+                    print(f'\tSNR of {round(snr,2)} exceeds lower threshold of {snr_min}, but not upper threshold of {snr_max}\n')
+                    upper_thresh_failed += 1
+                else:
+                    print(red_start+f'\tSNR of {round(snr,2)} does not pass lower threshold of {snr_min}\n'+red_end)
+                    lower_thresh_failed = True
+
+                if r >= r_max:
+                    print(green_start+f'\tR-value of {round(r,2)} exceeds upper threshold of {r_max}\n'+green_end)
+                elif r >= r_min and r < r_max:
+                    print(f'\tR-value of {round(r,2)} exceeds lower threshold of {r_min}, but not upper threshold of {r_max}\n')
+                    upper_thresh_failed += 1
+                else:
+                    print(f'\tR-value of {round(r,2)} does not pass lower threshold of {r_min}\n')
+                    lower_thresh_failed = True
+
+                if cnn >= cnn_max:
+                    print(green_start+'\tCNN-value of '+cnn_round+f' exceeds threshold of {cnn_max}\n'+green_end)
+                elif cnn >= cnn_min and cnn < cnn_max:
+                    print('\tCNN-value of '+cnn_round+f' exceeds lower threshold of {cnn_min}, but not upper threshold of {cnn_max}\n')
+                    upper_thresh_failed += 1
+                else:
+                    print(red_start+'\tCNN-value of '+cnn_round+f' does not pass lower threshold of {cnn_min}\n'+red_end)
+                    lower_thresh_failed = True
+
+                if lower_thresh_failed:
+                    print(red_start+f'Result: Component {idx[i]+1} got rejected because it failed at least one lower threshold!\n\n'+red_end)
+                elif upper_thresh_failed == 3 and not lower_thresh_failed:
+                    print(red_start+f'Result: Component {idx[i]+1} got rejected because it met all lower, but no upper thresholds!\n\n'+red_end)
+                else:
+                    print('This should not appear, check code logic!\n\n')
+        
+        return snr, rval, cnn
+
+
+def plot_contours_LL(A, Cn, thr=None, thr_method='max', maxthr=0.2, nrgthr=0.9, display_numbers=True, max_number=None,
+                  cmap=None, swap_dim=False, colors='w', vmin=None, vmax=None, coordinates=None,
+                  contour_args={}, number_args={}, **kwargs):
+    """Plots contour of spatial components against a background image and returns their coordinates
+       LL edit: zoom in on single cell and only plot its proximity. can set cell contour alpha transparency
+       
+     Args:
+         A:   np.ndarray or sparse matrix
+                   Matrix of Spatial components (d x K)
+    
+         Cn:  np.ndarray (2D)
+                   Background image (e.g. mean, correlation)
+    
+         thr_method: [optional] string
+                  Method of thresholding:
+                      'max' sets to zero pixels that have value less than a fraction of the max value
+                      'nrg' keeps the pixels that contribute up to a specified fraction of the energy
+    
+         maxthr: [optional] scalar
+                    Threshold of max value
+    
+         nrgthr: [optional] scalar
+                    Threshold of energy
+    
+         thr: scalar between 0 and 1
+                   Energy threshold for computing contours (default 0.9)
+                   Kept for backwards compatibility. If not None then thr_method = 'nrg', and nrgthr = thr
+    
+         display_number:     Boolean
+                   Display number of ROIs if checked (default True)
+    
+         max_number:    int
+                   Display the number for only the first max_number components (default None, display all numbers)
+    
+         cmap:     string
+                   User specifies the colormap (default None, default colormap)
+     Returns:
+          coordinates: list of coordinates with center of mass, contour plot coordinates and bounding box for each component
+    """
+
+    if swap_dim:
+        Cn = Cn.T
+        print('Swapping dim')
+
+    if thr is None:
+        try:
+            thr = {'nrg': nrgthr, 'max': maxthr}[thr_method]
+        except KeyError:
+            thr = maxthr
+    else:
+        thr_method = 'nrg'
+
+
+    for key in ['c', 'colors', 'line_color']:
+        if key in kwargs.keys():
+            color = kwargs[key]
+            kwargs.pop(key)
+
+    ax = pl.gca()
+    if vmax is None and vmin is None:
+        pl.imshow(Cn, interpolation=None, cmap=cmap,
+                  vmin=np.percentile(Cn[~np.isnan(Cn)], 1),
+                  vmax=np.percentile(Cn[~np.isnan(Cn)], 99))
+    else:
+        pl.imshow(Cn, interpolation=None, cmap=cmap, vmin=vmin, vmax=vmax)
+
+    if coordinates is None:
+        coordinates = get_contours(A, np.shape(Cn), thr, thr_method, swap_dim)
+    for c in coordinates:
+        v = c['coordinates']
+        c['bbox'] = [np.floor(np.nanmin(v[:, 1])), np.ceil(np.nanmax(v[:, 1])),
+                     np.floor(np.nanmin(v[:, 0])), np.ceil(np.nanmax(v[:, 0]))]
+        pl.plot(*v.T, c=colors, **contour_args)
+
+    if display_numbers:
+        d1, d2 = np.shape(Cn)
+        d, nr = np.shape(A)
+        cm = com(A, d1, d2)
+        if max_number is None:
+            max_number = A.shape[1]
+        for i in range(np.minimum(nr, max_number)):
+            if swap_dim:
+                ax.text(cm[i, 0], cm[i, 1], str(i + 1), color=colors, **number_args)
+            else:
+                ax.text(cm[i, 1], cm[i, 0], str(i + 1), color=colors, **number_args)
+    return coordinates
 
 def plot_component_traces(cnm, idx, param='F_dff', comp_array=None):
     """
