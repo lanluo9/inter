@@ -1,11 +1,12 @@
 % select 1 position w low SNR & clustered cells
 
 clear 
+clear all global % sbxread need to first clear global var
 close all
 clc
 
-date = '210922'; 
-time = '1353';
+date = '210930'; 
+time = '1409';
 ImgFolder = '001';
 mouse = '1339';
 
@@ -190,8 +191,8 @@ expt_input = temp;
         xlabel('Azimuth');
         ylabel('Elevation');
         colorbar
-        caxis([0 pixThreshold/.4])
-        caxis([-0.1 0.1])
+%         caxis([0 pixThreshold/.4])
+%         caxis([-0.1 0.1])
     
     else
         data_tc = squeeze(mean(mean(data,1),2));
