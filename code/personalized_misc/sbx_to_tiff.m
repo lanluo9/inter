@@ -1,8 +1,8 @@
 clear all
+clear all global
 clc
 
 tic
-
 cd('Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\')
 imgMatFile = '002_000_000.mat';
 load(imgMatFile);
@@ -23,10 +23,12 @@ disp('permutation done')
 
 data = squeeze(data);
 data_chop = data(:,:,1:70000);
+toc
 
+tic
 disp('start saving tiff')
 saveastiff(data_chop, ...
     'Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\002_multipage_70k.tif');
 % takes 20h to convert 100K frame sbx
-
+% takes <10h to convert 70K frame sbx? with a tifflib error in the middle ("Unable to write the current directory.")
 toc
