@@ -3,9 +3,12 @@ clear all
 clc
 
 %%
-master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
-% irow = 15; % todo 16
-irow = 47; % date == 210506
+% C:\Users\ll357\Documents\inter\mat
+root_folder = 'C:\Users\ll357\Documents\inter\';
+master_xls_file = 'mat\adp_dataset_master.xlsx';
+master_xls = readtable([root_folder, master_xls_file]);
+irow = 15; % todo 16
+% irow = 47; % date == 210506
 mouse = master_xls.mouse(irow);
 imouse = ['i', num2str(mouse)];
 date = num2str(master_xls.date(irow));
@@ -91,7 +94,7 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
 %%
-select = 4;
+select = 5;
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
@@ -144,6 +147,20 @@ catch
     nTrials = input.trialSinceReset
 end
 sz = size(data_reg); % [y pixel * x pixel * nframe]
+
+data_max_projection = max(data_reg,[],3);
+data_top_perc = prctile(data_reg,[95],[3]);
+
+analysis_dir = fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]);
+cd(analysis_dir)
+save data_max.mat data_max_projection data_top_perc
+
+imagesc(data_max_projection); set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, 'max proj.jpg')
+close
+imagesc(data_top_perc); set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, 'top percentile.jpg')
+close
 
 data_f = zeros(sz(1),sz(2),nTrials);
 data_adapter = zeros(sz(1),sz(2),nTrials);
@@ -198,10 +215,13 @@ disp(' ')
 
 % ca_latency = 5 or 8;
 % ca_latency = 7; % = x-1. stim onset frame 1 -> signal received frame x
-% window_len = 3;
 
-ca_latency = 4;
-window_len = 1;
+close all
+ca_latency = 8;
+window_len = 2;
+
+% ca_latency = 4;
+% window_len = 1;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
 for itrial = 1:nTrials
@@ -356,6 +376,7 @@ figure; imagesc(mask_cell)
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['mask_cell_addfake.jpg'])
 disp('mask cell img saved')
+close
 
 % bwout = imCellEditInteractive(data_dfof_max);
 % mask_cell = bwlabel(bwout);

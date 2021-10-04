@@ -3,7 +3,10 @@ clear all global
 clc
 
 tic
-cd('Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\')
+% cd('Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\')
+
+% todo: copy file and convert to tif locally!
+
 imgMatFile = '002_000_000.mat';
 load(imgMatFile);
 nframes = info.config.frames;
