@@ -9,7 +9,8 @@ global ntrial ncell frame_rate
 % output:
 %     dfof_align = (tc - base) / base. ncell x ntrial x trial_len
 
-trial_base_len = frame_rate * 1; % 30 frame/sec * 1 sec
+% trial_base_len = frame_rate * 1; % 30 frame/sec * 1 sec
+trial_base_len = frame_rate * 0.5;
 tc_trial_base = zeros(ncell, ntrial, trial_base_len);
 for icell = 1:ncell
     npSub_tc_cell = npSub_tc(:,icell);

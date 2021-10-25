@@ -41,5 +41,5 @@ saveastiff(data, '002_multipage_100k_local.tif');
 % takes <10h to convert 70K frame sbx? with a tifflib error in the middle ("Unable to write the current directory.")
 % takes 2.5h to convert 35K frame sbx
 % using local drive to read and write:
-% takes 77h to convert 100K frame sbx??? why???
+% takes 77h to convert 100K frame sbx??? why??? inspect saveastiff func
 toc

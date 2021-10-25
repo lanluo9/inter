@@ -1,4 +1,4 @@
-function [npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area)
+function [npSub_tc, frame_rate, input_behav, info] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area)
 % function [frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area)
 
 % input: 
@@ -27,17 +27,18 @@ areamousedate = [area '_' imouse '_' date];
 fName = fullfile(mworks_fn, ['data-' imouse '-' date '-' num2str(time) '.mat']);
 temp = load(fName); % load behavior data "input"
 input_behav = temp.input; clear temp
-stim1 = input_behav.tstimOne; stim2 = input_behav.tstimTwo
-pwd
-save input_behav.mat stim1 stim2
+% % test pseudo rand bunny 500
+% stim1 = input_behav.tstimOne; stim2 = input_behav.tstimTwo 
+% pwd
+% save input_behav.mat stim1 stim2
 
 CD = fullfile(data_fn, imouse, date, ImgFolder); cd(CD);
 imgMatFile = [ImgFolder '_000_000.mat'];
-load(imgMatFile); % load 2P img metadata "info"
+info = load(imgMatFile); % load 2P img metadata "info"
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
 load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); 
 % fix bug later: retinotopy folder in Analysis naming convention should adhere to tc folder
 
-result_prefix = 'C:\Users\lan\Documents\repos\inter\mat\';
-result_folder = fullfile(result_prefix, areamousedate); if ~exist(result_folder); mkdir(result_folder); end
-cd(result_folder);
+% result_prefix = 'C:\Users\lan\Documents\repos\inter\mat\';
+% result_folder = fullfile(result_prefix, areamousedate); if ~exist(result_folder); mkdir(result_folder); end
+% cd(result_folder);

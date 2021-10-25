@@ -23,4 +23,6 @@ for iori = 1 : nori
 end
 % end
 
+% trace_avg = squeeze(trace_avg);
+
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
