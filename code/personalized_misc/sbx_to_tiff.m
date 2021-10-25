@@ -34,10 +34,12 @@ toc
 
 tic
 disp('start saving tiff')
-saveastiff(data, ...
-    'Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\002_multipage_100k_local.tif');
+saveastiff(data, '002_multipage_100k_local.tif');
+%     'Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002\002_multipage_100k_local.tif');
 % using mapped drive isilon:
 % takes 20h to convert 100K frame sbx
 % takes <10h to convert 70K frame sbx? with a tifflib error in the middle ("Unable to write the current directory.")
 % takes 2.5h to convert 35K frame sbx
+% using local drive to read and write:
+% takes 77h to convert 100K frame sbx??? why???
 toc
