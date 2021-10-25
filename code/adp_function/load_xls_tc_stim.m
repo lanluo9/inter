@@ -8,7 +8,6 @@ function [npSub_tc, frame_rate, input_behav, info] = load_xls_tc_stim(data_fn, m
 %      date, imouse, area
 % 
 % output:
-%     result_folder directory
 %     input_behav for stim input
 %     info for 2P img metadata
 %     npSub_tc for timecourse nframe x ncell

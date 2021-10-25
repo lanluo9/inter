@@ -1,7 +1,14 @@
 %% init
 
 close all; clc; clear
-cd C:\Users\lan\Documents\repos\inter\mat
+clear id_ad id_noad id_isi2 id_isi3 id_ori root_path
+clear frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
+global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
+global frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
+global root_path
+
+root_path = 'C:\Users\ll357\Documents\inter';
+cd([root_path, '\mat'])
 
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 ll_fn = fullfile(fn_base, 'home\lan'); 
@@ -9,28 +16,27 @@ data_fn = fullfile(ll_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
+% caiman test data: grating gcamp6s 
+% Z:\All_Staff\home\lan\Data\2P_images\i1329\201209\002
 dataset_list = struct;
-dataset_list.mouse = [1322,1322,1322, 1323,1323,1323, 1324,1324]; % i1324 200730 LI was given up
-dataset_list.date = [200803, 200804, 200806,...
-                    200720, 200721, 200723, ...
-                    200728, 200729];
-dataset_list.area = {'V1','LM','LI', 'V1','LM','LI', 'V1','LM'};
+dataset_list.mouse = [1329]; 
+dataset_list.date = [201209];
+dataset_list.area = {'V1'};
 
 %% load [xls, timecourse, stim]
 
-for iset = 1 %: length(dataset_list.date)
-iset
-save_flag = 0; % toggle this to save/skip all .mat creation below
-
-clear id_ad id_noad id_isi2 id_isi3 id_ori
-clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
-global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
-global frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
+% for iset = 1 %: length(dataset_list.date)
+iset = 1
+save_flag = 1; % toggle this to save/skip all .mat creation below
 
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse];
 area = dataset_list.area{1,iset}
-[npSub_tc, frame_rate, input_behav, info, result_folder] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+[npSub_tc, frame_rate, input_behav, info] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+
+areamousedate = [area '_' imouse '_' date];
+result_folder = [root_path, '\mat\', areamousedate];
+if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
 %% params & indexing trials
@@ -83,7 +89,7 @@ grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad alig
 if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
 close
 
-range_base = 1:3; range_resp = 9:12;
+range_base = 1:3; range_resp = 9:11;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% response to adapter & targets. get trace 
@@ -104,6 +110,10 @@ sig_alpha = 0.01;
 [sig_vis_noad_tg, p_vis_noad_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
 vis_cell_ad = logical(sig_vis_ad');
 vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
+vis_cell_any = logical(vis_cell_ad | vis_cell_noad_tg);
+sum(vis_cell_ad) % vis driven by ad = 118 manual
+sum(vis_cell_noad_tg) % vis driven by noad tg = 87 manual
+sum(vis_cell_any) % vis driven by any = 123 manual
 
 % find(vis_cell_ad==0) % not vis driven by ad
 % find(vis_cell_noad_tg==0) % not vis driven by noad tg
@@ -122,14 +132,13 @@ vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
 
 %% fit tuning
 % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
-save_flag = 0;
 [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
 %% cell property
 
 if save_flag
     save cell_property_loose.mat vis_cell_ad vis_cell_noad_tg sig_vis_ad sig_vis_noad_tg...
-    ori_pref well_fit_cell
+    ori_pref % well_fit_cell
 end
 
-end
+% end
