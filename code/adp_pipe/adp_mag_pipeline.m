@@ -2,9 +2,9 @@
 
 close all; clc; clear
 clear id_ad id_noad id_isi2 id_isi3 id_ori root_path
-clear frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
+clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
 global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
-global frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
+global frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
 global root_path
 
 root_path = 'C:\Users\ll357\Documents\inter';

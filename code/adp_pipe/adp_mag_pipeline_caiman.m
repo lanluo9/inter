@@ -2,9 +2,9 @@
 
 close all; clc; clear
 clear id_ad id_noad id_isi2 id_isi3 id_ori root_path
-clear frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
+clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
 global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
-global frame_rate range_base range_resp ncell ntrial trial_len_max nisi nori ori_list
+global frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
 global root_path
 
 root_path = 'C:\Users\ll357\Documents\inter';
@@ -65,7 +65,7 @@ id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
 
-trial_len_max = max(unique(diff(frame_ad)));
+trial_len_min = min(unique(diff(frame_ad)));
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); ori_seq(ori_seq == 180) = 0;
 ori_seq(end) = [];
@@ -112,6 +112,7 @@ if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem 
 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, save_flag);
+size(trace_avg)
 
 %% visually driven cells
 % cells responsive to ad / noad tg (all oris)
