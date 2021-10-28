@@ -5,8 +5,8 @@ clear all global % sbxread need to first clear global var
 close all
 clc
 
-date = '211020'; 
-time = '1456';
+date = '211028'; 
+time = '1406';
 ImgFolder = '001';
 mouse = '1350';
 
