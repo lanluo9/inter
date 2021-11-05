@@ -6,6 +6,7 @@ clc
 tic
 
 %% set dir
+
 caiman_path = 'C:\Users\ll357\Documents\CaImAn\';
 root_path = 'C:\Users\ll357\Documents\inter\';
 database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
@@ -17,13 +18,14 @@ nset = size(dataset_todo); nset = nset(1)
 
 for iset = 1:nset
 
-%% copy each dataset to local
 disp('working on dataset #')
 iset
 date = num2str(dataset_todo.date(iset))
 mouse = num2str(dataset_todo.mouse(iset)); imouse = ['i', mouse]
 area = dataset_todo.area{1,iset}
 num = dataset_todo.num{1,iset}
+
+%% copy to local
 
 cd([database_path, imouse, '\', date, '\', num, '\'])
 sbx_file = [num, '_000_000.sbx'];
@@ -36,6 +38,7 @@ copyfile(sbx_file, local_iset);
 disp('copied sbx to local')
 
 %% convert sbx to tif locally
+
 cd(local_iset)
 load(mat_file);
 nframes = info.config.frames
