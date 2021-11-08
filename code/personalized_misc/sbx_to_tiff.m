@@ -1,7 +1,7 @@
 %% clean up
 
-clear all
-clear all global
+clearvars
+clear global
 clc
 tic
 
@@ -13,25 +13,30 @@ database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
 master_xls = [root_path, 'mat\adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 dataset_todo = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
-dataset_todo = dataset_todo(4:end,:); % waiting for AWS
+% dataset_todo = dataset_todo(4:end,:); % waiting for AWS
 nset = size(dataset_todo); nset = nset(1)
 
+time_seq = [];
 for iset = 1:nset
 
 disp('working on dataset #')
 iset
 date = num2str(dataset_todo.date(iset))
 mouse = num2str(dataset_todo.mouse(iset)); imouse = ['i', mouse]
-area = dataset_todo.area{1,iset}
-num = dataset_todo.num{1,iset}
+area = dataset_todo.area{iset, 1}
+num = dataset_todo.num{iset, 1}
 
 %% copy to local
 
 cd([database_path, imouse, '\', date, '\', num, '\'])
+% C:\Users\Public\ForLan
 sbx_file = [num, '_000_000.sbx'];
 mat_file = [num, '_000_000.mat'];
 caiman_data_path = [caiman_path, 'demos\temp_data\'];
 local_iset = [caiman_data_path, imouse, '_', date, '_', num, '\'];
+if ~exist(local_iset, 'dir')
+    continue % if local dir exist, assume this sbx has been copied
+end
 mkdir(local_iset)
 copyfile(mat_file, local_iset);
 copyfile(sbx_file, local_iset);
@@ -54,9 +59,13 @@ toc
 tic
 disp('saving tiff')
 tif_file = [imouse, '_', date, '_', num, '_multipage_100k_local.tif'];
+if ~exist(tif_file, 'file')
+    continue % if tif exist, assume this sbx has been converted
+end
 saveastiff(data, tif_file);
 disp('save tiff done')
-toc
+t = toc
+time_seq(end+1) = t
 
 % using mapped drive isilon:
 % takes 20h to convert 100K frame sbx
@@ -65,6 +74,7 @@ toc
 
 % using local drive to read and write:
 % takes 77h to convert 100K frame sbx??? why??? inspect saveastiff func
+% takes 53h to convert 100K frame sbx. why???
 
 %% remove sbx
 
