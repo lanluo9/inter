@@ -17,7 +17,7 @@ dataset_todo = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
 nset = size(dataset_todo); nset = nset(1)
 
 time_seq = [];
-for iset = 1 %:nset
+for iset = 1:nset
 
 disp('working on dataset #')
 iset
@@ -33,7 +33,7 @@ sbx_file = [num, '_000_000.sbx'];
 mat_file = [num, '_000_000.mat'];
 caiman_data_path = [caiman_path, 'demos\temp_data\'];
 local_iset = [caiman_data_path, imouse, '_', date, '_', num, '\'];
-if ~exist(local_iset, 'dir')
+if exist(local_iset, 'dir')
     continue % if local dir exist, assume this sbx has been copied
 end
 mkdir(local_iset)
@@ -58,7 +58,7 @@ toc
 tic
 disp('saving tiff')
 tif_file = [imouse, '_', date, '_', num, '_multipage_100k_local.tif'];
-if ~exist(tif_file, 'file')
+if exist(tif_file, 'file')
     continue % if tif exist, assume this sbx has been converted
 end
 saveastiff(data, tif_file);
