@@ -17,7 +17,7 @@ dataset_todo = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
 nset = size(dataset_todo); nset = nset(1)
 
 time_seq = [];
-for iset = 1:nset
+for iset = 1 %:nset
 
 disp('working on dataset #')
 iset
@@ -29,7 +29,6 @@ num = dataset_todo.num{iset, 1}
 %% copy to local
 
 cd([database_path, imouse, '\', date, '\', num, '\'])
-% C:\Users\Public\ForLan
 sbx_file = [num, '_000_000.sbx'];
 mat_file = [num, '_000_000.mat'];
 caiman_data_path = [caiman_path, 'demos\temp_data\'];
