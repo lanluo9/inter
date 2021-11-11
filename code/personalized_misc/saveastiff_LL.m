@@ -1,4 +1,4 @@
-function res = saveastiff(data, path, options)
+function res = saveastiff_LL(data, path, options)
 % options.color
 %   : true or FALSE
 %   : If this is true, third dimension should be 3 and the data is saved as a color image.
@@ -257,6 +257,11 @@ while ~exist('tfile', 'var')
 end
 
 for d = 1:depth
+    if ~mod(d, 1000)
+        disp(['writing ', num2str(d/1000), 'K out of ', num2str(depth/1000), 'K frames'])
+        datetime('now')
+    end
+    
     tfile.setTag(tagstruct);
     tfile.write(data(:, :, :, d));
     if d ~= depth
