@@ -23,23 +23,28 @@ nset = size(dataset_todo); nset = nset(1)
 
 %% for each sbx
 time_seq = [];
-for iset = 0 % test bunny 500 gcamp6s V1: 1339_210922
+% for iset = 0 % test bunny 500 gcamp6s V1: 1339_210922
 % 3 % test remote w i1324 V1
 % 1:nset on hubel % nset:-1:1 on nuke
 
+for iset = 2:nset % 1 done
+if iset == 3 % skip i1324, it's being converted atm
+    continue
+end
+    
 tic
-% disp('working on dataset #')
-% iset
-% date = num2str(dataset_todo.date(iset))
-% mouse = num2str(dataset_todo.mouse(iset)); imouse = ['i', mouse]
-% area = dataset_todo.area{iset, 1}
-% num = dataset_todo.num{iset, 1}
+disp('working on dataset #')
+iset
+date = num2str(dataset_todo.date(iset))
+mouse = num2str(dataset_todo.mouse(iset)); imouse = ['i', mouse]
+area = dataset_todo.area{iset, 1}
+num = dataset_todo.num{iset, 1}
 
-disp('convert bunny 500 gcamp6s V1')
-date = '210922'
-mouse = '1339'; imouse = ['i', mouse]
-area = 'V1'
-num = '002' % todo: 003 and 004 concat to long tif = 240K frames total
+% disp('convert bunny 500 gcamp6s V1')
+% date = '210922'
+% mouse = '1339'; imouse = ['i', mouse]
+% area = 'V1'
+% num = '002' % todo: 003 and 004 concat to long tif = 240K frames total
 
 disp('prep done')
 
@@ -95,7 +100,7 @@ end
 fTIF = Fast_BigTiff_Write(tif_file,1,0);
 tic
 msg = 0;
-N = nframes % /100; % tested w 1000 frames, worked. visualized in caiman
+N = nframes; % /100 % tested w 1000 frames, worked. visualized in caiman
 B = numel(data)*2;
 for ct = 1:N
     fprintf(1,repmat('\b',[1,msg]));
@@ -103,12 +108,14 @@ for ct = 1:N
     fTIF.WriteIMG(data(:,:,ct));
 end
 fTIF.close;
-t=toc
+% datetime('now')
 fprintf(1,repmat('\b',[1,msg]));
+t=toc
 fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
 fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
 
 % using mapped drive isilon:
+% 15-20 mins for 100K frames by Fast_BigTiff_Write!
 % takes 20h to convert 100K frame sbx
 % takes <10h to convert 70K frame sbx? with a tifflib error in the middle ("Unable to write the current directory.")
 % takes 2.5h to convert 35K frame sbx
