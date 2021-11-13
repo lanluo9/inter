@@ -46,8 +46,7 @@ mouse = '1339'; imouse = ['i', mouse]
 area = 'V1'
 num = '003' % todo: 003 and 004 concat to long tif = 240K frames total
 if iset == 2
-    num = '004'
-end
+    num = ''
 
 disp('prep done')
 
