@@ -18,13 +18,22 @@ mode = 'remote' % read sbx and write tif remotely on isilon
 database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
 master_xls = [root_path, 'mat\adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
-dataset_now = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
+% dataset_now = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
+dataset_now = dataset_meta(ismember(dataset_meta.paradigm, 'bunny500'),:);
 nset = size(dataset_now); nset = nset(1)
 
-%% for each sbx
-time_seq = [];
+data_seq = 'single';
+if sum(ismember(dataset_now.paradigm, 'bunny500'))
+    data_seq = 'sequential';
+end
 
-for iset = 3 
+%% for each sbx
+
+if contains(data_seq, 'sequential')
+    data_full = [];
+end
+
+for iset = 1:nset
     
 tic
 disp('working on dataset #')
@@ -34,18 +43,9 @@ mouse = num2str(dataset_now.mouse(iset)); imouse = ['i', mouse]
 area = dataset_now.area{iset, 1}
 num = dataset_now.num{iset, 1}
 
-% disp('convert bunny 500 gcamp6s V1')
-% date = '210922'
-% mouse = '1339'; imouse = ['i', mouse]
-% area = 'V1'
-% num = '003' % todo: 003 and 004 concat to long tif = 240K frames total
-% if iset == 2
-%     num = '004'
-% end
-
 disp('prep done')
 
-%% copy to local
+%% copy to local or work remotely
 
 cd([database_path, imouse, '\', date, '\', num, '\'])
 sbx_file = [num, '_000_000.sbx'];
@@ -77,35 +77,37 @@ disp('read sbx done')
 data = permute(data_temp, [3,2,4,1]); % flip to make nrow > ncol. for easy visualiz
 disp('permutation done')
 data = squeeze(data);
+
+data_full = cat(3,data_full,data); % concat 3 recordings of bunny 500
+
+end
+
+data_size = size(data_full)
+nframes = data_size(3)
 toc
 
-%% save max proj: pre-registration movie
-
-max_proj = max(data,[],3);
-size(max_proj)
-
-imagesc(max_proj)
-set(gcf, 'Position',  [0, 0, width(max_proj), height(max_proj)])
+% %% save max proj: pre-registration movie
+% 
+% max_proj = max(data,[],3);
+% size(max_proj)
+% 
+% imagesc(max_proj)
+% set(gcf, 'Position',  [0, 0, width(max_proj), height(max_proj)])
 
 %% convert sbx to tif
 
 % tic
 disp('start saving tiff')
 datetime('now')
-tif_file = [imouse, '_', date, '_', num, '_multipage_100k_local.tif'];
-if exist(tif_file, 'file')
-    continue % if tif exist, assume this sbx has been converted
-end
-
-% saveastiff_LL(data, tif_file); 
-% disp('save tiff done')
-% t = toc
-% time_seq(end+1) = t
+tif_file = [imouse, '_', date, '_', num, '_multipage_240k.tif'];
+% if exist(tif_file, 'file')
+%     continue % if tif exist, assume this sbx has been converted
+% end
 
 fTIF = Fast_BigTiff_Write(tif_file,1,0);
 tic
 msg = 0;
-N = nframes; % /100 % tested w 1000 frames, worked. visualized in caiman
+N = nframes;
 B = numel(data)*2;
 for ct = 1:N
     fprintf(1,repmat('\b',[1,msg]));
@@ -113,21 +115,10 @@ for ct = 1:N
     fTIF.WriteIMG(data(:,:,ct));
 end
 fTIF.close;
-% datetime('now')
 fprintf(1,repmat('\b',[1,msg]));
 t=toc
 fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
 fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
-
-% using mapped drive isilon:
-% 15-20 mins for 100K frames by Fast_BigTiff_Write!
-% takes 20h to convert 100K frame sbx
-% takes <10h to convert 70K frame sbx? with a tifflib error in the middle ("Unable to write the current directory.")
-% takes 2.5h to convert 35K frame sbx
-
-% using local drive to read and write:
-% takes 77h to convert 100K frame sbx??? why??? inspect saveastiff func
-% takes 53h to convert 100K frame sbx. verified w another file. why???
 
 %% remove sbx if local
 
@@ -135,4 +126,4 @@ if contains(mode, 'local')
     delete(mat_file)
     delete(sbx_file)
 end
-end
+% end
