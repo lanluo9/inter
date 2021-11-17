@@ -18,36 +18,30 @@ mode = 'remote' % read sbx and write tif remotely on isilon
 database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
 master_xls = [root_path, 'mat\adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
-dataset_todo = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
-nset = size(dataset_todo); nset = nset(1)
+dataset_now = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
+nset = size(dataset_now); nset = nset(1)
 
 %% for each sbx
 time_seq = [];
-% for iset = 0 % test bunny 500 gcamp6s V1: 1339_210922
-% 3 % test remote w i1324 V1
-% 1:nset on hubel % nset:-1:1 on nuke
 
-for iset = 1:2 % 2:nset % 1 done
-% if iset == 3 % skip i1324, it's being converted atm
-%     continue
-% end
+for iset = 3 
     
 tic
-% disp('working on dataset #')
-% iset
-% date = num2str(dataset_todo.date(iset))
-% mouse = num2str(dataset_todo.mouse(iset)); imouse = ['i', mouse]
-% area = dataset_todo.area{iset, 1}
-% num = dataset_todo.num{iset, 1}
+disp('working on dataset #')
+iset
+date = num2str(dataset_now.date(iset))
+mouse = num2str(dataset_now.mouse(iset)); imouse = ['i', mouse]
+area = dataset_now.area{iset, 1}
+num = dataset_now.num{iset, 1}
 
-disp('convert bunny 500 gcamp6s V1')
-date = '210922'
-mouse = '1339'; imouse = ['i', mouse]
-area = 'V1'
-num = '003' % todo: 003 and 004 concat to long tif = 240K frames total
-if iset == 2
-    num = '004'
-end
+% disp('convert bunny 500 gcamp6s V1')
+% date = '210922'
+% mouse = '1339'; imouse = ['i', mouse]
+% area = 'V1'
+% num = '003' % todo: 003 and 004 concat to long tif = 240K frames total
+% if iset == 2
+%     num = '004'
+% end
 
 disp('prep done')
 
@@ -84,6 +78,14 @@ data = permute(data_temp, [3,2,4,1]); % flip to make nrow > ncol. for easy visua
 disp('permutation done')
 data = squeeze(data);
 toc
+
+%% save max proj: pre-registration movie
+
+max_proj = max(data,[],3);
+size(max_proj)
+
+imagesc(max_proj)
+set(gcf, 'Position',  [0, 0, width(max_proj), height(max_proj)])
 
 %% convert sbx to tif
 
