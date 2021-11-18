@@ -97,6 +97,7 @@ toc
 %% convert sbx to tif
 
 % tic
+cd ..
 disp('start saving tiff')
 datetime('now')
 tif_file = [imouse, '_', date, '_', num, '_multipage_240k.tif'];
