@@ -108,11 +108,11 @@ fTIF = Fast_BigTiff_Write(tif_file,1,0);
 tic
 msg = 0;
 N = nframes;
-B = numel(data)*2;
+B = numel(data_full)*2;
 for ct = 1:N
     fprintf(1,repmat('\b',[1,msg]));
     msg = fprintf(1,'%.0f/%.0f',ct,N);
-    fTIF.WriteIMG(data(:,:,ct));
+    fTIF.WriteIMG(data_full(:,:,ct));
 end
 fTIF.close;
 fprintf(1,repmat('\b',[1,msg]));
