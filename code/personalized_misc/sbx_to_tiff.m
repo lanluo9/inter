@@ -77,12 +77,13 @@ disp('read sbx done')
 data = permute(data_temp, [3,2,4,1]); % flip to make nrow > ncol. for easy visualiz
 disp('permutation done')
 data = squeeze(data);
+data = data(:,:,1:70000); % get first 70k frames = 1 round of bunny500
 
 data_full = cat(3,data_full,data); % concat 3 recordings of bunny 500
+data_size = size(data_full)
 
 end
 
-data_size = size(data_full)
 nframes = data_size(3)
 toc
 
@@ -100,7 +101,7 @@ toc
 cd ..
 disp('start saving tiff')
 datetime('now')
-tif_file = [imouse, '_', date, '_', num, '_multipage_240k.tif'];
+tif_file = [imouse, '_', date, '_', num, '_multipage_210k.tif'];
 % if exist(tif_file, 'file')
 %     continue % if tif exist, assume this sbx has been converted
 % end
