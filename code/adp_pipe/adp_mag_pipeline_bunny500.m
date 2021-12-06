@@ -59,15 +59,16 @@ cd(result_folder)
 %% substitute npSub_tc w caiman
 
 df = load('C:\Users\ll357\Documents\CaImAn\demos\caiman_activity_i1339_210922_multisess.mat');
-df_pile = (df.df)'; % need to reshape to [nframe_sum, ncell]
+df_pile = (df.df)'; 
 
 t = cellfun(@size,df_pile,'uni',false); 
 ncell = size(t,2);
 t = cell2mat(t(:,1));
 nframe_seq = t(:,2);
 
+df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
 for icell = 1:ncell
-    
+    df_flat(:,icell) = horzcat(df_pile{:, icell})';
 end
 
 %% concat trial stim info for each session
@@ -133,4 +134,84 @@ end
 t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
 nrep_stim = unique(t(:,2)) % bunny500 3sess gives 3/4/5 rep of each img
+
+%% dfof aligned
+% align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
+% always use frame_ad as the end point of trial-specific baseline
+
+npSub_tc = df_flat;
+tc_align_ad = align_tc(frame_ad, npSub_tc);
+tc_align_tg = align_tc(frame_tg, npSub_tc);
+dfof_align_ad = tc_align_ad; % did not do trial-specific baselining
+dfof_align_tg = tc_align_tg; % which should have been dfof_align = (tc - base) / base
+% dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
+% dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
+
+%% set resp window
+% find base window & resp window
+
+t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t(:,:), 1)); 
+t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
+
+range = 50; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
+grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
+if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
+
+range = trial_len_min; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
+grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
+if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
+close all
+
+range_base = 1:3; range_resp = 11:13;
+% prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
+
+%% response to adapter & targets. get trace (bunny mode: isi=250 only)
+% dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
+
+[dfof_ad, dfof_ad_sem, dfof_ad_std] = dfof_resp(dfof_align_ad, 'tg', 0); % tg mode aka separate diff stim images, but use adapter resp
+[dfof_tg, dfof_tg_sem, dfof_tg_std] = dfof_resp(dfof_align_tg, 'tg', 0);
+dfof_ad = dfof_ad(:,:,3); dfof_ad_sem = dfof_ad_sem(:,:,3); dfof_ad_std = dfof_ad_std(:,:,3); % keep isi=250 only
+dfof_tg = dfof_tg(:,:,3); dfof_tg_sem = dfof_tg_sem(:,:,3); dfof_tg_std = dfof_tg_std(:,:,3);
+if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
+
+% trace = ncell x nori x nisi3 [noad 750 250]
+[trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
+trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:));
+if save_flag; save trace_aligned.mat trace_avg trace_sem; end
+
+%% visually driven cells
+% cells responsive to adapter aka stimOne, categorized by adapter identity
+
+sig_alpha = 0.01;
+id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is for noad tg
+[sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'tg_any', sig_alpha);
+[sig_vis_tg, p_vis_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
+
+vis_cell_ad = logical(sum(sig_vis_ad, 2));
+vis_cell_tg = logical(sum(sig_vis_tg, 2));
+
+subplot(1,2,1)
+imagesc(sig_vis_ad) % bug
+subplot(1,2,2)
+imagesc(sig_vis_tg) % bug
+
+sum(vis_cell_ad)/length(vis_cell_ad) % percent vis driven by any stim
+t = sum(sig_vis_ad,1)/ncell; % percent vis driven by each stim
+bar(t); % bug
+t2 = sum(sig_vis_ad,2); % each cell respond to how many stim
+bar(t2);
+t3 = t2(t2>0); 
+bar(t3); % each cell respond to how many stim, excluding 0 stim
+histogram(t2,50); % how many neurons respond to 0...500 stimuli?
+histogram(t3,100); % how many neurons respond to 1...500 stimuli?
+
+% length(find(vis_cell_ad==0)) % not vis driven by ad
+% length(find(vis_cell_tg==0)) % not vis driven by ad tg
+% length(find(~vis_cell_ad & ~vis_cell_tg)) % not vis driven by anything
+% length(vis_cell_ad) - length(find(~vis_cell_ad & ~vis_cell_tg)) 
+
+if save_flag
+    save vis_driven.mat sig_vis_ad p_vis_ad vis_cell_ad
+end
+
 
