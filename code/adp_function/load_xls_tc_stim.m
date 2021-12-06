@@ -35,7 +35,8 @@ CD = fullfile(data_fn, imouse, date, ImgFolder); cd(CD);
 imgMatFile = [ImgFolder '_000_000.mat'];
 info = load(imgMatFile); % load 2P img metadata "info"
 tc_name = fullfile(tc_fn, datemouse, datemouserun);
-load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); 
+% load([tc_name, '\', datemouserun, '_TCs_addfake.mat']); % for manual segm data
+npSub_tc = []; disp('caiman mode: no loading npSub_tc')
 % fix bug later: retinotopy folder in Analysis naming convention should adhere to tc folder
 
 % result_prefix = 'C:\Users\lan\Documents\repos\inter\mat\';
