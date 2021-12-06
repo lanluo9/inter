@@ -31,7 +31,28 @@ save_flag = 1; % toggle this to save/skip all .mat creation below
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse]
 area = dataset_list.area{1,iset}
-[~, frame_rate, input_behav, info] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+% [~, frame_rate, input_behav, info] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
+
+% get stim mat: input_behav for each session
+xls_dir = fullfile(data_fn, imouse, date); cd(xls_dir)
+xls_file = dir('*.xlsx');
+data_now_meta = readtable(xls_file.name);
+frame_rate = data_now_meta.(5)(end);
+bunny500_id = find(contains(data_now_meta.StimulusSet,'bunny_randStim1_doSameStim2'))
+
+clear input_behav
+for i = 1:length(bunny500_id)
+    id = bunny500_id(i);
+    time = data_now_meta.(8)(id);
+    ImgFolder = data_now_meta.(1){id}(1:3);
+
+%     run_str = catRunName(ImgFolder, 1);
+%     datemouse = [date '_' imouse]; datemouserun = [date '_' imouse '_' run_str];
+%     areamousedate = [area '_' imouse '_' date];
+    fName = fullfile(mworks_fn, ['data-' imouse '-' date '-' num2str(time) '.mat']);
+    temp = load(fName); % load behavior data "input"
+    input_behav(i) = temp.input; clear temp
+end
 
 areamousedate = [area '_' imouse '_' date];
 result_folder = [root_path, '\mat\', areamousedate, '_caiman'];
@@ -41,9 +62,9 @@ cd(result_folder)
 %% substitute npSub_tc w caiman
 
 df = load('C:\Users\ll357\Documents\CaImAn\demos\caiman_activity_i1339_210922_multisess.mat');
-df_pile = (df.df)'; % shape = [nframe, ncell]
+df_pile = (df.df)'; % need to reshape to [nframe_sum, ncell]
 
-%% params & indexing trials
+%% params & indexing trials for each session
 % index by adapter contrast, target ori, isi
 
 ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps 

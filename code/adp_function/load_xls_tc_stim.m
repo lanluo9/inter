@@ -14,10 +14,10 @@ function [npSub_tc, frame_rate, input_behav, info] = load_xls_tc_stim(data_fn, m
 
 xls_dir = fullfile(data_fn, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx'); clear dataset_meta
-dataset_meta = readtable(xls_file.name); 
-time = dataset_meta.(8)(end);
-ImgFolder = dataset_meta.(1){end}(1:3);
-frame_rate = dataset_meta.(5)(end);
+data_now_meta = readtable(xls_file.name); 
+time = data_now_meta.(8)(end);
+ImgFolder = data_now_meta.(1){end}(1:3);
+frame_rate = data_now_meta.(5)(end);
 
 run_str = catRunName(ImgFolder, 1);
 datemouse = [date '_' imouse]; datemouserun = [date '_' imouse '_' run_str];
