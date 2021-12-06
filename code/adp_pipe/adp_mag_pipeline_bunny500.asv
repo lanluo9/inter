@@ -66,58 +66,49 @@ ncell = size(t,2);
 t = cell2mat(t(:,1));
 nframe_seq = t(:,2);
 
-for icell = 1:ncell
-    
-end
-
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
 
 ntrial = 0;
 adapter_id = [];
 target_id = [];
-frame_ad = [];
-frame_ad_off = [];
-frame_tg = [];
 
 for i = 1 : length(bunny500_id)
-    input_behav = input_behav_seq(i);
+    input_behav = input_behav_seq(i)
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
     
     adapter_id_sess = cell2mat(input_behav.tstimOne); 
-    adapter_id_sess = adapter_id_sess(1:ntrial_sess);
+    adapter_id_sess = adapter_id_sess(1:ntrial);
     adapter_id = [adapter_id, adapter_id_sess];
     target_id_sess = cell2mat(input_behav.tstimTwo); 
-    target_id_sess = target_id_sess(1:ntrial_sess);
+    target_id_sess = target_id_sess(1:ntrial);
     target_id = [target_id, target_id_sess];
     
     assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1) % verify randStim1_doSameStim2 protocol
     assert(sum(adapter_id == target_id) == length(target_id))
 
     frame_ad_sess = double(cell2mat(input_behav.cStimOneOn)); 
-    frame_ad_sess = frame_ad_sess(1:ntrial_sess);
-    frame_ad_off_sess = double(cell2mat(input_behav.cStimOneOn)); 
-    frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
-    frame_tg_sess = double(celleqel2mat_padded(input_behav.cStimTwoOn)); 
-    frame_tg_sess = frame_tg_sess(1:ntrial_sess);
+    frame_ad_sess = frame_ad_sess(1:ntrial);
     if i>1
         frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:i-1));
-        frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:i-1));
-        frame_tg_sess = frame_tg_sess + sum(nframe_seq(1:i-1));
     end
-    frame_ad = [frame_ad, frame_ad_sess];
-    frame_ad_off = [frame_ad_off, frame_ad_off_sess];
-    frame_tg = [frame_tg, frame_tg_sess];
+    frame_ad = []
 end
 
 adapter_list = unique(adapter_id); n_adapter = length(adapter_list);
 target_list = unique(target_id); n_target = length(target_list);
 id_noad = []; id_ad = 1:ntrial; 
+
+
+frame_ad_off = double(cell2mat(input_behav.cStimOneOn)); frame_ad_off = frame_ad_off(1:ntrial);
+frame_tg = double(celleqel2mat_padded(input_behav.cStimTwoOn)); frame_tg = frame_tg(1:ntrial);
 isi_seq = frame_tg - frame_ad_off; 
 trial_len_min = min(unique(diff(frame_ad)));
 
 nisi = length(unique(frame_tg - frame_ad));
+% id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
+% id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
 id_750 = []; id_250 = 1:ntrial; 
 id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
@@ -130,7 +121,4 @@ for iori  = 1 : nori
     id_ori{iori} = find(ori_seq == ori_list(iori)); 
 end
 
-t = cellfun(@size,id_ori,'uni',false);
-t = cell2mat(t(:,1));
-nrep_stim = unique(t(:,2)) % bunny500 3sess gives 3/4/5 rep of each img
 
