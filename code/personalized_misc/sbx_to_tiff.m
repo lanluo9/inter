@@ -19,19 +19,19 @@ database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
 master_xls = [root_path, 'mat\adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 % dataset_now = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
-dataset_now = dataset_meta(ismember(dataset_meta.paradigm, 'bunny500'),:);
+dataset_now = dataset_meta(ismember(dataset_meta.paradigm, 'bunnytop'),:);
 nset = size(dataset_now); nset = nset(1)
 
-data_seq = 'single';
-if sum(ismember(dataset_now.paradigm, 'bunny500'))
-    data_seq = 'sequential';
-end
+% data_seq = 'single';
+% if sum(ismember(dataset_now.paradigm, 'bunny500'))
+%     data_seq = 'sequential';
+% end
 
 %% for each sbx
 
-if contains(data_seq, 'sequential')
-    data_full = [];
-end
+% if contains(data_seq, 'sequential')
+%     data_full = [];
+% end
 
 for iset = 1:nset
     
@@ -77,13 +77,11 @@ disp('read sbx done')
 data = permute(data_temp, [3,2,4,1]); % flip to make nrow > ncol. for easy visualiz
 disp('permutation done')
 data = squeeze(data);
-data = data(:,:,1:70000); % get first 70k frames = 1 round of bunny500
+% data = data(:,:,1:70000); % get first 70k frames = 1 round of bunny500
 
-data_full = cat(3,data_full,data); % concat 3 recordings of bunny 500
+% data_full = cat(3,data_full,data); % concat 3 recordings of bunny 500
+data_full = data;
 data_size = size(data_full)
-
-end
-
 nframes = data_size(3)
 toc
 
@@ -101,7 +99,7 @@ toc
 cd ..
 disp('start saving tiff')
 datetime('now')
-tif_file = [imouse, '_', date, '_', num, '_multipage_210k.tif'];
+tif_file = [imouse, '_', date, '_', num, '_multipage_70k.tif'];
 % if exist(tif_file, 'file')
 %     continue % if tif exist, assume this sbx has been converted
 % end
@@ -128,4 +126,5 @@ if contains(mode, 'local')
     delete(mat_file)
     delete(sbx_file)
 end
-% end
+
+end
