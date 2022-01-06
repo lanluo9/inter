@@ -182,36 +182,36 @@ trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:))
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 %% visually driven cells
-% % cells responsive to adapter aka stimOne, categorized by adapter identity
-% 
-% sig_alpha = 0.01;
-% id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is for noad tg
-% [sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'tg_any', sig_alpha);
-% [sig_vis_tg, p_vis_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
-% 
-% vis_cell_ad = logical(sum(sig_vis_ad, 2));
-% vis_cell_tg = logical(sum(sig_vis_tg, 2));
-% 
-% subplot(1,2,1)
-% imagesc(sig_vis_ad) % bug
-% subplot(1,2,2)
-% imagesc(sig_vis_tg) % bug
-% 
-% sum(vis_cell_ad)/length(vis_cell_ad) % percent vis driven by any stim
-% t = sum(sig_vis_ad,1)/ncell; % percent vis driven by each stim
-% bar(t); % bug
-% t2 = sum(sig_vis_ad,2); % each cell respond to how many stim
-% bar(t2);
-% t3 = t2(t2>0); 
-% bar(t3); % each cell respond to how many stim, excluding 0 stim
-% histogram(t2,50); % how many neurons respond to 0...500 stimuli?
-% histogram(t3,100); % how many neurons respond to 1...500 stimuli?
-% 
-% % length(find(vis_cell_ad==0)) % not vis driven by ad
-% % length(find(vis_cell_tg==0)) % not vis driven by ad tg
-% % length(find(~vis_cell_ad & ~vis_cell_tg)) % not vis driven by anything
-% % length(vis_cell_ad) - length(find(~vis_cell_ad & ~vis_cell_tg)) 
-% 
-% if save_flag
-%     save vis_driven.mat sig_vis_ad p_vis_ad vis_cell_ad
-% end
+% cells responsive to adapter aka stimOne, categorized by adapter identity
+
+sig_alpha = 0.01;
+id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is for noad tg
+[sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'tg_any', sig_alpha);
+[sig_vis_tg, p_vis_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
+
+vis_cell_ad = logical(sum(sig_vis_ad, 2));
+vis_cell_tg = logical(sum(sig_vis_tg, 2));
+
+subplot(1,2,1)
+imagesc(sig_vis_ad) % bug
+subplot(1,2,2)
+imagesc(sig_vis_tg) % bug
+
+sum(vis_cell_ad)/length(vis_cell_ad) % percent vis driven by any stim
+t = sum(sig_vis_ad,1)/ncell; % percent vis driven by each stim
+bar(t); % bug
+t2 = sum(sig_vis_ad,2); % each cell respond to how many stim
+bar(t2);
+t3 = t2(t2>0); 
+bar(t3); % each cell respond to how many stim, excluding 0 stim
+histogram(t2,50); % how many neurons respond to 0...500 stimuli?
+histogram(t3,100); % how many neurons respond to 1...500 stimuli?
+
+% length(find(vis_cell_ad==0)) % not vis driven by ad
+% length(find(vis_cell_tg==0)) % not vis driven by ad tg
+% length(find(~vis_cell_ad & ~vis_cell_tg)) % not vis driven by anything
+% length(vis_cell_ad) - length(find(~vis_cell_ad & ~vis_cell_tg)) 
+
+if save_flag
+    save vis_driven.mat sig_vis_ad p_vis_ad vis_cell_ad
+end
