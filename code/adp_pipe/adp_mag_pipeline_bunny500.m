@@ -16,29 +16,27 @@ data_fn = fullfile(ll_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
-% caiman bunny500 gcamp6s 
+% caiman bunny500/top gcamp6s 
 dataset_list = struct;
-dataset_list.mouse = [1339]; 
-dataset_list.date = [210922];
+dataset_list.mouse = [1350]; 
+dataset_list.date = [211222];
 dataset_list.area = {'V1'};
+stim_protocol = 'bunnytop'
 
 %% load [xls, timecourse, stim]
 
-% for iset = 1 %: length(dataset_list.date)
-iset = 1
 save_flag = 1; % toggle this to save/skip all .mat creation below
-
+iset = 1 % this assumes registered multisession is recorded on same day & mouse
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse]
 area = dataset_list.area{1,iset}
-% [~, frame_rate, input_behav, info] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
 
 % get stim mat: input_behav for each session
 xls_dir = fullfile(data_fn, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
 frame_rate = data_now_meta.(5)(end);
-bunny500_id = find(contains(data_now_meta.StimulusSet,'bunny_randStim1_doSameStim2'))
+bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol))
 
 clear input_behav_seq
 for i = 1:length(bunny500_id)
@@ -58,11 +56,11 @@ cd(result_folder)
 
 %% substitute npSub_tc w caiman
 
-df = load('C:\Users\ll357\Documents\CaImAn\demos\caiman_activity_i1339_210922_multisess.mat');
+df = load('C:\Users\ll357\Documents\CaImAn\demos\temp_data\i1350_211222\caiman_activity_i1350_211222_multisess.mat');
 df_pile = (df.df)'; 
 
 t = cellfun(@size,df_pile,'uni',false); 
-ncell = size(t,2);
+ncell = size(t,2)
 t = cell2mat(t(:,1));
 nframe_seq = t(:,2);
 
@@ -133,7 +131,9 @@ end
 
 t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
-nrep_stim = unique(t(:,2)) % bunny500 3sess gives 3/4/5 rep of each img
+nrep_stim = unique(t(:,2)) 
+% bunny500 3sess gives 3/4/5 rep of each img
+% bunnytop 3sess gives 48-50 rep of each img
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
@@ -153,16 +153,18 @@ dfof_align_tg = tc_align_tg; % which should have been dfof_align = (tc - base) /
 t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t(:,:), 1)); 
 t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
 
+figure
 range = 50; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
 
+figure
 range = trial_len_min; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
-close all
+% close all
 
-range_base = 1:3; range_resp = 11:13;
+range_base = 1:4; range_resp = 11:13;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% response to adapter & targets. get trace (bunny mode: isi=250 only)
@@ -180,38 +182,36 @@ trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:))
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 %% visually driven cells
-% cells responsive to adapter aka stimOne, categorized by adapter identity
-
-sig_alpha = 0.01;
-id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is for noad tg
-[sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'tg_any', sig_alpha);
-[sig_vis_tg, p_vis_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
-
-vis_cell_ad = logical(sum(sig_vis_ad, 2));
-vis_cell_tg = logical(sum(sig_vis_tg, 2));
-
-subplot(1,2,1)
-imagesc(sig_vis_ad) % bug
-subplot(1,2,2)
-imagesc(sig_vis_tg) % bug
-
-sum(vis_cell_ad)/length(vis_cell_ad) % percent vis driven by any stim
-t = sum(sig_vis_ad,1)/ncell; % percent vis driven by each stim
-bar(t); % bug
-t2 = sum(sig_vis_ad,2); % each cell respond to how many stim
-bar(t2);
-t3 = t2(t2>0); 
-bar(t3); % each cell respond to how many stim, excluding 0 stim
-histogram(t2,50); % how many neurons respond to 0...500 stimuli?
-histogram(t3,100); % how many neurons respond to 1...500 stimuli?
-
-% length(find(vis_cell_ad==0)) % not vis driven by ad
-% length(find(vis_cell_tg==0)) % not vis driven by ad tg
-% length(find(~vis_cell_ad & ~vis_cell_tg)) % not vis driven by anything
-% length(vis_cell_ad) - length(find(~vis_cell_ad & ~vis_cell_tg)) 
-
-if save_flag
-    save vis_driven.mat sig_vis_ad p_vis_ad vis_cell_ad
-end
-
-
+% % cells responsive to adapter aka stimOne, categorized by adapter identity
+% 
+% sig_alpha = 0.01;
+% id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is for noad tg
+% [sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'tg_any', sig_alpha);
+% [sig_vis_tg, p_vis_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
+% 
+% vis_cell_ad = logical(sum(sig_vis_ad, 2));
+% vis_cell_tg = logical(sum(sig_vis_tg, 2));
+% 
+% subplot(1,2,1)
+% imagesc(sig_vis_ad) % bug
+% subplot(1,2,2)
+% imagesc(sig_vis_tg) % bug
+% 
+% sum(vis_cell_ad)/length(vis_cell_ad) % percent vis driven by any stim
+% t = sum(sig_vis_ad,1)/ncell; % percent vis driven by each stim
+% bar(t); % bug
+% t2 = sum(sig_vis_ad,2); % each cell respond to how many stim
+% bar(t2);
+% t3 = t2(t2>0); 
+% bar(t3); % each cell respond to how many stim, excluding 0 stim
+% histogram(t2,50); % how many neurons respond to 0...500 stimuli?
+% histogram(t3,100); % how many neurons respond to 1...500 stimuli?
+% 
+% % length(find(vis_cell_ad==0)) % not vis driven by ad
+% % length(find(vis_cell_tg==0)) % not vis driven by ad tg
+% % length(find(~vis_cell_ad & ~vis_cell_tg)) % not vis driven by anything
+% % length(vis_cell_ad) - length(find(~vis_cell_ad & ~vis_cell_tg)) 
+% 
+% if save_flag
+%     save vis_driven.mat sig_vis_ad p_vis_ad vis_cell_ad
+% end
