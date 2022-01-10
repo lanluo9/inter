@@ -132,8 +132,8 @@ end
 t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
 nrep_stim = unique(t(:,2)) 
-% bunny500 3sess gives 3/4/5 rep of each img
-% bunnytop 3sess gives 48-50 rep of each img
+% bunny500 3sess = 3/4/5 rep of each img
+% bunnytop 3sess = 48-50 rep of each img, each sess = 16 rep
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
@@ -172,6 +172,7 @@ range_base = 1:4; range_resp = 11:13;
 
 [dfof_ad, dfof_ad_sem, dfof_ad_std] = dfof_resp(dfof_align_ad, 'tg', 0); % tg mode aka separate diff stim images, but use adapter resp
 [dfof_tg, dfof_tg_sem, dfof_tg_std] = dfof_resp(dfof_align_tg, 'tg', 0);
+% [dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag)
 dfof_ad = dfof_ad(:,:,3); dfof_ad_sem = dfof_ad_sem(:,:,3); dfof_ad_std = dfof_ad_std(:,:,3); % keep isi=250 only
 dfof_tg = dfof_tg(:,:,3); dfof_tg_sem = dfof_tg_sem(:,:,3); dfof_tg_std = dfof_tg_std(:,:,3);
 if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
