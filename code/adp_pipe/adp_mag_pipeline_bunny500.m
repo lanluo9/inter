@@ -36,7 +36,8 @@ xls_dir = fullfile(data_fn, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
 frame_rate = data_now_meta.(5)(end);
-bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol))
+bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol));
+data_now_meta(bunny500_id,:)
 
 clear input_behav_seq
 for i = 1:length(bunny500_id)
@@ -49,7 +50,14 @@ for i = 1:length(bunny500_id)
     input_behav_seq(i) = temp.input; clear temp
 end
 
-areamousedate = [area '_' imouse '_' date];
+sess_flag = 1
+if sess_flag == 1
+    input_behav_seq = input_behav_seq(1); sess = '002';
+elseif sess_flag == 3
+    input_behav_seq = input_behav_seq(3); sess = '004';
+end
+
+areamousedate = [area '_' imouse '_' date '_' sess];
 result_folder = [root_path, '\mat\', areamousedate, '_caiman'];
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
@@ -67,6 +75,12 @@ nframe_seq = t(:,2);
 df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
 for icell = 1:ncell
     df_flat(:,icell) = horzcat(df_pile{:, icell})';
+end
+
+if sess_flag == 1
+    
+elseif sess_flag == 3
+    
 end
 
 %% concat trial stim info for each session
