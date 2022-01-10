@@ -50,7 +50,7 @@ for i = 1:length(bunny500_id)
     input_behav_seq(i) = temp.input; clear temp
 end
 
-sess_flag = 1
+sess_flag = 3
 if sess_flag == 1
     input_behav_seq = input_behav_seq(1); sess = '002';
 elseif sess_flag == 3
@@ -78,10 +78,12 @@ for icell = 1:ncell
 end
 
 if sess_flag == 1
-    
+    frame_range = 1:70000;
 elseif sess_flag == 3
-    
+    frame_range = 140000:210000;
 end
+df_flat = df_flat(frame_range, :);
+
 
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
@@ -93,7 +95,7 @@ frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
 
-for i = 1 : length(bunny500_id)
+for i = 1 %: length(bunny500_id) % for single sess, sess_flag has value
     input_behav = input_behav_seq(i);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
@@ -147,7 +149,7 @@ t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
 nrep_stim = unique(t(:,2)) 
 % bunny500 3sess = 3/4/5 rep of each img
-% bunnytop 3sess = 48-50 rep of each img, each sess = 16 rep
+% bunnytop 3sess = 48-50 rep of each img, each sess = 16-17 rep
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
