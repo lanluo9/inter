@@ -18,10 +18,10 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
 % caiman bunny500/top gcamp6s 
 dataset_list = struct;
-dataset_list.mouse = [1350]; 
-dataset_list.date = [211222];
+dataset_list.mouse = [1339]; 
+dataset_list.date = [210922];
 dataset_list.area = {'V1'};
-stim_protocol = 'bunnytop'
+stim_protocol = 'bunny'
 
 %% load [xls, timecourse, stim]
 
@@ -50,25 +50,28 @@ for i = 1:length(bunny500_id)
     input_behav_seq(i) = temp.input; clear temp
 end
 
-sess_flag = 'B'
+sess_flag = ''
 if sess_flag == 1
-    input_behav_seq = input_behav_seq(1); sess = '002';
+    input_behav_seq = input_behav_seq(1); sess = '_002';
 elseif sess_flag == 3
-    input_behav_seq = input_behav_seq(3); sess = '004';
+    input_behav_seq = input_behav_seq(3); sess = '_004';
 elseif contains(sess_flag, 'A')
-    sess = 'sideA';
+    sess = '_sideA';
 elseif contains(sess_flag, 'B')
-    sess = 'sideB';
+    sess = '_sideB';
+else
+    sess = '';
 end
 
-areamousedate = [area '_' imouse '_' date '_' sess];
+areamousedate = [area '_' imouse '_' date sess];
 result_folder = [root_path, '\mat\', areamousedate, '_caiman']
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
 %% substitute npSub_tc w caiman
 
-df = load('C:\Users\ll357\Documents\CaImAn\demos\temp_data\i1350_211222\caiman_activity_i1350_211222_multisess.mat');
+% df = load('C:\Users\ll357\Documents\CaImAn\demos\temp_data\i1350_211222\caiman_activity_i1350_211222_multisess.mat');
+df = load('Z:\All_Staff\home\lan\Analysis\2P\210922_i1339\caiman_activity_i1339_210922_multisess.mat')
 df_pile = (df.df)'; 
 
 t = cellfun(@size,df_pile,'uni',false); 
@@ -81,14 +84,14 @@ for icell = 1:ncell
     df_flat(:,icell) = horzcat(df_pile{:, icell})';
 end
 
-if sess_flag == 1
-    frame_range = 1:70000;
-elseif sess_flag == 3
-    frame_range = 140000:210000;
-else
-    frame_range = 1:210000;
-end
-df_flat = df_flat(frame_range, :);
+% if sess_flag == 1
+%     frame_range = 1:70000;
+% elseif sess_flag == 3
+%     frame_range = 140000:210000;
+% else
+%     frame_range = 1:210000;
+% end
+% df_flat = df_flat(frame_range, :);
 
 
 %% concat trial stim info for each session
@@ -168,6 +171,10 @@ dfof_align_ad = tc_align_ad; % did not do trial-specific baselining
 dfof_align_tg = tc_align_tg; % which should have been dfof_align = (tc - base) / base
 % dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
 % dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
+
+trace_by_trial = dfof_align_ad;
+stim_seq = adapter_id';
+if save_flag; save trace_trial_stim.mat trace_by_trial stim_seq; end
 
 %% set resp window
 % find base window & resp window
