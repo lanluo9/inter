@@ -18,8 +18,8 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
 % caiman bunny500/top gcamp6s 
 dataset_list = struct;
-dataset_list.mouse = [1339]; 
-dataset_list.date = [210922];
+dataset_list.mouse = [1350]; 
+dataset_list.date = [211222];
 dataset_list.area = {'V1'};
 stim_protocol = 'bunny'
 
@@ -71,7 +71,7 @@ cd(result_folder)
 %% substitute npSub_tc w caiman
 
 % df = load('C:\Users\ll357\Documents\CaImAn\demos\temp_data\i1350_211222\caiman_activity_i1350_211222_multisess.mat');
-df = load('Z:\All_Staff\home\lan\Analysis\2P\210922_i1339\caiman_activity_i1339_210922_multisess.mat')
+df = load('Z:\All_Staff\home\lan\Analysis\2P\210922_i1339\caiman_activity_i1339_210922_multisess.mat');
 df_pile = (df.df)'; 
 
 t = cellfun(@size,df_pile,'uni',false); 
@@ -92,7 +92,7 @@ end
 %     frame_range = 1:210000;
 % end
 % df_flat = df_flat(frame_range, :);
-
+size(df_flat)
 
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
@@ -238,6 +238,10 @@ if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 %% visually driven cells
 % cells responsive to adapter aka stimOne, categorized by adapter identity
+
+size(trace_by_trial)
+
+%%
 
 sig_alpha = 0.01;
 id_noad = id_ad; % pretend every trial is noad bc vis_cell_criteria tg_any is for noad tg

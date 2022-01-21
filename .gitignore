@@ -8,8 +8,8 @@ debug.log
 f_neuron.mat
 npSub_tc_fake.mat
 tc_align_ad.mat
-trace_avg.mat
+trace*.mat
 fake_movie.mat
 
-mat/V1_i1339_210922_caiman/trace_aligned.mat
+mat/V1_i1339_210922_caiman/trace*.mat
 code/mwork/*/Image
