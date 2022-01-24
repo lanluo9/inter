@@ -30,7 +30,3 @@ Eye_data = extractEyeData(data_crop,rad_range);
 %% align to stimulus presentation
 [rad centroid] = alignEyeData(Eye_data,input);
 
-
-
-    
-            
