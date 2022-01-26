@@ -232,6 +232,7 @@ if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem 
 
 [dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
 dfof_ad_trial = dfof_ad_trial(:,:,3);
+dfof_ad_trial = cell2mat(dfof_ad_trial);
 dfof_base_trial = dfof_base_trial(:,:,3);
 
 % trace = ncell x nori x nisi3 [noad 750 250]
