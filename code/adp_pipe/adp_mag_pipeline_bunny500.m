@@ -230,15 +230,29 @@ dfof_ad = dfof_ad(:,:,3); dfof_ad_sem = dfof_ad_sem(:,:,3); dfof_ad_std = dfof_a
 dfof_tg = dfof_tg(:,:,3); dfof_tg_sem = dfof_tg_sem(:,:,3); dfof_tg_std = dfof_tg_std(:,:,3);
 if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
 
-[dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
-dfof_ad_trial = dfof_ad_trial(:,:,3);
-dfof_ad_trial = cell2mat(dfof_ad_trial);
-dfof_base_trial = dfof_base_trial(:,:,3);
-
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
 trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:));
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
+
+%% trial-wise response and baseline
+
+[dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
+dfof_ad_trial = dfof_ad_trial(:,:,3);
+dfof_base_trial = dfof_base_trial(:,:,3);
+
+[dfof_tg_trial, dfof_base2_trial] = dfof_resp_trialwise(dfof_align_tg, save_flag);
+dfof_tg_trial = dfof_tg_trial(:,:,3);
+dfof_base2_trial = dfof_base2_trial(:,:,3);
+
+if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial dfof_base_trial dfof_base2_trial; end
+
+% for 
+%     
+% end
+% nrep_stim_min = min(nrep_stim); % only keep min nrep per stim to enable cell2mat
+% t = cellfun(@(x) x(1:nrep_stim_min),dfof_ad_trial,'UniformOutput',false);
+% dfof_ad_trial = cell2mat(t);
 
 %% visually driven cells
 % cells responsive to adapter aka stimOne, categorized by adapter identity
