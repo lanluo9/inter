@@ -70,9 +70,11 @@ cd(result_folder)
 
 %% substitute npSub_tc w caiman
 
+tc_file = fullfile(tc_fn, [date '_' imouse], ['caiman_activity_' imouse '_' date, '_multisess.mat']);
+df = load(tc_file);
 % df = load('C:\Users\ll357\Documents\CaImAn\demos\temp_data\i1350_211222\caiman_activity_i1350_211222_multisess.mat');
-df = load('Z:\All_Staff\home\lan\Analysis\2P\210922_i1339\caiman_activity_i1339_210922_multisess.mat');
-df_pile = (df.df)'; 
+% df = load('Z:\All_Staff\home\lan\Analysis\2P\210922_i1339\caiman_activity_i1339_210922_multisess.mat');
+df_pile = (df.df)';
 
 t = cellfun(@size,df_pile,'uni',false); 
 ncell = size(t,2)
