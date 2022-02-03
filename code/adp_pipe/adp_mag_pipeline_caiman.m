@@ -128,18 +128,29 @@ if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 %% trial-wise response and baseline
 
 [dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
-dfof_ad_trial = dfof_ad_trial(:,:,3);
-dfof_base_trial = dfof_base_trial(:,:,3);
-
 [dfof_tg_trial, dfof_base2_trial] = dfof_resp_trialwise(dfof_align_tg, save_flag);
-dfof_tg_trial = dfof_tg_trial(:,:,3);
-dfof_base2_trial = dfof_base2_trial(:,:,3);
 
-README = 'to get real stim response, subtract baseline: `dfof_ad_trial - dfof_base_trial` and `dfof_tg_trial - dfof_base2_trial`';
-if save_flag; save resp_base_trialwise.mat README ...
-        dfof_ad_trial dfof_tg_trial ...
-        dfof_base_trial dfof_base2_trial; 
+% % only take isi=250 to compare w bunnytop adp & target resp
+% dfof_ad_trial = dfof_ad_trial(:,:,3);
+% dfof_base_trial = dfof_base_trial(:,:,3);
+% dfof_tg_trial = dfof_tg_trial(:,:,3);
+% dfof_base2_trial = dfof_base2_trial(:,:,3);
+
+% README = 'isi=250. to get real stim response, subtract baseline: `dfof_ad_trial - dfof_base_trial` and `dfof_tg_trial - dfof_base2_trial`';
+% if save_flag; save resp_base_trialwise.mat README ...
+%         dfof_ad_trial dfof_tg_trial ...
+%         dfof_base_trial dfof_base2_trial; 
+% end
+
+% only take isi=inf (noad trials) to compare w bunnytop adapter resp
+dfof_tg_trial = dfof_tg_trial(:,:,1);
+dfof_base2_trial = dfof_base2_trial(:,:,1);
+
+README = 'isi=inf/noad. to get real stim response, subtract baseline: `dfof_tg_trial - dfof_base2_trial`';
+if save_flag
+    save resp_base_trialwise_noad.mat README dfof_tg_trial dfof_base2_trial
 end
+
 
 %% visually driven cells
 % cells responsive to ad / noad tg (all oris)
