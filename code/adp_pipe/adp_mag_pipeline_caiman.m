@@ -136,7 +136,10 @@ dfof_tg_trial = dfof_tg_trial(:,:,3);
 dfof_base2_trial = dfof_base2_trial(:,:,3);
 
 README = 'to get real stim response, subtract baseline: `dfof_ad_trial - dfof_base_trial` and `dfof_tg_trial - dfof_base2_trial`';
-if save_flag; save resp_base_trialwise.mat README dfof_ad_trial dfof_tg_trial dfof_base_trial dfof_base2_trial; end
+if save_flag; save resp_base_trialwise.mat README ...
+        dfof_ad_trial dfof_tg_trial ...
+        dfof_base_trial dfof_base2_trial; 
+end
 
 %% visually driven cells
 % cells responsive to ad / noad tg (all oris)
