@@ -41,8 +41,13 @@ cd(result_folder)
 
 %% substitute npSub_tc w caiman
 
-df_cells = load('C:\Users\ll357\Documents\CaImAn\demos\caiman_cell_activity.mat');
-npSub_tc = (df_cells.df_cells)'; % shape = [nframe, ncell]
+tc_file = dir(fullfile(tc_fn, [date '_' imouse], 'caiman_*.mat'));
+tc_file = {tc_file.name}; 
+if max(size(tc_file)) == 1; tc_file = tc_file{1}; end % there is only one caiman result mat
+
+df = load(fullfile(tc_fn, [date '_' imouse], tc_file));
+npSub_tc = (df.df_cells)'; % shape = [nframe, ncell]
+size(npSub_tc)
 
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
@@ -86,6 +91,11 @@ dfof_align_tg = tc_align_tg; % which should have been dfof_align = (tc - base) /
 % dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
 % dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
 
+trace_by_trial = dfof_align_ad;
+stim_seq = ori_seq';
+isi_inf_750_250_id = id_isi3;
+if save_flag; save trace_trial_stim.mat trace_by_trial stim_seq isi_inf_750_250_id; end
+
 %% set resp window
 % find base window & resp window
 
@@ -113,6 +123,20 @@ if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, save_flag);
 size(trace_avg)
+if save_flag; save trace_aligned.mat trace_avg trace_sem; end
+
+%% trial-wise response and baseline
+
+[dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
+dfof_ad_trial = dfof_ad_trial(:,:,3);
+dfof_base_trial = dfof_base_trial(:,:,3);
+
+[dfof_tg_trial, dfof_base2_trial] = dfof_resp_trialwise(dfof_align_tg, save_flag);
+dfof_tg_trial = dfof_tg_trial(:,:,3);
+dfof_base2_trial = dfof_base2_trial(:,:,3);
+
+README = 'to get real stim response, subtract baseline: `dfof_ad_trial - dfof_base_trial` and `dfof_tg_trial - dfof_base2_trial`';
+if save_flag; save resp_base_trialwise.mat README dfof_ad_trial dfof_tg_trial dfof_base_trial dfof_base2_trial; end
 
 %% visually driven cells
 % cells responsive to ad / noad tg (all oris)
