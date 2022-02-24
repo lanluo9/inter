@@ -20,6 +20,8 @@ master_xls = [root_path, 'mat\adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 % dataset_now = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
 dataset_now = dataset_meta(ismember(dataset_meta.paradigm, 'bunnytop'),:);
+dataset_now = dataset_now(ismember(dataset_now.area, 'LM'),:);
+dataset_now
 nset = size(dataset_now); nset = nset(1)
 
 % data_seq = 'single';
@@ -99,7 +101,7 @@ toc
 cd ..
 disp('start saving tiff')
 datetime('now')
-tif_file = [imouse, '_', date, '_', num, '_multipage_70k.tif'];
+tif_file = [imouse, '_', date, '_', num, '_multipage.tif'];
 % if exist(tif_file, 'file')
 %     continue % if tif exist, assume this sbx has been converted
 % end
