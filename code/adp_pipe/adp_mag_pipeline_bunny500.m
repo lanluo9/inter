@@ -19,8 +19,8 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 % caiman bunny500/top gcamp6s 
 dataset_list = struct;
 dataset_list.mouse = [1350]; 
-dataset_list.date = [211222];
-dataset_list.area = {'V1'};
+dataset_list.date = [220124];
+dataset_list.area = {'LM'};
 stim_protocol = 'bunny'
 
 %% load [xls, timecourse, stim]
@@ -193,9 +193,9 @@ figure
 range = trial_len_min; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
-close all
+% close all
 
-range_base = 1:4; range_resp = 11:13;
+range_base = 1:4; range_resp = 13:15;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
