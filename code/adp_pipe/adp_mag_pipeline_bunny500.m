@@ -16,11 +16,11 @@ data_fn = fullfile(ll_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
-% caiman bunny500/top gcamp6s 
+% caiman bunny500/top gcamp6s
 dataset_list = struct;
-dataset_list.mouse = [1350]; 
-dataset_list.date = [220124];
-dataset_list.area = {'LM'};
+dataset_list.mouse = [1350]; % Z:\All_Staff\home\lan\Analysis\2P\220225_i1350
+dataset_list.date = [220225];
+dataset_list.area = {'V1'};
 stim_protocol = 'bunny'
 
 %% load [xls, timecourse, stim]
@@ -36,8 +36,11 @@ xls_dir = fullfile(data_fn, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
 frame_rate = data_now_meta.(5)(end);
-bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol));
+% bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol));
+bunny500_id = find(contains(data_now_meta.Var9,stim_protocol));
 data_now_meta(bunny500_id,:)
+
+%%
 
 clear input_behav_seq
 for i = 1:length(bunny500_id)
@@ -161,6 +164,35 @@ t = cell2mat(t(:,1));
 nrep_stim = unique(t(:,2)) 
 % bunny500 3sess = 3/4/5 rep of each img
 % bunnytop 3sess = 48-50 rep of each img, each sess = 16-17 rep
+
+% %% visliz F over time: photobleaching / dying cell
+% % clear all global % sbxread might need clear global var
+% 
+% cd('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\002')
+% names = dir('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\002\*_000_000.mat');
+% imgMatFile = {names.name}
+% load(imgMatFile{1});
+% nframes = info.config.frames;
+% names = dir('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\002\*_000_000.sbx');
+% sbxFile = {names.name}
+% data_temp = sbxread(sbxFile{1}(1:end-4), 0, nframes);
+% 
+% cd('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\003')
+% names = dir('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\003\*_000_000.sbx');
+% sbxFile = {names.name}
+% data_temp2 = sbxread(sbxFile{1}(1:end-4), 0, nframes);
+% 
+% data = cat(4, data_temp, data_temp2);
+% data = squeeze(data);
+% data_avg = squeeze(mean(mean(data,2),1));
+% 
+% data_smooth = movmean(data_avg, 500);
+% plot(data_smooth)
+% 
+% cd('Z:\All_Staff\home\lan\Analysis\2P\220225_i1350')
+% save overall_fluorescence.mat data_avg
+% saveas(gcf, 'overall_fluorescence', 'jpg')
+% close
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
