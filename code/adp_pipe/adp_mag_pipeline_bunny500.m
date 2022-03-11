@@ -67,37 +67,42 @@ else
 end
 
 areamousedate = [area '_' imouse '_' date sess];
-result_folder = [root_path, '\mat\', areamousedate, '_caiman']
+result_folder = [root_path, '\mat\', areamousedate]
+% result_folder = [root_path, '\mat\', areamousedate, '_caiman']
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
 %% substitute npSub_tc w caiman
 
-tc_file = fullfile(tc_fn, [date '_' imouse], ['caiman_activity_' imouse '_' date, '_multisess.mat']);
-df = load(tc_file);
-% df = load('C:\Users\ll357\Documents\CaImAn\demos\temp_data\i1350_211222\caiman_activity_i1350_211222_multisess.mat');
-% df = load('Z:\All_Staff\home\lan\Analysis\2P\210922_i1339\caiman_activity_i1339_210922_multisess.mat');
-df_pile = (df.df)';
+cd(fullfile(tc_fn, [date '_' imouse]))
+cd('220225_i1350_runs-002')
+tc = load('220225_i1350_runs-002_TCs_addfake.mat');
+df_flat = tc.npSub_tc;
+[nframe, ncell] = size(df_flat)
 
-t = cellfun(@size,df_pile,'uni',false); 
-ncell = size(t,2)
-t = cell2mat(t(:,1));
-nframe_seq = t(:,2);
-
-df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
-for icell = 1:ncell
-    df_flat(:,icell) = horzcat(df_pile{:, icell})';
-end
-
-% if sess_flag == 1
-%     frame_range = 1:70000;
-% elseif sess_flag == 3
-%     frame_range = 140000:210000;
-% else
-%     frame_range = 1:210000;
+% tc_file = fullfile(tc_fn, [date '_' imouse], ['caiman_activity_' imouse '_' date, '_multisess.mat']);
+% df = load(tc_file);
+% df_pile = (df.df)';
+% 
+% t = cellfun(@size,df_pile,'uni',false); 
+% ncell = size(t,2)
+% t = cell2mat(t(:,1));
+% nframe_seq = t(:,2);
+% 
+% df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
+% for icell = 1:ncell
+%     df_flat(:,icell) = horzcat(df_pile{:, icell})';
 % end
-% df_flat = df_flat(frame_range, :);
-size(df_flat)
+% 
+% % if sess_flag == 1
+% %     frame_range = 1:70000;
+% % elseif sess_flag == 3
+% %     frame_range = 140000:210000;
+% % else
+% %     frame_range = 1:210000;
+% % end
+% % df_flat = df_flat(frame_range, :);
+% size(df_flat)
 
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
@@ -227,7 +232,7 @@ grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad alig
 if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
-range_base = 1:4; range_resp = 13:15;
+range_base = 1:4; range_resp = 9:12;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
