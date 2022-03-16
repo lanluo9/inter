@@ -2,14 +2,21 @@
 clear all
 clc
 
-master_xls = readtable('C:\Users\lan\Documents\repos\inter\mat\adp_dataset_master.xlsx');
-% irow = 15; % todo 16
-irow = 32;
-mouse = master_xls.mouse(irow);
-imouse = ['i', num2str(mouse)];
-date = num2str(master_xls.date(irow));
-ImgFolder = master_xls.num(irow); ImgFolder = ImgFolder{1};
+%%
+database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
+master_xls = [database_path, 'mat_inter\adp_dataset_master.xlsx'];
+dataset_meta = readtable(master_xls);
+dataset_now = dataset_meta(ismember(dataset_meta.paradigm, 'bunnytop high res'),:);
+dataset_now = dataset_now(dataset_now.mouse == 1350, :);
+dataset_now
 
+iset = 1
+mouse = dataset_now.mouse(iset)
+imouse = ['i', num2str(mouse)];
+date = num2str(dataset_now.date(iset))
+ImgFolder = dataset_now.num(iset); ImgFolder = ImgFolder{1}
+
+%%
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
 xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx'); clear dataset_meta
@@ -23,7 +30,7 @@ ref = strvcat('001'); % what is ref?
 nrun = size(ImgFolder,1);
 run_str = catRunName(ImgFolder, nrun);
 
-% %% load and register
+%% load and register
 tic
 data = [];
 clear temp
@@ -89,7 +96,7 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
 %%
-select = 4;
+select = 3
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
@@ -195,7 +202,7 @@ disp(' ')
 % data_f2 (baseline after adaptation) = frame #14-16
 
 % ca_latency = 5 or 8;
-ca_latency = 7; % = x-1. stim onset frame 1 -> signal received frame x
+ca_latency = 8; % = x-1. stim onset frame 1 -> signal received frame x
 window_len = 3;
 
 % ca_latency = 4;

@@ -16,11 +16,12 @@ root_path = 'C:\Users\ll357\Documents\inter\';
 mode = 'remote' % read sbx and write tif remotely on isilon
 
 database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
-master_xls = [root_path, 'mat\adp_dataset_master.xlsx'];
+master_xls = [database_path, 'mat_inter\adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 % dataset_now = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
 % dataset_now = dataset_now(ismember(dataset_now.area, 'LM'),:);
 dataset_now = dataset_meta(ismember(dataset_meta.paradigm, 'bunnytop high res'),:);
+dataset_now = dataset_now(dataset_now.mouse == 1369, :);
 dataset_now
 nset = size(dataset_now); nset = nset(1)
 
@@ -122,11 +123,19 @@ t=toc
 fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
 fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
 
-%% remove sbx if local
+%% remove sbx if local, copy tif if remote
 
 if contains(mode, 'local')
     delete(mat_file)
     delete(sbx_file)
+end
+if contains(mode, 'remote')
+    parent_dir = 'C:\Users\ll357\Documents\CaImAn\demos\temp_data\'
+    mouse = dataset_now.mouse(1)
+    date = dataset_now.date(1)
+    new_dir = [parent_dir, 'ii', num2str(mouse), '_', num2str(date)]
+    mkdir(parent_dir, new_dir)
+%     copyfile(SOURCE,DESTINATION,MODE) % todo
 end
 
 end
