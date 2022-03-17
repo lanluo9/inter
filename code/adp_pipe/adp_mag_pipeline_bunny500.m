@@ -18,8 +18,8 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
 % caiman bunny500/top gcamp6s
 dataset_list = struct;
-dataset_list.mouse = [1350]; % Z:\All_Staff\home\lan\Analysis\2P\220225_i1350
-dataset_list.date = [220225];
+dataset_list.mouse = [1369];
+dataset_list.date = [220310];
 dataset_list.area = {'V1'};
 stim_protocol = 'bunny'
 
@@ -37,7 +37,8 @@ xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
 frame_rate = data_now_meta.(5)(end);
 % bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol));
-bunny500_id = find(contains(data_now_meta.Var9,stim_protocol));
+% bunny500_id = find(contains(data_now_meta.Var9,stim_protocol));
+bunny500_id = find(contains(data_now_meta.adjustIsi_500_StimDuration_200,stim_protocol));
 data_now_meta(bunny500_id,:)
 
 %%
@@ -67,42 +68,43 @@ else
 end
 
 areamousedate = [area '_' imouse '_' date sess];
-result_folder = [root_path, '\mat\', areamousedate]
-% result_folder = [root_path, '\mat\', areamousedate, '_caiman']
+mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
+% result_folder = [mapped_path, '\mat_inter\', areamousedate]; disp('manual segm');
+result_folder = [mapped_path, '\mat_inter\', areamousedate, '_caiman']; disp('caiman segm');
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
 %% substitute npSub_tc w caiman
 
-cd(fullfile(tc_fn, [date '_' imouse]))
-cd('220225_i1350_runs-002')
-tc = load('220225_i1350_runs-002_TCs_addfake.mat');
-df_flat = tc.npSub_tc;
-[nframe, ncell] = size(df_flat)
+% cd(fullfile(tc_fn, [date '_' imouse]))
+% cd('220225_i1350_runs-002')
+% tc = load('220225_i1350_runs-002_TCs_addfake.mat');
+% df_flat = tc.npSub_tc;
+% [nframe, ncell] = size(df_flat)
 
-% tc_file = fullfile(tc_fn, [date '_' imouse], ['caiman_activity_' imouse '_' date, '_multisess.mat']);
-% df = load(tc_file);
-% df_pile = (df.df)';
-% 
-% t = cellfun(@size,df_pile,'uni',false); 
-% ncell = size(t,2)
-% t = cell2mat(t(:,1));
-% nframe_seq = t(:,2);
-% 
-% df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
-% for icell = 1:ncell
-%     df_flat(:,icell) = horzcat(df_pile{:, icell})';
+tc_file = fullfile(tc_fn, [date '_' imouse], ['caiman_activity_' imouse '_' date, '_multisess.mat']);
+df = load(tc_file);
+df_pile = (df.df)';
+
+t = cellfun(@size,df_pile,'uni',false); 
+ncell = size(t,2)
+t = cell2mat(t(:,1));
+nframe_seq = t(:,2);
+
+df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
+for icell = 1:ncell
+    df_flat(:,icell) = horzcat(df_pile{:, icell})';
+end
+
+% if sess_flag == 1
+%     frame_range = 1:70000;
+% elseif sess_flag == 3
+%     frame_range = 140000:210000;
+% else
+%     frame_range = 1:210000;
 % end
-% 
-% % if sess_flag == 1
-% %     frame_range = 1:70000;
-% % elseif sess_flag == 3
-% %     frame_range = 140000:210000;
-% % else
-% %     frame_range = 1:210000;
-% % end
-% % df_flat = df_flat(frame_range, :);
-% size(df_flat)
+% df_flat = df_flat(frame_range, :);
+size(df_flat)
 
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
@@ -222,17 +224,23 @@ t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t
 t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
 
 figure
-range = 50; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
+range = 50;
+plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
 
+t_ad = [t_ad(100:end), t_ad(1:100)];
+t_tg = [t_tg(100:end), t_tg(1:100)];
+endpoint = length(t_ad)
+
 figure
 range = trial_len_min; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
+xline(endpoint - 100);
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
-range_base = 1:4; range_resp = 9:12;
+range_base = 1:4; range_resp = 14:16;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
