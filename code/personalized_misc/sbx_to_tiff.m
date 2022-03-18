@@ -131,16 +131,19 @@ if contains(mode, 'local')
     delete(sbx_file)
 end
 if contains(mode, 'remote') % copy over to local
-    parent_dir = 'C:\Users\ll357\Documents\CaImAn\demos\temp_data\'
-    mouse = dataset_now.mouse(1)
-    date = dataset_now.date(1)
-    new_dir = ['i', num2str(mouse), '_', num2str(date)]
-    mkdir(parent_dir, new_dir)
-    
-    source_dir = pwd
-    source_file = [source_dir '\' tif_file];
-    goal_dir = [parent_dir new_dir];
-    copyfile(tif_file, goal_dir)
+    parent_dir = 'C:\Users\ll357\Documents\CaImAn\demos\temp_data\';
+    mouse = dataset_now.mouse(1);
+    date = dataset_now.date(1);
+    new_dir = ['i', num2str(mouse), '_', num2str(date)];
+    try
+        mkdir(parent_dir, new_dir);
+        source_dir = pwd;
+        source_file = [source_dir '\' tif_file];
+        goal_dir = [parent_dir new_dir];
+        copyfile(tif_file, goal_dir)
+    catch
+        disp('should log in as ll357 to migrate tiff')
+    end
 end
 
 end
