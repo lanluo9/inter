@@ -19,9 +19,10 @@ database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
 master_xls = [database_path, 'mat_inter\adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 % dataset_now = dataset_meta(ismember(dataset_meta.caiman, 'todo'),:);
-dataset_now = dataset_meta(ismember(dataset_meta.paradigm, 'bunnytop high res'),:);
-dataset_now = dataset_now(ismember(dataset_now.area, 'LM'),:);
-dataset_now = dataset_now(dataset_now.mouse == 1369, :);
+dataset_now = dataset_meta(ismember(dataset_meta.paradigm, ...
+    'bunnytop high res high lum-contrast'),:);
+% dataset_now = dataset_now(ismember(dataset_now.area, 'LM'),:);
+% dataset_now = dataset_now(dataset_now.mouse == 1369, :);
 dataset_now
 nset = size(dataset_now); nset = nset(1)
 
