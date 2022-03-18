@@ -77,10 +77,11 @@ cd(result_folder)
 %% substitute npSub_tc w caiman
 
 cd(fullfile(tc_fn, [date '_' imouse]))
-cd('220225_i1350_runs-002')
-tc = load('220225_i1350_runs-002_TCs_addfake.mat');
+cd([date '_' imouse '_runs-002'])
+tc = load([date '_' imouse '_runs-002_TCs_addfake.mat']);
 df_flat = tc.npSub_tc;
 [nframe, ncell] = size(df_flat)
+nframe_seq = [nframe];
 
 % tc_file = fullfile(tc_fn, [date '_' imouse], ['caiman_activity_' imouse '_' date, '_multisess.mat']);
 % df = load(tc_file);
@@ -116,7 +117,7 @@ frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
 
-for i = 1 : length(bunny500_id) % comment out i>1 for single sess
+for i = 1 % : length(bunny500_id) % comment out i>1 for single sess
     input_behav = input_behav_seq(i);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
@@ -135,7 +136,8 @@ for i = 1 : length(bunny500_id) % comment out i>1 for single sess
     frame_ad_sess = frame_ad_sess(1:ntrial_sess);
     frame_ad_off_sess = double(cell2mat(input_behav.cStimOneOn)); 
     frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
-    frame_tg_sess = double(celleqel2mat_padded(input_behav.cStimTwoOn)); 
+%     frame_tg_sess = double(celleqel2mat_padded(input_behav.cStimTwoOn)); 
+    frame_tg_sess = double(cell2mat(input_behav.cStimTwoOn)); 
     frame_tg_sess = frame_tg_sess(1:ntrial_sess);
     if i>1
         frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:i-1));
@@ -205,6 +207,8 @@ nrep_stim = unique(t(:,2))
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
 % always use frame_ad as the end point of trial-specific baseline
 
+cd(['Z:\All_Staff\home\lan\Analysis\2P\' date '_' imouse])
+
 npSub_tc = df_flat;
 tc_align_ad = align_tc(frame_ad, npSub_tc);
 tc_align_tg = align_tc(frame_tg, npSub_tc);
@@ -240,7 +244,7 @@ grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad alig
 if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
-range_base = 1:4; range_resp = 14:16;
+range_base = 1:4; range_resp = 12:14;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp

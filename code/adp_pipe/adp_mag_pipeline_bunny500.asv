@@ -77,8 +77,8 @@ cd(result_folder)
 %% substitute npSub_tc w caiman
 
 cd(fullfile(tc_fn, [date '_' imouse]))
-cd('220225_i1350_runs-002')
-tc = load('220225_i1350_runs-002_TCs_addfake.mat');
+cd([date '_' imouse '_runs-002'])
+tc = load([date '_' imouse '_runs-002_TCs_addfake.mat']);
 df_flat = tc.npSub_tc;
 [nframe, ncell] = size(df_flat)
 
