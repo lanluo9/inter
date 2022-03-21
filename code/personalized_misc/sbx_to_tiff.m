@@ -142,7 +142,7 @@ if contains(mode, 'remote') % copy over to local
         goal_dir = [parent_dir new_dir];
         copyfile(tif_file, goal_dir)
     catch
-        disp('should log in as ll357 to migrate tiff')
+        disp('should log in as ll357 to migrate tiff, for caiman runs in ll357')
     end
 end
 
