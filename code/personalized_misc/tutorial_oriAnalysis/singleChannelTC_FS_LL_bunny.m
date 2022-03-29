@@ -204,8 +204,8 @@ disp(' ')
 % data_f2 (baseline after adaptation) = frame #14-16
 
 % ca_latency = 5 or 8;
-ca_latency = 10; % = x-1. stim onset frame 1 -> signal received frame x
-window_len = 3;
+ca_latency = 6; % = x-1. stim onset frame 1 -> signal received frame x
+window_len = 2; % 2-3
 
 % ca_latency = 4;
 % window_len = 1;

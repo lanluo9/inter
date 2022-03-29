@@ -18,8 +18,8 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
 % caiman bunny500/top gcamp6s
 dataset_list = struct;
-dataset_list.mouse = [1369];
-dataset_list.date = [220310];
+dataset_list.mouse = [44415];
+dataset_list.date = [220318];
 dataset_list.area = {'V1'};
 stim_protocol = 'bunny'
 
@@ -37,14 +37,14 @@ xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
 frame_rate = data_now_meta.(5)(end);
 % bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol));
-% bunny500_id = find(contains(data_now_meta.Var9,stim_protocol));
-bunny500_id = find(contains(data_now_meta.adjustIsi_500_StimDuration_200,stim_protocol));
+bunny500_id = find(contains(data_now_meta.Var9,stim_protocol));
+% bunny500_id = find(contains(data_now_meta.adjustIsi_500_StimDuration_200,stim_protocol));
 data_now_meta(bunny500_id,:)
 
 %%
 
 clear input_behav_seq
-for i = 1:length(bunny500_id)
+for i = 1%:length(bunny500_id)
     id = bunny500_id(i);
     time = data_now_meta.(8)(id);
     ImgFolder = data_now_meta.(1){id}(1:3);
@@ -77,8 +77,8 @@ cd(result_folder)
 %% substitute npSub_tc w caiman
 
 cd(fullfile(tc_fn, [date '_' imouse]))
-cd([date '_' imouse '_runs-002'])
-tc = load([date '_' imouse '_runs-002_TCs_addfake.mat']);
+cd([date '_' imouse '_runs-00', num2str(bunny500_id(1))])
+tc = load([date '_' imouse '_runs-00', num2str(bunny500_id(1)),'_TCs_addfake.mat']);
 df_flat = tc.npSub_tc;
 [nframe, ncell] = size(df_flat)
 nframe_seq = [nframe];
@@ -207,7 +207,8 @@ nrep_stim = unique(t(:,2))
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
 % always use frame_ad as the end point of trial-specific baseline
 
-cd(['Z:\All_Staff\home\lan\Analysis\2P\' date '_' imouse])
+cd(['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\' area '_' imouse '_' date])
+% Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i44415_220318
 
 npSub_tc = df_flat;
 tc_align_ad = align_tc(frame_ad, npSub_tc);
@@ -235,7 +236,7 @@ if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
 
 t_ad = [t_ad(100:end), t_ad(1:100)];
 t_tg = [t_tg(100:end), t_tg(1:100)];
-endpoint = length(t_ad)
+endpoint = length(t_ad);
 
 figure
 range = trial_len_min; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
@@ -244,7 +245,8 @@ grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad alig
 if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
-range_base = 1:4; range_resp = 12:14;
+%%
+range_base = 1:3; range_resp = 7:8;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
