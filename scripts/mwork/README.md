@@ -1,0 +1,1 @@
+find full image set at mapped_drive:\All_Staff\home\lan\mwork
