@@ -114,9 +114,10 @@ clear data_reg
 data_size = size(data_full)
 nframes = data_size(3)
 
-assert(strcmp(class(data_full), 'double'));
-assert(0 < min(data_full(:)))
-assert(max(data_full(:)) < 2^16-1)
+class(data_full)
+% assert(strcmp(class(data_full), 'double'));
+assert(0 <= min(data_full(:)))
+assert(max(data_full(:)) <= 2^16-1)
 data_full = uint16(data_full); % convert double to uint16 so as to write tif
 assert(strcmp(class(data_full), 'uint16'));
 
