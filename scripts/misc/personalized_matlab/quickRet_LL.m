@@ -5,10 +5,10 @@ clear all global % sbxread need to first clear global var
 close all
 clc
 
-mouse = '44415'
-date = '220318'
-time = '1427'
-ImgFolder = '002'
+mouse = '1369'
+date = '220330'
+time = '1122'
+ImgFolder = '001'
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -106,6 +106,13 @@ expt_input = temp;
     data = data_reg;
     clear data_reg
     end
+    
+    
+% plot full screen trace
+trace_screen = mean(data, 1);
+trace_screen = mean(trace_screen, 2);
+plot(trace_screen)
+set(gcf, 'Position', get(0, 'Screensize'));
     
 %     sz = size(data);
 %     data = data(:,:,1:(nOn+nOff)*ntrials);

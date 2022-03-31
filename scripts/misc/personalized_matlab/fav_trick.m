@@ -37,19 +37,18 @@ eval(call_help);
 
 %% startup 
 restoredefaultpath;matlabrc
-addpath(genpath('C:\Users\ll357\Documents\inter'))
-addpath(genpath('C:\Users\ll357\Documents\ImagingCode-Glickfeld-Hull'))
-addpath(genpath('C:\Users\ll357\Documents\Scanbox'))
+addpath(genpath('C:\Users\GlickfeldLab\Documents\test\inter'))
+addpath(genpath('C:\Users\GlickfeldLab\Documents\test\ImagingCode-Glickfeld-Hull'))
+addpath(genpath('C:\Users\GlickfeldLab\Documents\test\BehaviorCode-Glickfeld-Hull'))
+addpath(genpath('C:\Users\GlickfeldLab\Documents\test\Scanbox'))
 
-svnroot = 'C:\Users\ll357\Documents\ImagingCode-Glickfeld-Hull';
+svnroot = 'C:\Users\GlickfeldLab\Documents\test\ImagingCode-Glickfeld-Hull';
 ijroot = 'C:\Program Files\ImageJ';
 coreInitJavaPath(svnroot,ijroot);
 coreInitMatlabPath(svnroot,ijroot);
 
-cd C:\Users\ll357\Documents\inter\code
+cd C:\Users\GlickfeldLab\Documents\test\inter\
 clc
-
-% savepath('C:\Users\ll357\Documents\MATLAB\pathdef.m')
 
 %% saving var
 save('data_reg.mat', 'data_reg', '-v7.3') % force save >2GB .mat

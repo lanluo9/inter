@@ -55,8 +55,6 @@ for irun = 1:nrun
     data = squeeze(data);
 end
 
-assert(strcmp(class(data), 'uint16'));
-
 %%% Choose register interval
 nep = floor(size(data,3)./10000);
 [n, n2] = subplotn(nep);
@@ -114,12 +112,6 @@ clear data_reg
 data_size = size(data_full)
 nframes = data_size(3)
 
-assert(strcmp(class(data_full), 'double'));
-assert(0 < min(data_full(:)))
-assert(max(data_full(:)) < 2^16-1)
-data_full = uint16(data_full); % convert double to uint16 so as to write tif
-assert(strcmp(class(data_full), 'uint16'));
-
 cd ..
 disp('start saving tiff')
 datetime('now')
@@ -136,12 +128,11 @@ for ct = 1:N
     msg = fprintf(1,'%.0f/%.0f',ct,N);
     fTIF.WriteIMG(data_full(:,:,ct));
 end
-
 fTIF.close;
 fprintf(1,repmat('\b',[1,msg]));
 t=toc
 fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
 fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
-clear data_full
 
+clear data_full
 end
