@@ -70,35 +70,37 @@ sess_flag = ''
 %%
 areamousedate = [area '_' imouse '_' date sess];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
-result_folder = [mapped_path, '\mat_inter\', areamousedate]; disp('manual segm');
+% result_folder = [mapped_path, '\mat_inter\', areamousedate]; disp('manual segm');
 % result_folder = [mapped_path, '\mat_inter\', areamousedate, '_caiman']; disp('caiman segm');
-% result_folder = [mapped_path, '\mat_inter\', areamousedate, '_midway']; disp('matlab motion correct, caiman segm');
+result_folder = [mapped_path, '\mat_inter\', areamousedate, '_midway']; disp('matlab motion correct, caiman segm');
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
 %% substitute npSub_tc w caiman
 
 
-cd(fullfile(tc_fn, [date '_' imouse]))
-cd([date '_' imouse '_runs-00', num2str(bunny500_id(1))])
-tc = load([date '_' imouse '_runs-00', num2str(bunny500_id(1)),'_TCs_addfake.mat']);
-df_flat = tc.npSub_tc;
-[nframe, ncell] = size(df_flat)
-nframe_seq = [nframe];
+% cd(fullfile(tc_fn, [date '_' imouse]))
+% cd([date '_' imouse '_runs-00', num2str(bunny500_id(1))])
+% tc = load([date '_' imouse '_runs-00', num2str(bunny500_id(1)),'_TCs_addfake.mat']);
+% df_flat = tc.npSub_tc;
+% [nframe, ncell] = size(df_flat)
+% nframe_seq = [nframe];
 
-% tc_file = fullfile(tc_fn, [date '_' imouse], ['caiman_activity_' imouse '_' date, '_multisess.mat']);
-% df = load(tc_file);
-% df_pile = (df.df)';
-% 
-% t = cellfun(@size,df_pile,'uni',false); 
-% ncell = size(t,2)
-% t = cell2mat(t(:,1));
-% nframe_seq = t(:,2);
-% 
-% df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
-% for icell = 1:ncell
-%     df_flat(:,icell) = horzcat(df_pile{:, icell})';
-% end
+tc_file = fullfile(tc_fn, [date '_' imouse], ...
+    ['caiman_activity_' imouse '_' date, '_multisess_registered.mat']);
+%     caiman_activity_i1369_220310_multisess_registered
+df = load(tc_file);
+df_pile = (df.df)';
+
+t = cellfun(@size,df_pile,'uni',false); 
+ncell = size(t,2)
+t = cell2mat(t(:,1));
+nframe_seq = t(:,2);
+
+df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
+for icell = 1:ncell
+    df_flat(:,icell) = horzcat(df_pile{:, icell})';
+end
 
 % % if sess_flag == 1
 % %     frame_range = 1:70000;
@@ -250,7 +252,7 @@ if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
 %%
-range_base = 1:4; range_resp = 12:16;
+range_base = 1:5; range_resp = 16:25;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
