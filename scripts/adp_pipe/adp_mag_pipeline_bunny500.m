@@ -19,8 +19,8 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 % caiman bunny500/top gcamp6s
 dataset_list = struct;
 dataset_list.mouse = [1369];
-dataset_list.date = [220310];
-dataset_list.area = {'V1'};
+dataset_list.date = [220311];
+dataset_list.area = {'LM'};
 stim_protocol = 'bunny'
 
 %% load [xls, timecourse, stim]
@@ -70,9 +70,11 @@ sess_flag = ''
 %%
 areamousedate = [area '_' imouse '_' date sess];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
+
 % result_folder = [mapped_path, '\mat_inter\', areamousedate]; disp('manual segm');
-% result_folder = [mapped_path, '\mat_inter\', areamousedate, '_caiman']; disp('caiman segm');
-result_folder = [mapped_path, '\mat_inter\', areamousedate, '_midway']; disp('matlab motion correct, caiman segm');
+result_folder = [mapped_path, '\mat_inter\', areamousedate, '_caiman']; disp('caiman segm');
+% result_folder = [mapped_path, '\mat_inter\', areamousedate, '_midway']; disp('matlab motion correct, caiman segm');
+
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
@@ -87,7 +89,7 @@ cd(result_folder)
 % nframe_seq = [nframe];
 
 tc_file = fullfile(tc_fn, [date '_' imouse], ...
-    ['caiman_activity_' imouse '_' date, '_multisess_registered.mat']);
+    ['caiman_activity_' imouse '_' date, '_multisess.mat']);
 %     caiman_activity_i1369_220310_multisess_registered
 df = load(tc_file);
 df_pile = (df.df)';
