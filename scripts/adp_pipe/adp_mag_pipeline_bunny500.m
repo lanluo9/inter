@@ -18,8 +18,8 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
 % caiman bunny500/top gcamp6s
 dataset_list = struct;
-dataset_list.mouse = [44415];
-dataset_list.date = [220318];
+dataset_list.mouse = [1369];
+dataset_list.date = [220310];
 dataset_list.area = {'V1'};
 stim_protocol = 'bunny'
 
@@ -37,14 +37,14 @@ xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
 frame_rate = data_now_meta.(5)(end);
 % bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol));
-bunny500_id = find(contains(data_now_meta.Var9,stim_protocol));
+bunny500_id = find(contains(data_now_meta{:,9},stim_protocol));
 % bunny500_id = find(contains(data_now_meta.adjustIsi_500_StimDuration_200,stim_protocol));
 data_now_meta(bunny500_id,:)
 
 %%
 
 clear input_behav_seq
-for i = 1%:length(bunny500_id)
+for i = 1:length(bunny500_id)
     id = bunny500_id(i);
     time = data_now_meta.(8)(id);
     ImgFolder = data_now_meta.(1){id}(1:3);
@@ -55,26 +55,29 @@ for i = 1%:length(bunny500_id)
 end
 
 sess_flag = ''
-if sess_flag == 1
-    input_behav_seq = input_behav_seq(1); sess = '_002';
-elseif sess_flag == 3
-    input_behav_seq = input_behav_seq(3); sess = '_004';
-elseif contains(sess_flag, 'A')
-    sess = '_sideA';
-elseif contains(sess_flag, 'B')
-    sess = '_sideB';
-else
+% if sess_flag == 1
+%     input_behav_seq = input_behav_seq(1); sess = '_002';
+% elseif sess_flag == 3
+%     input_behav_seq = input_behav_seq(3); sess = '_004';
+% elseif contains(sess_flag, 'A')
+%     sess = '_sideA';
+% elseif contains(sess_flag, 'B')
+%     sess = '_sideB';
+% else
     sess = '';
-end
+% end
 
+%%
 areamousedate = [area '_' imouse '_' date sess];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
 result_folder = [mapped_path, '\mat_inter\', areamousedate]; disp('manual segm');
 % result_folder = [mapped_path, '\mat_inter\', areamousedate, '_caiman']; disp('caiman segm');
+% result_folder = [mapped_path, '\mat_inter\', areamousedate, '_midway']; disp('matlab motion correct, caiman segm');
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
 %% substitute npSub_tc w caiman
+
 
 cd(fullfile(tc_fn, [date '_' imouse]))
 cd([date '_' imouse '_runs-00', num2str(bunny500_id(1))])
@@ -97,14 +100,15 @@ nframe_seq = [nframe];
 %     df_flat(:,icell) = horzcat(df_pile{:, icell})';
 % end
 
-% if sess_flag == 1
-%     frame_range = 1:70000;
-% elseif sess_flag == 3
-%     frame_range = 140000:210000;
-% else
-%     frame_range = 1:210000;
-% end
-% df_flat = df_flat(frame_range, :);
+% % if sess_flag == 1
+% %     frame_range = 1:70000;
+% % elseif sess_flag == 3
+% %     frame_range = 140000:210000;
+% % else
+% %     frame_range = 1:210000;
+% % end
+% % df_flat = df_flat(frame_range, :);
+
 size(df_flat)
 
 %% concat trial stim info for each session
@@ -117,7 +121,7 @@ frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
 
-for i = 1 % : length(bunny500_id) % comment out i>1 for single sess
+for i = 1 : length(bunny500_id) % comment out i>1 for single sess
     input_behav = input_behav_seq(i);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
@@ -207,8 +211,8 @@ nrep_stim = unique(t(:,2))
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
 % always use frame_ad as the end point of trial-specific baseline
 
-cd(['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\' area '_' imouse '_' date])
-% Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i44415_220318
+% cd(['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\' area '_' imouse '_' date])
+cd(result_folder)
 
 npSub_tc = df_flat;
 tc_align_ad = align_tc(frame_ad, npSub_tc);
@@ -229,7 +233,7 @@ t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t
 t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
 
 figure
-range = 50;
+range = 100;
 plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
 grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
@@ -246,7 +250,7 @@ if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
 %%
-range_base = 1:3; range_resp = 7:8;
+range_base = 1:4; range_resp = 12:16;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
