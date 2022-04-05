@@ -6,9 +6,9 @@ close all
 clc
 
 mouse = '1369'
-date = '220330'
-time = '1122'
-ImgFolder = '001'
+date = '220401'
+time = '1359'
+ImgFolder = '002'
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
@@ -110,9 +110,13 @@ expt_input = temp;
     
 % plot full screen trace
 trace_screen = mean(data, 1);
-trace_screen = mean(trace_screen, 2);
+trace_screen = squeeze(mean(trace_screen, 2));
+figure
 plot(trace_screen)
+xlim([-50, 4050+50])
 set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, 'trace_screen', 'jpg');
+save trace_screen.mat trace_screen
     
 %     sz = size(data);
 %     data = data(:,:,1:(nOn+nOff)*ntrials);
