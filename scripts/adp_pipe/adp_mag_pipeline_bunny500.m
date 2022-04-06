@@ -19,13 +19,13 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 % caiman bunny500/top gcamp6s
 dataset_list = struct;
 dataset_list.mouse = [1369];
-dataset_list.date = [220311];
-dataset_list.area = {'LM'};
+dataset_list.date = [220310];
+dataset_list.area = {'V1'};
 stim_protocol = 'bunny'
 
 %% load [xls, timecourse, stim]
 
-save_flag = 1; % toggle this to save/skip all .mat creation below
+save_flag = 0; % toggle this to save/skip all .mat creation below
 iset = 1 % this assumes registered multisession is recorded on same day & mouse
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse]
@@ -44,7 +44,7 @@ data_now_meta(bunny500_id,:)
 %%
 
 clear input_behav_seq
-for i = 1:length(bunny500_id)
+for i = 1%:length(bunny500_id)
     id = bunny500_id(i);
     time = data_now_meta.(8)(id);
     ImgFolder = data_now_meta.(1){id}(1:3);
@@ -72,8 +72,9 @@ areamousedate = [area '_' imouse '_' date sess];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
 
 % result_folder = [mapped_path, '\mat_inter\', areamousedate]; disp('manual segm');
-result_folder = [mapped_path, '\mat_inter\', areamousedate, '_caiman']; disp('caiman segm');
+% result_folder = [mapped_path, '\mat_inter\', areamousedate, '_caiman']; disp('caiman segm');
 % result_folder = [mapped_path, '\mat_inter\', areamousedate, '_midway']; disp('matlab motion correct, caiman segm');
+result_folder = [mapped_path, '\mat_inter\', areamousedate, '_cellpose']; disp('cellpose segm');
 
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
@@ -81,28 +82,29 @@ cd(result_folder)
 %% substitute npSub_tc w caiman
 
 
-% cd(fullfile(tc_fn, [date '_' imouse]))
-% cd([date '_' imouse '_runs-00', num2str(bunny500_id(1))])
+cd(fullfile(tc_fn, [date '_' imouse]))
+cd([date '_' imouse '_runs-00', num2str(bunny500_id(1))])
 % tc = load([date '_' imouse '_runs-00', num2str(bunny500_id(1)),'_TCs_addfake.mat']);
-% df_flat = tc.npSub_tc;
-% [nframe, ncell] = size(df_flat)
-% nframe_seq = [nframe];
+tc = load([date '_' imouse '_runs-00', num2str(bunny500_id(1)),'_TCs_cellpose.mat']);
+df_flat = tc.npSub_tc;
+[nframe, ncell] = size(df_flat)
+nframe_seq = [nframe];
 
-tc_file = fullfile(tc_fn, [date '_' imouse], ...
-    ['caiman_activity_' imouse '_' date, '_multisess.mat']);
-%     caiman_activity_i1369_220310_multisess_registered
-df = load(tc_file);
-df_pile = (df.df)';
-
-t = cellfun(@size,df_pile,'uni',false); 
-ncell = size(t,2)
-t = cell2mat(t(:,1));
-nframe_seq = t(:,2);
-
-df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
-for icell = 1:ncell
-    df_flat(:,icell) = horzcat(df_pile{:, icell})';
-end
+% tc_file = fullfile(tc_fn, [date '_' imouse], ...
+%     ['caiman_activity_' imouse '_' date, '_multisess.mat']);
+% %     caiman_activity_i1369_220310_multisess_registered
+% df = load(tc_file);
+% df_pile = (df.df)';
+% 
+% t = cellfun(@size,df_pile,'uni',false); 
+% ncell = size(t,2)
+% t = cell2mat(t(:,1));
+% nframe_seq = t(:,2);
+% 
+% df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
+% for icell = 1:ncell
+%     df_flat(:,icell) = horzcat(df_pile{:, icell})';
+% end
 
 % % if sess_flag == 1
 % %     frame_range = 1:70000;
@@ -125,7 +127,7 @@ frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
 
-for i = 1 : length(bunny500_id) % comment out i>1 for single sess
+for i = 1 %: length(bunny500_id) % comment out i>1 for single sess
     input_behav = input_behav_seq(i);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
