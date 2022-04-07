@@ -256,7 +256,7 @@ if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
 %%
-range_base = 1:5; range_resp = 16:25;
+range_base = 1:4; range_resp = 12:15;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
