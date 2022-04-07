@@ -25,7 +25,7 @@ stim_protocol = 'bunny'
 
 %% load [xls, timecourse, stim]
 
-save_flag = 0; % toggle this to save/skip all .mat creation below
+save_flag = 1; % toggle this to save/skip all .mat creation below
 iset = 1 % this assumes registered multisession is recorded on same day & mouse
 date = num2str(dataset_list.date(iset))
 mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse]
@@ -256,7 +256,7 @@ if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
 %%
-range_base = 1:4; range_resp = 12:15;
+range_base = 1:4; range_resp = 12:14;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
