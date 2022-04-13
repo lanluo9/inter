@@ -7,10 +7,10 @@ database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
 master_xls = [database_path, 'mat_inter\adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 dataset_now = dataset_meta(ismember(dataset_meta.paradigm, ...
-    'bunnytop high res'),:); % high lum-contrast
-dataset_now = dataset_now(dataset_now.mouse == 1369, :);
-dataset_now = dataset_now(ismember(dataset_now.area, ...
-    'V1'),:);
+    'bunnytop high res high lum-contrast'),:);
+% dataset_now = dataset_now(dataset_now.mouse == 1369, :);
+% dataset_now = dataset_now(ismember(dataset_now.area, ...
+%     'V1'),:);
 dataset_now
 
 iset = 1
@@ -99,7 +99,7 @@ figure('units','normalized','outerposition',[0 0 1 1]);
 for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 
 %%
-select = 3
+select = 4
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
@@ -206,12 +206,12 @@ disp(' ')
 % data_f2 (baseline after adaptation) = frame #14-16
 
 % ca_latency = 5 or 8;
-ca_latency = 10; % = x-1. stim onset frame 1 -> signal received frame x
-window_len = 3; % 2-3
+% ca_latency = 10; % = x-1. stim onset frame 1 -> signal received frame x
+% window_len = 3; % 2-3
 close all
 
-% ca_latency = 4;
-% window_len = 1;
+ca_latency = 5;
+window_len = 2;
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
 for itrial = 1:nTrials
@@ -268,17 +268,19 @@ data_dfof_max = max(imfilter(data_dfof, myfilter),[],3); % gauss smooth each sti
 % figure
 % imagesc(max(data_dfof_targ, [], 3)) 
 % title('data dfof tg max')
-% set(gcf, 'Position', get(0, 'Screensize'));
-% figure; imagesc(data_dfof_max)
-% title('data dfof max')
+
+figure; imagesc(data_dfof_max)
+set(gcf, 'Position', get(0, 'Screensize'));
+title('data dfof max')
 
 data_dfof = cat(3,data_dfof, data_dfof_max); % adapter, targ, targ_fake, gaussian filter max proj
 
 %% export tif for cellpose
 
-stim_resp_gauss = data_dfof_max';
-tif_file = ['cellpose_stim_resp_gauss.tif'];
+stim_resp_gauss = data_dfof_max'; % gauss smooth each stim resp, take max
+% stim_resp_max = max(data_dfof, [], 3)'; % only max, no gauss smooth
 
+tif_file = ['cellpose_stim_resp_gauss.tif'];
 fTIF = Fast_BigTiff_Write(tif_file,1,0);
 tic
 msg = 0;
@@ -295,6 +297,7 @@ t=toc
 fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
 fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
 
+pwd % get working directory to get run folder like "220318_i44415_runs-003"
 
 %% wait for cellpose to run in ipynb
 
