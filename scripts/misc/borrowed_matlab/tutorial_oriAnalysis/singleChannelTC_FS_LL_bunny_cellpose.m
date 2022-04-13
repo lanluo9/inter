@@ -259,7 +259,7 @@ end
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof = cat(3, data_dfof_ad, data_dfof_targ, data_dfof_targ_fake);
-data_dfof_max = max(imfilter(data_dfof, myfilter),[],3);
+data_dfof_max = max(imfilter(data_dfof, myfilter),[],3); % gauss smooth each stim resp, then take max
 
 % figure
 % imagesc(max(data_dfof_ad, [], 3)) 
