@@ -223,10 +223,11 @@ cd(result_folder)
 npSub_tc = df_flat;
 tc_align_ad = align_tc(frame_ad, npSub_tc);
 tc_align_tg = align_tc(frame_tg, npSub_tc);
-dfof_align_ad = tc_align_ad; % did not do trial-specific baselining
-dfof_align_tg = tc_align_tg; % which should have been dfof_align = (tc - base) / base
-% dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
-% dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
+% disp('caiman mode: skip trial-specific baselining')
+% dfof_align_ad = tc_align_ad; % did not do trial-specific baselining
+% dfof_align_tg = tc_align_tg; % which should have been dfof_align = (tc - base) / base
+dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
+dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
 
 trace_by_trial = dfof_align_ad;
 stim_seq = adapter_id';
