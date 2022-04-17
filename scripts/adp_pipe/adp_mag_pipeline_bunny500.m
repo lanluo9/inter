@@ -79,7 +79,7 @@ result_folder = [mapped_path, '\mat_inter\', areamousedate, '_cellpose']; disp('
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
-%% substitute npSub_tc w caiman
+%% substitute npSub_tc w cellpose
 
 
 cd(fullfile(tc_fn, [date '_' imouse]))
@@ -236,28 +236,37 @@ if save_flag; save trace_trial_stim.mat trace_by_trial stim_seq; end
 %% set resp window
 % find base window & resp window
 
-t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); t_ad = squeeze(nanmean(t(:,:), 1)); 
-t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); t_tg = squeeze(nanmean(t(:,:), 1)); 
+t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); 
+t_ad = squeeze(nanmean(t(:,:), 1)); 
+t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); 
+t_tg = squeeze(nanmean(t(:,:), 1)); 
 
 figure
 range = 100;
-plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
-grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
+plot(t_ad(1:range), 'r'); hold on; 
+plot(t_tg(1:range), 'b'); 
+grid on; grid minor; 
+set(gcf, 'Position', get(0, 'Screensize')); 
+legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
 
-t_ad = [t_ad(100:end), t_ad(1:100)];
-t_tg = [t_tg(100:end), t_tg(1:100)];
-endpoint = length(t_ad);
+% t_ad = [t_ad(100:end), t_ad(1:100)];
+% t_tg = [t_tg(100:end), t_tg(1:100)];
+% endpoint = length(t_ad);
 
 figure
-range = trial_len_min; plot(t_ad(1:range), 'r'); hold on; plot(t_tg(1:range), 'b'); 
-xline(endpoint - 100);
-grid on; grid minor; set(gcf, 'Position', get(0, 'Screensize')); legend('ad align', 'targ align')
+range = trial_len_min; 
+plot(t_ad(1:range), 'r'); hold on; 
+plot(t_tg(1:range), 'b'); 
+% xline(endpoint - 100);
+grid on; grid minor; 
+set(gcf, 'Position', get(0, 'Screensize')); 
+legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 % close all
 
 %%
-range_base = 1:4; range_resp = 12:14;
+range_base = 1:4; range_resp = 12:15;
 % prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
 
 %% bunnytop early vs late half session resp
