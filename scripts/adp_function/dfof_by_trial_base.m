@@ -1,5 +1,5 @@
 function dfof_align = dfof_by_trial_base(tc_aligned, npSub_tc, frame_ad)
-global ntrial ncell frame_rate
+global frame_rate ntrial ncell
 
 % input: 
 %     tc_aligned by ad or tg. ncell x ntrial x trial_len
@@ -8,7 +8,25 @@ global ntrial ncell frame_rate
 %     frame_rate, ncell, ntrial
 % output:
 %     dfof_align = (tc - base) / base. ncell x ntrial x trial_len
+% 
+% TODO: fix baseline bug!
 
+% %% rewrite 2022-04-18
+% 
+% trial_base_len = frame_rate * 1; % 30 frame/sec * 1 sec
+% % trial_base_len = floor(frame_rate * 0.2);
+% tc_trial_base = tc_aligned(:, :, end-trial_base_len:end);
+% 
+% base_max = max(tc_trial_base, [], 3);
+% base_min = min(tc_trial_base, [], 3);
+% base_fluc = (base_max - base_min) ./ (base_min + 1e-6);
+% base_fluc = mean(base_fluc(:))
+% if base_fluc >= 0.1; disp('trial baseline fluctuates too much!'); end
+% 
+% tc_trial_base = mean(tc_trial_base, 3);
+% dfof_align = tc_aligned ./ tc_trial_base - 1;
+
+%%
 % trial_base_len = frame_rate * 1; % 30 frame/sec * 1 sec
 % trial_base_len = frame_rate * 0.5;
 trial_base_len = frame_rate * 0.1; % reduced trial base length for cellpose bunnytop
