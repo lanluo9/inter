@@ -236,11 +236,22 @@ disp(' ')
 find_peak_bef = 16; % first peak comes before 16 frames
 data_trial_zoom_first_peak = data_trial_zoom_in(1:find_peak_bef);
 [~, peak_id] = max(data_trial_zoom_first_peak)
+if peak_id < 6
+    disp('WARNING: strange trace or peak')
+end
 
 window_len = 2; % 2-3
 ca_latency = peak_id - floor(window_len/2) - 1; % - half window - starting frame number (1)
 % ca_latency = 5 or 8;
 % ca_latency = 12; % = x-1. stim onset frame 1 -> signal received frame x
+
+figure;
+plot(data_trial_zoom_in(1:40));
+xline(1 + ca_latency, 'k--')
+xline(1 + ca_latency + window_len, 'k--')
+grid on; grid minor
+set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['find_ca_latency_ca_window.jpg'])
 close all
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))

@@ -14,10 +14,11 @@ dataset_grat = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
 
 %%
 
+clearvars -except dataset_bunny dataset_grat
 nset = size(dataset_bunny,1);
 disp('cellpose segment bunny datasets first')
 
-for iset = 1 : nset
+for iset = 1:nset
 
 iset, nset
 dataset_now = dataset_bunny(iset,:);
@@ -35,7 +36,7 @@ catch
     mkdir(dir_analysis)
     cd(dir_analysis)
 end
-if ~isempty(dir('*TCs_cellpose.mat')) && iset ~= 1 % redo first bunny set
+if ~isempty(dir('*TCs_cellpose.mat'))
     disp('cellpose time course exists, skip to next set:')
     disp(iset+1)
     continue
@@ -57,4 +58,9 @@ npSub_tc = get_cellpose_timecourse(data_reg, ...
     LL_base, arg_date, imouse, run_str);
 
 disp([num2str(iset), ' set done out of ', num2str(nset)])
+clear data_reg npSub_tc
+clear global
+clearvars -except dataset_bunny dataset_grat nset iset 
+% suspect weird trace is bc residual global var affecting sbxread?
+
 end

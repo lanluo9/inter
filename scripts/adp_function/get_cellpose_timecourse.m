@@ -3,7 +3,9 @@ function npSub_tc = get_cellpose_timecourse(data_reg, LL_base, arg_date, imouse,
 t = load('cellpose_mask.mat');
 mask_cell = t.cellpose_mask;
 
-while 1>0
+while isempty(dir('*TCs_cellpose.mat')) 
+% while cellpose timecourse does not exist, try generate it / wait for enough memory
+
 try
     
 mask_np = imCellNeuropil(mask_cell, 3, 5);
