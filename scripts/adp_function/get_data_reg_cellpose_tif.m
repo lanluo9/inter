@@ -132,7 +132,7 @@ data_avg = mean(data(:,:,start_idx:stop_idx),3);
 
 % %% Register data
 
-if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
+if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
     [outs, data_reg]=stackRegister_MA(double(data),[],[],out);
@@ -151,7 +151,7 @@ elseif doFromRef
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
 else
     tic; [out, data_reg] = stackRegister(data,data_avg); toc;
-    mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
+%     mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
 end
@@ -221,7 +221,8 @@ figure; data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_i
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['find_ca_latency_zoomin.jpg'])
 save find_ca_latency.mat data_trial_zoom_in data_trial
-disp('now manually update ca latency and adapted baseline window in next section')
+% disp('now manually update ca latency and adapted baseline window in next section')
+disp('detecting first peak automatically')
 disp(' ')
 
 %% calculate response
@@ -232,13 +233,15 @@ disp(' ')
 % data_adapter = frame #8-11
 % data_f2 (baseline after adaptation) = frame #14-16
 
-% ca_latency = 5 or 8;
-ca_latency = 12; % = x-1. stim onset frame 1 -> signal received frame x
-window_len = 3; % 2-3
-close all
+find_peak_bef = 16; % first peak comes before 16 frames
+data_trial_zoom_first_peak = data_trial_zoom_in(1:find_peak_bef);
+[~, peak_id] = max(data_trial_zoom_first_peak)
 
-% ca_latency = 5;
-% window_len = 2;
+window_len = 2; % 2-3
+ca_latency = peak_id - floor(window_len/2) - 1; % - half window - starting frame number (1)
+% ca_latency = 5 or 8;
+% ca_latency = 12; % = x-1. stim onset frame 1 -> signal received frame x
+close all
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
 for itrial = 1:nTrials

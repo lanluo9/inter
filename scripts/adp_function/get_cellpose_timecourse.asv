@@ -3,7 +3,6 @@ function npSub_tc = get_cellpose_timecourse(data_reg, LL_base, arg_date, imouse,
 t = load('cellpose_mask.mat');
 mask_cell = t.cellpose_mask;
 
-while 1>0
 try
     
 mask_np = imCellNeuropil(mask_cell, 3, 5);
@@ -47,10 +46,7 @@ clear data_tc data_tc_down np_tc np_tc_down mask_np mask_cell
 disp('TC extraction complete')
 
 catch
-    disp('out of memory atm, retrying in a bit')
-    pause(60)
-end
-
-end
+    
+    e
 
 end

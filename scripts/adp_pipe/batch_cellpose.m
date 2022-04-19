@@ -1,6 +1,7 @@
 %% 
 
 clear all
+close all
 clc
 
 %% 
@@ -34,7 +35,7 @@ catch
     mkdir(dir_analysis)
     cd(dir_analysis)
 end
-if ~isempty(dir('*TCs_cellpose.mat'))
+if ~isempty(dir('*TCs_cellpose.mat')) && iset ~= 1 % redo first bunny set
     disp('cellpose time course exists, skip to next set:')
     disp(iset+1)
     continue
