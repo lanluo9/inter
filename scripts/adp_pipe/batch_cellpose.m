@@ -29,7 +29,11 @@ disp('for bunny data, take sess 002 only to avoid repetitive depth')
 imouse = ['i', num2str(arg_mouse)];
 dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
     '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
-cd(dir_analysis)
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
 if ~isempty(dir('*TCs_cellpose.mat'))
     disp('cellpose time course exists, skip to next set:')
     disp(iset+1)
