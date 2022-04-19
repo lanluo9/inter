@@ -1,154 +1,76 @@
 function [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(arg_mouse, arg_date, arg_ImgFolder)
 
 disp('start running get_data_reg_cellpose_tif.m')
-% restoredefaultpath
-% arg_mouse = args.arg_mouse;
-% arg_date = args.arg_date;
-
-% % database_path = 'Z:\All_Staff\home\lan\Data\2P_images\';
-% % master_xls = [database_path, 'mat_inter\adp_dataset_master.xlsx'];
-% database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
-% master_xls = [database_path, 'data/batch_cellpose.csv'];
-% dataset_now = readtable(master_xls);
-% dataset_now = dataset_now(dataset_now.mouse == arg_mouse, :);
-% dataset_now = dataset_now(dataset_now.date == arg_date, :);
-% dataset_now
-
 mouse = arg_mouse
 imouse = ['i', num2str(mouse)];
 date = num2str(arg_date)
 ImgFolder = arg_ImgFolder
-% ImgFolder = dataset_now.num(1); ImgFolder = ImgFolder{1} 
 
-%%
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
 xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
 xls_file = dir('*.xlsx'); clear dataset_meta
 dataset_meta = readtable(xls_file.name); 
 idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
 time = num2str(dataset_meta.(8)(idx));
-frame_rate = 30;
-
-disp('got to frame_rate')
-% pause(5)
-
-doFromRef = 0;
-ref = strvcat('001'); % what is ref?
 nrun = size(ImgFolder,1);
 run_str = catRunName(ImgFolder, nrun);
 
-% %% load and register
-
+% load and register
 disp('start loading sbx')
-% pause(5)
-
 tic
 data = [];
 clear temp
 trial_n = [];
 offset = 0;
 
-disp('got before irun')
-% pause(5)
-
 for irun = 1:nrun
     LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
     CD = [LL_base '\Data\2P_images\' imouse '\' date '\' ImgFolder(irun,:)];
-%     CD = [LL_base '\Data\2P_images\' date '_' mouse '\' ImgFolder(irun,:)];
-    
-    disp('got before os.chdir')
-    % pause(5)
-
     cd(CD);
+    
     imgMatFile = [ImgFolder(irun,:) '_000_000.mat'];
     load(imgMatFile);
-    
-    disp('got after load imgMatFile')
-    % pause(5)
-    
     fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' imouse '-' date '-' time(irun,:) '.mat'];
     behav_mat = load(fName);
-    
-    disp('got after load behav MatFile')
-    % pause(5)
-    
     temp(irun) = behav_mat.input;
     behav_input = behav_mat.input;
     nframes = max([temp(irun).counterValues{end}(end) info.config.frames]);
     fprintf(['Reading run ' num2str(irun) ', consisting of ' num2str(min(nframes)) ' frames \r\n'])
-    % pause(5)
 
     data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
-%     data_temp = sbxread(imgMatFile(1,1:11),0,100000);
     if size(data_temp,1)== 2
         data_temp = data_temp(1,:,:,:);
     end
-    
-    if isfield(behav_input, 'cLeverUp') 
-        if irun>1
-            ntrials = size(behav_input.trialOutcomeCell,2);
-            for itrial = 1:ntrials
-                %temp(irun).counterValues{itrial} = bsxfun(@plus,temp(irun).counterValues{itrial},offset);
-                temp(irun).cLeverDown{itrial} = temp(irun).cLeverDown{itrial}+offset;
-                temp(irun).cFirstStim{itrial} = temp(irun).cFirstStim{itrial}+offset;
-                temp(irun).cStimOn{itrial} = temp(irun).cStimOn{itrial}+offset;
-                if ~isempty(temp(irun).cLeverUp{itrial})
-                    temp(irun).cLeverUp{itrial} = temp(irun).cLeverUp{itrial}+offset;
-                else
-                    temp(irun).cLeverUp{itrial} = temp(irun).cLeverUp{itrial};
-                end
-                if ~isempty(temp(irun).cTargetOn{itrial})
-                    temp(irun).cTargetOn{itrial} = temp(irun).cTargetOn{itrial}+offset;
-                else
-                    temp(irun).cTargetOn{itrial} = temp(irun).cTargetOn{itrial};
-                end
-            end
-        end
-    end
     offset = offset+min(nframes);
-        
     data_temp = squeeze(data_temp);
     data = cat(3,data,data_temp);
     trial_n = [trial_n nframes];
 end
 % behav_input = concatenateDataBlocks(temp);
-clear data_temp
-clear temp
+clear data_temp temp
 toc
 
-% %% Choose register interval
+% Choose register interval
 nep = floor(size(data,3)./10000);
 [n, n2] = subplotn(nep);
 figure('units','normalized','outerposition',[0 0 1 1]);
-for i = 1:nep; subplot(n,n2,i); imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
-
-%%
-
+for i = 1:nep
+    subplot(n,n2,i); 
+    imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
+    title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
+end
 disp('start registration. using middle section as motion correct ref')
 select = 4
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
 
-% %% Register data
-
+% Register data
 if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
     [outs, data_reg]=stackRegister_MA(double(data),[],[],out);
     clear out outs
-elseif doFromRef
-    ref_str = ['runs-' ref];
-    if size(ref,1)>1
-        ref_str = [ref_str '-' ref(size(ref,1),:)];
-    end
-    load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' ref_str], [date '_' imouse '_' ref_str '_reg_shifts.mat']))
-    [out, data_reg] = stackRegister(data,data_avg);
-    mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
-    %load(fullfile(LG_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' ref_str], [date '_' mouse '_' ref_str '_mask_cell.mat']))
-    %load(fullfile(LG_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' ref_str], [date '_' mouse '_' ref_str '_trialData.mat']))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
 else
     tic; [out, data_reg] = stackRegister(data,data_avg); toc;
 %     mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
@@ -158,52 +80,42 @@ end
 clear data out
 disp('registration finished')
 
-% %% test stability
+% test stability
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data_reg(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_byFrame.pdf']),'-dpdf', '-bestfit')
-
 figure; imagesq(mean(data_reg(:,:,1:10000),3)); truesize;
 set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_avg.pdf']),'-dpdf', '-bestfit')
 
 %% find activated cells
 
-% tCyc = cell2mat(behav_input.tCyclesOn);
 cStart = cell2mat(behav_input.cStimOneOn); % same as cStimOn
 cStimOn = cell2mat(behav_input.cStimOneOn);
 cStimOff = cell2mat(behav_input.cStimOneOff);
-% cTarget = celleqel2mat_padded(behav_input.cStimTwoOn); cTarget = int64(cTarget);
 cTarget = cell2mat(behav_input.cStimTwoOn);
 try nTrials = behav_input.trialsSinceReset % 464 = 32 types * 14.5 reps
 catch
     nTrials = behav_input.trialSinceReset
 end
 sz = size(data_reg); % [y pixel * x pixel * nframe]
-
 data_f = zeros(sz(1),sz(2),nTrials);
 data_adapter = zeros(sz(1),sz(2),nTrials);
 data_f2 = zeros(sz(1),sz(2),nTrials);
 data_targ = zeros(sz(1),sz(2),nTrials);
 
-% %% trial design
+% show trial design
 unique(cStimOff - cStimOn) % adapter = 3-4 frame. rounded from 100 ms?
 unique(cTarget - cStimOff) % ISI = 8 or 22-23 frame. rounded from 250? or 750 ms
 unique(cTarget - cStimOn) % target: 3-4 frame too
-
 trial_len = diff(cStart); unique(trial_len)
-% histogram(trial_len)
 
-% %% determine ca signal latency (around 8 frames for this session)
-
+% determine ca signal latency
 tc_screen = mean(mean(data_reg,1),2);
 tc_screen = squeeze(tc_screen);
-all_trial_len = sz(3) - cStart(1);
-
+whos tc_screen
 data_trial = zeros(min(unique(trial_len)), nTrials); % take 1-200 frame of every trial
 data_trial_real = zeros(max(trial_len), nTrials);
-whos tc_screen
-
 for it = 1:(nTrials-1)
     start_id = cStimOn(it);
     data_trial(:,it) = tc_screen(start_id : start_id + min(unique(trial_len)) - 1);
@@ -221,19 +133,13 @@ figure; data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_i
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['find_ca_latency_zoomin.jpg'])
 save find_ca_latency.mat data_trial_zoom_in data_trial
-% disp('now manually update ca latency and adapted baseline window in next section')
 disp('detecting first peak automatically')
 disp(' ')
 
 %% calculate response
-% see data_trial_zoom_in
-% if ca signal latency = +7 frames 
-% adapter|target = 3|4 frames
-% count from frame #1
-% data_adapter = frame #8-11
-% data_f2 (baseline after adaptation) = frame #14-16
 
-find_peak_bef = 16; % first peak comes before 16 frames
+find_peak_bef = 16;
+disp('assume: first peak comes before 16 frames. second peak comes after')
 data_trial_zoom_first_peak = data_trial_zoom_in(1:find_peak_bef);
 [~, peak_id] = max(data_trial_zoom_first_peak)
 if peak_id < 6
@@ -242,8 +148,7 @@ end
 
 window_len = 2; % 2-3
 ca_latency = peak_id - floor(window_len/2) - 1; % - half window - starting frame number (1)
-% ca_latency = 5 or 8;
-% ca_latency = 12; % = x-1. stim onset frame 1 -> signal received frame x
+% ca_latency = x-1. stim onset frame 1 -> signal received frame x
 
 figure;
 plot(data_trial_zoom_in(1:40));
@@ -301,26 +206,18 @@ end
 myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof = cat(3, data_dfof_ad, data_dfof_targ, data_dfof_targ_fake);
 data_dfof_max = max(imfilter(data_dfof, myfilter),[],3); % gauss smooth each stim resp, then take max
-
-% figure
-% imagesc(max(data_dfof_ad, [], 3)) 
-% title('data dfof ad max')
-% set(gcf, 'Position', get(0, 'Screensize'));
-% figure
-% imagesc(max(data_dfof_targ, [], 3)) 
-% title('data dfof tg max')
+data_dfof = cat(3,data_dfof, data_dfof_max); % adapter, targ, targ_fake, gaussian filter max proj
 
 figure; imagesc(data_dfof_max)
 set(gcf, 'Position', get(0, 'Screensize'));
 title('data dfof max')
-
-data_dfof = cat(3,data_dfof, data_dfof_max); % adapter, targ, targ_fake, gaussian filter max proj
+close all
 
 %% export tif for cellpose
 
 stim_resp_gauss = data_dfof_max'; % gauss smooth each stim resp, take max
-close all
-disp('saving dfof-max-gauss tif')
+disp('saving dfof-max-gauss tif & mat')
+save data_dfof.mat data_dfof data_dfof_max
 
 tif_file = ['cellpose_stim_resp_gauss.tif'];
 fTIF = Fast_BigTiff_Write(tif_file,1,0);
@@ -339,7 +236,6 @@ t=toc
 fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
 fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
 
-pwd % get run folder like "220318_i44415_runs-003"
 disp(['mouse', num2str(mouse), 'date', num2str(date), ...
     'finished data_reg & cellpose tif'])
 

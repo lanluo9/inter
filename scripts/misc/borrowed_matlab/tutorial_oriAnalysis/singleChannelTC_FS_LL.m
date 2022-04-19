@@ -1,3 +1,4 @@
+
 %% get path names
 clear all
 clc
@@ -135,7 +136,7 @@ figure; imagesq(mean(data_reg(:,:,1:10000),3)); truesize;
 set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_avg.pdf']),'-dpdf', '-bestfit')
 
-% %% find activated cells
+%% find activated cells
 
 % tCyc = cell2mat(input.tCyclesOn);
 cStart = cell2mat(input.cStimOn); % same as cStimOn
