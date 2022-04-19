@@ -1,4 +1,4 @@
-function data_reg = get_data_reg_cellpose_tif(arg_mouse, arg_date, arg_ImgFolder)
+function [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(arg_mouse, arg_date, arg_ImgFolder)
 
 disp('start running get_data_reg_cellpose_tif.m')
 % restoredefaultpath
@@ -73,6 +73,7 @@ for irun = 1:nrun
     % pause(5)
     
     temp(irun) = behav_mat.input;
+    behav_input = behav_mat.input;
     nframes = max([temp(irun).counterValues{end}(end) info.config.frames]);
     fprintf(['Reading run ' num2str(irun) ', consisting of ' num2str(min(nframes)) ' frames \r\n'])
     % pause(5)
@@ -83,9 +84,9 @@ for irun = 1:nrun
         data_temp = data_temp(1,:,:,:);
     end
     
-    if isfield(input, 'cLeverUp') 
+    if isfield(behav_input, 'cLeverUp') 
         if irun>1
-            ntrials = size(input.trialOutcomeCell,2);
+            ntrials = size(behav_input.trialOutcomeCell,2);
             for itrial = 1:ntrials
                 %temp(irun).counterValues{itrial} = bsxfun(@plus,temp(irun).counterValues{itrial},offset);
                 temp(irun).cLeverDown{itrial} = temp(irun).cLeverDown{itrial}+offset;
@@ -110,7 +111,7 @@ for irun = 1:nrun
     data = cat(3,data,data_temp);
     trial_n = [trial_n nframes];
 end
-% input = concatenateDataBlocks(temp);
+% behav_input = concatenateDataBlocks(temp);
 clear data_temp
 clear temp
 toc
@@ -133,7 +134,7 @@ data_avg = mean(data(:,:,start_idx:stop_idx),3);
 
 if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
     load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'input')
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
     [outs, data_reg]=stackRegister_MA(double(data),[],[],out);
     clear out outs
 elseif doFromRef
@@ -147,12 +148,12 @@ elseif doFromRef
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
     %load(fullfile(LG_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' ref_str], [date '_' mouse '_' ref_str '_mask_cell.mat']))
     %load(fullfile(LG_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' ref_str], [date '_' mouse '_' ref_str '_trialData.mat']))
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'input')
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
 else
     tic; [out, data_reg] = stackRegister(data,data_avg); toc;
     mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'input')
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
 end
 clear data out
 disp('registration finished')
@@ -168,15 +169,15 @@ print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' r
 
 %% find activated cells
 
-% tCyc = cell2mat(input.tCyclesOn);
-cStart = cell2mat(input.cStimOneOn); % same as cStimOn
-cStimOn = cell2mat(input.cStimOneOn);
-cStimOff = cell2mat(input.cStimOneOff);
-% cTarget = celleqel2mat_padded(input.cStimTwoOn); cTarget = int64(cTarget);
-cTarget = cell2mat(input.cStimTwoOn);
-try nTrials = input.trialsSinceReset % 464 = 32 types * 14.5 reps
+% tCyc = cell2mat(behav_input.tCyclesOn);
+cStart = cell2mat(behav_input.cStimOneOn); % same as cStimOn
+cStimOn = cell2mat(behav_input.cStimOneOn);
+cStimOff = cell2mat(behav_input.cStimOneOff);
+% cTarget = celleqel2mat_padded(behav_input.cStimTwoOn); cTarget = int64(cTarget);
+cTarget = cell2mat(behav_input.cStimTwoOn);
+try nTrials = behav_input.trialsSinceReset % 464 = 32 types * 14.5 reps
 catch
-    nTrials = input.trialSinceReset
+    nTrials = behav_input.trialSinceReset
 end
 sz = size(data_reg); % [y pixel * x pixel * nframe]
 
@@ -261,11 +262,11 @@ data_targ_dfof_fake = (data_targ-data_f)./data_f;
 
 %% plot dfof for randStim1_doSameStim2 bunny
 
-assert(input.doRandStimOne == 1 & input.doSameStims == 1)
-adapter_id = cell2mat(input.tstimOne);
+assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1)
+adapter_id = cell2mat(behav_input.tstimOne);
 adapter_list = unique(adapter_id);
 n_adapter = length(adapter_list);
-target_id = cell2mat(input.tstimTwo);
+target_id = cell2mat(behav_input.tstimTwo);
 target_list = unique(target_id);
 n_target = length(target_list);
 

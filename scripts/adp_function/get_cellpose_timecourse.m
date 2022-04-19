@@ -1,4 +1,4 @@
-function npSub_tc = get_cellpose_timecourse(data_reg)
+function npSub_tc = get_cellpose_timecourse(data_reg, LL_base, arg_date, imouse, run_str)
 
 t = load('cellpose_mask.mat');
 mask_cell = t.cellpose_mask;
@@ -35,6 +35,7 @@ np_w = 0.01*ind;
 npSub_tc = data_tc-bsxfun(@times,tcRemoveDC(np_tc),np_w);
 clear data_reg data_reg_down
 
+date = arg_date;
 save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], ...
     [date '_' imouse '_' run_str], ...
     [date '_' imouse '_' run_str '_TCs_cellpose.mat']), ...
