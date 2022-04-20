@@ -1,8 +1,33 @@
 %% init
 
-close all; clc; clear
-clear id_ad id_noad id_isi2 id_isi3 id_ori root_path
-clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
+close all; clc; 
+clear; clear global
+
+
+%% 
+
+database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
+master_xls = [database_path, 'data/batch_cellpose.csv'];
+dataset_meta = readtable(master_xls);
+dataset_bunny = dataset_meta(ismember(dataset_meta.stim_type, 'bunny'),:);
+dataset_grat = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
+
+%%
+
+clearvars -except dataset_bunny dataset_grat
+nset = size(dataset_bunny,1);
+disp('cellpose segment bunny datasets first')
+
+for iset = 1:nset
+
+iset, nset
+dataset_now = dataset_bunny(iset,:);
+arg_mouse = dataset_now.mouse
+arg_date = num2str(dataset_now.date)
+% arg_ImgFolder = dataset_now.num(1); arg_ImgFolder = ['00', num2str(arg_ImgFolder)]
+% disp('for bunny data, take sess 002 only to avoid repetitive depth')
+
+%%
 global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
 global frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
 global root_path
@@ -321,3 +346,5 @@ dfof_base2_trial = dfof_base2_trial(:,:,3);
 if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial dfof_base_trial dfof_base2_trial; end
 
 %% find visually driven cells -> vis_driven.ipynb
+
+end
