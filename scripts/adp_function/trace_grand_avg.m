@@ -16,7 +16,7 @@ for iori = 1 : nori
     for iisi =  1 : length(id_isi3) 
         % disp(['  isi # ', num2str(iisi), ' of 3'])
         idx = intersect(id_ori{iori}, id_isi3{iisi}); 
-        temp = squeeze(dfof_align_ad(:, idx, 1:trial_len_min));
+        temp = dfof_align_ad(:, idx, 1:trial_len_min); % should not squeeze, leave idx (axis=2) to be averaged
         trace_avg(:, iori, iisi, :) = squeeze(nanmean(temp, 2));
 %         trace_sem(:, iori, iisi, :) = squeeze(nanstd(temp, 2)) ./ length(idx);
     end

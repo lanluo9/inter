@@ -3,7 +3,6 @@
 close all; clc; 
 clear; clear global
 
-
 %% 
 
 database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
@@ -14,86 +13,68 @@ dataset_grat = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
 
 %%
 
-clearvars -except dataset_bunny dataset_grat
 nset = size(dataset_bunny,1);
-disp('cellpose segment bunny datasets first')
-
 for iset = 1:nset
+
+close all
+clearvars -except dataset_bunny dataset_grat iset nset
+disp('cellpose segment bunny datasets first')
 
 iset, nset
 dataset_now = dataset_bunny(iset,:);
-arg_mouse = dataset_now.mouse
 arg_date = num2str(dataset_now.date)
-% arg_ImgFolder = dataset_now.num(1); arg_ImgFolder = ['00', num2str(arg_ImgFolder)]
-% disp('for bunny data, take sess 002 only to avoid repetitive depth')
+arg_mouse = dataset_now.mouse
+imouse = ['i', num2str(arg_mouse)];
+area = 'V1'
 
 %%
-global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
-global frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
-global root_path
+% declare all global var for single dataset
+global frame_rate range_base range_resp ...
+    ncell ntrial trial_len_min ...
+    nisi nori ori_list...
+    id_ad id_noad id_isi2 id_isi3 id_ori ...
 
-root_path = 'C:\Users\ll357\Documents\inter';
-% cd([root_path, '\mat'])
-
+root_path = 'C:\Users\GlickfeldLab\Documents\test\inter'; %'C:\Users\ll357\Documents\inter';
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 ll_fn = fullfile(fn_base, 'home\lan'); 
 data_fn = fullfile(ll_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
-% caiman bunny500/top gcamp6s
-dataset_list = struct;
-dataset_list.mouse = [1369];
-dataset_list.date = [220310];
-dataset_list.area = {'V1'};
-stim_protocol = 'bunny'
-
-%% load [xls, timecourse, stim]
+%% load
 
 save_flag = 1; % toggle this to save/skip all .mat creation below
-iset = 1 % this assumes registered multisession is recorded on same day & mouse
-date = num2str(dataset_list.date(iset))
-mouse = num2str(dataset_list.mouse(iset)); imouse = ['i', mouse]
-area = dataset_list.area{1,iset}
+stim_protocol = 'bunny'
 
 % get stim mat: input_behav for each session
-xls_dir = fullfile(data_fn, imouse, date); cd(xls_dir)
+xls_dir = fullfile(data_fn, imouse, arg_date)
+cd(xls_dir)
 xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
-frame_rate = data_now_meta.(5)(end);
-% bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol));
+
 bunny500_id = find(contains(data_now_meta{:,9},stim_protocol));
+% bunny500_id = find(contains(data_now_meta.StimulusSet,stim_protocol));
 % bunny500_id = find(contains(data_now_meta.adjustIsi_500_StimDuration_200,stim_protocol));
+bunny500_id = bunny500_id(1) 
+disp('for bunny data, take sess 002 only to avoid repetitive depth')
+
 data_now_meta(bunny500_id,:)
+frame_rate = data_now_meta.(5)(bunny500_id);
 
 %%
 
-clear input_behav_seq
-for i = 1%:length(bunny500_id)
+for i = 1:length(bunny500_id)
     id = bunny500_id(i);
     time = data_now_meta.(8)(id);
     ImgFolder = data_now_meta.(1){id}(1:3);
 
-    fName = fullfile(mworks_fn, ['data-' imouse '-' date '-' num2str(time) '.mat']);
-    temp = load(fName); % load behavior data "input"
+    fName = fullfile(mworks_fn, ['data-' imouse '-' arg_date '-' num2str(time) '.mat']);
+    temp = load(fName); % load behavior data "input", which clashes with built-in function
     input_behav_seq(i) = temp.input; clear temp
 end
 
-sess_flag = ''
-% if sess_flag == 1
-%     input_behav_seq = input_behav_seq(1); sess = '_002';
-% elseif sess_flag == 3
-%     input_behav_seq = input_behav_seq(3); sess = '_004';
-% elseif contains(sess_flag, 'A')
-%     sess = '_sideA';
-% elseif contains(sess_flag, 'B')
-%     sess = '_sideB';
-% else
-    sess = '';
-% end
-
 %%
-areamousedate = [area '_' imouse '_' date sess];
+areamousedate = [area '_' imouse '_' arg_date];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
 
 % result_folder = [mapped_path, '\mat_inter\', areamousedate]; disp('manual segm');
@@ -106,41 +87,13 @@ cd(result_folder)
 
 %% substitute npSub_tc w cellpose
 
-
-cd(fullfile(tc_fn, [date '_' imouse]))
-cd([date '_' imouse '_runs-00', num2str(bunny500_id(1))])
-% tc = load([date '_' imouse '_runs-00', num2str(bunny500_id(1)),'_TCs_addfake.mat']);
-tc = load([date '_' imouse '_runs-00', num2str(bunny500_id(1)),'_TCs_cellpose.mat']);
+cd(fullfile(tc_fn, [arg_date '_' imouse]))
+cd([arg_date '_' imouse '_runs-', ImgFolder])
+tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']);
+disp('loaded cellpose timecourse')
 df_flat = tc.npSub_tc;
 [nframe, ncell] = size(df_flat)
 nframe_seq = [nframe];
-
-% tc_file = fullfile(tc_fn, [date '_' imouse], ...
-%     ['caiman_activity_' imouse '_' date, '_multisess.mat']);
-% %     caiman_activity_i1369_220310_multisess_registered
-% df = load(tc_file);
-% df_pile = (df.df)';
-% 
-% t = cellfun(@size,df_pile,'uni',false); 
-% ncell = size(t,2)
-% t = cell2mat(t(:,1));
-% nframe_seq = t(:,2);
-% 
-% df_flat = zeros(sum(nframe_seq), ncell); % [nframe_sum, ncell]
-% for icell = 1:ncell
-%     df_flat(:,icell) = horzcat(df_pile{:, icell})';
-% end
-
-% % if sess_flag == 1
-% %     frame_range = 1:70000;
-% % elseif sess_flag == 3
-% %     frame_range = 140000:210000;
-% % else
-% %     frame_range = 1:210000;
-% % end
-% % df_flat = df_flat(frame_range, :);
-
-size(df_flat)
 
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
@@ -152,7 +105,7 @@ frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
 
-for i = 1 %: length(bunny500_id) % comment out i>1 for single sess
+for i = 1 : length(bunny500_id) % comment out i>1 for single sess
     input_behav = input_behav_seq(i);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
@@ -171,7 +124,6 @@ for i = 1 %: length(bunny500_id) % comment out i>1 for single sess
     frame_ad_sess = frame_ad_sess(1:ntrial_sess);
     frame_ad_off_sess = double(cell2mat(input_behav.cStimOneOn)); 
     frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
-%     frame_tg_sess = double(celleqel2mat_padded(input_behav.cStimTwoOn)); 
     frame_tg_sess = double(cell2mat(input_behav.cStimTwoOn)); 
     frame_tg_sess = frame_tg_sess(1:ntrial_sess);
     if i>1
@@ -209,40 +161,10 @@ nrep_stim = unique(t(:,2))
 % bunny500 3sess = 3/4/5 rep of each img
 % bunnytop 3sess = 48-50 rep of each img, each sess = 16-17 rep
 
-% %% visliz F over time: photobleaching / dying cell
-% % clear all global % sbxread might need clear global var
-% 
-% cd('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\002')
-% names = dir('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\002\*_000_000.mat');
-% imgMatFile = {names.name}
-% load(imgMatFile{1});
-% nframes = info.config.frames;
-% names = dir('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\002\*_000_000.sbx');
-% sbxFile = {names.name}
-% data_temp = sbxread(sbxFile{1}(1:end-4), 0, nframes);
-% 
-% cd('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\003')
-% names = dir('Z:\All_Staff\home\lan\Data\2P_images\i1350\220225\003\*_000_000.sbx');
-% sbxFile = {names.name}
-% data_temp2 = sbxread(sbxFile{1}(1:end-4), 0, nframes);
-% 
-% data = cat(4, data_temp, data_temp2);
-% data = squeeze(data);
-% data_avg = squeeze(mean(mean(data,2),1));
-% 
-% data_smooth = movmean(data_avg, 500);
-% plot(data_smooth)
-% 
-% cd('Z:\All_Staff\home\lan\Analysis\2P\220225_i1350')
-% save overall_fluorescence.mat data_avg
-% saveas(gcf, 'overall_fluorescence', 'jpg')
-% close
-
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
 % always use frame_ad as the end point of trial-specific baseline
 
-% cd(['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\' area '_' imouse '_' date])
 cd(result_folder)
 
 npSub_tc = df_flat;
@@ -267,7 +189,7 @@ t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1));
 t_tg = squeeze(nanmean(t(:,:), 1)); 
 
 figure
-range = 100;
+range = 60;
 plot(t_ad(1:range), 'r'); hold on; 
 plot(t_tg(1:range), 'b'); 
 grid on; grid minor; 
@@ -288,36 +210,26 @@ grid on; grid minor;
 set(gcf, 'Position', get(0, 'Screensize')); 
 legend('ad align', 'targ align')
 if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
-% close all
 
-%%
-range_base = 1:4; range_resp = 12:15;
-% prompt = 'base window = 1:3. what is resp window? '; range_resp = input(prompt); close
+%% find calcium resp window
 
-%% bunnytop early vs late half session resp
-
-ntrial_half = floor(ntrial / 2);
-
-if contains(sess_flag, 'A')
-    trial_seq = 1 : ntrial_half;
-    dfof_align_ad = dfof_align_ad(:,trial_seq,:);
-    id_isi3{1, 3} = id_isi3{1, 3}(id_isi3{1, 3} <= ntrial_half);
-    id_ad = id_ad(id_ad <= ntrial_half);
-    for i = 1 : nori
-        id_ori{i, 1} = id_ori{i, 1}(id_ori{i, 1} <= ntrial_half);
-    end
-elseif contains(sess_flag, 'B')
-    trial_seq = ntrial_half+1 : ntrial;
-    dfof_align_ad = dfof_align_ad(:,trial_seq,:);
-    id_isi3{1, 3} = id_isi3{1, 3}(id_isi3{1, 3} > ntrial_half);
-    id_isi3{1, 3} = id_isi3{1, 3} - ntrial_half;
-    id_ad = id_ad(id_ad > ntrial_half);
-    id_ad = id_ad - ntrial_half;
-    for i = 1 : nori
-        id_ori{i, 1} = id_ori{i, 1}(id_ori{i, 1} > ntrial_half);
-        id_ori{i, 1} = id_ori{i, 1} - ntrial_half;
-    end
+find_peak_bef = 15;
+disp('assume: first peak comes before n frames. second peak comes after')
+trace_start = t_ad(1:find_peak_bef);
+[~, peak_id] = max(trace_start)
+if peak_id < 6 % first peak should not be earlier than 6 frames
+    disp('WARNING: strange trace or peak')
 end
+range_base = 1:3; range_resp = (peak_id-1):(peak_id+1);
+
+figure;
+plot(t_ad(1:40));
+xline(range_base(end), 'k--')
+xline(range_resp(1), 'k--')
+xline(range_resp(end), 'k--')
+grid on; grid minor
+set(gcf, 'Position', get(0, 'Screensize'));
+saveas(gcf, ['find_ca_latency_ca_window.jpg'])
 
 %% response to adapter & targets. get trace (bunny mode: isi=250 only)
 % dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
@@ -343,7 +255,8 @@ dfof_base_trial = dfof_base_trial(:,:,3);
 dfof_tg_trial = dfof_tg_trial(:,:,3);
 dfof_base2_trial = dfof_base2_trial(:,:,3);
 
-if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial dfof_base_trial dfof_base2_trial; end
+if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
+        dfof_base_trial dfof_base2_trial; end
 
 %% find visually driven cells -> vis_driven.ipynb
 
