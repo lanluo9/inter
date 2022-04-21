@@ -71,6 +71,18 @@ if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_
     load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
     [outs, data_reg]=stackRegister_MA(double(data),[],[],out);
+% for grating dataset 2 - i1323 V1:
+% Index in position 1 exceeds array bounds (must not exceed 99865).
+% 
+% Error in stackRegister_MA (line 76)
+%         row_shift = shifts_xy(index,3);
+% 
+% Error in get_data_reg_cellpose_tif (line 73)
+%     [outs, data_reg]=stackRegister_MA(double(data),[],[],out);
+% 
+% Error in batch_cellpose (line 55)
+% [data_reg, LL_base, date, imouse, run_str] =
+% get_data_reg_cellpose_tif(...
     clear out outs
 else
     tic; [out, data_reg] = stackRegister(data,data_avg); toc;

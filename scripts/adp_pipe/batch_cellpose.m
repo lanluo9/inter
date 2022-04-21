@@ -26,7 +26,7 @@ end
 nset = size(dataset_table,1);
 disp('cellpose segment bunny datasets first')
 
-for iset = 2:nset % 1
+for iset = 6:nset % 1
 
 iset, nset
 dataset_now = dataset_table(iset,:);
