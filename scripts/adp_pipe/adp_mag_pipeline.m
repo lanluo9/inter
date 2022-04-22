@@ -1,14 +1,14 @@
 %% init
 
-close all; clc; clear
-clear id_ad id_noad id_isi2 id_isi3 id_ori root_path
-clear frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
+close all; clc
+clear; clear global
+
 global id_ad id_noad id_isi2 id_isi3 id_ori % declare all global var for single dataset
 global frame_rate range_base range_resp ncell ntrial trial_len_min nisi nori ori_list
 global root_path
 
-root_path = 'C:\Users\ll357\Documents\inter';
-cd([root_path, '\mat'])
+root_path = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter';
+% cd(root_path)
 
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 ll_fn = fullfile(fn_base, 'home\lan'); 
@@ -35,7 +35,7 @@ area = dataset_list.area{1,iset}
 [npSub_tc, frame_rate, input_behav, info] = load_xls_tc_stim(data_fn, mworks_fn, tc_fn, date, imouse, area);
 
 areamousedate = [area '_' imouse '_' date];
-result_folder = [root_path, '\mat\', areamousedate];
+result_folder = [root_path, areamousedate];
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 

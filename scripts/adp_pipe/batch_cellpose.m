@@ -18,6 +18,17 @@ clearvars -except dataset_bunny dataset_grat
 clearvars –global
 
 stim_type = 'grating'
+
+%{
+for now:
+use i1322-i1329 manual
+use 210120_i1337_runs-003 cellpose
+
+TODO:
+add param loosening loop for cellpose: 210120_i1337_runs-002
+remove resp_tg (but keep resp_tg_fakebase) for cellpose.tif to reduce noise
+%}
+
 if strcmp(stim_type, 'bunny')
     dataset_table = dataset_bunny;
 elseif strcmp(stim_type, 'grating')
@@ -26,7 +37,7 @@ end
 nset = size(dataset_table,1);
 disp('cellpose segment bunny datasets first')
 
-for iset = 6:nset % 1
+for iset = nset % 1
 
 iset, nset
 dataset_now = dataset_table(iset,:);
@@ -71,7 +82,7 @@ npSub_tc = get_cellpose_timecourse(data_reg, ...
 
 disp([num2str(iset), ' set done out of ', num2str(nset)])
 clear global
-clearvars -except dataset_bunny dataset_grat nset iset 
+clearvars -except dataset_bunny dataset_grat nset iset dataset_table stim_type
 % suspect weird trace is bc residual global var affecting sbxread
 
 end
