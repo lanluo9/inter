@@ -208,6 +208,19 @@ grid on; grid minor
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['find_ca_latency_ca_window.jpg'])
 
+%% trial-wise response and baseline
+
+[dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
+dfof_ad_trial = dfof_ad_trial(:,:,3); % only take isi=250
+dfof_base_trial = dfof_base_trial(:,:,3);
+
+[dfof_tg_trial, dfof_base2_trial] = dfof_resp_trialwise(dfof_align_tg, save_flag);
+dfof_tg_trial = dfof_tg_trial(:,:,3);
+dfof_base2_trial = dfof_base2_trial(:,:,3);
+
+if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
+        dfof_base_trial dfof_base2_trial; end
+
 % %% response to adapter & targets. get trace (bunny mode: isi=250 only)
 % % dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
 % 
