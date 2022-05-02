@@ -29,10 +29,10 @@ plt.rcParams.update({"font.size": 10})
 # functions
 def load_trace_trial_data(dir_path, vis_filter=True):
     """
-    Load trace by trial .mat and stim info data from directory.
+    load trace by trial .mat and stim info data from directory.
 
     args:
-        dir_path (raw string): directory path, compatible with windows path containing '\'
+        dir_path (raw string): directory path, compatible with windows path containing '\\'
         vis_filter (boolean): whether to filter by visually driven cells
 
     returns:
@@ -69,7 +69,7 @@ def load_trace_trial_data(dir_path, vis_filter=True):
 
 def calc_trace_stim(trace_by_trial, stim_id):
     """
-    Calculate mean trace and mean trace by stim.
+    calculate mean trace and mean trace by stim.
 
     args:
         trace_by_trial (ndarray): neural activity of shape: ncell x ntrial x nframe
@@ -80,17 +80,24 @@ def calc_trace_stim(trace_by_trial, stim_id):
         trace_by_stim (ndarray): mean neural activity of shape: nstim x ncell x nframe
     """
 
-    trace_cell_avg = np.mean(
-        np.mean(trace_by_trial, axis=0), axis=0
-    )  # trace of avg cell over all stims
+    # trace over all stims
+    trace_cell_avg = np.mean(np.mean(trace_by_trial, axis=0), axis=0)
 
+    # trace for each stim
     trace_stim_avg = []
     for i in np.unique(stim_id):
-        trace_istim_avg = np.mean(
-            trace_by_trial[:, np.where(stim_id == i)[0]], axis=1
-        )  # ncell x nframe
-        trace_istim_avg = np.mean(trace_istim_avg, axis=0)  # nframe
+        trace_istim_avg = np.mean(trace_by_trial[:, np.where(stim_id == i)[0]], axis=1)
+        trace_istim_avg = np.mean(trace_istim_avg, axis=0)
         trace_stim_avg.append(trace_istim_avg)
-    print(len(trace_stim_avg), trace_stim_avg[0].shape)  # trace for each stim
+    print(len(trace_stim_avg), trace_stim_avg[0].shape)
 
     return trace_cell_avg, trace_stim_avg
+
+
+def read_csv_by_stim_type():
+    dir_inter = r'C:\Users\GlickfeldLab\Documents\test\inter'.replace('\\', '/')
+    df = pd.read_csv(dir_inter + '/data/batch_cellpose.csv')
+    df = df[(df.manual_seg == 1) | (df.cellpose_seg == 1)].reset_index(drop=True) # only keep segmented data
+    df_bun = df[df['stim_type'] == 'bunny']
+    df_grat = df[(df['stim_type'] == 'grating')]
+    df
