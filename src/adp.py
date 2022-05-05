@@ -59,7 +59,8 @@ def load_trace_trial_data(dir_path, vis_filter=True):
     nstim = len(np.unique(stim_id))
     ntrial = trace_by_trial.shape[1]
     nframe = trace_by_trial.shape[2]
-    print(ncell, nstim, ntrial, nframe)
+    print(f"ncell: {ncell}, nstim: {nstim}, ntrial: {ntrial}, nframe: {nframe}")
+    # print(ncell, nstim, ntrial, nframe)
 
     return (
         stim_id,
@@ -95,4 +96,18 @@ def calc_trace_stim(trace_by_trial, stim_id):
 
 
 def read_csv_by_stim_type():
-    
+    """
+    read csv file containing metadata of recordings, including stim type 
+
+    returns:
+        df (pandas dataframe): dataframe of recordings for each stim type
+    """
+    # read metadata of segmented sessions
+    dir_inter = r"C:\Users\GlickfeldLab\Documents\test\inter".replace("\\", "/")
+    df = pd.read_csv(dir_inter + "/data/batch_cellpose.csv")
+    # only keep segmented data
+    df = df[(df.manual_seg == 1) | (df.cellpose_seg == 1)].reset_index(drop=True)
+    # separate by stim type
+    df_bun = df[df["stim_type"] == "bunny"]
+    df_grat = df[(df["stim_type"] == "grating")]
+    return df_bun, df_grat
