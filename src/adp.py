@@ -110,4 +110,4 @@ def read_csv_by_stim_type():
     # separate by stim type
     df_bun = df[df["stim_type"] == "bunny"]
     df_grat = df[(df["stim_type"] == "grating")]
-    return df_bun, df_grat
+    return df, df_bun, df_grat
