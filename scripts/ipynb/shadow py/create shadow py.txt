@@ -1,0 +1,9 @@
+# in anaconda prompt
+conda activate misc
+cd C:\Users\ll357\Documents\inter\scripts\ipynb
+jupyter nbconvert --to script *.ipynb
+move *.py "./shadow py/"
+
+TODO:
+write .sh to automate conversion to py, git add, git commit -m, git push
+take commit comment as input arg
