@@ -1,0 +1,15 @@
+mouse,date,area,depth,num,cellpose_seg,manual_seg,paradigm,gcamp,stim_type
+1338,210616,V1,200,2.0,1.0,,bunny6,6s,bunny
+1339,210922,V1,200,2.0,1.0,,bunny500,6s,bunny
+1350,211222,V1,200,2.0,1.0,,bunnytop,6s,bunny
+1350,220225,V1,200,2.0,1.0,,bunnytop high res,6s,bunny
+1369,220310,V1,200,2.0,1.0,,bunnytop high res,6s,bunny
+1372,220406,V1,200,2.0,1.0,,bunnytop high res high lum-contrast,6s,bunny
+1322,200803,V1,200,2.0,,1.0,grating,6s,grating
+1323,200720,V1,200,3.0,,1.0,grating,6s,grating
+1324,200728,V1,200,3.0,,1.0,grating,6s,grating
+1328,201015,V1,200,4.0,,1.0,grating,6s,grating
+1329,201209,V1,200,2.0,,1.0,grating,6s,grating
+1337,210120,V1,200,2.0,,,grating,6s,grating
+1337,210120,V1,150,3.0,1.0,,grating,6s,grating
+1338,210225,V1,200,2.0,,,grating,6s,grating
