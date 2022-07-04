@@ -37,17 +37,19 @@ eval(call_help);
 
 %% startup 
 restoredefaultpath;matlabrc
-addpath(genpath('C:\Users\GlickfeldLab\Documents\test\inter'))
-addpath(genpath('C:\Users\GlickfeldLab\Documents\test\ImagingCode-Glickfeld-Hull'))
-addpath(genpath('C:\Users\GlickfeldLab\Documents\test\BehaviorCode-Glickfeld-Hull'))
-addpath(genpath('C:\Users\GlickfeldLab\Documents\test\Scanbox'))
+repo_dir = 'C:\Users\ll357\Documents\'
+addpath(genpath(repo_dir))
+% addpath(genpath('C:\Users\GlickfeldLab\Documents\test\inter'))
+% addpath(genpath('C:\Users\GlickfeldLab\Documents\test\ImagingCode-Glickfeld-Hull'))
+% addpath(genpath('C:\Users\GlickfeldLab\Documents\test\BehaviorCode-Glickfeld-Hull'))
+% addpath(genpath('C:\Users\GlickfeldLab\Documents\test\Scanbox'))
 
-svnroot = 'C:\Users\GlickfeldLab\Documents\test\ImagingCode-Glickfeld-Hull';
-ijroot = 'C:\Program Files\ImageJ';
-coreInitJavaPath(svnroot,ijroot);
-coreInitMatlabPath(svnroot,ijroot);
+% svnroot = [repo_dir, 'ImagingCode-Glickfeld-Hull'];
+% ijroot = 'C:\Program Files\ImageJ';
+% coreInitJavaPath(svnroot,ijroot);
+% coreInitMatlabPath(svnroot,ijroot);
 
-cd C:\Users\GlickfeldLab\Documents\test\inter\
+cd(repo_dir)
 clc
 
 %% saving var
