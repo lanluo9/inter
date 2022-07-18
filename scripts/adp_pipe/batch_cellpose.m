@@ -6,7 +6,8 @@ clc
 
 %% 
 
-database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
+% database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
+database_path = 'C:\Users\ll357\Documents\inter\';
 master_xls = [database_path, 'data/batch_cellpose.csv'];
 dataset_meta = readtable(master_xls);
 dataset_bunny = dataset_meta(ismember(dataset_meta.stim_type, 'bunny'),:);
