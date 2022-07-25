@@ -1,5 +1,5 @@
 %% preference setting
-% set keyboard shortcut for evaluate selection: Ctrl + Shift + E
+% keyboard shortcut for `evaluate selection` (not `evaluate CURRENT selection`!): Ctrl + Shift + E
 % command window - wrap lines
 % general - confirmation dialogs - confirm before matlab exit 
 

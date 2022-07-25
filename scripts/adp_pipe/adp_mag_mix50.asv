@@ -1,0 +1,19 @@
+%% 
+
+clear all
+close all
+clc
+
+%% 
+
+% database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
+database_path = 'C:\Users\ll357\Documents\inter\';
+master_xls = [database_path, 'data/mix50_grat1.csv'];
+dataset_meta = readtable(master_xls);
+
+%%
+
+clearvars -except dataset_meta
+clearvars –global
+
+stim_type = 'grating'

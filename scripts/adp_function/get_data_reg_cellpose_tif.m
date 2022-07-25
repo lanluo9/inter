@@ -61,7 +61,7 @@ for i = 1:nep
     title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
 end
 disp('start registration. using middle section as motion correct ref')
-select = 4
+select = 5
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
