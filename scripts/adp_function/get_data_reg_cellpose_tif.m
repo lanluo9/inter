@@ -61,7 +61,7 @@ for i = 1:nep
     title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
 end
 disp('start registration. using middle section as motion correct ref')
-select = 5
+select = 3
 start_idx = select * 10000 + 1;
 stop_idx = select * 10000 + 500;
 data_avg = mean(data(:,:,start_idx:stop_idx),3);
@@ -249,6 +249,16 @@ catch
 end
 sz = size(data_reg); % [y pixel * x pixel * nframe]
 
+
+% % for data corrupted halfway
+% % data_reg = data_reg(:,:,1:87139);
+% nframe_good = sz(3);
+% cTarget = cTarget(cTarget <= nframe_good); % stim2 onset time must be before data corruption
+% cStart = cStart(1 : length(cTarget));
+% cStimOn = cStimOn(1 : length(cTarget));
+% cStimOff = cStimOff(1 : length(cTarget));
+% nTrials = length(cTarget);
+
 data_f = zeros(sz(1),sz(2),nTrials);
 data_adapter = zeros(sz(1),sz(2),nTrials);
 data_f2 = zeros(sz(1),sz(2),nTrials);
@@ -339,13 +349,16 @@ if behav_input.doRandCon
 else
     adapterCon = celleqel2mat_padded(behav_input.tBaseGratingContrast);
 end
+% adapterCon = adapterCon(1:nTrials);
 unique(adapterCon) % adapter contrast 0 or 1
 ind_con = intersect(find(targCon == 1),find(adapterCon == 0));
 
 adapterDir = celleqel2mat_padded(behav_input.tBaseGratingDirectionDeg);
+% adapterDir = adapterDir(1:nTrials);
 dirs = unique(adapterDir);
 ndir = length(dirs);
 targetDelta = celleqel2mat_padded(behav_input.tGratingDirectionDeg);
+% targetDelta = targetDelta(1:nTrials);
 deltas = unique(targetDelta);
 nDelta = length(deltas);
 
