@@ -90,7 +90,7 @@ def calc_trace_stim(trace_by_trial, stim_id):
         trace_istim_avg = np.mean(trace_by_trial[:, np.where(stim_id == i)[0]], axis=1)
         trace_istim_avg = np.mean(trace_istim_avg, axis=0)
         trace_stim_avg.append(trace_istim_avg)
-    print(len(trace_stim_avg), trace_stim_avg[0].shape)
+    print(f'trace_stim_avg: {len(trace_stim_avg)}. trace_stim_avg[0].shape: {trace_stim_avg[0].shape}')
 
     return trace_cell_avg, trace_stim_avg
 

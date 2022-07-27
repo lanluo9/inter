@@ -114,20 +114,19 @@ ntrial_good = sum(frame_tg_onset < nframe - corrupt_buffer)
 
 field_name = fieldnames(input_behav_seq);
 for i = 1 : length(field_name)
-%     field_content = getfield(input_behav_seq, field_name{i});
-    field_content = input_behav_seq.(field_name{i});
-    field_len = length(field_content);
+    field_content = getfield(input_behav_seq, field_name{i});
+    field_len = length(field_content)
 
     if field_len > ntrial_good
-%         input_behav_seq = setfield(input_behav_seq, field_name{i}, field_content{1:ntrial_good})
-        input_behav_seq.(field_name{i}) = field_content(1:ntrial_good);
+        
     end
 end
 
+%%
+
 input_behav = input_behav_seq;
-% ntrial = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
-ntrial = ntrial_good - 1;
-disp('chopped off corrupted data')
+ntrial = input_behav.trialSinceReset - 1; % 464 = 8 dir * 2 adapter contrast * 2 ISI * 14.5 reps 
+% final trial discarded bc too few frames
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
 id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 
@@ -169,7 +168,7 @@ dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
 dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
 
 disp('extract only trace_by_trial for trials w isi=250, ad & tg ori=0')
-trial_select = intersect(id_ori{find(ori_list==0)}, id_ad250);
+trial_select = intersect(id_ori{find(ori_list==0)}, id_ad250)
 trace_by_trial = dfof_align_ad(:, trial_select, :);
 disp('stim_seq is just tg ori=0 for now')
 stim_seq = ori_seq';
@@ -218,8 +217,7 @@ end
 range_base = 1:3; range_resp = (peak_id-1):(peak_id+1);
 
 figure;
-% plot(t_ad(1:40));
-plot(t_ad(1:end));
+plot(t_ad(1:40));
 xline(range_base(end), 'k--')
 xline(range_resp(1), 'k--')
 xline(range_resp(end), 'k--')

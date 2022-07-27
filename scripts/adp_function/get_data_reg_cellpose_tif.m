@@ -405,7 +405,6 @@ for idir = 1:nDelta
     title(deltas(idir))
 end
 set(gcf, 'Position', get(0, 'Screensize'));
-% data_dfof = cat(3,data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
 
 data_dfof_targ_noadapt = zeros(sz(1),sz(2),nDelta);
 [n, n2] = subplotn(nDelta);
@@ -419,7 +418,8 @@ for idir = 1:nDelta
     title(deltas(idir))
 end
 set(gcf, 'Position', get(0, 'Screensize'));
-data_dfof = cat(3,data_dfof_targ_noadapt, data_dfof_targ_fake, data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
+% data_dfof = cat(3,data_dfof_targ_noadapt, data_dfof_targ_fake, data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
+data_dfof = cat(3, data_dfof_targ_fake, data_dfof_dir_all); % did not concat data_dfof_targ_noadapt and data_dfof_targ due to higher noise
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof_max = max(imfilter(data_dfof, myfilter), [], 3);
