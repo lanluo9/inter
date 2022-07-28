@@ -83,6 +83,9 @@ def calc_trace_stim(trace_by_trial, stim_id):
 
     # trace over all stims
     trace_cell_avg = np.mean(np.mean(trace_by_trial, axis=0), axis=0)
+    trace_cell_sem = np.std(np.mean(trace_by_trial, axis=0), axis=0) / np.sqrt(
+        trace_by_trial.shape[0]
+    )
 
     # trace for each stim
     trace_stim_avg = []
@@ -90,9 +93,13 @@ def calc_trace_stim(trace_by_trial, stim_id):
         trace_istim_avg = np.mean(trace_by_trial[:, np.where(stim_id == i)[0]], axis=1)
         trace_istim_avg = np.mean(trace_istim_avg, axis=0)
         trace_stim_avg.append(trace_istim_avg)
-    print(f'trace_stim_avg: {len(trace_stim_avg)}. trace_stim_avg[0].shape: {trace_stim_avg[0].shape}')
+    print(
+        f"trace_cell_avg: {trace_cell_avg.shape}. \
+        trace_stim_avg list len: {len(trace_stim_avg)}. \
+        trace_stim_avg[0].shape: {trace_stim_avg[0].shape}"
+    )
 
-    return trace_cell_avg, trace_stim_avg
+    return trace_cell_avg, trace_cell_sem, trace_stim_avg
 
 
 def read_csv_by_stim_type():
