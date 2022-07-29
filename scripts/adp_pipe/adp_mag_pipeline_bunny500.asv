@@ -99,12 +99,7 @@ df_flat = tc.npSub_tc;
 [nframe, ncell] = size(df_flat)
 nframe_seq = [nframe];
 
-try
-    assert(sum(df_flat(nframe,:) < 65535) == ncell)
-catch
-    plot(df_flat(nframe,:)) 
-    disp('some cell at the final frame has fluo value 65535 -> corrupted')
-end
+imagesc(df_flat(:,:,end-1))
 
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
