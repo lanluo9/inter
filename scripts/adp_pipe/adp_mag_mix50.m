@@ -30,7 +30,7 @@ nset = size(dataset_table,1);
 % disp('cellpose segment grating datasets first')
 
 % for iset = 1:nset
-iset = 1
+iset = 2
 
 iset, nset
 dataset_now = dataset_table(iset,:);
@@ -38,8 +38,11 @@ arg_mouse = dataset_now.mouse
 arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num(1);
 arg_ImgFolder = ['00', num2str(arg_ImgFolder)]
-if strcmp(stim_type, 'mix')
-    disp('take first session 002 of mix50 for now')
+ref_ImgFolder = ['00', num2str(dataset_table(1,:).num(1))];
+run_str_ref = catRunName(ref_ImgFolder, nrun);
+
+if strcmp(stim_type, 'mix') && iset == 1
+    disp('take first session 002 of mix50 as ref session')
 end
 
 % check if cellpose time course exists
@@ -58,7 +61,7 @@ end
 % end
 
 [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
-    arg_mouse, arg_date, arg_ImgFolder, stim_type);
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref);
 disp('got data_reg, waiting for cellpose')
 
 %%

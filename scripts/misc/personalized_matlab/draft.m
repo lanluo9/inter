@@ -6,3 +6,9 @@
 % figure
 % imshowpair(img(1:100, 1:100)',denoised_img(1:100, 1:100)','montage');
 % set(gcf, 'Position', get(0, 'Screensize'));
+
+
+% test large sbx
+% t = rand(264, 796, 100000, 3); % cannot leave 3 or 4 of sbx sized matrix
+% in memory
+

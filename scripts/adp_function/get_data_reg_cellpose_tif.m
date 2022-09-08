@@ -1,5 +1,5 @@
 function [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
-    arg_mouse, arg_date, arg_ImgFolder, stim_type)
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref)
 
 disp('start running get_data_reg_cellpose_tif.m')
 mouse = arg_mouse
@@ -52,19 +52,23 @@ clear data_temp temp
 toc
 
 % Choose register interval
-nep = floor(size(data,3)./10000);
-[n, n2] = subplotn(nep);
-figure('units','normalized','outerposition',[0 0 1 1]);
-for i = 1:nep
-    subplot(n,n2,i); 
-    imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
-    title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
+if strcmp(run_str_ref, run_str) % if this session is ref session to register against
+    nep = floor(size(data,3)./10000);
+    [n, n2] = subplotn(nep);
+    figure('units','normalized','outerposition',[0 0 1 1]);
+    for i = 1:nep
+        subplot(n,n2,i); 
+        imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
+        title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
+    end
+    disp('start registration. using middle section as motion correct ref')
+    select = 3
+    start_idx = select * 10000 + 1;
+    stop_idx = select * 10000 + 500;
+    data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg
+else % otherwise take data_avg from ref session
+    load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_reg_shifts.mat']), 'data_avg')
 end
-disp('start registration. using middle section as motion correct ref')
-select = 3
-start_idx = select * 10000 + 1;
-stop_idx = select * 10000 + 500;
-data_avg = mean(data(:,:,start_idx:stop_idx),3);
 
 % Register data
 if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
@@ -85,7 +89,7 @@ if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_
 % get_data_reg_cellpose_tif(...
     clear out outs
 else
-    tic; [out, data_reg] = stackRegister(data,data_avg); toc;
+    tic; [out, data_reg] = stackRegister(data, data_avg); toc;
 %     mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
