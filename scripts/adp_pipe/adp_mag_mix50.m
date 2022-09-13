@@ -27,12 +27,9 @@ elseif strcmp(stim_type, 'grating')
     dataset_table = dataset_grat
 end
 nset = size(dataset_table,1);
-% disp('cellpose segment grating datasets first')
 
-% for iset = 1:nset
-iset = 1
+for iset = nset % 1:nset
 
-%%
 iset, nset
 dataset_now = dataset_table(iset,:);
 arg_mouse = dataset_now.mouse
@@ -40,7 +37,7 @@ arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num(1);
 arg_ImgFolder = ['00', num2str(arg_ImgFolder)]
 ref_ImgFolder = ['00', num2str(dataset_table(1,:).num(1))];
-run_str_ref = ['runs-' ref_ImgFolder(1,:)];
+run_str_ref = ['runs-' ref_ImgFolder(1,:)]
 
 if strcmp(stim_type, 'mix') && iset == 1
     disp('take first session 002 of mix50 as ref session')
@@ -61,10 +58,11 @@ end
 %     continue
 % end
 
-%%
 [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref);
-disp('got data_reg, waiting for cellpose')
+disp(['got data_reg & cellpose tif for session ', arg_ImgFolder])
+
+end
 
 %%
 tic
@@ -84,9 +82,3 @@ clearvars -except dataset_meta nset iset dataset_table stim_type
 % suspect weird trace is bc residual global var affecting sbxread
 
 % end
-
-%% register mix50 multisession
-
-data_reg_002 = data_reg;
-clear data_reg
-

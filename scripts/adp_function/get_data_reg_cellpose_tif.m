@@ -125,6 +125,8 @@ clear data out
 disp('registration finished')
 
 % test stability
+nep = floor(size(data_reg,3)./10000);
+[n, n2] = subplotn(nep);
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data_reg(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_byFrame.pdf']),'-dpdf', '-bestfit')
@@ -135,9 +137,10 @@ print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' r
 %%
 
 disp(stim_type)
+disp(run_str)
 
 switch stim_type % TODO: wrap into function
-case 'bunny'
+case {'bunny', 'mix'}
     
 %% find activated cells
 
@@ -178,6 +181,7 @@ set(gcf, 'Position', get(0, 'Screensize'));
 analysis_dir = fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]);
 cd(analysis_dir)
 saveas(gcf, ['find_ca_latency.jpg'])
+print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_find_ca_latency.pdf']),'-dpdf', '-bestfit')
 close
 
 figure; data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:40)); grid on; grid minor
@@ -208,6 +212,7 @@ xline(1 + ca_latency + window_len, 'k--')
 grid on; grid minor
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['find_ca_latency_ca_window.jpg'])
+print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_find_ca_latency_ca_window.pdf']),'-dpdf', '-bestfit')
 close all
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
@@ -262,6 +267,7 @@ data_dfof = cat(3,data_dfof, data_dfof_max); % adapter, targ, targ_fake, gaussia
 figure; imagesc(data_dfof_max)
 set(gcf, 'Position', get(0, 'Screensize'));
 title('data dfof max')
+print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_data_dfof_max.pdf']),'-dpdf', '-bestfit')
 close all
 
     
@@ -467,7 +473,7 @@ data_dfof = cat(3,data_dfof, data_dfof_max, data_dfof_perc);
 data_dfof_max = data_dfof_perc; % TODO: fix bunny data_dfof_max to data_dfof_perc, depending on noise lvl
     
 otherwise
-    disp('no such stim. stim type should be bunny or grating')
+    disp('no such stim. stim type should be bunny, mix or grating')
 end
 
 %% export tif for cellpose
@@ -493,7 +499,7 @@ t=toc
 fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
 fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
 
-disp(['mouse ', num2str(mouse), ' date ', num2str(date), ...
+disp(['mouse ', num2str(mouse), ' date ', num2str(date), ' ', run_str ...
     ' - finished data_reg & cellpose tif'])
 
 end
