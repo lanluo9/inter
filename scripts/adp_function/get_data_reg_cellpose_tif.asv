@@ -52,9 +52,13 @@ clear data_temp temp
 toc
 
 % check data corruption
-data_frame_avg = squeeze(mean(mean(data, 1) ,2));
-frame_corrupt = min(find(data_frame_avg == 65535)) - 1; % fully corrupted frame avg = 65535
-if ~isempty(find(data_frame_avg == 65536))
+if any(data(:) == 65535)
+    disp('suspected data corruption')
+
+    data_frame_avg = mean(mean(data, 1) ,1);
+    frame_corrupt = find(data_frame_avg == 65535); % fully corrupted frame avg 
+
+%     [~, ~, frame_corrupt] = find(data == 65535); % too slow
     sprintf('data corruption starts at frame no. %d', frame_corrupt)
 
     nep = floor(size(data,3)./10000);
@@ -66,8 +70,6 @@ if ~isempty(find(data_frame_avg == 65536))
         title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
     end
     print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_check_corrupt.pdf']),'-dpdf', '-bestfit')
-else
-    sprintf('data corruption not detected')
 end
 
 % Choose register interval
@@ -80,21 +82,13 @@ if strcmp(run_str_ref, run_str) % if this session is ref session, then register 
         imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
         title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
     end
-    print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_select_register_ref.pdf']),'-dpdf', '-bestfit')
-%     close all
-    
     disp('start registration. using middle section as motion correct ref')
-    select = 5
+    select = 4
     start_idx = select * 10000 + 1;
     stop_idx = select * 10000 + 500;
     data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg
-    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_data_avg.mat']), 'data_avg')
 else % otherwise take data_avg from ref session
-    try
-        load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_reg_shifts.mat']), 'data_avg')
-    catch
-        load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_data_avg.mat']), 'data_avg')
-    end
+    load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_reg_shifts.mat']), 'data_avg')
 end
 
 % Register data

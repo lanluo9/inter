@@ -1,6 +1,6 @@
 mouse,date,area,depth,num,cellpose_seg,manual_seg,paradigm,gcamp,stim_type
-1372,220711,V1,200,2,1,,mix50,6s,mix
-1372,220711,V1,200,3,1,,mix50,6s,mix
-1372,220711,V1,200,4,1,,mix50,6s,mix
 1372,220714,V1,200,2,1,,grat1,6s,grating
 1372,220714,V1,200,3,1,,grat1,6s,grating
+1373,220909,V1,150,2,1,,mix50,6s,mix
+1373,220909,V1,150,3,1,,mix50,6s,mix
+1373,220909,V1,150,4,1,,mix50,6s,mix
