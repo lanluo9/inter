@@ -52,7 +52,7 @@ clear data_temp temp
 toc
 
 % Choose register interval
-if strcmp(run_str_ref, run_str) % if this session is ref session to register against
+if strcmp(run_str_ref, run_str) % if this session is ref session, then register against oneself
     nep = floor(size(data,3)./10000);
     [n, n2] = subplotn(nep);
     figure('units','normalized','outerposition',[0 0 1 1]);
