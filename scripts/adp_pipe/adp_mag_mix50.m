@@ -65,6 +65,25 @@ disp(['got data_reg & cellpose tif for session ', arg_ImgFolder])
 end
 
 %%
+
+% now we have cellpose tif for each sess, avg sess tif to get final tif
+% pass to cellpose in ipynb, who reads from final tif folder (not sess folder)
+
+dir_final_tif = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse];
+cd(dir_final_tif) % one level up from sess folder
+file_list = dir(fullfile(dir_final_tif, '**\data_dfof.mat'));
+file_list = file_list(~[file_list.isdir]); % remove folders from list
+
+tmp = pi * ones(264, 796, nset);
+for i = 1 : length(file_list)
+    file_name = [file_list(i).folder, '\', file_list(i).name];
+    load(file_name, 'data_dfof_max')
+    tmp(:,:,i) = data_dfof_max;
+end
+data_dfof_multisess = mean(tmp, 3);
+
+%%
+
 tic
 while ~exist('cellpose_mask.mat','file')
     % pwd should be like \Analysis\2P\220310_i1369\220310_i1369_runs-002
@@ -77,8 +96,6 @@ npSub_tc = get_cellpose_timecourse(data_reg, ...
     LL_base, arg_date, imouse, run_str);
 
 disp([num2str(iset), ' set done out of ', num2str(nset)])
-clear global
+clear global % suspect weird trace is bc residual global var affecting sbxread
 clearvars -except dataset_meta nset iset dataset_table stim_type
-% suspect weird trace is bc residual global var affecting sbxread
 
-% end

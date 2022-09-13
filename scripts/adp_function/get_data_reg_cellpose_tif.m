@@ -495,7 +495,7 @@ for ct = 1:N
 end
 fTIF.close;
 fprintf(1,repmat('\b',[1,msg]));
-t=toc
+t=toc;
 fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
 fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
 
