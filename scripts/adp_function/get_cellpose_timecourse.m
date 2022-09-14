@@ -5,7 +5,7 @@ mask_cell = t.cellpose_mask;
 
 if max(mask_cell(:)) > 0
     
-    while isempty(dir('*TCs_cellpose.mat')) 
+    while isempty(dir('*TCs_cellpose*.mat')) 
     % while cellpose timecourse does not exist, try generate it / wait for enough memory
     
         try
@@ -37,7 +37,7 @@ if max(mask_cell(:)) > 0
         end
         [max_skew, ind] =  max(x,[],1);
         np_w = 0.01*ind;
-        npSub_tc = data_tc-bsxfun(@times,tcRemoveDC(np_tc),np_w);
+        npSub_tc = data_tc - bsxfun(@times,tcRemoveDC(np_tc),np_w);
         clear data_reg data_reg_down
         
         date = arg_date;
@@ -46,7 +46,7 @@ if max(mask_cell(:)) > 0
             [date '_' imouse '_' run_str '_TCs_cellpose.mat']), ...
             'data_tc', 'np_tc', 'npSub_tc', 'mask_cell', 'mask_np')
         clear data_tc data_tc_down np_tc np_tc_down mask_np mask_cell
-        disp('TC extraction complete')
+        disp(['TC extraction complete for ', run_str])
         
         catch
             disp('out of memory atm, retrying in a bit')

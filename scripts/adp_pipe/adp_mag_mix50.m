@@ -76,24 +76,27 @@ save_mat_as_tif(data_dfof_multisess) % pass to cellpose in ipynb, who reads from
 
 %%
 
-% if ~isempty(dir('*TCs_cellpose*.mat')) % check if cellpose time course exists
-%     disp('cellpose time course exists, skip to next set:')
-%     disp(iset+1)
-%     continue
-% end
+if isempty(dir('*TCs_cellpose*.mat')) % proceed if multisess cellpose time course not exist
+    tic
+    while ~exist('cellpose_mask.mat','file')
+        pause(60) % wait for cellpose to run in ipynb
+        toc
+    end
+    disp('got cellpose mask, now extract TC from each sess')
 
-tic
-while ~exist('cellpose_mask.mat','file')
-    % pwd should be like \Analysis\2P\220310_i1369\220310_i1369_runs-002
-    pause(60) % wait for cellpose to run in ipynb
-    toc
+    file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));    
+    for i = 1 : length(file_list)
+        file_name = [file_list(i).folder, '\', file_list(i).name];
+        load(file_name, 'out')
+        arg_ImgFolder = ['00', num2str(dataset_table(i,:).num(1))]
+
+        [data, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+        [outs, data_reg] = stackRegister_MA(double(data), [], [], out); % re-register to get data_reg back
+        npSub_tc = get_cellpose_timecourse(data_reg, LL_base, arg_date, imouse, run_str_sess);
+    end
+
 end
 
-disp('got cellpose mask, extracting TC')
-npSub_tc = get_cellpose_timecourse(data_reg, ...
-    LL_base, arg_date, imouse, run_str);
-
-disp([num2str(iset), ' set done out of ', num2str(nset)])
 clear global % suspect weird trace is bc residual global var affecting sbxread
 clearvars -except dataset_meta nset iset dataset_table stim_type
 
