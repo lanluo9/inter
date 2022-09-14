@@ -1,17 +1,14 @@
-%% 
 
 clear all
 close all
 clc
 
-%% 
+%% setup
 
 % database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
 database_path = 'C:\Users\ll357\Documents\inter\';
 master_xls = [database_path, 'data/mix50_grat1.csv'];
 dataset_meta = readtable(master_xls);
-
-%%
 
 clearvars -except dataset_meta
 clearvars –global
@@ -28,7 +25,9 @@ elseif strcmp(stim_type, 'grating')
 end
 nset = size(dataset_table,1);
 
-for iset = nset % 1:nset
+%% draw cellpose_tif for each sess
+
+for iset = 1:nset
 
 iset, nset
 dataset_now = dataset_table(iset,:);
@@ -43,7 +42,6 @@ if strcmp(stim_type, 'mix') && iset == 1
     disp('take first session 002 of mix50 as ref session')
 end
 
-% check if cellpose time course exists
 imouse = ['i', num2str(arg_mouse)];
 dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
     '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
@@ -52,11 +50,6 @@ catch
     mkdir(dir_analysis)
     cd(dir_analysis)
 end
-% if ~isempty(dir('*TCs_cellpose.mat'))
-%     disp('cellpose time course exists, skip to next set:')
-%     disp(iset+1)
-%     continue
-% end
 
 [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref);
@@ -64,10 +57,7 @@ disp(['got data_reg & cellpose tif for session ', arg_ImgFolder])
 
 end
 
-%%
-
-% now we have cellpose tif for each sess, avg sess tif to get final tif
-% pass to cellpose in ipynb, who reads from final tif folder (not sess folder)
+%% merge into multisess tif
 
 dir_final_tif = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse];
 cd(dir_final_tif) % one level up from sess folder
@@ -80,9 +70,17 @@ for i = 1 : length(file_list)
     load(file_name, 'data_dfof_max')
     tmp(:,:,i) = data_dfof_max;
 end
-data_dfof_multisess = mean(tmp, 3);
+
+data_dfof_multisess = mean(tmp, 3); % avg sess tif to get final tif
+save_mat_as_tif(data_dfof_multisess) % pass to cellpose in ipynb, who reads from multisess tif folder (one level above sess folder)
 
 %%
+
+% if ~isempty(dir('*TCs_cellpose.mat')) % check if cellpose time course exists
+%     disp('cellpose time course exists, skip to next set:')
+%     disp(iset+1)
+%     continue
+% end
 
 tic
 while ~exist('cellpose_mask.mat','file')
