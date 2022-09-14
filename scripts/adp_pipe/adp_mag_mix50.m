@@ -76,7 +76,7 @@ save_mat_as_tif(data_dfof_multisess) % pass to cellpose in ipynb, who reads from
 
 %%
 
-% if ~isempty(dir('*TCs_cellpose.mat')) % check if cellpose time course exists
+% if ~isempty(dir('*TCs_cellpose*.mat')) % check if cellpose time course exists
 %     disp('cellpose time course exists, skip to next set:')
 %     disp(iset+1)
 %     continue
