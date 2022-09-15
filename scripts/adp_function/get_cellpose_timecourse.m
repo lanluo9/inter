@@ -1,14 +1,16 @@
-function npSub_tc = get_cellpose_timecourse(data_reg, LL_base, arg_date, imouse, run_str)
+function npSub_tc = get_cellpose_timecourse(data_reg, tif_name, LL_base, arg_date, imouse, run_str)
 
-t = load('cellpose_mask.mat');
+% t = load('cellpose_mask.mat');
+t = load(tif_name);
+
 mask_cell = t.cellpose_mask;
 
 if max(mask_cell(:)) > 0
     
-    while isempty(dir('*TCs_cellpose*.mat')) 
-    % while cellpose timecourse does not exist, try generate it / wait for enough memory
-    
-        try
+%     while isempty(dir('*TCs_cellpose*.mat')) 
+%     % while cellpose timecourse does not exist, try generate it / wait for enough memory
+%     
+%         try
             
         mask_np = imCellNeuropil(mask_cell, 3, 5);
         
@@ -48,12 +50,12 @@ if max(mask_cell(:)) > 0
         clear data_tc data_tc_down np_tc np_tc_down mask_np mask_cell
         disp(['TC extraction complete for ', run_str])
         
-        catch
-            disp('out of memory atm, retrying in a bit')
-            pause(60)
-        end
-    
-    end
+%         catch
+%             disp('out of memory atm, retrying in a bit')
+%             pause(60)
+%         end
+%     
+%     end
 
 else 
     disp('skipped cellpose TC extraction due to cellpose bug: ncell=0')

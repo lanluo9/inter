@@ -51,6 +51,12 @@ catch
     cd(dir_analysis)
 end
 
+if ~isempty(dir('cellpose_stim_resp_gauss.tif'))
+    disp('cellpose time course exists, skip to next set:')
+    disp(iset+1)
+    continue
+end
+
 [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref);
 disp(['got data_reg & cellpose tif for session ', arg_ImgFolder])
@@ -62,7 +68,6 @@ end
 dir_final_tif = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse];
 cd(dir_final_tif) % one level up from sess folder
 file_list = dir(fullfile(dir_final_tif, '**\data_dfof.mat'));
-file_list = file_list(~[file_list.isdir]); % remove folders from list
 
 tmp = pi * ones(264, 796, nset);
 for i = 1 : length(file_list)
@@ -76,26 +81,34 @@ save_mat_as_tif(data_dfof_multisess) % pass to cellpose in ipynb, who reads from
 
 %%
 
-if isempty(dir('*TCs_cellpose*.mat')) % proceed if multisess cellpose time course not exist
-    tic
-    while ~exist('cellpose_mask.mat','file')
-        pause(60) % wait for cellpose to run in ipynb
-        toc
-    end
-    disp('got cellpose mask, now extract TC from each sess')
-
-    file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));    
-    for i = 1 : length(file_list)
-        file_name = [file_list(i).folder, '\', file_list(i).name];
-        load(file_name, 'out')
-        arg_ImgFolder = ['00', num2str(dataset_table(i,:).num(1))]
-
-        [data, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
-        [outs, data_reg] = stackRegister_MA(double(data), [], [], out); % re-register to get data_reg back
-        npSub_tc = get_cellpose_timecourse(data_reg, LL_base, arg_date, imouse, run_str_sess);
-    end
-
+while ~exist('cellpose_mask.mat','file')
+    pause(60) % wait for cellpose to run in ipynb
+    toc
 end
+disp('got cellpose mask, now extract TC from each sess')
+
+file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));
+file_list.name
+for i = 1 : length(file_list)
+    if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % proceed if multisess cellpose time course not exist
+        disp('sess cellpose time course exists, skip to next set:')
+        disp(i+1)
+        continue
+    end
+
+    file_name = [file_list(i).folder, '\', file_list(i).name];
+    load(file_name, 'out')
+    arg_ImgFolder = ['00', num2str(dataset_table(i,:).num(1))]
+
+    [data, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+    [outs, data_reg] = stackRegister_MA(double(data), [], [], out); % re-register to get data_reg back
+    
+    cd(dir_final_tif)
+    tif_name = [dir_final_tif, '\cellpose_mask.mat']
+    npSub_tc = get_cellpose_timecourse(data_reg, tif_name, LL_base, arg_date, imouse, run_str_sess);
+end
+
+%%
 
 clear global % suspect weird trace is bc residual global var affecting sbxread
 clearvars -except dataset_meta nset iset dataset_table stim_type
