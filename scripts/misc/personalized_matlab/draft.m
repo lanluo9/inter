@@ -12,3 +12,4 @@
 % t = rand(264, 796, 100000, 3); % cannot leave 3 or 4 of sbx sized matrix
 % in memory
 
+t = rand(170, 100000, 3);
