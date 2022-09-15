@@ -106,6 +106,7 @@ for i = 1 : length(file_list)
     cd(dir_final_tif)
     tif_name = [dir_final_tif, '\cellpose_mask.mat']
     npSub_tc = get_cellpose_timecourse(data_reg, tif_name, LL_base, arg_date, imouse, run_str_sess);
+    clear data data_reg
 end
 
 %%

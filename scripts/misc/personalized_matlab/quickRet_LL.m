@@ -5,10 +5,10 @@ clear all global % sbxread need to first clear global var
 close all
 clc
 
-mouse = '1373'
-date = '220909'
-time = '1335'
-ImgFolder = '001'
+mouse = '1375'
+date = '220915'
+time = '1412'
+ImgFolder = '002'
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;
