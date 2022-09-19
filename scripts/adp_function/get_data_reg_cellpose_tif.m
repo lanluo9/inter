@@ -1,7 +1,8 @@
 function [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref)
 
-[data, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder)
+mouse = arg_mouse
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
 
 % check data corruption
 data_frame_avg = squeeze(mean(mean(data, 1) ,2));
@@ -433,7 +434,7 @@ end
 disp('saving dfof-max-gauss tif & mat')
 save data_dfof.mat data_dfof data_dfof_max
 
-save_mat_as_tif(data_dfof_max)
+save_mat_as_tif(data_dfof_max);
 
 disp(['mouse ', num2str(mouse), ' date ', num2str(date), ' ', run_str ...
     ' - finished data_reg & cellpose tif'])

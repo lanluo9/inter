@@ -1,4 +1,4 @@
-function [data, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder)
+function [data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder)
 
 disp('start running get_data_reg_cellpose_tif.m')
 mouse = arg_mouse

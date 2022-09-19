@@ -7,6 +7,7 @@ clc
 
 % database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
 database_path = 'C:\Users\ll357\Documents\inter\';
+LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from functions
 master_xls = [database_path, 'data/mix50_grat1.csv'];
 dataset_meta = readtable(master_xls);
 
@@ -23,6 +24,9 @@ if strcmp(stim_type, 'mix')
 elseif strcmp(stim_type, 'grating')
     dataset_table = dataset_grat
 end
+
+dataset_table = dataset_table(dataset_table.date == 220907, :)
+% dataset_table = dataset_table(dataset_table.date == 220915, :)
 nset = size(dataset_table,1);
 
 %% draw cellpose_tif for each sess
@@ -52,12 +56,11 @@ catch
 end
 
 if ~isempty(dir('cellpose_stim_resp_gauss.tif'))
-    disp('cellpose time course exists, skip to next set:')
-    disp(iset+1)
+    disp('cellpose tif exists, skip to next set:')
     continue
 end
 
-[data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+[~, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref);
 disp(['got data_reg & cellpose tif for session ', arg_ImgFolder])
 
@@ -100,13 +103,14 @@ for i = 1 : length(file_list)
     load(file_name, 'out')
     arg_ImgFolder = ['00', num2str(dataset_table(i,:).num(1))]
 
-    [data, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+    [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
     [outs, data_reg] = stackRegister_MA(double(data), [], [], out); % re-register to get data_reg back
+    clear data
     
     cd(dir_final_tif)
     tif_name = [dir_final_tif, '\cellpose_mask.mat']
     npSub_tc = get_cellpose_timecourse(data_reg, tif_name, LL_base, arg_date, imouse, run_str_sess);
-    clear data data_reg
+    clear data_reg
 end
 
 %%
