@@ -25,8 +25,8 @@ elseif strcmp(stim_type, 'grating')
     dataset_table = dataset_grat
 end
 
-dataset_table = dataset_table(dataset_table.date == 220907, :)
-% dataset_table = dataset_table(dataset_table.date == 220915, :)
+% dataset_table = dataset_table(dataset_table.date == 220907, :)
+dataset_table = dataset_table(dataset_table.date == 220915, :)
 nset = size(dataset_table,1);
 
 %% draw cellpose_tif for each sess
@@ -60,7 +60,7 @@ if ~isempty(dir('cellpose_stim_resp_gauss.tif'))
     continue
 end
 
-[~, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref);
 disp(['got data_reg & cellpose tif for session ', arg_ImgFolder])
 
