@@ -7,7 +7,6 @@ clc
 
 % database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
 database_path = 'C:\Users\ll357\Documents\inter\';
-LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from functions
 master_xls = [database_path, 'data/mix50_grat1.csv'];
 dataset_meta = readtable(master_xls);
 
@@ -109,6 +108,7 @@ for i = 1 : length(file_list)
     
     cd(dir_final_tif)
     tif_name = [dir_final_tif, '\cellpose_mask.mat']
+    LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from function load_sbx_data
     npSub_tc = get_cellpose_timecourse(data_reg, tif_name, LL_base, arg_date, imouse, run_str_sess);
     clear data_reg
 end

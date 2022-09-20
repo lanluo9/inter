@@ -10,6 +10,8 @@ dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
 dataset_grat = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
 
 data = dataset_mix;
+% data = data(data.date == 220907, :)
+data = data(data.date == 220915, :)
 nset = size(data,1);
 disp('analyzing mix50 datasets')
 
@@ -80,9 +82,10 @@ for i = 1:length(bunny500_id)
     tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']);
     df_flat = [df_flat; tc.npSub_tc];
 
-    [nframe, ncell] = size(tc.npSub_tc)
+    [nframe, ncell] = size(tc.npSub_tc);
     nframe_seq = [nframe_seq, nframe];
 end
+nframe, ncell
 
 disp('loaded cellpose timecourse & visual input')
 try
@@ -234,6 +237,7 @@ saveas(gcf, 'find_ca_latency_ca_window.jpg')
 %% response to adapter & targets. get trace (bunny mode: isi=250 only)
 % dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
 
+close all
 [dfof_ad, dfof_ad_sem, dfof_ad_std] = dfof_resp(dfof_align_ad, 'tg', 0); % tg mode aka separate diff stim images, but use adapter resp
 [dfof_tg, dfof_tg_sem, dfof_tg_std] = dfof_resp(dfof_align_tg, 'tg', 0);
 dfof_ad = dfof_ad(:,:,3); dfof_ad_sem = dfof_ad_sem(:,:,3); dfof_ad_std = dfof_ad_std(:,:,3); % keep isi=250 only
