@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-sns.set_theme(style="whitegrid")
+# sns.set_theme(style="whitegrid")
 sns.set_context("talk", font_scale=0.8)
 
 import scipy.io as sio
