@@ -99,7 +99,7 @@ def calc_trace_stim(trace_by_trial, stim_id):
         trace_stim_avg[0].shape: {trace_stim_avg[0].shape}"
     )
 
-    return trace_cell_avg, trace_cell_sem, trace_stim_avg
+    return trace_cell_avg, trace_cell_sem
 
 
 def read_csv_by_stim_type():
@@ -110,8 +110,8 @@ def read_csv_by_stim_type():
         df (pandas dataframe): dataframe of recordings for each stim type
     """
     # read metadata of segmented sessions
-    dir_inter = r"C:\Users\GlickfeldLab\Documents\test\inter".replace("\\", "/")
-    df = pd.read_csv(dir_inter + "/data/batch_cellpose.csv")
+    dir_inter = r"C:\Users\ll357\Documents\inter\data".replace("\\", "/")
+    df = pd.read_csv(dir_inter + "/batch_cellpose.csv")
     # only keep segmented data
     df = df[(df.manual_seg == 1) | (df.cellpose_seg == 1)].reset_index(drop=True)
     # separate by stim type
