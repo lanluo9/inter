@@ -99,7 +99,7 @@ def calc_trace_stim(trace_by_trial, stim_id):
         trace_stim_avg[0].shape: {trace_stim_avg[0].shape}"
     )
 
-    return trace_cell_avg, trace_cell_sem
+    return trace_cell_avg, trace_cell_sem, trace_stim_avg
 
 
 def read_csv_by_stim_type():
