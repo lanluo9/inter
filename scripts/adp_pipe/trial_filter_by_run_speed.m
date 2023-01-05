@@ -4,6 +4,7 @@ mouse = 'i1375';
 date = '220915';
 run = '003';
 time = '1421';
+area = 'V1';
 
 %% load mworks data
 
@@ -62,6 +63,7 @@ trial_speed_ok = ~trial_speed_discard;
 
 %% visliz after discard
 
+figure;
 subplot(1,2,1)
 imagesc(speed_trim);
 subplot(1,2,2)
@@ -69,4 +71,20 @@ imagesc(speed_trim(~trial_speed_discard, :))
 colorbar;
 set(gcf, 'Position', get(0, 'Screensize'));
 
-save('speed_filter_trials.mat', 'trial_speed_ok') % TODO: save w cell filters
+figure;
+speed_avg = mean(speed_trim, 1);
+plot(speed_avg);
+hold on;
+speed_avg_filtered = mean(speed_trim(~trial_speed_discard, :), 1);
+plot(speed_avg_filtered);
+
+%% save trial filter with cell filter
+
+mat_inter_path = ['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\', area, '_', mouse, '_', date, '_cellpose']
+cd(mat_inter_path)
+speed_trial_by_frame = speed_trim;
+save('filter_trials_by_speed.mat', 'trial_speed_ok', 'speed_trial_by_frame')
+
+
+
+

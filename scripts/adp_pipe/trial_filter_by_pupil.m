@@ -50,5 +50,7 @@ Eye_data = extractEyeData(data_crop, rad_range); % check if pupil not found in t
 %% align to stimulus presentation
 [rad, centroid] = alignEyeData(Eye_data,input);
 
+%% visliz
+
 %% discard trial by pupil radius or position
 
