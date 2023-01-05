@@ -87,7 +87,6 @@ hold on
 for itrial = 1 : ntrial
     plot( [centroid.base(1, itrial), centroid.stim(1, itrial)], [centroid.base(2, itrial), centroid.stim(2, itrial)] )
 end % should discard trials w large diff between baseline and stim-on
-xlabel('eye position, moving from baseline to stim-on in each trial')
 
 % figure % same as lineplot above but with arrow
 % hold on
@@ -98,31 +97,22 @@ xlabel('eye position, moving from baseline to stim-on in each trial')
 %     quiver(p1(1),p1(2), dp(1),dp(2), 0)
 % end
 
+figure;
+histogram(centroid.dist); % should discard trials w pupils far from median position
+
+%% discard trial by pupil radius & position
+
+% extreme pupil size
+rad_trials
+
+% large diff between baseline and stim-on
 dp = zeros(ntrial, 2);
 for itrial = 1 : ntrial
     p1 = [centroid.base(1, itrial), centroid.base(2, itrial)];
     p2 = [centroid.stim(1, itrial), centroid.stim(2, itrial)];
     dp(itrial, :) = p2 - p1; % position difference
 end
-eye_move_dist = sqrt(dp(:, 1).^2 + dp(:, 2).^2);
-figure;
-histogram(eye_move_dist);
-xlabel('eye movement distance within each trial')
+ey
 
-figure;
-histogram(centroid.dist); % should discard trials w pupils far from median position
-xlabel('pupil centroid distance from median')
-
-%% discard trial by pupil radius & position
-
-discard_perc_low = 1
-discard_perc_high = 5
-
-% extreme pupil size
-rad_trials
-
-% large diff between baseline and stim-on
-eye_move_dist
-
-% pupils far from median position
+% or pupils far from median position
 centroid.dist
