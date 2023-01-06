@@ -119,10 +119,12 @@ discard_perc_low = 1
 discard_perc_high = 5
 
 % extreme pupil size
-rad_trials
+[rad_thres, rad_id_retained]= threshold_percentile(rad_trials, discard_perc_low, discard_perc_high);
 
 % large diff between baseline and stim-on
-eye_move_dist
+[eyemove_thres, eyemove_id_retained]= threshold_percentile(eye_move_dist, 0, discard_perc_high);
 
 % pupils far from median position
-centroid.dist
+[pupil_deviation_thres, pupil_deviation_id_retained]= threshold_percentile(centroid.dist, 0, discard_perc_high);
+
+%%
