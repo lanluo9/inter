@@ -29,6 +29,8 @@ ntrial = size(speed_trim, 1)
 
 %% visliz
 
+speed_flat = reshape(speed_trim, [size(speed_trim,1)*size(speed_trim,2),1]);
+
 figure;
 imagesc(speed_trim); % some trials have higher running speed. no frames in trial have very high run speed
 colorbar;
@@ -37,7 +39,7 @@ speed_avg = mean(speed_trim, 1); % run speed of avg trial
 figure;
 plot(speed_avg);
 
-speed_dist = mean(speed_trim, 2); % speed dist across trials
+speed_dist = mean(speed_trim, 2); % avg speed dist across trials
 figure;
 histogram(speed_dist, 500);
 

@@ -1,6 +1,7 @@
-function [rad centroid] = alignEyeData(Eye_data,input);
+function [rad, centroid] = alignEyeData(Eye_data, input, varargin)
 % Eye_data is output of extractEyeData
 % input is from mworks
+% varargin: [int] value of 2 will set pre & post window around stim 2 (instead of stim 1)
 
 % Output: rad and centroid are structures with timecourses and base/stim 
 % for pupil radius and centroid. 
@@ -14,11 +15,15 @@ function [rad centroid] = alignEyeData(Eye_data,input);
         postwin_frames = input.nFramesOn;
     elseif isfield(input,'cStimOneOn')
         cStimOn = celleqel2mat_padded(input.cStimOneOn);
+        if (nargin > 2 && varargin{1} == 2) % then there is an optional argument
+            disp('eye data peri-stimulus 2, not 1')
+            cStimOn = celleqel2mat_padded(input.cStimTwoOn);
+        end
         try
             prewin_frames = input.stimOneOnFrames; %check these
             postwin_frames = input.stimOneOnFrames;
         catch
-            prewin_frames = input.stimOnTimeMs * input.frameRateHz / 1000; % ms/1000 * frame/s = frame. note var type is int64, so must divide 1000 at the end!
+            prewin_frames = input.stimOnTimeMs * input.frameRateHz / 1000; % ms/1000 * frame/s = frame. note var type is int64, so must divide 1000 *at the end*!
             postwin_frames = prewin_frames;
         end
     else

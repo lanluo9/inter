@@ -11,6 +11,10 @@ function [arr_thresholded, id_retained] = threshold_percentile(arr_1D, discard_p
     
     [nrow, ncol] = size(arr_1D);
     assert(nrow==1 || ncol==1);
+
+    if nrow == 1
+        arr_1D = arr_1D'; % ensure single column variable
+    end
     
     thres_low = prctile(arr_1D, discard_perc_low);
     thres_high = prctile(arr_1D, 100 - discard_perc_high);

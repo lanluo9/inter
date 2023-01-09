@@ -236,7 +236,7 @@ data_adapter_dfof = (data_adapter-data_f)./data_f;
 data_targ_dfof = (data_targ-data_f2)./data_f2; 
 data_targ_dfof_fake = (data_targ-data_f)./data_f; 
 
-%% plot dfof for randStim1_doSameStim2 bunny or grat_SF6 twoStim
+%% plot dfof for randStim1_doSameStim2 bunny
 
 try
     assert(input.doRandStimOne == 1 & input.doSameStims == 1) % bunny 
@@ -244,9 +244,14 @@ catch
     assert(input.doRandSF == 1) % or grat_SF6
 end
 
-try % randStim1_doSameStim2 with bunnies6.mwel
+try % bunny with bunnies6.mwel
     adapter_id = cell2mat(input.tstimOne);
+    adapter_list = unique(adapter_id);
+    n_adapter = length(adapter_list);
     target_id = cell2mat(input.tstimTwo);
+    target_list = unique(target_id);
+    n_target = length(target_list);
+
 catch % grat_SF6 with twoStim.mwel
     SF_arr = sort(unique(cell2mat(input.tStimOneGratingSpatialFreqCPD)));
     adapter_SF = cell2mat(input.tStimOneGratingSpatialFreqCPD);
@@ -254,14 +259,9 @@ catch % grat_SF6 with twoStim.mwel
     for i = 1 : length(adapter_SF)
         adapter_id(i) = find(SF_arr==adapter_SF(i));
     end
-    tmp = cell2mat(input.tStimTwoGratingSpatialFreqCPD) == cell2mat(input.tStimOneGratingSpatialFreqCPD);
-    assert(sum(tmp) == length(tmp)) % stim 1 vs 2 have same SF
-    target_id = adapter_id;
+    tmp = sum(cell2mat(input.tStimTwoGratingSpatialFreqCPD) == cell2mat(input.tStimOneGratingSpatialFreqCPD))
+    assert(tmp == length(tmp))
 end
-adapter_list = unique(adapter_id);
-n_adapter = length(adapter_list);
-target_list = unique(target_id);
-n_target = length(target_list);
 
 data_dfof_ad = zeros(sz(1),sz(2),n_adapter);
 for i_ad = 1:n_adapter
