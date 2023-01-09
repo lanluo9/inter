@@ -150,6 +150,8 @@ histogram(pupil_deviation_thres);
 trial_eye_ok = (rad_id_retained & eyemove_id_retained & pupil_deviation_id_retained);
 sum(trial_eye_ok) / length(trial_eye_ok) % ratio of trials that passed pupil check
 
+%% save trial filter with cell filter
+
 mat_inter_path = ['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\', area, '_', mouse, '_', date, '_cellpose']
 cd(mat_inter_path)
 save('filter_trials_by_pupil.mat', 'trial_eye_ok', 'rad_trials', 'eye_move_dist', 'pupil_deviation')

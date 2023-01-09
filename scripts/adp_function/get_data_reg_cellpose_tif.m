@@ -93,7 +93,7 @@ disp(stim_type)
 disp(run_str)
 
 switch stim_type % TODO: wrap into function
-case {'bunny', 'mix'}
+case {'bunny', 'mix', 'grat6'}
     
 %% find activated cells
 
@@ -190,11 +190,36 @@ data_targ_dfof_fake = (data_targ-data_f)./data_f;
 
 %% plot dfof for randStim1_doSameStim2 bunny
 
-assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1)
-adapter_id = cell2mat(behav_input.tstimOne);
+% assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1)
+% adapter_id = cell2mat(behav_input.tstimOne);
+% adapter_list = unique(adapter_id);
+% n_adapter = length(adapter_list);
+% target_id = cell2mat(behav_input.tstimTwo);
+% target_list = unique(target_id);
+% n_target = length(target_list);
+
+try
+    assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1) % bunny 
+catch
+    assert(behav_input.doRandSF == 1) % or grat_SF6
+end
+
+try % randStim1_doSameStim2 with bunnies6.mwel
+    adapter_id = cell2mat(behav_input.tstimOne);
+    target_id = cell2mat(behav_input.tstimTwo);
+catch % grat_SF6 with twoStim.mwel
+    SF_arr = sort(unique(cell2mat(behav_input.tStimOneGratingSpatialFreqCPD)));
+    adapter_SF = cell2mat(behav_input.tStimOneGratingSpatialFreqCPD);
+    adapter_id = zeros(length(adapter_SF), 1);
+    for i = 1 : length(adapter_SF)
+        adapter_id(i) = find(SF_arr==adapter_SF(i));
+    end
+    tmp = cell2mat(behav_input.tStimTwoGratingSpatialFreqCPD) == cell2mat(behav_input.tStimOneGratingSpatialFreqCPD);
+    assert(sum(tmp) == length(tmp)) % stim 1 vs 2 have same SF
+    target_id = adapter_id;
+end
 adapter_list = unique(adapter_id);
 n_adapter = length(adapter_list);
-target_id = cell2mat(behav_input.tstimTwo);
 target_list = unique(target_id);
 n_target = length(target_list);
 
@@ -426,7 +451,7 @@ data_dfof = cat(3,data_dfof, data_dfof_max, data_dfof_perc);
 data_dfof_max = data_dfof_perc; % TODO: fix bunny data_dfof_max to data_dfof_perc, depending on noise lvl
     
 otherwise
-    disp('no such stim. stim type should be bunny, mix or grating')
+    disp('no such stim. stim type should be bunny, mix, grat6 or grating')
 end
 
 %% export tif for cellpose

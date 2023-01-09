@@ -62,7 +62,7 @@ if ~isempty(dir('cellpose_stim_resp_gauss.tif'))
 end
 
 [~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(... % register every sess against data_avg of session 002
-    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref);
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); % add your stim_type into function
 disp(['got data_reg & cellpose tif for session ', arg_ImgFolder])
 
 end
