@@ -20,7 +20,7 @@ function [rad, centroid] = alignEyeData(Eye_data, input, varargin)
             cStimOn = celleqel2mat_padded(input.cStimTwoOn);
         end
         try
-            prewin_frames = input.stimOneOnFrames; %check these
+            prewin_frames = input.stimOneOnFrames;
             postwin_frames = input.stimOneOnFrames;
         catch
             prewin_frames = input.stimOnTimeMs * input.frameRateHz / 1000; % ms/1000 * frame/s = frame. note var type is int64, so must divide 1000 *at the end*!

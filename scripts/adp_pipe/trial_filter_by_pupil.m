@@ -45,7 +45,7 @@ disp('using test data only')
 
 %% measure pupil position/diameter
 
-rad_range = [3 13]; % histogram of pupil radius must show both tails, otherwise adjust rad_range
+rad_range = [2 13]; % histogram of pupil radius must show both tails, otherwise adjust rad_range
 Eye_data = extractEyeData(data_crop, rad_range); % check if pupil not found in too many frames
 % must use full data (not truncated test data) below, to match mworks input
 
@@ -57,6 +57,7 @@ Eye_data = extractEyeData(data_crop, rad_range);
 
 %% align to stimulus presentation
 
+close all
 [rad, centroid] = alignEyeData(Eye_data, input); % eye data peri-stimulus 1
 [rad2, centroid2] = alignEyeData(Eye_data, input, 2); % eye data peri-stimulus 2
 
