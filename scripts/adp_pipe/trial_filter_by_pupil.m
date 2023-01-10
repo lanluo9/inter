@@ -5,18 +5,27 @@ clear all
 clc
 
 mouse = 'i1375';
-date = '220915';
-run = '003'; % mix50 session 1
-time = '1421';
+date = '230103';
 area = 'V1';
-data_pn = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
-CD = [data_pn '\Data\2P_images\' mouse '\' date '\' run]; % Z:\All_Staff\home\lan\Data\2P_images\i1375\220915\003
-cd(CD);
-fn = [run '_000_000_eye.mat'];
+
+data_path = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
+data_path = [data_path '\Data\2P_images\' mouse '\' date]; 
+cd(data_path);
+
+master_xls = '2P Imaging Notes Lan.xlsx';
+dataset_meta = readtable(master_xls);
+dataset_meta = dataset_meta(dataset_meta.Var7 > 10000, :); % nframes large enough to be grat_6SF session
+
+nset = size(dataset_meta,1);
 
 %%
+for i = 1:nset
+    run = dataset_meta{i,1}{1}(1:3)
+    time = num2str(dataset_meta{i,8})
 
 % load data
+cd([data_path, '\', run]);
+fn = [run '_000_000_eye.mat'];
 data_temp = load(fn);
 data_temp = squeeze(data_temp.data);
 
@@ -26,19 +35,25 @@ load(fName);
 nFrames = input.counterValues{end}(end);
 data = data_temp(:,:,1:nFrames);      % the raw images...
 
-% data = data(:, :, 1:1000); 
-% disp('using test data only')
+data_test = data(:, :, 1:1000); 
+disp('using test data only')
 
 %% Crop image to isolate pupil 
 
 % select an area as small as possible that contains pupil, but excludes bright spots
-[data_crop, rect] = cropEyeData(data); % select rectangle, hit enter if happy, z to redo
+[data_crop, rect] = cropEyeData(data_test); % select rectangle, hit enter if happy, z to redo
 
 %% measure pupil position/diameter
 
 rad_range = [3 13]; % histogram of pupil radius must show both tails, otherwise adjust rad_range
 Eye_data = extractEyeData(data_crop, rad_range); % check if pupil not found in too many frames
 % must use full data (not truncated test data) below, to match mworks input
+
+%% rerun w full eye data
+
+close all
+data_crop = data(rect(2):rect(2)+rect(4),rect(1):rect(1)+rect(3),:); % crop full data by rectangle determined above
+Eye_data = extractEyeData(data_crop, rad_range);
 
 %% align to stimulus presentation
 
@@ -157,3 +172,4 @@ cd(mat_inter_path)
 save('filter_trials_by_pupil.mat', 'trial_eye_ok', 'rad_trials', 'eye_move_dist', 'pupil_deviation')
 
 
+end

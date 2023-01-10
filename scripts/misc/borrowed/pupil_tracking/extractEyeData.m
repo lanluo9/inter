@@ -72,6 +72,7 @@ subplot(2,2,3)
 hist(Val);
 xlabel('Metric')
 movegui('center')
+% set(gcf, 'Position', get(0, 'Screensize'));
 
 x1 = find(isnan(Area));
 x2 = find(~isnan(Area));
@@ -98,6 +99,7 @@ for i = 1:minx
 end
 movegui('center')
 sgtitle(['No pupil detected- ' num2str(length(badFrames)) ' frames'])
+set(gcf, 'Position', get(0, 'Screensize'));
 % print(fullfile(LG_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_noPupil2.pdf']),'-dpdf','-fillpage');
 
 goodFrames = setdiff(x2,x3);
@@ -120,6 +122,7 @@ for i = 1:minx
 end
 movegui('center')
 sgtitle('Pupil detected')
+set(gcf, 'Position', get(0, 'Screensize'));
 % print(fullfile(LG_base, 'Analysis\2P', [date '_' mouse], [date '_' mouse '_' run_str], [date '_' mouse '_' run_str '_Pupil.pdf']),'-dpdf','-fillpage');
 
 Eye_data.goodFrames = goodFrames;

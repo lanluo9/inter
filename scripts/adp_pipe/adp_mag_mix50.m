@@ -80,7 +80,7 @@ for i = 1 : length(file_list)
     tmp(:,:,i) = data_dfof_max;
 end
 
-data_dfof_multisess = mean(tmp, 3); % avg sess tif to get final tif
+data_dfof_multisess = mean(tmp, 3); % aggregate sess tif to get final tif
 save_mat_as_tif(data_dfof_multisess) % pass to cellpose in ipynb, who reads from multisess tif folder (one level above sess folder)
 
 %%
