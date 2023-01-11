@@ -6,7 +6,7 @@ run = '003';
 time = '1421';
 area = 'V1';
 
-%% load mworks data
+%% load speed data
 
 fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' mouse '-' date '-' time '.mat'];
 input_mworks = load(fName);

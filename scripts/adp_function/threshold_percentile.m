@@ -23,7 +23,8 @@ function [arr_thresholded, id_retained] = threshold_percentile(arr_1D, discard_p
     n_discard = sum(~id_retained);
     n_total = length(id_retained);
     discarded_percent = round(n_discard / n_total * 100);
-    fprintf('discarded %d percent of 1D array', discarded_percent)
+    fprintf('discarded %d percent of 1D array\n', discarded_percent)
+    disp(' ')
 
     arr_thresholded = arr_1D(id_retained);
 
