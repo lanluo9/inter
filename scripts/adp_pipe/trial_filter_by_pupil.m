@@ -19,7 +19,7 @@ dataset_meta = dataset_meta(dataset_meta.Var7 > 10000, :); % nframes large enoug
 nset = size(dataset_meta,1);
 
 %%
-for i = 1:nset
+for i = 1 : nset
     run = dataset_meta{i,1}{1}(1:3)
     time = num2str(dataset_meta{i,8})
 
@@ -45,7 +45,7 @@ disp('using test data only')
 
 %% measure pupil position/diameter
 
-rad_range = [3 13]; % histogram of pupil radius must show both tails, otherwise adjust rad_range
+rad_range = [2 13]; % histogram of pupil radius must show both tails, otherwise adjust rad_range
 Eye_data = extractEyeData(data_crop, rad_range); % check if pupil not found in too many frames
 % must use full data (not truncated test data) below, to match mworks input
 
@@ -172,6 +172,7 @@ histogram(pupil_deviation_thres);
 xlabel('pupil position deviation from median distribution across trials')
 
 trial_eye_ok = (rad_id_retained & eyemove_id_retained & pupil_deviation_id_retained);
+disp('ratio of trials that passed pupil check')
 sum(trial_eye_ok) / length(trial_eye_ok) % ratio of trials that passed pupil check
 
 %% load speed data
@@ -219,21 +220,13 @@ close all
 
 discard_perc_low = 1
 discard_perc_high = 4.75
-thres_low = prctile(speed_dist, discard_perc_low)
-thres_high = prctile(speed_dist, 100-discard_perc_high)
+[speed_thresholded, trial_speed_ok] = threshold_percentile(speed_dist, discard_perc_low, discard_perc_high);
 
-figure;
-histogram(speed_dist, 200);
-hold on;
-xline(thres_low);
-xline(thres_high);
-
-ntrial_discard = sum((speed_dist < thres_low) | (speed_dist > thres_high))
-ntrial_discard / ntrial % percent of discarded trials should be close to discard_perc_low + high
-ntrial - ntrial_discard
-
-trial_speed_discard = (speed_dist < thres_low) | (speed_dist > thres_high); % discard trials with extreme speed
-trial_speed_ok = ~trial_speed_discard;
+% figure;
+% histogram(speed_dist, 200);
+% hold on;
+% xline(thres_low);
+% xline(thres_high);
 
 %% visliz after discard
 
@@ -243,7 +236,7 @@ figure;
 subplot(1,2,1)
 imagesc(speed_trim);
 subplot(1,2,2)
-imagesc(speed_trim(~trial_speed_discard, :))
+imagesc(speed_trim(trial_speed_ok, :))
 colorbar;
 set(gcf, 'Position', get(0, 'Screensize'));
 
@@ -251,7 +244,7 @@ figure;
 speed_avg = mean(speed_trim, 1);
 plot(speed_avg);
 hold on;
-speed_avg_filtered = mean(speed_trim(~trial_speed_discard, :), 1);
+speed_avg_filtered = mean(speed_trim(trial_speed_ok, :), 1);
 plot(speed_avg_filtered);
 
 %% save trial filter with cell filter

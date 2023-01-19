@@ -25,10 +25,12 @@ if max(mask_cell(:)) > 0
         np_tc = zeros(sz(3),nCells);
         np_tc_down = zeros(floor(sz(3)./down), nCells);
         for i = 1:nCells
-             np_tc(:,i) = stackGetTimeCourses(data_reg,mask_np(:,:,i));
-             np_tc_down(:,i) = stackGetTimeCourses(data_reg_down,mask_np(:,:,i));
-             fprintf(['Cell #' num2str(i) '%s /n']) 
-             disp(' ')
+            np_tc(:,i) = stackGetTimeCourses(data_reg,mask_np(:,:,i));
+            np_tc_down(:,i) = stackGetTimeCourses(data_reg_down,mask_np(:,:,i));
+ 			log_every_n = floor(nCells ./ 10); % log less frequently
+			if mod(i, log_every_n)==0 
+				fprintf(['Cell #' num2str(i) '%s /n'])
+			end
         end
         
         %get weights by maximizing skew

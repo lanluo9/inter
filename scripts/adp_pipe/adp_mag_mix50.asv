@@ -62,7 +62,7 @@ if ~isempty(dir('cellpose_stim_resp_gauss.tif'))
 end
 
 [~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(... % register every sess against data_avg of session 002
-    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); % adjust stim_type 
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); % add your stim_type into function
 disp(['got data_reg & cellpose tif for session ', arg_ImgFolder])
 
 end
@@ -72,6 +72,7 @@ end
 dir_final_tif = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse];
 cd(dir_final_tif) % one level up from sess folder
 file_list = dir(fullfile(dir_final_tif, '**\data_dfof.mat'));
+assert(size(file_list, 1) == nset); % ensure each session sav
 
 tmp = pi * ones(264, 796, nset);
 for i = 1 : length(file_list)
@@ -80,7 +81,8 @@ for i = 1 : length(file_list)
     tmp(:,:,i) = data_dfof_max;
 end
 
-data_dfof_multisess = mean(tmp, 3); % avg sess tif to get final tif
+data_dfof_multisess = mean(tmp(:, :, 1:2), 3); % aggregate sess tif to get final tif
+disp('sess 004 turned out too noisy to cellpose')
 save_mat_as_tif(data_dfof_multisess) % pass to cellpose in ipynb, who reads from multisess tif folder (one level above sess folder)
 
 %%

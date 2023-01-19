@@ -54,7 +54,7 @@ end
 if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
-    [outs, data_reg]=stackRegister_MA(double(data),[],[],out);
+    [outs, data_reg]=stackRegister_MA_LL(double(data),[],[],out);
 % for grating dataset 2 - i1323 V1:
 % Index in position 1 exceeds array bounds (must not exceed 99865).
 % 

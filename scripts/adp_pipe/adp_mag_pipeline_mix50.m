@@ -6,14 +6,16 @@ clear; clear global
 database_path = 'C:\Users\ll357\Documents\inter\';
 master_xls = [database_path, 'data/mix50_grat1.csv'];
 dataset_meta = readtable(master_xls);
-dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
-dataset_grat = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
+% dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
+% dataset_grat = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
 
-data = dataset_mix;
+% data = dataset_mix;
 % data = data(data.date == 220907, :)
-data = data(data.date == 220915, :)
+% data = data(data.date == 220915, :)
+data = dataset_meta(dataset_meta.date == 230103, :)
 nset = size(data,1);
-disp('analyzing mix50 datasets')
+% disp('analyzing mix50 datasets')
+disp('analyzing grat6 datasets')
 
 %%
 
@@ -46,7 +48,7 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 %% 
 
 save_flag = 1; % toggle this to save/skip all .mat creation below
-stim_protocol = 'mix'
+stim_protocol = 'grat_SF6'
 
 xls_dir = fullfile(data_fn, imouse, arg_date)
 cd(xls_dir)
@@ -54,6 +56,9 @@ xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
 
 bunny500_id = find(contains(data_now_meta{:,9}, stim_protocol));
+bunny500_id = bunny500_id(1:end-1)
+disp('230103-i1375 session 004 failed to save mworks mat')
+
 data_now_meta(bunny500_id,:)
 frame_rate = data_now_meta.(5)(bunny500_id(end));
 
