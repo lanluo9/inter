@@ -79,8 +79,8 @@ end
 
 %% search field name in struct
 
-tt = fieldnames(input);
-index = cellfun(@(x) any(contains(x, 'Ms')),tt); sum(index)
+tt = fieldnames(input_behav);
+index = cellfun(@(x) any(contains(x, 'Two')),tt); sum(index)
 id = find(index > 0);
 for i = 1 : length(id)
     fprintf(['input.', tt{id(i)}])

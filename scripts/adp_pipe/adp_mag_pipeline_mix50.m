@@ -110,20 +110,36 @@ frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
 
-for i = 1 : length(bunny500_id)
-    input_behav = input_behav_seq(i);
+for isess = 1 : length(bunny500_id)
+    input_behav = input_behav_seq(isess);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
+
+    try
+        assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1) % bunny where stim1=stim2
+    catch
+        assert(input_behav.doRandSF == 1) % or grat_SF6
+    end
     
-    adapter_id_sess = cell2mat(input_behav.tstimOne); 
+    try % randStim1_doSameStim2 with bunnies6.mwel
+        adapter_id_sess = cell2mat(input_behav.tstimOne);
+        target_id_sess = cell2mat(input_behav.tstimTwo);
+    catch % grat_SF6 with twoStim.mwel
+        SF_arr = sort(unique(cell2mat(input_behav.tStimOneGratingSpatialFreqCPD)));
+        adapter_SF = cell2mat(input_behav.tStimOneGratingSpatialFreqCPD);
+        adapter_id_sess = zeros(length(adapter_SF), 1);
+        for iSF = 1 : length(adapter_SF)
+            adapter_id_sess(iSF) = find(SF_arr==adapter_SF(iSF));
+        end
+        tmp = cell2mat(input_behav.tStimTwoGratingSpatialFreqCPD) == cell2mat(input_behav.tStimOneGratingSpatialFreqCPD);
+        assert(sum(tmp) == length(tmp)) % stim 1 vs 2 have same SF
+        target_id_sess = adapter_id_sess;
+    end
     adapter_id_sess = adapter_id_sess(1:ntrial_sess);
-    adapter_id = [adapter_id, adapter_id_sess];
-    target_id_sess = cell2mat(input_behav.tstimTwo); 
+    assert(size(adapter_id_sess, 1) > size(adapter_id_sess, 2)) % ensure its a column vector
+    adapter_id = [adapter_id; adapter_id_sess];
     target_id_sess = target_id_sess(1:ntrial_sess);
-    target_id = [target_id, target_id_sess];
-    
-    assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1) % verify randStim1_doSameStim2 protocol
-    assert(sum(adapter_id == target_id) == length(target_id))
+    target_id = [target_id; target_id_sess];
 
     frame_ad_sess = double(cell2mat(input_behav.cStimOneOn)); 
     frame_ad_sess = frame_ad_sess(1:ntrial_sess);
@@ -131,10 +147,10 @@ for i = 1 : length(bunny500_id)
     frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
     frame_tg_sess = double(cell2mat(input_behav.cStimTwoOn)); 
     frame_tg_sess = frame_tg_sess(1:ntrial_sess);
-    if i>1
-        frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:i-1));
-        frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:i-1));
-        frame_tg_sess = frame_tg_sess + sum(nframe_seq(1:i-1));
+    if isess > 1
+        frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:isess-1));
+        frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:isess-1));
+        frame_tg_sess = frame_tg_sess + sum(nframe_seq(1:isess-1));
     end
     frame_ad = [frame_ad, frame_ad_sess];
     frame_ad_off = [frame_ad_off, frame_ad_off_sess];
@@ -162,7 +178,7 @@ end
 
 t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
-nrep_stim = unique(t(:,2)) 
+nrep_stim = unique(t(:)) % ignore `1`
 % bunny500 3sess = 3/4/5 rep of each img
 % bunnytop 3sess = 48-50 rep of each img, each sess = 16-17 rep
 
@@ -266,6 +282,12 @@ dfof_base2_trial = dfof_base2_trial(:,:,3);
 
 if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
         dfof_base_trial dfof_base2_trial; end
+
+%% discard trials by pupil or run speed -> trial_filter_by_pupil_or_speed.m
+
+% TODO: when we integrate trial filter (bool) into dataframe, need to cut
+% off final trial of each sess just like above:
+% ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
 %% find visually driven cells -> vis_driven.ipynb
 

@@ -44,6 +44,8 @@ def load_trace_trial_data(dir_path, vis_filter=True):
 
     stim_seq = data["stim_seq"]
     stim_id = [i[0] for i in stim_seq]  # flatten list
+    if stim_seq.shape[1] > stim_seq.shape[0]: # if stim_seq is a column vector
+        stim_id = stim_seq
     trace_by_trial = data["trace_by_trial"]
 
     if vis_filter:
@@ -54,6 +56,7 @@ def load_trace_trial_data(dir_path, vis_filter=True):
         trace_by_trial = trace_by_trial[
             vis_driven, :, :
         ]  # only keep trace of vis-driven cells
+        print('alert! only vis driven cells are kept!')
 
     ncell = trace_by_trial.shape[0]
     nstim = len(np.unique(stim_id))
