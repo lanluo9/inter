@@ -1,19 +1,5 @@
-tt = fieldnames(input);
-index = cellfun(@(x) any(contains(x, 'Ms')),tt); sum(index)
-id = find(index > 0);
-for i = 1 : length(id)
-    fprintf(['input.', tt{id(i)}])
-    fprintf('\n')
-end
+size(trace_sem)
 
-
-input.tStimOneGratingOnTimeMs
-input.tStimTwoGratingOnTimeMs
-
-input.mwStimOneOnMs
-input.mwStimTwoOnMs
-input.mwStimOneOffMs
-input.mwStimTwoOffMs
-
-input.stimOneGratingOnTimeMs
-input.stimTwoGratingOnTimeMs
+trace_avg_all = mean(mean(trace_sem, 1), 2);
+trace_avg_all = squeeze(trace_avg_all);
+plot(trace_avg_all)
