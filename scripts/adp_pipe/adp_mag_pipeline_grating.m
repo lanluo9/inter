@@ -21,6 +21,7 @@ disp('analyzing grating datasets')
 
 nset = size(data,1);
 % for iset = 1:nset
+% iset = 1 % session 002 220714 i1372 is all corrupted
 iset = 2 % analyze session 003 220714 i1372
 
 close all

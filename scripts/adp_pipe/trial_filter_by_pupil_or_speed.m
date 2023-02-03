@@ -4,8 +4,8 @@ close all
 clear all
 clc
 
-mouse = 'i1375';
-date = '230103';
+mouse = 'i1372';
+date = '220714';
 area = 'V1';
 
 data_path = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
@@ -65,7 +65,7 @@ close all
 %% visliz radius
 
 close all
-rad_avg = (mean(rad.tc, 2) + mean(rad2.tc, 2)) / 2;
+rad_avg = (nanmean(rad.tc, 2) + nanmean(rad2.tc, 2)) / 2;
 figure
 plot(rad_avg)
 hold on
@@ -152,6 +152,8 @@ discard_perc_high = 5
 [pupil_deviation_thres, pupil_deviation_id_retained]= threshold_percentile(pupil_deviation, 0, discard_perc_high);
 
 %% visliz after discard
+
+close all;
 
 figure;
 histogram(rad_trials);

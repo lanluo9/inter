@@ -11,8 +11,15 @@ function [rad, centroid] = alignEyeData(Eye_data, input, varargin)
     calib = 1/26.6; %mm per pixel
     if isfield(input,'cStimOn')
         cStimOn = celleqel2mat_padded(input.cStimOn);
-        prewin_frames = input.nFramesOn;
-        postwin_frames = input.nFramesOn;
+        if (nargin > 2 && varargin{1} == 2) % then there is an optional argument
+            disp('eye data peri-stimulus 2, not 1')
+            cStimOn = celleqel2mat_padded(input.cTargetOn);
+        end
+        prewin_frames = unique(cell2mat(input.nFramesOn));
+%         if length(prewin_frames) > 1
+%             prewin_frames = prewin_frames{1,1};
+%         end
+        postwin_frames = prewin_frames;
 
     elseif isfield(input,'cStimOneOn')
         cStimOn = celleqel2mat_padded(input.cStimOneOn);
@@ -31,6 +38,7 @@ function [rad, centroid] = alignEyeData(Eye_data, input, varargin)
             prewin_frames = input.stimOneGratingOnTimeMs * input.frameRateHz / 1000; % ms/1000 * frame/s = frame. note var type is int64, so must divide 1000 *at the end*!
             postwin_frames = prewin_frames;
         end
+
     else
         cStimOn = input.nFramesOff+1:input.nFramesOff+input.nFramesOn:nFrames;
         prewin_frames = input.nFramesOn;
