@@ -83,7 +83,6 @@ for i = 1 : length(file_list)
 end
 
 data_dfof_multisess = mean(tmp, 3); % aggregate sess tif to get final tif
-% disp('sess 004 turned out too noisy to cellpose')
 save_mat_as_tif(data_dfof_multisess) % pass to cellpose in ipynb, who reads from multisess tif folder (one level above sess folder)
 
 %%
@@ -96,8 +95,7 @@ disp('got cellpose mask, now extract TC from each sess')
 
 file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));
 file_list.name
-for i = 1 : (length(file_list) - 1)
-    disp('skipping 004 due to only having 5 trials saved in mworks')
+for i = 1 : length(file_list)
     if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % proceed if multisess cellpose time course not exist
         disp('sess cellpose time course exists, skip to next set:')
         disp(i+1)
