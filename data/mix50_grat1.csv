@@ -1,15 +1,29 @@
-mouse,date,area,depth,num,cellpose_seg,manual_seg,paradigm,gcamp,stim_type
-1372,220714,V1,200,2,1,,grat1,6s,grating
-1372,220714,V1,200,3,1,,grat1,6s,grating
-1373,220909,V1,150,2,1,,mix50,6s,mix
-1373,220909,V1,150,3,1,,mix50,6s,mix
-1373,220909,V1,150,4,1,,mix50,6s,mix
-1374,220907,V1,150,2,1,,mix50,6s,mix
-1374,220907,V1,150,3,1,,mix50,6s,mix
-1374,220907,V1,150,4,1,,mix50,6s,mix
-1375,220915,V1,150,3,1,,mix50,6s,mix
-1375,220915,V1,150,5,1,,mix50,6s,mix
-1375,220915,V1,150,6,1,,mix50,6s,mix
-1375,230103,V1,150,2,1,,grat_SF6,6s,grat6
-1375,230103,V1,150,3,1,,grat_SF6,6s,grat6
-1375,230103,V1,150,4,1,,grat_SF6,6s,grat6
+mouse,date,area,depth,num,cellpose_seg,manual_seg,paradigm,gcamp,stim_type,note
+1372,220714,V1,200,2,1,,grat1,6s,grating,
+1372,220714,V1,200,3,1,,grat1,6s,grating,
+1373,220909,V1,150,2,1,,mix50,6s,mix,
+1373,220909,V1,150,3,1,,mix50,6s,mix,
+1373,220909,V1,150,4,1,,mix50,6s,mix,
+1374,220907,V1,150,2,1,,mix50,6s,mix,
+1374,220907,V1,150,3,1,,mix50,6s,mix,
+1374,220907,V1,150,4,1,,mix50,6s,mix,
+1375,220915,V1,150,3,1,,mix50,6s,mix,
+1375,220915,V1,150,5,1,,mix50,6s,mix,
+1375,220915,V1,150,6,1,,mix50,6s,mix,
+1375,230103,V1,150,2,1,,grat_SF6,6s,grat6,
+1375,230103,V1,150,3,1,,grat_SF6,6s,grat6,
+1375,230103,V1,150,4,1,,grat_SF6,6s,grat6,
+1380,230127,V1,150,3,1,,grat_SF6,6s,grat6,
+1380,230127,V1,150,4,1,,grat_SF6,6s,grat6,
+1380,230127,V1,150,5,1,,grat_SF6,6s,grat6,
+1369,220526,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1372,220529,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1370,220530,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1369,220619,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1370,220620,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1370,220620,V1,,3,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1372,220623,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1372,220623,V1,,3,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1380,230207,V1,200,2,1,,grat1,6s,grating,
+1380,230207,V1,200,3,1,,grat1,6s,grating,
+1380,230207,V1,200,4,1,,grat1,6s,grating,

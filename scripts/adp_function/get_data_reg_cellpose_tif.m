@@ -69,7 +69,7 @@ if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_
 % get_data_reg_cellpose_tif(...
     clear out outs
 else
-    tic; [out, data_reg] = stackRegister(data, data_avg); toc;
+    tic; [out, data_reg] = stackRegister_LL(data, data_avg); toc;
 %     mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')

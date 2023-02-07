@@ -6,9 +6,9 @@ close all
 clc
 
 mouse = '1380'
-date = '230127'
-time = '1312'
-ImgFolder = '002'
+date = '230207'
+time = '1138'
+ImgFolder = '001'
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;

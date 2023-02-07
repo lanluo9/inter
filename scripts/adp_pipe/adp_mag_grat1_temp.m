@@ -13,7 +13,7 @@ dataset_meta = readtable(master_xls);
 clearvars -except dataset_meta
 clearvars –global
 
-stim_type = 'grat6' % 3 sessions of mix50 must be registered to align
+stim_type = 'grating' % 3 sessions must be registered to align
 
 dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
 dataset_grat1 = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
@@ -27,7 +27,7 @@ elseif strcmp(stim_type, 'grat6')
     dataset_table = dataset_grat6
 end
 
-dataset_table = dataset_table(dataset_table.date == 230127, :)
+dataset_table = dataset_table(dataset_table.date == 230207, :)
 nset = size(dataset_table,1);
 
 %% draw cellpose_tif for each sess
