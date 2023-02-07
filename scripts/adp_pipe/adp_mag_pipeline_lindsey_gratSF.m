@@ -6,16 +6,11 @@ clear; clear global
 database_path = 'C:\Users\ll357\Documents\inter\';
 master_xls = [database_path, 'data/mix50_grat1.csv'];
 dataset_meta = readtable(master_xls);
-% dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
-% dataset_grat = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
 
-% data = dataset_mix;
-% data = data(data.date == 220907, :)
-% data = data(data.date == 220915, :)
-data = dataset_meta(dataset_meta.date == 230103, :)
+data = dataset_meta(dataset_meta.date == 220623, :)
 nset = size(data,1);
 % disp('analyzing mix50 datasets')
-disp('analyzing grat6 datasets')
+disp('analyzing gratSF_lindsey datasets')
 
 %%
 
@@ -40,7 +35,8 @@ global frame_rate range_base range_resp ...
 
 root_path = 'C:\Users\GlickfeldLab\Documents\test\inter'; %'C:\Users\ll357\Documents\inter';
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
-ll_fn = fullfile(fn_base, 'home\lan'); 
+ll_fn = fullfile(fn_base, 'home\lindsey'); 
+% ll_fn = fullfile(fn_base, 'home\lan'); 
 data_fn = fullfile(ll_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
@@ -53,6 +49,8 @@ stim_protocol = 'grat_SF6'
 xls_dir = fullfile(data_fn, imouse, arg_date)
 cd(xls_dir)
 xls_file = dir('*.xlsx');
+
+% TODO: start here
 data_now_meta = readtable(xls_file.name);
 
 bunny500_id = find(contains(data_now_meta{:,9}, stim_protocol));

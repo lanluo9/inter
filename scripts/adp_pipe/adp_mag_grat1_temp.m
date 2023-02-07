@@ -32,6 +32,14 @@ nset = size(dataset_table,1);
 
 %% draw cellpose_tif for each sess
 
+% TODO:
+% grating
+% runs-002
+% Unrecognized field name "cStimOn".
+% 
+% Error in get_data_reg_cellpose_tif (line 257)
+% cStart = cell2mat(behav_input.cStimOn); % same as cStimOn
+
 for iset = 1:nset
 
 iset, nset

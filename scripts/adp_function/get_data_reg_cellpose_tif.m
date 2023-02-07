@@ -37,7 +37,7 @@ if strcmp(run_str_ref, run_str) % if this session is ref session, then register 
 %     close all
     
     disp('start registration. using middle section as motion correct ref')
-    select = 5
+    select = 4
     start_idx = select * 10000 + 1;
     stop_idx = select * 10000 + 500;
     data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg
