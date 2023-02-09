@@ -8,7 +8,7 @@ function [trace_avg, trace_sem]= trace_grand_avg(dfof_align_ad, save_flag)
 global ncell nori id_ori id_isi3 trial_len_min
 
 trace_avg = zeros(ncell, nori, length(id_isi3), trial_len_min); 
-trace_sem = zeros(ncell, nori, length(id_isi3), trial_len_min); 
+% trace_sem = zeros(ncell, nori, length(id_isi3), trial_len_min); 
 
 % for icell = 1 : ncell    
 for iori = 1 : nori 
@@ -18,11 +18,12 @@ for iori = 1 : nori
         idx = intersect(id_ori{iori}, id_isi3{iisi}); 
         temp = dfof_align_ad(:, idx, 1:trial_len_min); % should not squeeze, leave idx (axis=2) to be averaged
         trace_avg(:, iori, iisi, :) = squeeze(nanmean(temp, 2));
-        trace_sem(:, iori, iisi, :) = squeeze(nanstd(temp, 2)) ./ length(idx);
+%         trace_sem(:, iori, iisi, :) = squeeze(nanstd(temp, 2)) ./ length(idx); -> not compatible when there is only 1 ISI
     end
 end
 % end
 
 % trace_avg = squeeze(trace_avg);
+trace_sem = 'not calculated'; % this has no use for now
 
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end

@@ -12,7 +12,7 @@ dataset_meta = readtable(master_xls);
 % data = dataset_mix;
 % data = data(data.date == 220907, :)
 % data = data(data.date == 220915, :)
-data = dataset_meta(dataset_meta.date == 230103, :)
+data = dataset_meta(dataset_meta.date == 230207, :)
 nset = size(data,1);
 % disp('analyzing mix50 datasets')
 disp('analyzing grat6 datasets')
@@ -48,7 +48,7 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 %% 
 
 save_flag = 1; % toggle this to save/skip all .mat creation below
-stim_protocol = 'grat_SF6'
+stim_protocol = 'only_1_grat from twoStim 2p frames mwel'
 
 xls_dir = fullfile(data_fn, imouse, arg_date)
 cd(xls_dir)
@@ -56,8 +56,8 @@ xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
 
 bunny500_id = find(contains(data_now_meta{:,9}, stim_protocol));
-bunny500_id = bunny500_id(1:end-1)
-disp('230103-i1375 session 004 failed to save mworks mat')
+% bunny500_id = bunny500_id(1:end-1)
+% disp('230103-i1375 session 004 failed to save mworks mat')
 
 data_now_meta(bunny500_id,:)
 frame_rate = data_now_meta.(5)(bunny500_id(end));
@@ -115,11 +115,11 @@ for isess = 1 : length(bunny500_id)
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
 
-    try
-        assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1) % bunny where stim1=stim2
-    catch
-        assert(input_behav.doRandSF == 1) % or grat_SF6
-    end
+%     try
+%         assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1) % bunny where stim1=stim2
+%     catch
+%         assert(input_behav.doRandSF == 1) % or grat_SF6
+%     end
     
     try % randStim1_doSameStim2 with bunnies6.mwel
         adapter_id_sess = cell2mat(input_behav.tstimOne);
@@ -178,7 +178,8 @@ end
 
 t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
-nrep_stim = unique(t(:)) % ignore `1`
+nrep_stim = unique(t(:))
+disp('ignore `1`')
 % bunny500 3sess = 3/4/5 rep of each img
 % bunnytop 3sess = 48-50 rep of each img, each sess = 16-17 rep
 
@@ -267,7 +268,7 @@ if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem 
 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
-trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:));
+trace_avg = squeeze(trace_avg(:,:,3,:)); % trace_sem = squeeze(trace_sem(:,:,3,:));
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 %% trial-wise response and baseline
@@ -284,6 +285,8 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
         dfof_base_trial dfof_base2_trial; end
 
 %% discard trials by pupil or run speed -> trial_filter_by_pupil_or_speed.m
+
+open trial_filter_by_pupil_or_speed.m
 
 % TODO: when we integrate trial filter (bool) into dataframe, need to cut
 % off final trial of each sess just like above:

@@ -198,11 +198,11 @@ data_targ_dfof_fake = (data_targ-data_f)./data_f;
 % target_list = unique(target_id);
 % n_target = length(target_list);
 
-try
-    assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1) % bunny 
-catch
-    assert(behav_input.doRandSF == 1) % or grat_SF6
-end
+% try
+%     assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1) % bunny 
+% catch
+%     assert(behav_input.doRandSF == 1) % or grat_SF6
+% end
 
 try % randStim1_doSameStim2 with bunnies6.mwel
     adapter_id = cell2mat(behav_input.tstimOne);

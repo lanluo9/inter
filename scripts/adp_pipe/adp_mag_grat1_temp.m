@@ -13,32 +13,28 @@ dataset_meta = readtable(master_xls);
 clearvars -except dataset_meta
 clearvars –global
 
-stim_type = 'grating' % 3 sessions must be registered to align
+stim_type = 'grat6' % only 1 grating, but modified from twoStim 2p frames mwel, just like grat SF6
 
-dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
-dataset_grat1 = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
-dataset_grat6 = dataset_meta(ismember(dataset_meta.stim_type, 'grat6'),:);
+% dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
+% dataset_grat1 = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
+% dataset_grat6 = dataset_meta(ismember(dataset_meta.stim_type, 'grat6'),:);
 
-if strcmp(stim_type, 'mix')
-    dataset_table = dataset_mix;
-elseif strcmp(stim_type, 'grating')
-    dataset_table = dataset_grat1
-elseif strcmp(stim_type, 'grat6')
-    dataset_table = dataset_grat6
-end
+% if strcmp(stim_type, 'mix')
+%     dataset_table = dataset_mix;
+% elseif strcmp(stim_type, 'grating')
+%     dataset_table = dataset_grat1
+% elseif strcmp(stim_type, 'grat6')
+%     dataset_table = dataset_grat6
+% end
 
+dataset_table = dataset_meta;
 dataset_table = dataset_table(dataset_table.date == 230207, :)
 nset = size(dataset_table,1);
 
 %% draw cellpose_tif for each sess
 
-% TODO:
-% grating
-% runs-002
-% Unrecognized field name "cStimOn".
-% 
-% Error in get_data_reg_cellpose_tif (line 257)
-% cStart = cell2mat(behav_input.cStimOn); % same as cStimOn
+% TODO: refactor to read mwel name from "archive 2P Imaging Notes Lan" -> 
+% modify get_data_reg_cellpose_tif.m to auto fill Unrecognized field name "cStimOn" etc
 
 for iset = 1:nset
 
@@ -90,8 +86,7 @@ for i = 1 : length(file_list)
     tmp(:,:,i) = data_dfof_max;
 end
 
-data_dfof_multisess = mean(tmp(:, :, 1:2), 3); % aggregate sess tif to get final tif
-disp('sess 004 turned out too noisy to cellpose')
+data_dfof_multisess = mean(tmp, 3); % aggregate sess tif to get final tif
 save_mat_as_tif(data_dfof_multisess) % pass to cellpose in ipynb, who reads from multisess tif folder (one level above sess folder)
 
 %%
@@ -104,8 +99,7 @@ disp('got cellpose mask, now extract TC from each sess')
 
 file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));
 file_list.name
-for i = 1 : (length(file_list) - 1)
-    disp('skipping 004 due to only having 5 trials saved in mworks')
+for i = 1 : (length(file_list))
     if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % proceed if multisess cellpose time course not exist
         disp('sess cellpose time course exists, skip to next set:')
         disp(i+1)

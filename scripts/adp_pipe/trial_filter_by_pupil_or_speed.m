@@ -1,11 +1,19 @@
 %%
 
-close all
-clear all
-clc
+close all; clc; 
+clear; clear global
 
-mouse = 'i1372';
-date = '220714';
+database_path = 'C:\Users\ll357\Documents\inter\';
+master_xls = [database_path, 'data/mix50_grat1.csv'];
+dataset_meta = readtable(master_xls);
+data = dataset_meta(dataset_meta.date == 230207, :)
+% nset = size(data,1);
+disp('analyzing grat6 datasets')
+
+%%
+
+mouse = ['i', num2str(data.mouse(1))]
+date = num2str(data.date(1))
 area = 'V1';
 
 data_path = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
@@ -35,7 +43,8 @@ load(fName);
 nFrames = input.counterValues{end}(end);
 data = data_temp(:,:,1:nFrames);      % the raw images...
 
-data_test = data(:, :, 1:1000); 
+% data_test = data(:, :, 1:1000);
+data_test = data(:, :, randsample(size(data,3), 1000)); % rand choose 1k test frames
 disp('using test data only')
 
 %% Crop image to isolate pupil 
@@ -212,17 +221,17 @@ speed_avg = mean(speed_trim, 1); % run speed of avg trial
 figure;
 plot(speed_avg);
 
-speed_dist = mean(speed_trim, 2); % avg speed dist across trials
+speed_sum = sum(speed_trim, 2); % speed, across trials
 figure;
-histogram(speed_dist, 500);
+histogram(speed_sum, 500);
 
 %% discard trial by run speed
 
 close all
 
 discard_perc_low = 1
-discard_perc_high = 4.75
-[speed_thresholded, trial_speed_ok] = threshold_percentile(speed_dist, discard_perc_low, discard_perc_high);
+discard_perc_high = 5
+[speed_thresholded, trial_speed_ok] = threshold_percentile(speed_sum, discard_perc_low, discard_perc_high);
 
 % figure;
 % histogram(speed_dist, 200);
@@ -237,6 +246,7 @@ close all
 figure;
 subplot(1,2,1)
 imagesc(speed_trim);
+colorbar;
 subplot(1,2,2)
 imagesc(speed_trim(trial_speed_ok, :))
 colorbar;
