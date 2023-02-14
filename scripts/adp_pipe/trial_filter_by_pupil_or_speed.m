@@ -3,10 +3,12 @@
 close all; clc; 
 clear; clear global
 
-database_path = 'C:\Users\ll357\Documents\inter\';
-master_xls = [database_path, 'data/mix50_grat1.csv'];
-dataset_meta = readtable(master_xls);
-data = dataset_meta(dataset_meta.date == 230207, :)
+% database_path = 'C:\Users\ll357\Documents\inter\';
+% master_xls = [database_path, 'data/mix50_grat1.csv'];
+% dataset_meta = readtable(master_xls);
+dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
+dataset_meta = readtable(dir_meta);
+data = dataset_meta(dataset_meta.date == 230209, :)
 % nset = size(data,1);
 disp('analyzing grat6 datasets')
 
@@ -54,6 +56,7 @@ disp('using test data only')
 
 %% measure pupil position/diameter
 
+close all
 rad_range = [2 13]; % histogram of pupil radius must show both tails, otherwise adjust rad_range
 Eye_data = extractEyeData(data_crop, rad_range); % check if pupil not found in too many frames
 % must use full data (not truncated test data) below, to match mworks input
@@ -63,6 +66,7 @@ Eye_data = extractEyeData(data_crop, rad_range); % check if pupil not found in t
 % pause % TODO: add user input? to adjust rad range after test data
 close all
 data_crop = data(rect(2):rect(2)+rect(4),rect(1):rect(1)+rect(3),:); % crop full data by rectangle determined above
+disp('start full eye data extraction')
 Eye_data = extractEyeData(data_crop, rad_range);
 
 %% align to stimulus presentation

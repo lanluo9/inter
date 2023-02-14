@@ -47,7 +47,8 @@ for n = 1:size(data,3)
         eye(n).Centroid = center(idx,:);
         eye(n).Area = pi*radii(idx)^2;
     end
-    if mod(n,100)==0
+    step_size = floor(size(data,3) / 20);
+    if mod(n, step_size)==0
         fprintf('Frame %d/%d\n',n,size(data,3));
     end
 end

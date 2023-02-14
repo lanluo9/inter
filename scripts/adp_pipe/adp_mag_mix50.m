@@ -106,7 +106,8 @@ for i = 1 : length(file_list)
 
     file_name = [file_list(i).folder, '\', file_list(i).name];
     load(file_name, 'out')
-    arg_ImgFolder = ['00', num2str(dataset_table(i,:).num(1))]
+    arg_ImgFolder = dataset_table(i,:).num{1};
+
 
     [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
     [outs, data_reg] = stackRegister_MA_LL(double(data), [], [], out); % re-register to get data_reg back

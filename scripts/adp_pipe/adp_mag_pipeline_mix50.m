@@ -3,16 +3,18 @@
 close all; clc; 
 clear; clear global
 
-database_path = 'C:\Users\ll357\Documents\inter\';
-master_xls = [database_path, 'data/mix50_grat1.csv'];
-dataset_meta = readtable(master_xls);
+% database_path = 'C:\Users\ll357\Documents\inter\';
+% master_xls = [database_path, 'data/mix50_grat1.csv'];
+dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
+dataset_meta = readtable(dir_meta);
+% dataset_meta = readtable(master_xls);
 % dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
 % dataset_grat = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
 
 % data = dataset_mix;
 % data = data(data.date == 220907, :)
 % data = data(data.date == 220915, :)
-data = dataset_meta(dataset_meta.date == 230207, :)
+data = dataset_meta(dataset_meta.date == 230209, :)
 nset = size(data,1);
 % disp('analyzing mix50 datasets')
 disp('analyzing grat6 datasets')
@@ -48,7 +50,7 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 %% 
 
 save_flag = 1; % toggle this to save/skip all .mat creation below
-stim_protocol = 'only_1_grat from twoStim 2p frames mwel'
+stim_protocol = 'grat_SF6'
 
 xls_dir = fullfile(data_fn, imouse, arg_date)
 cd(xls_dir)
