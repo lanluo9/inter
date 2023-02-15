@@ -14,7 +14,7 @@ dataset_meta = readtable(dir_meta);
 % data = dataset_mix;
 % data = data(data.date == 220907, :)
 % data = data(data.date == 220915, :)
-data = dataset_meta(dataset_meta.date == 230209, :)
+data = dataset_meta(dataset_meta.date == 230214, :)
 nset = size(data,1);
 % disp('analyzing mix50 datasets')
 disp('analyzing grat6 datasets')

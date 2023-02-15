@@ -8,7 +8,7 @@ clear; clear global
 % dataset_meta = readtable(master_xls);
 dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
 dataset_meta = readtable(dir_meta);
-data = dataset_meta(dataset_meta.date == 230209, :)
+data = dataset_meta(dataset_meta.date == 230214, :)
 % nset = size(data,1);
 disp('analyzing grat6 datasets')
 
@@ -267,7 +267,7 @@ plot(speed_avg_filtered);
 
 close all
 
-mat_inter_path = ['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\', area, '_', mouse, '_', date, '_cellpose']
+mat_inter_path = ['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\', area, '_', mouse, '_', date, '_cellpose'];
 try cd(mat_inter_path)
 catch
     mkdir(mat_inter_path)

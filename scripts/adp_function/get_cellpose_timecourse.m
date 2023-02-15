@@ -30,6 +30,7 @@ if max(mask_cell(:)) > 0
  			log_every_n = floor(nCells ./ 10); % log less frequently
 			if mod(i, log_every_n)==0 
 				fprintf(['Cell #' num2str(i) '%s /n'])
+                disp(' ')
 			end
         end
         
