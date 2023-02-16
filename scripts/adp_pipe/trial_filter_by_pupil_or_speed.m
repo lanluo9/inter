@@ -213,8 +213,11 @@ sum(trial_eye_ok) / length(trial_eye_ok) % ratio of trials that passed pupil che
 %% load speed data
 
 close all
-fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' mouse '-' date '-' time '.mat'];
+fName = fullfile(tc_fn, [date, '_', mouse], [date, '_', mouse, '_runs-', run], ...
+    [date, '_', mouse, '_runs-', run, '_input.mat'])
 input_mworks = load(fName);
+
+SF_arr = unique(cell2mat(input_mworks.input.tStimOneGratingSpatialFreqCPD))
 
 speed = input_mworks.input.wheelSpeedValues;
 assert(length(speed) == input_mworks.input.trialSinceReset)
@@ -287,7 +290,7 @@ plot(speed_avg_filtered);
 
 close all
 
-mat_inter_path = ['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\', area, '_', mouse, '_', date, '_cellpose'];
+mat_inter_path = ['Z:\All_Staff\home\lan\Data\2P_images\mat_inter\', area, '_', mouse, '_', date, '_lindsey'];
 try cd(mat_inter_path)
 catch
     mkdir(mat_inter_path)

@@ -117,7 +117,7 @@ for isess = 1 : length(sess_id_arr)
         assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1) % bunny where stim1=stim2
     catch
         assert(input_behav.doRandSF == 1) % or grat_SF6
-        input_behav.tGratingSpatialFreqCPD
+%         input_behav.tGratingSpatialFreqCPD
     end
     
     try % randStim1_doSameStim2 with bunnies6.mwel
