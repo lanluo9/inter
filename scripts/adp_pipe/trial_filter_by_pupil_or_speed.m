@@ -22,16 +22,27 @@ data_path = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lind
 data_path = [data_path '\Data\2P_images\' mouse '\' date]; 
 cd(data_path);
 
-master_xls = '2P Imaging Notes Lan.xlsx';
-dataset_meta = readtable(master_xls);
-dataset_meta = dataset_meta(dataset_meta.Var7 > 10000, :); % nframes large enough to be grat_6SF session
+dir_analysis_exp = ['Z:\All_Staff\home\lindsey\Analysis\2P\', date, '_', mouse];
+tmp = ls(dir_analysis_exp);
+sess_id_arr = strings().empty;
+for irow = 1 : size(tmp, 1)
+    if strfind(tmp(irow, :), 'runs-') > 0 % then it is a legit recording session of grat6SF
+        sess_id_arr = [sess_id_arr, num2str(tmp(irow, end-2:end))];
+    end
+end
+sess_id_arr = sess_id_arr(1:end-1) 
+disp('sess 003 of 220623 only has 1 SF, 80 trials. discard')
 
-nset = size(dataset_meta,1);
+% master_xls = '2P Imaging Notes Lan.xlsx';
+% dataset_meta = readtable(master_xls);
+% dataset_meta = dataset_meta(dataset_meta.Var7 > 10000, :); % nframes large enough to be grat_6SF session
+
+nset = size(sess_id_arr,1);
 
 %%
 for i = 1 : nset
-    run = dataset_meta{i,1}{1}(1:3)
-    time = num2str(dataset_meta{i,8})
+    run = convertStringsToChars(sess_id_arr(i));
+%     time = num2str(dataset_meta{i,8})
 
 %% load pupil data
 cd([data_path, '\', run]);
@@ -39,8 +50,17 @@ fn = [run '_000_000_eye.mat'];
 data_temp = load(fn);
 data_temp = squeeze(data_temp.data);
 
+root_path = 'C:\Users\GlickfeldLab\Documents\test\inter'; %'C:\Users\ll357\Documents\inter';
+fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
+ll_fn = fullfile(fn_base, 'home\lindsey'); 
+data_fn = fullfile(ll_fn, 'Data\2P_images');
+mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
+tc_fn = fullfile(ll_fn, 'Analysis\2P');
+
 % crop frames to match mworks data
-fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' mouse '-' date '-' time '.mat'];
+% fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' mouse '-' date '-' time '.mat'];
+fName = fullfile(tc_fn, [date, '_', mouse], [date, '_', mouse, '_runs-', run], ...
+    [date, '_', mouse, '_runs-', run, '_input.mat'])
 load(fName);
 nFrames = input.counterValues{end}(end);
 data = data_temp(:,:,1:nFrames);      % the raw images...

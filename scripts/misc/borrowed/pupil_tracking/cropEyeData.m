@@ -9,6 +9,7 @@ imagesc(data_avg);
 movegui('center')
 ax = gca;
 rect = getrect(ax);
+rect = int64(rect); % LL: must index with integer
 datat = data_avg(rect(2):rect(2)+rect(4),rect(1):rect(1)+rect(3));
 figure;
 imagesc(datat)
