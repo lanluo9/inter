@@ -1,16 +1,16 @@
-%%
+%% init
 
 close all; clc; 
 clear; clear global
 
-% database_path = 'C:\Users\ll357\Documents\inter\';
-% master_xls = [database_path, 'data/mix50_grat1.csv'];
-% dataset_meta = readtable(master_xls);
-dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
-dataset_meta = readtable(dir_meta);
-data = dataset_meta(dataset_meta.date == 230214, :)
-% nset = size(data,1);
-disp('analyzing grat6 datasets')
+database_path = 'C:\Users\ll357\Documents\inter\';
+master_xls = [database_path, 'data/mix50_grat1.csv'];
+dataset_meta = readtable(master_xls);
+
+data = dataset_meta(dataset_meta.date == 220623, :)
+nset = size(data,1);
+% disp('analyzing mix50 datasets')
+disp('analyzing gratSF_lindsey datasets')
 
 %%
 
@@ -18,7 +18,7 @@ mouse = ['i', num2str(data.mouse(1))]
 date = num2str(data.date(1))
 area = 'V1';
 
-data_path = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
+data_path = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lindsey';
 data_path = [data_path '\Data\2P_images\' mouse '\' date]; 
 cd(data_path);
 

@@ -36,7 +36,6 @@ global frame_rate range_base range_resp ...
 root_path = 'C:\Users\GlickfeldLab\Documents\test\inter'; %'C:\Users\ll357\Documents\inter';
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 ll_fn = fullfile(fn_base, 'home\lindsey'); 
-% ll_fn = fullfile(fn_base, 'home\lan'); 
 data_fn = fullfile(ll_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
@@ -46,23 +45,24 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 save_flag = 1; % toggle this to save/skip all .mat creation below
 stim_protocol = 'grat_SF6'
 
-xls_dir = fullfile(data_fn, imouse, arg_date)
+xls_dir = fullfile(data_fn, imouse, arg_date);
 cd(xls_dir)
 xls_file = dir('*.xlsx');
 
-% TODO: start here
-data_now_meta = readtable(xls_file.name);
-
-bunny500_id = find(contains(data_now_meta{:,9}, stim_protocol));
-bunny500_id = bunny500_id(1:end-1)
-disp('230103-i1375 session 004 failed to save mworks mat')
-
-data_now_meta(bunny500_id,:)
-frame_rate = data_now_meta.(5)(bunny500_id(end));
+dir_analysis_exp = ['Z:\All_Staff\home\lindsey\Analysis\2P\', arg_date, '_', imouse];
+tmp = ls(dir_analysis_exp);
+sess_id_arr = strings().empty;
+for irow = 1 : size(tmp, 1)
+    if strfind(tmp(irow, :), 'runs-') > 0 % then it is a legit recording session of grat6SF
+        sess_id_arr = [sess_id_arr, num2str(tmp(irow, end-2:end))];
+    end
+end
+sess_id_arr = sess_id_arr(1:end-1) 
+disp('sess 003 of 220623 only has 1 SF, 80 trials. discard')
 
 areamousedate = [area '_' imouse '_' arg_date];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
-result_folder = [mapped_path, '\mat_inter\', areamousedate, '_cellpose']; disp('cellpose segm');
+result_folder = [mapped_path, '\mat_inter\', areamousedate, '_lindsey']; disp('lindsey segm');
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
@@ -71,18 +71,12 @@ cd(result_folder)
 df_flat = [];
 nframe_seq = [];
 
-for i = 1:length(bunny500_id)
-    id = bunny500_id(i);
-    time = data_now_meta.(8)(id);
-    ImgFolder = data_now_meta.(1){id}(1:3);
-
-    fName = fullfile(mworks_fn, ['data-' imouse '-' arg_date '-' num2str(time) '.mat']);
-    temp = load(fName); % load behavior data "input", which clashes with built-in function
-    input_behav_seq(i) = temp.input; clear temp
+for i = 1:length(sess_id_arr)
+    ImgFolder = convertStringsToChars(sess_id_arr(i));
 
     cd(fullfile(tc_fn, [arg_date '_' imouse]))
     cd([arg_date '_' imouse '_runs-', ImgFolder])
-    tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']);
+    tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs.mat']);
     df_flat = [df_flat; tc.npSub_tc];
 
     [nframe, ncell] = size(tc.npSub_tc);
@@ -90,7 +84,7 @@ for i = 1:length(bunny500_id)
 end
 nframe, ncell
 
-disp('loaded cellpose timecourse & visual input')
+disp('loaded cellpose timecourse')
 try
     assert(sum(df_flat(nframe,:) < 65535) == ncell)
 catch
@@ -108,8 +102,14 @@ frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
 
-for isess = 1 : length(bunny500_id)
-    input_behav = input_behav_seq(isess);
+for isess = 1 : length(sess_id_arr)
+
+    ImgFolder = convertStringsToChars(sess_id_arr(isess));
+    fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
+    [arg_date, '_', imouse, '_runs-', ImgFolder, '_input.mat'])
+    temp = load(fName); % load behavior data "input", which clashes with built-in function
+    input_behav = temp.input; clear temp
+
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
 
@@ -117,6 +117,7 @@ for isess = 1 : length(bunny500_id)
         assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1) % bunny where stim1=stim2
     catch
         assert(input_behav.doRandSF == 1) % or grat_SF6
+        input_behav.tGratingSpatialFreqCPD
     end
     
     try % randStim1_doSameStim2 with bunnies6.mwel
@@ -174,11 +175,12 @@ for iori  = 1 : nori
     id_ori{iori} = find(ori_seq == ori_list(iori)); 
 end
 
+frame_rate = input_behav.frameRateHz;
+SF_arr = unique(cell2mat(input_behav.tStimOneGratingSpatialFreqCPD))
+
 t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
 nrep_stim = unique(t(:)) % ignore `1`
-% bunny500 3sess = 3/4/5 rep of each img
-% bunnytop 3sess = 48-50 rep of each img, each sess = 16-17 rep
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
@@ -233,7 +235,7 @@ if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 
 %% find calcium resp window
 
-find_peak_bef = 15;
+find_peak_bef = 13;
 disp('assume: first peak comes before n frames. second peak comes after')
 trace_start = t_ad(1:find_peak_bef);
 [~, peak_id] = max(trace_start)
@@ -265,7 +267,7 @@ if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem 
 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
-trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:));
+trace_avg = squeeze(trace_avg(:,:,3,:)); % trace_sem = squeeze(trace_sem(:,:,3,:));
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 %% trial-wise response and baseline
@@ -282,6 +284,8 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
         dfof_base_trial dfof_base2_trial; end
 
 %% discard trials by pupil or run speed -> trial_filter_by_pupil_or_speed.m
+
+open trial_filter_by_pupil_or_speed.m
 
 % TODO: when we integrate trial filter (bool) into dataframe, need to cut
 % off final trial of each sess just like above:
