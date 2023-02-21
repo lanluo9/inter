@@ -5,9 +5,9 @@ clear all global % sbxread need to first clear global var
 close all
 clc
 
-mouse = '1373'
-date = '230214'
-time = '1138'
+mouse = '1380'
+date = '230221'
+time = '1118'
 ImgFolder = '001'
 
 imouse = ['i' mouse];
