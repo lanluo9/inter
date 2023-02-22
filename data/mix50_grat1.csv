@@ -21,7 +21,7 @@ mouse,date,area,depth,num,cellpose_seg,manual_seg,paradigm,gcamp,stim_type,note
 1370,220530,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
 1369,220619,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
 1370,220620,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
-1370,220620,V1,,3,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
+1370,220620,V1,,3,1,,grat_SF_lindsey,6s,grat_SF_lindsey,"as shortcut in analysis dir, but only 1 SF, only 80 trials"
 1372,220623,V1,,2,1,,grat_SF_lindsey,6s,grat_SF_lindsey,as shortcut in analysis dir
 1372,220623,V1,,3,1,,grat_SF_lindsey,6s,grat_SF_lindsey,"as shortcut in analysis dir, but only 1 SF, only 80 trials"
 1380,230207,V1,200,2,1,,grat1,6s,grating,
