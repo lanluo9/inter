@@ -7,7 +7,7 @@ database_path = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter\';
 master_xls = [database_path, 'adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 
-data = dataset_meta(dataset_meta.date == 220530, :)
+data = dataset_meta(dataset_meta.date == 220526, :)
 nset = size(data,1);
 % disp('analyzing mix50 datasets')
 disp('analyzing gratSF_lindsey datasets')
