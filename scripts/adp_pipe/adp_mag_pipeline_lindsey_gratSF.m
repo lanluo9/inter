@@ -7,7 +7,7 @@ database_path = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter\';
 master_xls = [database_path, 'adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 
-data = dataset_meta(dataset_meta.date == 220620, :)
+data = dataset_meta(dataset_meta.date == 220530, :)
 nset = size(data,1);
 % disp('analyzing mix50 datasets')
 disp('analyzing gratSF_lindsey datasets')
@@ -57,8 +57,9 @@ for irow = 1 : size(tmp, 1)
         sess_id_arr = [sess_id_arr, num2str(tmp(irow, end-2:end))];
     end
 end
-sess_id_arr = sess_id_arr(1:end-1) 
-disp('sess 003 of 220623 only has 1 SF, 80 trials. discard')
+% sess_id_arr = sess_id_arr(1:end-1) 
+% disp('sess 003 of 220623 only has 1 SF, 80 trials. discard')
+disp(sess_id_arr)
 
 areamousedate = [area '_' imouse '_' arg_date];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';

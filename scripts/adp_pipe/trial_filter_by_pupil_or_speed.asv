@@ -7,7 +7,7 @@ database_path = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter\';
 master_xls = [database_path, 'adp_dataset_master.xlsx'];
 dataset_meta = readtable(master_xls);
 
-data = dataset_meta(dataset_meta.date == 220530, :)
+data = dataset_meta(dataset_meta.date == 220620, :)
 nset = size(data,1);
 % disp('analyzing mix50 datasets')
 disp('analyzing gratSF_lindsey datasets')
@@ -30,9 +30,8 @@ for irow = 1 : size(tmp, 1)
         sess_id_arr = [sess_id_arr, num2str(tmp(irow, end-2:end))];
     end
 end
-% sess_id_arr = sess_id_arr(1:end-1) 
-% disp('sess 003 of 220623 only has 1 SF, 80 trials. discard')
-disp(sess_id_arr)
+sess_id_arr = sess_id_arr(1:end-1) 
+disp('sess 003 of 220623 only has 1 SF, 80 trials. discard')
 
 % master_xls = '2P Imaging Notes Lan.xlsx';
 % dataset_meta = readtable(master_xls);
@@ -41,8 +40,7 @@ disp(sess_id_arr)
 nset = size(sess_id_arr,1);
 
 %%
-% for i = 1 : nset
-i = 1
+for i = 1 : nset
     run = convertStringsToChars(sess_id_arr(i));
 %     time = num2str(dataset_meta{i,8})
 
@@ -302,4 +300,4 @@ end
 save(['filter_trials_by_pupil_or_speed_', run, '.mat'], 'trial_speed_ok', 'speed_trial_by_frame', ...
     'trial_eye_ok', 'rad_trials', 'eye_move_dist', 'pupil_deviation')
 
-% end
+end
