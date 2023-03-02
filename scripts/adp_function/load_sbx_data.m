@@ -1,10 +1,10 @@
 function [data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder)
 
 disp('start running get_data_reg_cellpose_tif.m')
-mouse = arg_mouse
+mouse = arg_mouse;
 imouse = ['i', num2str(mouse)];
-date = num2str(arg_date)
-ImgFolder = arg_ImgFolder
+date = num2str(arg_date);
+ImgFolder = arg_ImgFolder;
 
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
 xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
