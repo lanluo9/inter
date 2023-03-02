@@ -1,64 +1,13 @@
 function [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref)
 
-disp('start running get_data_reg_cellpose_tif.m')
-mouse = arg_mouse
-imouse = ['i', num2str(mouse)];
-date = num2str(arg_date)
-ImgFolder = arg_ImgFolder
-
-fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
-xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
-xls_file = dir('*.xlsx'); clear dataset_meta
-dataset_meta = readtable(xls_file.name); 
-idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
-time = num2str(dataset_meta.(8)(idx));
-nrun = size(ImgFolder,1);
-run_str = catRunName(ImgFolder, nrun);
-
-% load and register
-disp('start loading sbx')
-tic
-data = [];
-clear temp
-trial_n = [];
-offset = 0;
-
-for irun = 1:nrun
-    LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
-    CD = [LL_base '\Data\2P_images\' imouse '\' date '\' ImgFolder(irun,:)];
-    cd(CD);
-    
-    imgMatFile = [ImgFolder(irun,:) '_000_000.mat'];
-    load(imgMatFile);
-    fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' imouse '-' date '-' time(irun,:) '.mat'];
-    behav_mat = load(fName);
-    temp(irun) = behav_mat.input;
-    behav_input = behav_mat.input;
-    nframes = max([temp(irun).counterValues{end}(end) info.config.frames]);
-    fprintf(['Reading run ' num2str(irun) ', consisting of ' num2str(min(nframes)) ' frames \r\n'])
-
-    data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
-    if size(data_temp,1)== 2
-        data_temp = data_temp(1,:,:,:);
-    end
-    offset = offset+min(nframes);
-    data_temp = squeeze(data_temp);
-    data = cat(3,data,data_temp);
-    trial_n = [trial_n nframes];
-end
-% behav_input = concatenateDataBlocks(temp);
-clear data_temp temp
-toc
+mouse = arg_mouse;
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
 
 % check data corruption
-if any(data(:) == 65535)
-    disp('suspected data corruption')
-
-    data_frame_avg = mean(mean(data, 1) ,1);
-    frame_corrupt = find(data_frame_avg == 65535); % fully corrupted frame avg 
-
-%     [~, ~, frame_corrupt] = find(data == 65535); % too slow
+data_frame_avg = squeeze(mean(mean(data, 1) ,2));
+frame_corrupt = min(find(data_frame_avg == 65535)) - 1; % fully corrupted frame avg = 65535
+if ~isempty(find(data_frame_avg == 65536))
     sprintf('data corruption starts at frame no. %d', frame_corrupt)
 
     nep = floor(size(data,3)./10000);
@@ -70,6 +19,8 @@ if any(data(:) == 65535)
         title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
     end
     print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_check_corrupt.pdf']),'-dpdf', '-bestfit')
+else
+    sprintf('data corruption not detected')
 end
 
 % Choose register interval
@@ -82,20 +33,28 @@ if strcmp(run_str_ref, run_str) % if this session is ref session, then register 
         imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
         title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
     end
+    print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_select_register_ref.pdf']),'-dpdf', '-bestfit')
+%     close all
+    
     disp('start registration. using middle section as motion correct ref')
     select = 4
     start_idx = select * 10000 + 1;
     stop_idx = select * 10000 + 500;
     data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_data_avg.mat']), 'data_avg')
 else % otherwise take data_avg from ref session
-    load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_reg_shifts.mat']), 'data_avg')
+    try
+        load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_reg_shifts.mat']), 'data_avg')
+    catch
+        load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_data_avg.mat']), 'data_avg')
+    end
 end
 
 % Register data
 if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
-    [outs, data_reg]=stackRegister_MA(double(data),[],[],out);
+    [outs, data_reg]=stackRegister_MA_LL(double(data),[],[],out);
 % for grating dataset 2 - i1323 V1:
 % Index in position 1 exceeds array bounds (must not exceed 99865).
 % 
@@ -110,7 +69,7 @@ if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_
 % get_data_reg_cellpose_tif(...
     clear out outs
 else
-    tic; [out, data_reg] = stackRegister(data, data_avg); toc;
+    tic; [out, data_reg] = stackRegister_LL(data, data_avg); toc;
 %     mkdir(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']), 'out', 'data_avg')
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
@@ -119,6 +78,8 @@ clear data out
 disp('registration finished')
 
 % test stability
+nep = floor(size(data_reg,3)./10000);
+[n, n2] = subplotn(nep);
 figure; for i = 1:nep; subplot(n,n2,i); imagesc(mean(data_reg(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); end
 set(gcf, 'Position', get(0, 'Screensize'));
 print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_FOV_byFrame.pdf']),'-dpdf', '-bestfit')
@@ -129,9 +90,10 @@ print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' r
 %%
 
 disp(stim_type)
+disp(run_str)
 
 switch stim_type % TODO: wrap into function
-case 'bunny'
+case {'bunny', 'mix', 'grat6'}
     
 %% find activated cells
 
@@ -172,6 +134,7 @@ set(gcf, 'Position', get(0, 'Screensize'));
 analysis_dir = fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str]);
 cd(analysis_dir)
 saveas(gcf, ['find_ca_latency.jpg'])
+print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_find_ca_latency.pdf']),'-dpdf', '-bestfit')
 close
 
 figure; data_trial_zoom_in = nanmean(data_trial_real, 2); plot(data_trial_zoom_in(1:40)); grid on; grid minor
@@ -202,6 +165,7 @@ xline(1 + ca_latency + window_len, 'k--')
 grid on; grid minor
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['find_ca_latency_ca_window.jpg'])
+print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_find_ca_latency_ca_window.pdf']),'-dpdf', '-bestfit')
 close all
 
 assert(length(cTarget) == nTrials && length(cStart) == nTrials && cTarget(nTrials)+3 < sz(3))
@@ -226,11 +190,36 @@ data_targ_dfof_fake = (data_targ-data_f)./data_f;
 
 %% plot dfof for randStim1_doSameStim2 bunny
 
-assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1)
-adapter_id = cell2mat(behav_input.tstimOne);
+% assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1)
+% adapter_id = cell2mat(behav_input.tstimOne);
+% adapter_list = unique(adapter_id);
+% n_adapter = length(adapter_list);
+% target_id = cell2mat(behav_input.tstimTwo);
+% target_list = unique(target_id);
+% n_target = length(target_list);
+
+% try
+%     assert(behav_input.doRandStimOne == 1 & behav_input.doSameStims == 1) % bunny 
+% catch
+%     assert(behav_input.doRandSF == 1) % or grat_SF6
+% end
+
+try % randStim1_doSameStim2 with bunnies6.mwel
+    adapter_id = cell2mat(behav_input.tstimOne);
+    target_id = cell2mat(behav_input.tstimTwo);
+catch % grat_SF6 with twoStim.mwel
+    SF_arr = sort(unique(cell2mat(behav_input.tStimOneGratingSpatialFreqCPD)));
+    adapter_SF = cell2mat(behav_input.tStimOneGratingSpatialFreqCPD);
+    adapter_id = zeros(length(adapter_SF), 1);
+    for i = 1 : length(adapter_SF)
+        adapter_id(i) = find(SF_arr==adapter_SF(i));
+    end
+    tmp = cell2mat(behav_input.tStimTwoGratingSpatialFreqCPD) == cell2mat(behav_input.tStimOneGratingSpatialFreqCPD);
+    assert(sum(tmp) == length(tmp)) % stim 1 vs 2 have same SF
+    target_id = adapter_id;
+end
 adapter_list = unique(adapter_id);
 n_adapter = length(adapter_list);
-target_id = cell2mat(behav_input.tstimTwo);
 target_list = unique(target_id);
 n_target = length(target_list);
 
@@ -256,6 +245,7 @@ data_dfof = cat(3,data_dfof, data_dfof_max); % adapter, targ, targ_fake, gaussia
 figure; imagesc(data_dfof_max)
 set(gcf, 'Position', get(0, 'Screensize'));
 title('data dfof max')
+print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_data_dfof_max.pdf']),'-dpdf', '-bestfit')
 close all
 
     
@@ -461,33 +451,17 @@ data_dfof = cat(3,data_dfof, data_dfof_max, data_dfof_perc);
 data_dfof_max = data_dfof_perc; % TODO: fix bunny data_dfof_max to data_dfof_perc, depending on noise lvl
     
 otherwise
-    disp('no such stim. stim type should be bunny or grating')
+    disp('no such stim. stim type should be bunny, mix, grat6 or grating')
 end
 
 %% export tif for cellpose
 
-stim_resp_gauss = data_dfof_max'; % gauss smooth each stim resp, take max
 disp('saving dfof-max-gauss tif & mat')
 save data_dfof.mat data_dfof data_dfof_max
 
-tif_file = ['cellpose_stim_resp_gauss.tif'];
-fTIF = Fast_BigTiff_Write(tif_file,1,0);
-tic
-msg = 0;
-N = 1;
-B = numel(stim_resp_gauss)*2;
-for ct = 1:N
-    fprintf(1,repmat('\b',[1,msg]));
-    msg = fprintf(1,'%.0f/%.0f',ct,N);
-    fTIF.WriteIMG(stim_resp_gauss(:,:,ct));
-end
-fTIF.close;
-fprintf(1,repmat('\b',[1,msg]));
-t=toc
-fprintf(1,'\nWrite %.0f bytes in %.0f mins \n',B*N,t/60);
-fprintf(1,'Write speed: %.0f MB/s \n',(B*N)/(2^20*t));
+save_mat_as_tif(data_dfof_max);
 
-disp(['mouse ', num2str(mouse), ' date ', num2str(date), ...
+disp(['mouse ', num2str(mouse), ' date ', num2str(date), ' ', run_str ...
     ' - finished data_reg & cellpose tif'])
 
 end

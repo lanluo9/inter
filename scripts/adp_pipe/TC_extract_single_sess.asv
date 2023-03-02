@@ -45,7 +45,7 @@ catch
     cd(dir_analysis)
 end
 
-% check if cellpose time course exists
+% check if time course exists
 if ~isempty(dir('*TC*.mat'))
     disp('timecourse exists, skip to next dataset:')
     continue
