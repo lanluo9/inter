@@ -5,6 +5,8 @@ clear all global % sbxread need to first clear global var
 close all
 clc
 
+%%
+
 mouse = '1373'
 date = '230302'
 time = '1107'
