@@ -76,7 +76,7 @@ try % if data folder contains 2p imaging note.xls
     frame_rate = data_now_meta.(5)(sess_id_arr(end));
 catch % if data folder has been transferred to AWS, cannot read 2p imaging note.xls anymore
     sess_id_arr = str2num(dataset_now.num{1}(end));
-    disp('above line only works for single session data. TODO: fix')
+    disp('only works for single session data. TODO: fix sess_id_arr and ImgFolder')
 end
 
 %% load input_behav & npSubTC for eash sess
@@ -85,11 +85,9 @@ df_flat = [];
 nframe_seq = [];
 
 for i = 1:length(sess_id_arr)
-%     id = sess_id_arr(i);
-%     time = data_now_meta.(8)(id);
-    ImgFolder = dataset_now.num{1};
-
-%     fName = fullfile(mworks_fn, ['data-' imouse '-' arg_date '-' num2str(time) '.mat']);
+    ImgFolder = dataset_now.num{i};
+    fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
+        [arg_date, '_', imouse, '_runs-', ImgFolder, '_input.mat']);
     temp = load(fName); % load behavior data "input", which clashes with built-in function
     input_behav_seq(i) = temp.input; 
     frame_rate = temp.input.frameRateHz;
@@ -97,7 +95,13 @@ for i = 1:length(sess_id_arr)
 
     cd(fullfile(tc_fn, [arg_date '_' imouse]))
     cd([arg_date '_' imouse '_runs-', ImgFolder])
-    tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']);
+    segment_suffix = '' % default suffix is empty -> using manual segment
+    try
+        tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_addfake.mat']); % try manual TC first
+    catch
+        tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']); % if not, use cellpose TC
+        segment_suffix = '_cellpose' % add cellpose suffix for mat_inter subdir, if segmented by cellpose
+    end
     df_flat = [df_flat; tc.npSub_tc];
 
     [nframe, ncell] = size(tc.npSub_tc);
@@ -115,7 +119,7 @@ end
 
 areamousedate = [area '_' imouse '_' arg_date];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
-result_folder = [mapped_path, '\mat_inter\', areamousedate, '_cellpose']; disp('cellpose segm');
+result_folder = [mapped_path, '\mat_inter\', areamousedate, segment_suffix];
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
@@ -133,12 +137,6 @@ for isess = 1 : length(sess_id_arr)
     input_behav = input_behav_seq(isess);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
-
-%     try
-%         assert(input_behav.doRandStimOne == 1 & input_behav.doSameStims == 1) % bunny where stim1=stim2
-%     catch
-%         assert(input_behav.doRandSF == 1) % or grat_SF6
-%     end
     
     try % randStim1_doSameStim2 with bunnies6.mwel
         adapter_id_sess = cell2mat(input_behav.tstimOne);
@@ -199,8 +197,6 @@ t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
 nrep_stim = unique(t(:))
 disp('ignore `1`')
-% bunny500 3sess = 3/4/5 rep of each img
-% bunnytop 3sess = 48-50 rep of each img, each sess = 16-17 rep
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof

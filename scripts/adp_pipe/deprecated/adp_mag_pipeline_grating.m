@@ -108,27 +108,27 @@ nframe_seq = [nframe];
 %% params & indexing trials
 % index by adapter contrast, target ori, isi
 
-% cut off corrupted frames: from frame 87139, count back 100 ms
-corrupt_buffer = frame_rate * 0.1 % 30 frame / s * 0.100 s = 3 frame
-frame_tg_onset = cell2mat(input_behav_seq.cTargetOn);
-ntrial_good = sum(frame_tg_onset < nframe - corrupt_buffer)
-
-field_name = fieldnames(input_behav_seq);
-for i = 1 : length(field_name)
-%     field_content = getfield(input_behav_seq, field_name{i});
-    field_content = input_behav_seq.(field_name{i});
-    field_len = length(field_content);
-
-    if field_len > ntrial_good
-%         input_behav_seq = setfield(input_behav_seq, field_name{i}, field_content{1:ntrial_good})
-        input_behav_seq.(field_name{i}) = field_content(1:ntrial_good);
-    end
-end
+% % cut off corrupted frames: from frame 87139, count back 100 ms
+% corrupt_buffer = frame_rate * 0.1 % 30 frame / s * 0.100 s = 3 frame
+% frame_tg_onset = cell2mat(input_behav_seq.cTargetOn);
+% ntrial_good = sum(frame_tg_onset < nframe - corrupt_buffer)
+% 
+% field_name = fieldnames(input_behav_seq);
+% for i = 1 : length(field_name)
+% %     field_content = getfield(input_behav_seq, field_name{i});
+%     field_content = input_behav_seq.(field_name{i});
+%     field_len = length(field_content);
+% 
+%     if field_len > ntrial_good
+% %         input_behav_seq = setfield(input_behav_seq, field_name{i}, field_content{1:ntrial_good})
+%         input_behav_seq.(field_name{i}) = field_content(1:ntrial_good);
+%     end
+% end
 
 input_behav = input_behav_seq;
-% ntrial = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
-ntrial = ntrial_good - 1;
-disp('chopped off corrupted data')
+ntrial = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+% ntrial = ntrial_good - 1;
+% disp('chopped off corrupted data')
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
 id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 
