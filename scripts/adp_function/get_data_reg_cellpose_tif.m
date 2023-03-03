@@ -1,7 +1,7 @@
 function [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(...
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref)
 
-mouse = arg_mouse
+mouse = arg_mouse;
 [data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
 
 % check data corruption
@@ -52,6 +52,7 @@ end
 
 % Register data
 if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
+    disp('re-register from reg_shifts.mat')
     load(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_input.mat']), 'behav_input')
     [outs, data_reg]=stackRegister_MA_LL(double(data),[],[],out);
@@ -351,10 +352,10 @@ for itrial = 1:nTrials
             cTarget(itrial) + ca_latency : cTarget(itrial) + ca_latency + window_len),3);
 end
 
-data_adapter_dfof = (data_adapter-data_f)./data_f;
-data_base2_dfof = (data_f2-data_f)./data_f;
-data_targ_dfof = (data_targ-data_f2)./data_f2; 
-data_targ_dfof_fake = (data_targ-data_f)./data_f; 
+data_adapter_dfof = (data_adapter-data_f)./data_f; % adapter - baseline 1 (before trial onset)
+data_base2_dfof = (data_f2-data_f)./data_f;        % baseline 2 - baseline 1
+data_targ_dfof = (data_targ-data_f2)./data_f2;     % target - baseline 2
+data_targ_dfof_fake = (data_targ-data_f)./data_f;  % target - baseline 1
 
 % %% plot response
 targCon = celleqel2mat_padded(behav_input.tGratingContrast);
@@ -395,7 +396,7 @@ imagesc(data_dfof_dir) % adapter (deg == 0) resp is ok
 title('data dfof dir')
 set(gcf, 'Position', get(0, 'Screensize'));
 figure
-imagesc(data_dfof2_dir) % but baseline2 shows bright cells, almost same as adapter resp
+imagesc(data_dfof2_dir) % but baseline2 shows bright cells, almost same as adapter resp; bc fluores decay is slow
 title('data dfof2 dir')
 set(gcf, 'Position', get(0, 'Screensize'));
 
@@ -421,7 +422,7 @@ for idir = 1:nDelta
 end
 set(gcf, 'Position', get(0, 'Screensize'));
 
-data_dfof_targ_noadapt = zeros(sz(1),sz(2),nDelta);
+data_dfof_targ_noadapt = zeros(sz(1),sz(2),nDelta); % TODO: why no-ad targ resp blurry?
 [n, n2] = subplotn(nDelta);
 figure;
 for idir = 1:nDelta
@@ -435,20 +436,24 @@ end
 set(gcf, 'Position', get(0, 'Screensize'));
 % data_dfof = cat(3,data_dfof_targ_noadapt, data_dfof_targ_fake, data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
 data_dfof = cat(3, data_dfof_targ_fake, data_dfof_dir_all); % did not concat data_dfof_targ_noadapt and data_dfof_targ due to higher noise
+% current data_dfof contains: 
+    % R1 (adapter response - baseline 1), 
+    % decayed R1 (baseline 2 - baseline 1), 
+    % and fake R2 (target response - baseline 1), which includes ad-tg and noad-tg
 
 myfilter = fspecial('gaussian',[20 20], 0.5);
 data_dfof_max = max(imfilter(data_dfof, myfilter), [], 3);
-data_dfof_perc = prctile(imfilter(data_dfof, myfilter), 85, 3); % take top percentile due to noisy max tif
+% data_dfof_perc = prctile(imfilter(data_dfof, myfilter), 90, 3); % take top percentile due to noisy max tif?
 
 figure;
 imagesc(data_dfof_max)
 title('data dfof max')
-figure;
-imagesc(data_dfof_perc)
-title('data dfof perc')
+% figure;
+% imagesc(data_dfof_perc)
+% title('data dfof perc')
 
-data_dfof = cat(3,data_dfof, data_dfof_max, data_dfof_perc);
-data_dfof_max = data_dfof_perc; % TODO: fix bunny data_dfof_max to data_dfof_perc, depending on noise lvl
+data_dfof = cat(3, data_dfof, data_dfof_max);
+% data_dfof_max = data_dfof_perc;
     
 otherwise
     disp('no such stim. stim type should be bunny, mix, grat6 or grating')

@@ -33,7 +33,7 @@ arg_mouse = dataset_now.mouse
 arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num{1}
 
-ref_ImgFolder = arg_ImgFolder % dataset_table(1,:).num{1} for multisess, ref is the same as arg_ImgFolder if single sess
+ref_ImgFolder = arg_ImgFolder; % dataset_table(1,:).num{1} for multisess, ref is the same as arg_ImgFolder if single sess
 run_str_ref = ['runs-' ref_ImgFolder(1,:)]
 
 imouse = ['i', num2str(arg_mouse)];
@@ -45,7 +45,7 @@ catch
     cd(dir_analysis)
 end
 
-% check if cellpose time course exists
+% check if time course exists
 if ~isempty(dir('*TC*.mat'))
     disp('timecourse exists, skip to next dataset:')
     continue
@@ -54,13 +54,12 @@ end
 disp('add your stim_type into function: bunny, mix, grat6, grating(grat1)')
 [data_reg, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(... % register every sess against itself: single sess registration
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); 
-disp(['got data_reg & cellpose tif for ', arg_mouse, arg_date, arg_ImgFolder])
+disp(['got data_reg & cellpose tif for ', num2str(arg_mouse), ' ', arg_date, ' ', arg_ImgFolder])
+close all
 
-% wait for batch_cellpose.ipynb
-tic
+disp('wait for batch_cellpose.ipynb')
 while ~exist('cellpose_mask.mat','file')
     pause(60) % wait for cellpose to run in ipynb
-    toc
 end
 disp('got cellpose mask, now extract TC')
 

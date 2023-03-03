@@ -64,19 +64,19 @@ global frame_rate range_base range_resp ...
     id_ad id_noad id_isi2 id_isi3 id_ori
 
 save_flag = 1; % toggle this to save/skip all .mat creation below
-stim_protocol = 'grat_SF6'
 
-xls_dir = fullfile(data_fn, imouse, arg_date)
-cd(xls_dir)
-xls_file = dir('*.xlsx');
-data_now_meta = readtable(xls_file.name);
+try
+    stim_protocol = 'grat_SF6'
+    xls_dir = fullfile(data_fn, imouse, arg_date)
+    cd(xls_dir)
+    xls_file = dir('*.xlsx');
+    data_now_meta = readtable(xls_file.name);
+    sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
+    data_now_meta(sess_id_arr,:)
+    frame_rate = data_now_meta.(5)(sess_id_arr(end));
+catch
 
-bunny500_id = find(contains(data_now_meta{:,9}, stim_protocol));
-% bunny500_id = bunny500_id(1:end-1)
-% disp('230103-i1375 session 004 failed to save mworks mat')
-
-data_now_meta(bunny500_id,:)
-frame_rate = data_now_meta.(5)(bunny500_id(end));
+end
 
 areamousedate = [area '_' imouse '_' arg_date];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
@@ -89,14 +89,16 @@ cd(result_folder)
 df_flat = [];
 nframe_seq = [];
 
-for i = 1:length(bunny500_id)
-    id = bunny500_id(i);
+for i = 1:length(sess_id_arr)
+    id = sess_id_arr(i);
     time = data_now_meta.(8)(id);
     ImgFolder = data_now_meta.(1){id}(1:3);
 
     fName = fullfile(mworks_fn, ['data-' imouse '-' arg_date '-' num2str(time) '.mat']);
     temp = load(fName); % load behavior data "input", which clashes with built-in function
-    input_behav_seq(i) = temp.input; clear temp
+    input_behav_seq(i) = temp.input; 
+    frame_rate = temp.input.frameRateHz;
+    clear temp
 
     cd(fullfile(tc_fn, [arg_date '_' imouse]))
     cd([arg_date '_' imouse '_runs-', ImgFolder])
@@ -126,7 +128,7 @@ frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
 
-for isess = 1 : length(bunny500_id)
+for isess = 1 : length(sess_id_arr)
     input_behav = input_behav_seq(isess);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;

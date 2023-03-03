@@ -6,6 +6,13 @@
 close all; clc; 
 clear; clear global
 
+root_path = 'C:\Users\GlickfeldLab\Documents\test\inter'; %'C:\Users\ll357\Documents\inter';
+fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
+ll_fn = fullfile(fn_base, 'home\lan'); 
+data_fn = fullfile(ll_fn, 'Data\2P_images');
+mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
+tc_fn = fullfile(ll_fn, 'Analysis\2P');
+
 dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
 dataset_meta = readtable(dir_meta);
 
@@ -22,13 +29,15 @@ nset = size(dataset_table,1);
 %% find TC.mat
 
 for iset = 1:nset
-% iset = 1;
 
+clear global; close all
 iset, nset
+
 dataset_now = dataset_table(iset,:);
 arg_mouse = dataset_now.mouse
 arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num{1}
+area = dataset_now.area{1}
 
 imouse = ['i', num2str(arg_mouse)];
 dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
@@ -46,48 +55,22 @@ else
     disp('timecourse doesnt exist yet, skip to next set')
     continue
 end
+
 %%
-
-% for iset = 1:nset
-iset = 1;
-
-close all
-clearvars -except dataset_grat iset nset data
-
-iset, nset
-dataset_now = data(iset,:);
-arg_date = num2str(dataset_now.date)
-arg_mouse = dataset_now.mouse
-imouse = ['i', num2str(arg_mouse)];
-area = 'V1'
-
 % declare all global var for single dataset
 global frame_rate range_base range_resp ...
     ncell ntrial trial_len_min ...
     nisi nori ori_list...
-    id_ad id_noad id_isi2 id_isi3 id_ori ...
-
-root_path = 'C:\Users\GlickfeldLab\Documents\test\inter'; %'C:\Users\ll357\Documents\inter';
-fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
-ll_fn = fullfile(fn_base, 'home\lan'); 
-data_fn = fullfile(ll_fn, 'Data\2P_images');
-mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
-tc_fn = fullfile(ll_fn, 'Analysis\2P');
-
-%% 
+    id_ad id_noad id_isi2 id_isi3 id_ori
 
 save_flag = 1; % toggle this to save/skip all .mat creation below
-stim_protocol = 'grat_SF6'
 
+stim_protocol = 'grat_SF6'
 xls_dir = fullfile(data_fn, imouse, arg_date)
 cd(xls_dir)
 xls_file = dir('*.xlsx');
 data_now_meta = readtable(xls_file.name);
-
 bunny500_id = find(contains(data_now_meta{:,9}, stim_protocol));
-% bunny500_id = bunny500_id(1:end-1)
-% disp('230103-i1375 session 004 failed to save mworks mat')
-
 data_now_meta(bunny500_id,:)
 frame_rate = data_now_meta.(5)(bunny500_id(end));
 
@@ -323,4 +306,4 @@ open trial_filter_by_pupil_or_speed.m
 
 %% find visually driven cells -> vis_driven.ipynb
 
-% end
+end
