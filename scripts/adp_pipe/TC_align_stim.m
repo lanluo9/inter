@@ -65,7 +65,7 @@ global frame_rate range_base range_resp ...
 
 save_flag = 1; % toggle this to save/skip all .mat creation below
 
-try
+try % if data folder contains 2p imaging note.xls
     stim_protocol = 'grat_SF6'
     xls_dir = fullfile(data_fn, imouse, arg_date)
     cd(xls_dir)
@@ -74,15 +74,10 @@ try
     sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
     data_now_meta(sess_id_arr,:)
     frame_rate = data_now_meta.(5)(sess_id_arr(end));
-catch
-
+catch % if data folder has been transferred to AWS, cannot read 2p imaging note.xls anymore
+    sess_id_arr = str2num(dataset_now.num{1}(end));
+    disp('above line only works for single session data. TODO: fix')
 end
-
-areamousedate = [area '_' imouse '_' arg_date];
-mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
-result_folder = [mapped_path, '\mat_inter\', areamousedate, '_cellpose']; disp('cellpose segm');
-if ~exist(result_folder); mkdir(result_folder); end
-cd(result_folder)
 
 %% load input_behav & npSubTC for eash sess
 
@@ -90,11 +85,11 @@ df_flat = [];
 nframe_seq = [];
 
 for i = 1:length(sess_id_arr)
-    id = sess_id_arr(i);
-    time = data_now_meta.(8)(id);
-    ImgFolder = data_now_meta.(1){id}(1:3);
+%     id = sess_id_arr(i);
+%     time = data_now_meta.(8)(id);
+    ImgFolder = dataset_now.num{1};
 
-    fName = fullfile(mworks_fn, ['data-' imouse '-' arg_date '-' num2str(time) '.mat']);
+%     fName = fullfile(mworks_fn, ['data-' imouse '-' arg_date '-' num2str(time) '.mat']);
     temp = load(fName); % load behavior data "input", which clashes with built-in function
     input_behav_seq(i) = temp.input; 
     frame_rate = temp.input.frameRateHz;
@@ -117,6 +112,12 @@ catch
     plot(df_flat(nframe,:)) 
     disp('some cell at the final frame has fluo value 65535 -> corrupted')
 end
+
+areamousedate = [area '_' imouse '_' arg_date];
+mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
+result_folder = [mapped_path, '\mat_inter\', areamousedate, '_cellpose']; disp('cellpose segm');
+if ~exist(result_folder); mkdir(result_folder); end
+cd(result_folder)
 
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi

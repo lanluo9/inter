@@ -22,3 +22,152 @@ INFO:root:cellpose segmenting: mouse i1329, date 201217, run-004
 INFO:root:waiting for tif
 INFO:root:waiting for tif
 INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:TORCH CUDA version not installed/working.
+INFO:cellpose.core:>>>> using CPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.models:estimated cell diameter(s) in 8.11 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 10.59 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 23.06 sec
+INFO:root:number of cells detected: 90
+DEBUG:matplotlib.backends.backend_pdf:Assigning font /b'F1' = 'C:\\Users\\ll357\\Anaconda3\\envs\\cellpose\\Lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf'
+DEBUG:matplotlib.backends.backend_pdf:Embedding font C:\Users\ll357\Anaconda3\envs\cellpose\Lib\site-packages\matplotlib\mpl-data\fonts\ttf\DejaVuSans.ttf.
+DEBUG:matplotlib.backends.backend_pdf:Writing TrueType font.
+INFO:root:cellpose segmenting: mouse i1329, date 210113, run-004
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:TORCH CUDA version not installed/working.
+INFO:cellpose.core:>>>> using CPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.dynamics:No cell pixels found.
+INFO:cellpose.models:estimated cell diameter(s) in 5.52 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 30.00 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 8.50 sec
+INFO:root:number of cells detected: 7
+DEBUG:matplotlib.backends.backend_pdf:Assigning font /b'F1' = 'C:\\Users\\ll357\\Anaconda3\\envs\\cellpose\\Lib\\site-packages\\matplotlib\\mpl-data\\fonts\\ttf\\DejaVuSans.ttf'
+DEBUG:matplotlib.backends.backend_pdf:Embedding font C:\Users\ll357\Anaconda3\envs\cellpose\Lib\site-packages\matplotlib\mpl-data\fonts\ttf\DejaVuSans.ttf.
+DEBUG:matplotlib.backends.backend_pdf:Writing TrueType font.
+INFO:root:cellpose segmenting: mouse i1329, date 210113, run-006
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:cellpose segmenting: mouse i1323, date 200721, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1323, date 200723, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1324, date 200729, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1322, date 200804, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1322, date 200806, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201119, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201127, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201202, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201202, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 201217, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 201217, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 210113, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 210113, run-006
+INFO:root:waiting for tif

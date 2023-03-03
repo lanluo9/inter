@@ -376,3 +376,166 @@ Frame 5000 (35.4 fps)
 Frame 10000 (37.2 fps)
 Frame 15000 (37.7 fps)
 Frame 20000 (38.0 fps)
+Frame 25000 (38.1 fps)
+Frame 30000 (38.2 fps)
+Frame 35000 (38.3 fps)
+Frame 40000 (38.3 fps)
+Frame 45000 (38.3 fps)
+Frame 50000 (38.4 fps)
+Frame 55000 (38.4 fps)
+Frame 60000 (38.3 fps)
+Frame 65000 (38.3 fps)
+Frame 70000 (38.4 fps)
+Frame 75000 (38.4 fps)
+Frame 80000 (38.4 fps)
+Frame 85000 (38.5 fps)
+Frame 90000 (38.5 fps)
+Frame 95000 (38.5 fps)
+Frame 100000 (38.5 fps)
+Registered 100000 frames in 2596.0 seconds (38.5 fps)
+Elapsed time is 2595.995736 seconds.
+registration finished
+grating
+runs-004
+
+nTrials =
+
+   464
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×6 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208   222   223   224
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before 16 frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+ans =
+
+     1
+
+
+ans =
+
+     0     1
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1
+Write 420288 bytes in 0 mins 
+Write speed: 9 MB/s 
+mouse 1329 date 201217 runs-004 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1329 201217 004
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    90
+
+Cell #9 
+Cell #18 
+Cell #27 
+Cell #36 
+Cell #45 
+Cell #54 
+Cell #63 
+Cell #72 
+Cell #81 
+Cell #90 
+TC extraction complete for runs-004
+11 set done out of 36
+
+iset =
+
+    12
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 241.420979 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5000 (34.5 fps)
+Frame 10000 (35.9 fps)
+Frame 15000 (36.4 fps)
+Frame 20000 (36.7 fps)
+Frame 25000 (36.9 fps)
+Frame 30000 (37.0 fps)
+Frame 35000 (37.1 fps)
+Frame 40000 (37.0 fps)
+Frame 45000 (37.0 fps)
+Frame 50000 (37.1 fps)
+Frame 55000 (37.1 fps)
+Frame 60000 (37.1 fps)
+Frame 65000 (37.2 fps)
+Frame 70000 (37.2 fps)
