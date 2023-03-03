@@ -1,0 +1,378 @@
+dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
+ 
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    20
+
+
+ans =
+
+    16
+
+
+iset =
+
+     1
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 191.314456 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5000 (35.4 fps)
+Frame 10000 (37.2 fps)
+Frame 15000 (37.7 fps)
+Frame 20000 (38.0 fps)

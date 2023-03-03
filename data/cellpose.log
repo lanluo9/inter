@@ -1,0 +1,24 @@
+INFO:root:cellpose segmenting: mouse i1323, date 200721, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1323, date 200723, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1324, date 200729, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1322, date 200804, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1322, date 200806, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201119, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201127, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201202, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201202, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 201217, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 201217, run-004
+INFO:root:waiting for tif
+INFO:root:waiting for tif
+INFO:root:waiting for tif
