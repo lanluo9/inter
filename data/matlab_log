@@ -668,3 +668,1140 @@ select =
      4
 
 Starting, frame 0
+Frame 5000 (34.9 fps)
+Frame 10000 (36.5 fps)
+Frame 15000 (37.0 fps)
+Frame 20000 (37.3 fps)
+Frame 25000 (37.5 fps)
+Frame 30000 (37.6 fps)
+Frame 35000 (37.7 fps)
+Frame 40000 (37.7 fps)
+Frame 45000 (37.8 fps)
+Frame 50000 (37.9 fps)
+Frame 55000 (37.9 fps)
+Frame 60000 (38.0 fps)
+Frame 65000 (38.0 fps)
+Frame 70000 (38.0 fps)
+Frame 75000 (38.1 fps)
+Frame 80000 (38.1 fps)
+Frame 85000 (38.1 fps)
+Frame 90000 (38.1 fps)
+Frame 95000 (38.2 fps)
+Frame 100000 (38.2 fps)
+Registered 100000 frames in 2618.8 seconds (38.2 fps)
+Elapsed time is 2618.787267 seconds.
+registration finished
+grating
+runs-006
+
+nTrials =
+
+   464
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×6 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   210   221   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before 16 frames. second peak comes after
+
+peak_id =
+
+     9
+
+
+ans =
+
+     1
+
+
+ans =
+
+     0     1
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1
+Write 420288 bytes in 0 mins 
+Write speed: 11 MB/s 
+mouse 1329 date 210113 runs-006 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1329 210113 006
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+     6
+
+TC extraction complete for runs-006
+13 set done out of 36
+
+iset =
+
+    14
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+start loading sbx
+Reading run 1, consisting of 100002 frames 
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('sbxread')" style="font-weight:bold">sbxread</a>
+Cannot read frame.  Index range likely outside of bounds.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 40)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',40,0)">line 40</a>)
+    data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] =
+load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_single_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_single_sess.m', 60)" style="font-weight:bold">TC_extract_single_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_single_sess.m',60,0)">line 60</a>)
+[data_reg, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+% register every sess against itself: single sess registration
+
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',40,0)
+matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    20
+
+
+ans =
+
+    16
+
+
+iset =
+
+     1
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    12
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    13
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+
+run_str_ref =
+
+    'runs-006'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    14
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+start loading sbx
+Reading run 1, consisting of 100002 frames 
+tmp=sbxread(imgMatFile(1,1:11),0,min(nframes));
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('sbxread')" style="font-weight:bold">sbxread</a>
+Cannot read frame.  Index range likely outside of bounds.
+} 
+matlab.internal.language.introspective.errorDocCallback('sbxread')
+edit sbxread
+nframes
+
+nframes =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   100002
+
+imgMatFile(1,1:11)
+
+ans =
+
+    '002_000_000'
+
+tmp=sbxread(imgMatFile(1,1:11),0,min(nframes-2));
+108000//1000
+ 108000//1000
+        ↑
+{Invalid use of operator.
+} 
+floor(108002/1000)
+
+ans =
+
+   108
+
+help mod
+ <strong>mod</strong>    Modulus after division.
+    <strong>mod</strong>(x,y) returns x - floor(x./y).*y if y ~= 0, carefully computed to
+    avoid rounding error. If y is not an integer and the quotient x./y is
+    within roundoff error of an integer, then n is that integer. The inputs
+    x and y must be real and have compatible sizes. In the simplest cases,
+    they can be the same size or one can be a scalar. Two inputs have
+    compatible sizes if, for every dimension, the dimension sizes of the
+    inputs are either the same or one of them is 1.
+ 
+    The statement "x and y are congruent mod m" means mod(x,m) == mod(y,m).
+ 
+    By convention:
+       <strong>mod</strong>(x,0) is x.
+       <strong>mod</strong>(x,x) is 0.
+       <strong>mod</strong>(x,y), for x~=y and y~=0, has the same sign as y.
+ 
+    Note: REM(x,y), for x~=y and y~=0, has the same sign as x.
+    <strong>mod</strong>(x,y) and REM(x,y) are equal if x and y have the same sign, but
+    differ by y if x and y have different signs.
+ 
+    See also <a href="matlab:help rem -displayBanner">rem</a>.
+
+    <a href="matlab:doc mod">Documentation for mod</a>
+    <a href="matlab:matlab.internal.language.introspective.overloads.displayOverloads('mod')">Other functions named mod</a>
+
+if system_dependent('IsDebugMode')==1, dbquit all; end
+floor(100002 / 100) * 100 
+
+ans =
+
+      100000
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    20
+
+
+ans =
+
+    16
+
+
+iset =
+
+     1
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+run_str_ref =
+
+    'runs-003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    12
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+run_str_ref =
+
+    'runs-004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    13
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+
+run_str_ref =
+
+    'runs-006'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    14
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+start loading sbx
+Reading run 1, consisting of 100002 frames 
+
+nframes =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   100000
+
+Elapsed time is 69.762648 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5000 (35.8 fps)

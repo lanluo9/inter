@@ -50,6 +50,7 @@ else % otherwise take data_avg from ref session
     end
 end
 
+close all
 % Register data
 if exist(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_reg_shifts.mat']))
     disp('re-register from reg_shifts.mat')

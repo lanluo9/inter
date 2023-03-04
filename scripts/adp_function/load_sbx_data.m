@@ -37,7 +37,14 @@ for irun = 1 : nrun
     nframes = max([temp(irun).counterValues{end}(end) info.config.frames]);
     fprintf(['Reading run ' num2str(irun) ', consisting of ' num2str(min(nframes)) ' frames \r\n'])
 
-    data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+    try
+        data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+    catch
+        nframes = floor(nframes / 100) * 100 % cut off frames mod(nframes, 100)
+        disp('corrected nframes to read sbx')
+        data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+    end
+
     if size(data_temp,1)== 2
         data_temp = data_temp(1,:,:,:);
     end
