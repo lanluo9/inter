@@ -10,7 +10,7 @@ clc
 % write text output from command window to log file
 cd('C:\Users\ll357\Documents\inter\data\')
 diary matlab_log % batch cellpose grat 8ori 3isi data in LM and LI
-% diary on
+datetime
 
 %% setup
 
@@ -39,7 +39,7 @@ arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num{1}
 
 ref_ImgFolder = arg_ImgFolder; % dataset_table(1,:).num{1} for multisess, ref is the same as arg_ImgFolder if single sess
-run_str_ref = ['runs-' ref_ImgFolder(1,:)]
+run_str_ref = ['runs-' ref_ImgFolder(1,:)];
 
 imouse = ['i', num2str(arg_mouse)];
 dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
