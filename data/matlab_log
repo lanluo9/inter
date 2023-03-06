@@ -60598,3 +60598,757 @@ arg_ImgFolder =
 add your stim_type into function: bunny, mix, grat6, grating(grat1)
 start running get_data_reg_cellpose_tif.m
 start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 576.380260 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5000 (34.7 fps)
+Frame 10000 (36.2 fps)
+Frame 15000 (36.7 fps)
+Frame 20000 (36.9 fps)
+Frame 25000 (37.1 fps)
+Frame 30000 (37.2 fps)
+Frame 35000 (37.3 fps)
+Frame 40000 (37.4 fps)
+Frame 45000 (37.4 fps)
+Frame 50000 (37.4 fps)
+Frame 55000 (37.5 fps)
+Frame 60000 (37.5 fps)
+Frame 65000 (37.5 fps)
+Frame 70000 (37.5 fps)
+Frame 75000 (37.5 fps)
+Frame 80000 (37.5 fps)
+Frame 85000 (37.5 fps)
+Frame 90000 (37.6 fps)
+Frame 95000 (37.6 fps)
+Frame 100000 (37.6 fps)
+Registered 100000 frames in 2659.0 seconds (37.6 fps)
+Elapsed time is 2658.974454 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   464
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   2   3
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8    9   23
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   10   11   12   25   26
+
+
+ans =
+
+  1×6 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208   209   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before 16 frames. second peak comes after
+
+peak_id =
+
+    11
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+if system_dependent('IsDebugMode')==1, dbcont; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbcont; end
+iset
+{Unrecognized function or variable 'iset'.
+} 
+arg_mouse
+
+arg_mouse =
+
+        1337
+
+arg_date
+
+arg_date =
+
+    '210127'
+
+arg_ImgFolder
+
+arg_ImgFolder =
+
+    '003'
+
+if system_dependent('IsDebugMode')==1, dbstep; end
+for itrial = 1:nTrials-1 % disregard final trial, which doesnt have enough frame
+        data_f(:,:,itrial) = mean(data_reg(:,:,...
+            cStart(itrial) - 10 : cStart(itrial) - 1),3);
+        
+        data_adapter(:,:,itrial) = mean(data_reg(:,:,...
+            cStimOn(itrial) + ca_latency : cStimOn(itrial) + ca_latency + window_len),3);
+        
+        data_f2(:,:,itrial) = mean(data_reg(:,:,...
+            cTarget(itrial) - 3 :cTarget(itrial) - 1),3); % cTarget(itrial) + 14 :cTarget(itrial) + 16),3);
+
+        data_targ(:,:,itrial) = mean(data_reg(:,:,...
+            cTarget(itrial) + ca_latency : cTarget(itrial) + ca_latency + window_len),3);
+end
+data_adapter_dfof = (data_adapter-data_f)./data_f; % adapter - baseline 1 (before trial onset)
+data_base2_dfof = (data_f2-data_f)./data_f;        % baseline 2 - baseline 1
+data_targ_dfof = (data_targ-data_f2)./data_f2;     % target - baseline 2
+data_targ_dfof_fake = (data_targ-data_f)./data_f;  % target - baseline 1
+
+% %% plot response
+targCon = celleqel2mat_padded(behav_input.tGratingContrast);
+unique(targCon) % target contrast 1
+
+ans =
+
+     1
+
+if behav_input.doRandCon
+    adapterCon = ones(size(targCon));
+else
+    adapterCon = celleqel2mat_padded(behav_input.tBaseGratingContrast);
+end
+% adapterCon = adapterCon(1:nTrials);
+unique(adapterCon) % adapter contrast 0 or 1
+
+ans =
+
+     0     1
+
+ind_con = intersect(find(targCon == 1),find(adapterCon == 0));
+
+adapterDir = celleqel2mat_padded(behav_input.tBaseGratingDirectionDeg);
+% adapterDir = adapterDir(1:nTrials);
+dirs = unique(adapterDir);
+ndir = length(dirs);
+targetDelta = celleqel2mat_padded(behav_input.tGratingDirectionDeg);
+% targetDelta = targetDelta(1:nTrials);
+deltas = unique(targetDelta);
+nDelta = length(deltas);
+
+data_dfof_dir = zeros(sz(1),sz(2),ndir);
+data_dfof2_dir = zeros(sz(1),sz(2),ndir);
+[n, n2] = subplotn(ndir);
+% figure;
+for idir = 1:ndir
+    ind = setdiff(find(adapterDir == dirs(idir)),ind_con);
+    data_dfof_dir(:,:,idir) = nanmean(data_adapter_dfof(:,:,ind),3);
+    data_dfof2_dir(:,:,idir) = nanmean(data_base2_dfof(:,:,ind),3);
+%     subplot(n,n2,idir)
+%     imagesc(data_dfof_dir(:,:,idir))
+%     title(dirs(idir))
+end
+
+figure
+imagesc(data_dfof_dir) % adapter (deg == 0) resp is ok
+title('data dfof dir')
+set(gcf, 'Position', get(0, 'Screensize'));
+figure
+imagesc(data_dfof2_dir) % but baseline2 shows bright cells, almost same as adapter resp; bc fluores decay is slow
+title('data dfof2 dir')
+set(gcf, 'Position', get(0, 'Screensize'));
+
+if sum(~isnan(data_dfof2_dir))>1
+    data_dfof_dir_all = cat(3, data_dfof_dir, data_dfof2_dir);
+else
+    data_dfof_dir_all = data_dfof_dir;
+end
+
+data_dfof_targ = zeros(sz(1),sz(2),nDelta);
+data_dfof_targ_fake = zeros(sz(1),sz(2),nDelta);
+[n, n2] = subplotn(nDelta);
+figure;
+for idir = 1:nDelta
+    ind = find(targetDelta == deltas(idir));
+    data_dfof_targ(:,:,idir) = nanmean(data_targ_dfof(:,:,ind),3);
+    data_dfof_targ_fake(:,:,idir) = nanmean(data_targ_dfof_fake(:,:,ind),3);
+
+    subplot(n,n2,idir)
+%     imagesc(data_dfof_targ(:,:,idir)) % targ resp shows dim and blurry cells
+    imagesc(data_dfof_targ_fake(:,:,idir))
+    title(deltas(idir))
+end
+set(gcf, 'Position', get(0, 'Screensize'));
+
+data_dfof_targ_noadapt = zeros(sz(1),sz(2),nDelta); % TODO: why no-ad targ resp blurry?
+[n, n2] = subplotn(nDelta);
+figure;
+for idir = 1:nDelta
+    ind = find(targetDelta == deltas(idir) & adapterCon == 0);
+    data_dfof_targ_noadapt(:,:,idir) = nanmean(data_targ_dfof(:,:,ind),3);
+
+    subplot(n,n2,idir)
+    imagesc(data_dfof_targ_noadapt(:,:,idir))
+    title(deltas(idir))
+end
+set(gcf, 'Position', get(0, 'Screensize'));
+% data_dfof = cat(3,data_dfof_targ_noadapt, data_dfof_targ_fake, data_dfof_dir_all, data_dfof_targ); % concat adapter resp, baseline2, targ resp
+data_dfof = cat(3, data_dfof_targ_fake, data_dfof_dir_all); % did not concat data_dfof_targ_noadapt and data_dfof_targ due to higher noise
+% current data_dfof contains: 
+    % R1 (adapter response - baseline 1), 
+    % decayed R1 (baseline 2 - baseline 1), 
+    % and fake R2 (target response - baseline 1), which includes ad-tg and noad-tg
+
+myfilter = fspecial('gaussian',[20 20], 0.5);
+data_dfof_max = max(imfilter(data_dfof, myfilter), [], 3);
+% data_dfof_perc = prctile(imfilter(data_dfof, myfilter), 90, 3); % take top percentile due to noisy max tif?
+
+figure;
+imagesc(data_dfof_max)
+title('data dfof max')
+% figure;
+% imagesc(data_dfof_perc)
+% title('data dfof perc')
+
+data_dfof = cat(3, data_dfof, data_dfof_max);
+% data_dfof_max = data_dfof_perc;
+disp('saving dfof-max-gauss tif & mat')
+saving dfof-max-gauss tif & mat
+save data_dfof.mat data_dfof data_dfof_max
+
+save_mat_as_tif(data_dfof_max);
+saving dfof-max-gauss tif
+1/1
+Write 420288 bytes in 0 mins 
+Write speed: 7 MB/s 
+
+disp(['mouse ', num2str(mouse), ' date ', num2str(date), ' ', run_str ...
+    ' - finished data_reg & cellpose tif'])
+mouse 1337 date 210127 runs-003 - finished data_reg & cellpose tif
+data_reg
+ 
+disp(['got data_reg & cellpose tif for ', num2str(arg_mouse), ' ', arg_date, ' ', arg_ImgFolder])
+got data_reg & cellpose tif for 1337 210127 003
+close all
+disp('wait for batch_cellpose.ipynb')
+wait for batch_cellpose.ipynb
+while ~exist('cellpose_mask.mat','file')
+    pause(60) % wait for cellpose to run in ipynb
+end
+disp('got cellpose mask, now extract TC')
+got cellpose mask, now extract TC
+ 
+
+tif_name = 'cellpose_mask.mat';
+LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
+npSub_tc = get_cellpose_timecourse(data_reg, tif_name, ...
+    LL_base, arg_date, imouse, run_str);
+
+nCells =
+
+    62
+
+Cell #6 
+Cell #12 
+Cell #18 
+Cell #24 
+Cell #30 
+Cell #36 
+Cell #42 
+Cell #48 
+Cell #54 
+Cell #60 
+TC extraction complete for runs-003
+
+disp([num2str(iset), ' set done out of ', num2str(nset)])
+{Unrecognized function or variable 'iset'.
+} 
+clear data_reg
+clear global % suspect weird trace is bc residual global var affecting sbxread
+if system_dependent('IsDebugMode')==1, dbquit; end
+iset
+
+iset =
+
+    15
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Mar-2023 10:51:04
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    20
+
+
+ans =
+
+    16
+
+
+iset =
+
+     1
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    12
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    13
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    14
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    15
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    16
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 292.722080 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5000 (34.0 fps)
