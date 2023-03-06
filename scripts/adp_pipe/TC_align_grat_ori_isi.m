@@ -126,68 +126,28 @@ cd(result_folder)
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
 
-ntrial = 0;
-adapter_id = [];
-target_id = [];
-frame_ad = [];
-frame_ad_off = [];
-frame_tg = [];
+input_behav = input_behav_seq;
+ntrial = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
-for isess = 1 : length(sess_id_arr)
-    input_behav = input_behav_seq(isess);
-    ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
-    ntrial = ntrial + ntrial_sess;
-    
-    try % randStim1_doSameStim2 with bunnies6.mwel
-        adapter_id_sess = cell2mat(input_behav.tstimOne);
-        target_id_sess = cell2mat(input_behav.tstimTwo);
-    catch % grat_SF6 with twoStim.mwel
-        SF_arr = sort(unique(cell2mat(input_behav.tStimOneGratingSpatialFreqCPD)));
-        adapter_SF = cell2mat(input_behav.tStimOneGratingSpatialFreqCPD);
-        adapter_id_sess = zeros(length(adapter_SF), 1);
-        for iSF = 1 : length(adapter_SF)
-            adapter_id_sess(iSF) = find(SF_arr==adapter_SF(iSF));
-        end
-        tmp = cell2mat(input_behav.tStimTwoGratingSpatialFreqCPD) == cell2mat(input_behav.tStimOneGratingSpatialFreqCPD);
-        assert(sum(tmp) == length(tmp)) % stim 1 vs 2 have same SF
-        target_id_sess = adapter_id_sess;
-    end
-    adapter_id_sess = adapter_id_sess(1:ntrial_sess);
-    assert(size(adapter_id_sess, 1) > size(adapter_id_sess, 2)) % ensure its a column vector
-    adapter_id = [adapter_id; adapter_id_sess];
-    target_id_sess = target_id_sess(1:ntrial_sess);
-    target_id = [target_id; target_id_sess];
+contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
+id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 
+id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = []; 
 
-    frame_ad_sess = double(cell2mat(input_behav.cStimOneOn)); 
-    frame_ad_sess = frame_ad_sess(1:ntrial_sess);
-    frame_ad_off_sess = double(cell2mat(input_behav.cStimOneOn)); 
-    frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
-    frame_tg_sess = double(cell2mat(input_behav.cStimTwoOn)); 
-    frame_tg_sess = frame_tg_sess(1:ntrial_sess);
-    if isess > 1
-        frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:isess-1));
-        frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:isess-1));
-        frame_tg_sess = frame_tg_sess + sum(nframe_seq(1:isess-1));
-    end
-    frame_ad = [frame_ad, frame_ad_sess];
-    frame_ad_off = [frame_ad_off, frame_ad_off_sess];
-    frame_tg = [frame_tg, frame_tg_sess];
-end
-
-adapter_list = unique(adapter_id); n_adapter = length(adapter_list);
-target_list = unique(target_id); n_target = length(target_list);
-id_noad = []; id_ad = 1:ntrial; 
+frame_ad = double(cell2mat(input_behav.cStimOn)); frame_ad_off = double(cell2mat(input_behav.cStimOff));
+frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
 isi_seq = frame_tg - frame_ad_off; 
-trial_len_min = min(unique(diff(frame_ad)));
-
 nisi = length(unique(frame_tg - frame_ad));
-id_750 = []; id_250 = 1:ntrial; 
+id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
+id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
 id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
+trial_len_min = min(unique(diff(frame_ad)));
 
-ori_seq = adapter_id;
-ori_list = adapter_list; 
+ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
+ori_seq(ori_seq == 180) = 0;
+ori_seq(end) = [];
+ori_list = unique(ori_seq); 
 nori = length(ori_list); id_ori = cell(nori, 1);
 for iori  = 1 : nori
     id_ori{iori} = find(ori_seq == ori_list(iori)); 
@@ -195,8 +155,7 @@ end
 
 t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
-nrep_stim = unique(t(:))
-disp('ignore `1`')
+nrep_stim = unique(t(:,2))
 
 %% dfof aligned
 % align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
@@ -207,16 +166,16 @@ cd(result_folder)
 npSub_tc = df_flat;
 tc_align_ad = align_tc(frame_ad, npSub_tc);
 tc_align_tg = align_tc(frame_tg, npSub_tc);
-
-% disp('caiman mode: skip trial-specific baselining')
-% dfof_align_ad = tc_align_ad; % did not do trial-specific baselining
-% dfof_align_tg = tc_align_tg; % which should have been dfof_align = (tc - base) / base
 dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
 dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
 
 trace_by_trial = dfof_align_ad;
-stim_seq = adapter_id';
-if save_flag; save trace_trial_stim.mat trace_by_trial stim_seq; end
+stim_ori = ori_seq'; % stim as 
+isi_nframe = isi_seq'; % ISI as number of frames in each trial
+adapter_contrast = contrast_ad'; % contrast of adapter (R1)
+if save_flag; save trace_trial_stim.mat trace_by_trial ...
+        stim_ori isi_nframe adapter_contrast; end
+
 
 %% set resp window
 % find base window & resp window
@@ -277,32 +236,30 @@ saveas(gcf, 'find_ca_latency_ca_window.jpg')
 close all
 [dfof_ad, dfof_ad_sem, dfof_ad_std] = dfof_resp(dfof_align_ad, 'tg', 0); % tg mode aka separate diff stim images, but use adapter resp
 [dfof_tg, dfof_tg_sem, dfof_tg_std] = dfof_resp(dfof_align_tg, 'tg', 0);
-dfof_ad = dfof_ad(:,:,3); dfof_ad_sem = dfof_ad_sem(:,:,3); dfof_ad_std = dfof_ad_std(:,:,3); % keep isi=250 only
-dfof_tg = dfof_tg(:,:,3); dfof_tg_sem = dfof_tg_sem(:,:,3); dfof_tg_std = dfof_tg_std(:,:,3);
+% dfof_ad = dfof_ad(:,:,3); dfof_ad_sem = dfof_ad_sem(:,:,3); dfof_ad_std = dfof_ad_std(:,:,3); % keep isi=250 only
+% dfof_tg = dfof_tg(:,:,3); dfof_tg_sem = dfof_tg_sem(:,:,3); dfof_tg_std = dfof_tg_std(:,:,3);
 if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
 
 % trace = ncell x nori x nisi3 [noad 750 250]
 [trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
-trace_avg = squeeze(trace_avg(:,:,3,:)); % trace_sem = squeeze(trace_sem(:,:,3,:));
+% trace_avg = squeeze(trace_avg(:,:,3,:)); % trace_sem = squeeze(trace_sem(:,:,3,:));
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 %% trial-wise response and baseline
 
 [dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
-dfof_ad_trial = dfof_ad_trial(:,:,3);
-dfof_base_trial = dfof_base_trial(:,:,3);
+% dfof_ad_trial = dfof_ad_trial(:,:,3);
+% dfof_base_trial = dfof_base_trial(:,:,3);
 
 [dfof_tg_trial, dfof_base2_trial] = dfof_resp_trialwise(dfof_align_tg, save_flag);
-dfof_tg_trial = dfof_tg_trial(:,:,3);
-dfof_base2_trial = dfof_base2_trial(:,:,3);
+% dfof_tg_trial = dfof_tg_trial(:,:,3);
+% dfof_base2_trial = dfof_base2_trial(:,:,3);
 
 if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
         dfof_base_trial dfof_base2_trial; end
 
-%% discard trials by pupil or run speed -> trial_filter_by_pupil_or_speed.m
-
-open trial_filter_by_pupil_or_speed.m
-
+% %% discard trials by pupil or run speed -> trial_filter_by_pupil_or_speed.m
+% open trial_filter_by_pupil_or_speed.m
 % TODO: when we integrate trial filter (bool) into dataframe, need to cut
 % off final trial of each sess just like above:
 % ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
