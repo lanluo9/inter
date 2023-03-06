@@ -1260,3 +1260,19 @@ INFO:root:cellpose segmenting: mouse i1337, date 210127, run-003
 INFO:root:cellpose or manual time course exists, skip to next set
 INFO:root:cellpose segmenting: mouse i1337, date 210203, run-003
 INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:TORCH CUDA version not installed/working.
+INFO:cellpose.core:>>>> using CPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.dynamics:No cell pixels found.
+INFO:cellpose.models:estimated cell diameter(s) in 5.85 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 30.00 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 8.76 sec
+INFO:root:number of cells detected: 4 at time 2023-03-06 11:40:54.823227. for mouse i1337, date 210203, run-003
+WARNING:root:likely no cell detected!!
+INFO:root:cellpose segmenting: mouse i1337, date 210203, run-004
+INFO:root:waiting for tif
