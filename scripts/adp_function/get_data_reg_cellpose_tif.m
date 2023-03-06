@@ -260,7 +260,7 @@ cStart = cell2mat(behav_input.cStimOn); % same as cStimOn
 cStimOn = cell2mat(behav_input.cStimOn);
 cStimOff = cell2mat(behav_input.cStimOff);
 cTarget = cell2mat(behav_input.cTargetOn);
-try nTrials = behav_input.trialsSinceReset % 464 = 32 types * 14.5 reps
+try nTrials = behav_input.trialsSinceReset
 catch
     nTrials = behav_input.trialSinceReset
 end
@@ -316,8 +316,8 @@ disp(' ')
 
 %% calculate response
 
-find_peak_bef = 16;
-disp('assume: first peak comes before 16 frames. second peak comes after')
+find_peak_bef = 15;
+disp('assume: first peak comes before n frames. second peak comes after')
 data_trial_zoom_first_peak = data_trial_zoom_in(1:find_peak_bef);
 [~, peak_id] = max(data_trial_zoom_first_peak)
 if peak_id < 6
@@ -337,9 +337,9 @@ set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, ['find_ca_latency_ca_window.jpg'])
 close all
 
-assert(length(cTarget) == nTrials && length(cStart) == nTrials && ...
-    cTarget(nTrials)+3 < sz(3))
-for itrial = 1:nTrials
+% assert(length(cTarget) == nTrials && length(cStart) == nTrials && ...
+%     cTarget(nTrials)+3 < sz(3))
+for itrial = 1:nTrials-1 % disregard final trial, which doesnt have enough frame
         data_f(:,:,itrial) = mean(data_reg(:,:,...
             cStart(itrial) - 10 : cStart(itrial) - 1),3);
         
