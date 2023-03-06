@@ -184,7 +184,7 @@ t_ad = squeeze(nanmean(t(:,:), 1));
 t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); 
 t_tg = squeeze(nanmean(t(:,:), 1)); 
 
-figure
+figure;
 range = 60;
 plot(t_ad(1:range), 'r'); hold on; 
 plot(t_tg(1:range), 'b'); 

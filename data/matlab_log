@@ -63359,3 +63359,16 @@ Set 'VariableNamingRule' to 'preserve' to use the original column
 headers as table variable names.] 
 start loading sbx
 Reading run 1, consisting of 100000 frames 
+Elapsed time is 49.046099 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     8
+
+Starting, frame 0
