@@ -53,7 +53,7 @@ if ~isempty(dir('*TC*.mat'))
     disp('timecourse exists, start generating trace_trial_stim.mat')
 else
     disp('timecourse doesnt exist yet, skip to next set')
-    continue
+%     continue
 end
 
 %%
@@ -175,7 +175,6 @@ isi_nframe = isi_seq'; % ISI as number of frames in each trial
 adapter_contrast = contrast_ad'; % contrast of adapter (R1)
 if save_flag; save trace_trial_stim.mat trace_by_trial ...
         stim_ori isi_nframe adapter_contrast; end
-
 
 %% set resp window
 % find base window & resp window

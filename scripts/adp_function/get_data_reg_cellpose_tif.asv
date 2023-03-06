@@ -28,16 +28,21 @@ if strcmp(run_str_ref, run_str) % if this session is ref session, then register 
     nep = floor(size(data,3)./10000);
     [n, n2] = subplotn(nep);
     figure('units','normalized','outerposition',[0 0 1 1]);
+    fluo_arr = zeros(nep, 1);
     for i = 1:nep
         subplot(n,n2,i); 
         imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
+        frame_avg = mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3);
+        fluo_arr(i) = mean(frame_avg(:));
         title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
     end
     print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_select_register_ref.pdf']),'-dpdf', '-bestfit')
 %     close all
     
     disp('start registration. using middle section as motion correct ref')
-    select = 4
+    fluo_arr = fluo_arr(2:end-1); % dont use beginning or end of recording as data_avg
+    [~, fluo_median_id] = min(abs(fluo_arr - median(fluo_arr))); % find arr element closest to median fluo
+    select = fluo_median_id + 1 % add back the beginning
     start_idx = select * 10000 + 1;
     stop_idx = select * 10000 + 500;
     data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg

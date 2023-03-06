@@ -61980,3 +61980,1382 @@ select =
 
      4
 
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Mar-2023 14:01:26
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    20
+
+
+ans =
+
+    16
+
+
+iset =
+
+     1
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    12
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    13
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    14
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    15
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    16
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    17
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '004'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 223.748635 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+        frame_avg = mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3);
+ 
+        fluo_avg = mean(frame_avg(:));
+ 
+fluo_avg
+
+fluo_avg =
+
+  973.7239
+
+    fluo_arr = zeros(nrep, 1);
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eval')" style="font-weight:bold">eval</a>
+Unrecognized function or variable 'nrep'.
+} 
+    fluo_arr = zeros(nep, 1);
+ 
+fluo_arr
+ 
+        fluo_arr(i) = mean(frame_avg(:));
+ 
+fluo_arr
+ 
+    fluo_arr = fluo_arr(2:end-1);
+ 
+fluo_arr
+ 
+nep = floor(size(data,3)./10000);
+    [n, n2] = subplotn(nep);
+    figure('units','normalized','outerposition',[0 0 1 1]);
+    fluo_arr = zeros(nep, 1);
+    for i = 1:nep
+        subplot(n,n2,i); 
+        imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
+        frame_avg = mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3);
+        fluo_arr(i) = mean(frame_avg(:));
+        title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
+    end
+    print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_select_register_ref.pdf']),'-dpdf', '-bestfit')
+%     close all
+    
+fluo_arr
+ 
+    fluo_arr = fluo_arr(2:end-1);
+ 
+fluo_arr
+ 
+min(abs(fluo_arr - median(fluo_arr)))
+
+ans =
+
+   18.3368
+
+    [fluo_median, fluo_median_id] = min(abs(fluo_arr - median(fluo_arr)))
+
+fluo_median =
+
+   18.3368
+
+
+fluo_median_id =
+
+     2
+
+ 
+fluo_median
+
+fluo_median =
+
+   18.3368
+
+fluo_arr
+ 
+fluo_arr
+
+fluo_arr =
+
+   1.0e+03 *
+
+    1.0753
+    1.0129
+    1.0342
+    1.0203
+    0.9276
+    0.9623
+    0.9711
+    0.9762
+
+abs(fluo_arr - median(fluo_arr))
+
+ans =
+
+   80.7702
+   18.3368
+   39.6265
+   25.7126
+   67.0032
+   32.2714
+   23.4372
+   18.3368
+
+fluo_median_id
+
+fluo_median_id =
+
+     2
+
+    [~, fluo_median_id] = min(abs(fluo_arr - prctile(fluo_arr, 75))); % find arr element closest to median fluo
+ 
+fluo_median_id
+
+fluo_median_id =
+
+     3
+
+for i = 1:nep
+        subplot(n,n2,i); 
+        imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
+        frame_avg = mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3);
+        fluo_arr(i) = mean(frame_avg(:));
+        title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
+        colorbar;
+    end
+    fluo_arr = fluo_arr(2:end-1); % dont use beginning or end of recording as data_avg
+ 
+    [~, fluo_median_id] = min(abs(fluo_arr - median(fluo_arr))); % find arr element closest to median fluo
+ 
+    select = fluo_median_id + 1 % add back the beginning
+
+select =
+
+     3
+
+ 
+select
+
+select =
+
+     3
+
+start_idx = select * 10000 + 1;
+    stop_idx = select * 10000 + 500;
+    data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg
+imagesc(data_avg)
+select=4
+
+select =
+
+     4
+
+start_idx = select * 10000 + 1;
+    stop_idx = select * 10000 + 500;
+    data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg
+imagesc(data_avg)
+abs(fluo_arr - median(fluo_arr))
+
+ans =
+
+   80.7702
+   18.3368
+   39.6265
+   25.7126
+   67.0032
+   32.2714
+   23.4372
+   18.3368
+
+fluo_arr - median(fluo_arr)
+
+ans =
+
+   80.7702
+   18.3368
+   39.6265
+   25.7126
+  -67.0032
+  -32.2714
+  -23.4372
+  -18.3368
+
+select = fluo_median_id + 1 % add back the beginning
+
+select =
+
+     3
+
+    start_idx = select * 10000 + 1;
+    stop_idx = select * 10000 + 500;
+    data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_data_avg.mat']), 'data_avg')
+else % otherwise take data_avg from ref session
+ else % otherwise take data_avg from ref session
+ ↑
+{Error: Illegal use of reserved keyword "else".
+} 
+nep = floor(size(data,3)./10000);
+    [n, n2] = subplotn(nep);
+    figure('units','normalized','outerposition',[0 0 1 1]);
+    fluo_arr = zeros(nep, 1);
+    for i = 1:nep
+        subplot(n,n2,i); 
+        imagesc(mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3)); 
+        frame_avg = mean(data(:,:,1+((i-1)*10000):500+((i-1)*10000)),3);
+        fluo_arr(i) = mean(frame_avg(:));
+        title([num2str(1+((i-1)*10000)) '-' num2str(500+((i-1)*10000))]); 
+    end
+    print(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str], [date '_' imouse '_' run_str '_select_register_ref.pdf']),'-dpdf', '-bestfit')
+%     close all
+    
+    disp('start registration. using middle section as motion correct ref')
+start registration. using middle section as motion correct ref
+    fluo_arr = fluo_arr(2:end-1); % dont use beginning or end of recording as data_avg
+    [~, fluo_median_id] = min(abs(fluo_arr - median(fluo_arr))); % find arr element closest to median fluo
+    select = fluo_median_id + 1 % add back the beginning
+
+select =
+
+     3
+
+    start_idx = select * 10000 + 1;
+    stop_idx = select * 10000 + 500;
+    data_avg = mean(data(:,:,start_idx:stop_idx),3); % use the session itself as data_avg
+    save(fullfile(LL_base, 'Analysis\2P', [date '_' imouse], [date '_' imouse '_' run_str_ref], [date '_' imouse '_' run_str_ref '_data_avg.mat']), 'data_avg')
+ 
+else % otherwise take data_avg from ref session
+{Error: Illegal use of reserved keyword "else".
+} 
+close all
+ 
+if system_dependent('IsDebugMode')==1, dbcont; end
+Starting, frame 0
+Frame 5000 (35.6 fps)
+Frame 10000 (37.1 fps)
+Frame 15000 (37.6 fps)
+Frame 20000 (37.8 fps)
+Frame 25000 (38.0 fps)
+Frame 30000 (38.1 fps)
+Frame 35000 (38.2 fps)
+Frame 40000 (38.3 fps)
+Frame 45000 (38.3 fps)
+Frame 50000 (38.4 fps)
+Frame 55000 (38.4 fps)
+Frame 60000 (38.4 fps)
+Frame 65000 (38.4 fps)
+Frame 70000 (38.4 fps)
+Frame 75000 (38.4 fps)
+Frame 80000 (38.5 fps)
+Frame 85000 (38.5 fps)
+Frame 90000 (38.5 fps)
+Frame 95000 (38.5 fps)
+Frame 100000 (38.5 fps)
+Registered 100000 frames in 2596.3 seconds (38.5 fps)
+Elapsed time is 2596.293259 seconds.
+registration finished
+grating
+runs-004
+
+nTrials =
+
+   464
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   209   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    10
+
+
+ans =
+
+     1
+
+
+ans =
+
+     0     1
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 7 MB/s 
+mouse 1337 date 210203 runs-004 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1337 210203 004
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    20
+
+Cell #2 
+Cell #4 
+Cell #6 
+Cell #8 
+Cell #10 
+Cell #12 
+Cell #14 
+Cell #16 
+Cell #18 
+Cell #20 
+TC extraction complete for runs-004
+17 set done out of 36
+
+iset =
+
+    18
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1338
+
+
+arg_date =
+
+    '210325'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 303.625669 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+1+1
+
+ans =
+
+     2
+
+iset
+
+iset =
+
+    18
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Mar-2023 15:51:08
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    20
+
+
+ans =
+
+    16
+
+
+iset =
+
+     1
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    12
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    13
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    14
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    15
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    16
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    17
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    18
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1338
+
+
+arg_date =
+
+    '210325'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
