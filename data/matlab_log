@@ -79999,3 +79999,105 @@ Set 'VariableNamingRule' to 'preserve' to use the original column
 headers as table variable names.] 
 start loading sbx
 Reading run 1, consisting of 100057 frames 
+
+nframes =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   100000
+
+corrected nframes to read sbx
+Elapsed time is 252.948027 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     6
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 745.6 seconds (134.1 fps)
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   465
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   2   3   4
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    7    8    9   22   23
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   12   25   26
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223   224
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 7 MB/s 
+mouse 1339 date 210908 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1339 210908 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
