@@ -1325,3 +1325,31 @@ INFO:cellpose.models:>>>> TOTAL TIME 8.59 sec
 INFO:root:number of cells detected: 20 at time 2023-03-06 15:40:31.341660. for mouse i1337, date 210203, run-004
 INFO:root:cellpose segmenting: mouse i1338, date 210325, run-002
 INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:TORCH CUDA version not installed/working.
+INFO:cellpose.core:>>>> using CPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.models:estimated cell diameter(s) in 8.03 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 10.94 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 21.78 sec
+INFO:root:number of cells detected: 85 at time 2023-03-06 16:35:56.645145. for mouse i1338, date 210325, run-002
+INFO:root:cellpose segmenting: mouse i1338, date 210805, run-002
+INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:TORCH CUDA version not installed/working.
+INFO:cellpose.core:>>>> using CPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.models:estimated cell diameter(s) in 8.14 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 11.83 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 18.39 sec
+INFO:root:number of cells detected: 80 at time 2023-03-06 17:26:17.987588. for mouse i1338, date 210805, run-002
+INFO:root:cellpose segmenting: mouse i1339, date 210908, run-003
+INFO:root:waiting for tif

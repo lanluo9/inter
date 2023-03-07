@@ -7,10 +7,10 @@ clc
 
 %%
 
-mouse = '1373'
-date = '230302'
-time = '1107'
-ImgFolder = '002'
+mouse = '1381'
+date = '230307'
+time = '1145'
+ImgFolder = '001'
 
 imouse = ['i' mouse];
 rc = behavConstsAV_LL;

@@ -40,7 +40,7 @@ for irun = 1 : nrun
     try
         data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
     catch
-        nframes = floor(nframes / 100) * 100 % cut off frames mod(nframes, 100)
+        nframes = floor(nframes / 1000) * 1000 % cut off mod(nframes, 1000). my nframes usually are 100K or 108K
         disp('corrected nframes to read sbx')
         data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
     end
