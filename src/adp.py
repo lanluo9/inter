@@ -41,11 +41,20 @@ def load_trace_trial_data(dir_path, vis_filter=True):
     """
     file_path = dir_path.replace("\\", "/")
     data = sio.loadmat(file_path + "/trace_trial_stim.mat")
+    # print(data.keys())
 
-    stim_seq = data["stim_seq"]
-    stim_id = [i[0] for i in stim_seq]  # flatten list
-    if stim_seq.shape[1] > stim_seq.shape[0]: # if stim_seq is a column vector
-        stim_id = stim_seq
+    try:
+        stim_seq = data["stim_seq"]
+        stim_id = [i[0] for i in stim_seq]  # flatten list
+        if stim_seq.shape[1] > stim_seq.shape[0]: # if stim_seq is a column vector
+            stim_id = stim_seq
+    except:
+        stim_ori = data["stim_ori"]
+        isi_nframe = data["isi_nframe"]
+        adapter_contrast = data["adapter_contrast"]
+        stim_id = dict(
+            stim_ori=stim_ori, isi_nframe=isi_nframe, adapter_contrast=adapter_contrast
+        )
     trace_by_trial = data["trace_by_trial"]
 
     if vis_filter:
@@ -59,7 +68,10 @@ def load_trace_trial_data(dir_path, vis_filter=True):
         print('alert! only vis driven cells are kept!')
 
     ncell = trace_by_trial.shape[0]
-    nstim = len(np.unique(stim_id))
+    try:
+        nstim = len(np.unique(stim_id))
+    except:
+        nstim = len(np.unique(stim_ori))
     ntrial = trace_by_trial.shape[1]
     nframe = trace_by_trial.shape[2]
     print(f"ncell: {ncell}, nstim: {nstim}, ntrial: {ntrial}, nframe: {nframe}")
