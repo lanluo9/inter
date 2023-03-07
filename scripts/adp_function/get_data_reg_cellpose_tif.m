@@ -300,8 +300,13 @@ data_trial = zeros(min(unique(trial_len)), nTrials); % take 1-200 frame of every
 data_trial_real = zeros(max(trial_len), nTrials);
 for it = 1:(nTrials-1)
     start_id = cStimOn(it);
-    data_trial(:,it) = tc_screen(start_id : start_id + min(unique(trial_len)) - 1);
-    data_trial_real(:,it) = [tc_screen(start_id : start_id + trial_len(it) - 1); NaN(max(trial_len) - trial_len(it), 1)];
+    try
+        data_trial(:,it) = tc_screen(start_id : start_id + min(unique(trial_len)) - 1);
+        data_trial_real(:,it) = [tc_screen(start_id : start_id + trial_len(it) - 1); NaN(max(trial_len) - trial_len(it), 1)];
+    catch
+        data_trial(:,it) = 0;
+        data_trial_real(:,it) = 0; % if final trial not long enough, set dfof value as 0
+    end
 end
 
 figure; plot(mean(data_trial, 2))
@@ -365,14 +370,14 @@ data_targ_dfof_fake = (data_targ-data_f)./data_f;  % target - baseline 1
 
 % %% plot response
 targCon = celleqel2mat_padded(behav_input.tGratingContrast);
-unique(targCon) % target contrast 1
+unique(targCon); % target contrast 1
 if behav_input.doRandCon
     adapterCon = ones(size(targCon));
 else
     adapterCon = celleqel2mat_padded(behav_input.tBaseGratingContrast);
 end
 % adapterCon = adapterCon(1:nTrials);
-unique(adapterCon) % adapter contrast 0 or 1
+unique(adapterCon); % adapter contrast 0 or 1
 ind_con = intersect(find(targCon == 1),find(adapterCon == 0));
 
 adapterDir = celleqel2mat_padded(behav_input.tBaseGratingDirectionDeg);

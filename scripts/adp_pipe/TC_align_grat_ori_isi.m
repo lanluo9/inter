@@ -28,7 +28,7 @@ nset = size(dataset_table,1);
 
 %% find TC.mat
 
-for iset = 1:nset
+for iset = 20:nset % 1:nset
 
 clear global; close all
 iset, nset
@@ -53,7 +53,7 @@ if ~isempty(dir('*TC*.mat'))
     disp('timecourse exists, start generating trace_trial_stim.mat')
 else
     disp('timecourse doesnt exist yet, skip to next set')
-%     continue
+    continue
 end
 
 %%
@@ -65,32 +65,38 @@ global frame_rate range_base range_resp ...
 
 save_flag = 1; % toggle this to save/skip all .mat creation below
 
-try % if data folder contains 2p imaging note.xls
-    stim_protocol = 'grat_SF6'
-    xls_dir = fullfile(data_fn, imouse, arg_date)
-    cd(xls_dir)
-    xls_file = dir('*.xlsx');
-    data_now_meta = readtable(xls_file.name);
-    sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
-    data_now_meta(sess_id_arr,:)
-    frame_rate = data_now_meta.(5)(sess_id_arr(end));
-catch % if data folder has been transferred to AWS, cannot read 2p imaging note.xls anymore
+% try % if data folder contains 2p imaging note.xls
+%     stim_protocol = 'grat_SF6'
+%     xls_dir = fullfile(data_fn, imouse, arg_date)
+%     cd(xls_dir)
+%     xls_file = dir('*.xlsx');
+%     data_now_meta = readtable(xls_file.name);
+%     sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
+%     data_now_meta(sess_id_arr,:)
+%     frame_rate = data_now_meta.(5)(sess_id_arr(end));
+% catch % if data folder has been transferred to AWS, cannot read 2p imaging note.xls anymore
     sess_id_arr = str2num(dataset_now.num{1}(end));
     disp('only works for single session data. TODO: fix sess_id_arr and ImgFolder')
-end
+% end
 
 %% load input_behav & npSubTC for eash sess
 
 df_flat = [];
 nframe_seq = [];
+clear input_behav_seq
 
 for i = 1:length(sess_id_arr)
     ImgFolder = dataset_now.num{i};
     fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
         [arg_date, '_', imouse, '_runs-', ImgFolder, '_input.mat']);
     temp = load(fName); % load behavior data "input", which clashes with built-in function
-    input_behav_seq(i) = temp.input; 
-    frame_rate = temp.input.frameRateHz;
+    try
+        input_behav_seq(i) = temp.input; 
+    catch
+        input_behav_seq(i) = temp.behav_input;
+    end
+
+    frame_rate = input_behav_seq(i).frameRateHz;
     clear temp
 
     cd(fullfile(tc_fn, [arg_date '_' imouse]))
@@ -198,7 +204,7 @@ if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
 % endpoint = length(t_ad);
 
 figure
-range = trial_len_min; 
+range = trial_len_min-1; 
 plot(t_ad(1:range), 'r'); hold on; 
 plot(t_tg(1:range), 'b'); 
 % xline(endpoint - 100);
@@ -211,13 +217,12 @@ if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 
 find_peak_bef = 15;
 disp('assume: first peak comes before n frames. second peak comes after')
-trace_start = t_ad(1:find_peak_bef);
+trace_start = t_ad(1:find_peak_bef) + t_tg(1:find_peak_bef);
 [~, peak_id] = max(trace_start)
 if peak_id < 6 % first peak should not be earlier than 6 frames
     disp('WARNING: strange trace or peak')
 end
-range_base = 1:3; range_resp = (peak_id-1):(peak_id+1);
-range_resp = range_resp - 1
+range_base = 1:3; range_resp = (peak_id-2):(peak_id+2);
 
 figure;
 plot(t_ad(1:40)); hold on;
