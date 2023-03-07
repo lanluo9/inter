@@ -80101,3 +80101,56 @@ mouse 1339 date 210908 runs-003 - finished data_reg & cellpose tif
 got data_reg & cellpose tif for 1339 210908 003
 wait for batch_cellpose.ipynb
 got cellpose mask, now extract TC
+
+nCells =
+
+    59
+
+Cell #5 
+Cell #10 
+Cell #15 
+Cell #20 
+Cell #25 
+Cell #30 
+Cell #35 
+Cell #40 
+Cell #45 
+Cell #50 
+Cell #55 
+TC extraction complete for runs-003
+20 set done out of 36
+
+iset =
+
+    21
+
+
+nset =
+
+    36
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 

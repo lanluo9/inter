@@ -28,7 +28,7 @@ nset = size(dataset_table,1);
 
 %% find TC.mat
 
-for iset = 20:nset % 1:nset
+for iset = 21:nset % 1:nset
 
 clear global; close all
 iset, nset
@@ -49,12 +49,18 @@ catch
 end
 
 % check if time course exists
-if ~isempty(dir('*TC*.mat'))
-    disp('timecourse exists, start generating trace_trial_stim.mat')
-else
-    disp('timecourse doesnt exist yet, skip to next set')
-    continue
+disp('wait for timecourse')
+while isempty(dir('*TC*.mat'))
+    pause(60) % wait for TC extract to finish
 end
+disp('timecourse exists, start generating trace_trial_stim.mat')
+
+% if ~isempty(dir('*TC*.mat'))
+%     disp('timecourse exists, start generating trace_trial_stim.mat')
+% else
+%     disp('timecourse doesnt exist yet, waiting for it')
+%     pause(60) % wait for TC extract to finish
+% end
 
 %%
 % declare all global var for single dataset
