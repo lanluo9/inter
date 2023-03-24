@@ -80719,3 +80719,4130 @@ Set 'VariableNamingRule' to 'preserve' to use the original column
 headers as table variable names.] 
 start loading sbx
 Reading run 1, consisting of 100000 frames 
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   09-Mar-2023 12:49:00
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    23
+
+
+ans =
+
+    16
+
+
+iset =
+
+     1
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    12
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    13
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    14
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    15
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    16
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    17
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    18
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1338
+
+
+arg_date =
+
+    '210325'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    19
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1338
+
+
+arg_date =
+
+    '210805'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    20
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210908'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    21
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    22
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    23
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211020'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    24
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211020'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    25
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 192.756600 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     8
+
+Starting, frame 0
+Frame 5000 (34.3 fps)
+Frame 10000 (35.2 fps)
+Frame 15000 (36.0 fps)
+Frame 20000 (36.4 fps)
+Frame 25000 (36.8 fps)
+Frame 30000 (37.1 fps)
+Frame 35000 (37.4 fps)
+Frame 40000 (37.6 fps)
+Frame 45000 (37.8 fps)
+Frame 50000 (37.9 fps)
+Frame 55000 (38.0 fps)
+Frame 60000 (38.1 fps)
+Frame 65000 (37.7 fps)
+Frame 70000 (37.3 fps)
+Frame 75000 (37.0 fps)
+Frame 80000 (36.8 fps)
+Frame 85000 (36.8 fps)
+Frame 90000 (36.7 fps)
+Frame 95000 (36.7 fps)
+Frame 100000 (36.8 fps)
+Registered 100000 frames in 2717.6 seconds (36.8 fps)
+Elapsed time is 2717.622207 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   465
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8    9   23
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   12   26
+
+
+ans =
+
+  1×6 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   209   222   223   224
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 6 MB/s 
+mouse 1350 date 211028 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1350 211028 002
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+     4
+
+TC extraction complete for runs-002
+25 set done out of 39
+
+iset =
+
+    26
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 210.119432 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5000 (35.7 fps)
+Frame 10000 (37.2 fps)
+Frame 15000 (37.5 fps)
+Frame 20000 (37.8 fps)
+Frame 25000 (37.9 fps)
+Frame 30000 (37.2 fps)
+Frame 35000 (36.7 fps)
+Frame 40000 (36.3 fps)
+Frame 45000 (36.0 fps)
+Frame 50000 (36.1 fps)
+Frame 55000 (36.0 fps)
+Frame 60000 (36.3 fps)
+Frame 65000 (36.5 fps)
+Frame 70000 (36.6 fps)
+Frame 75000 (36.8 fps)
+Frame 80000 (36.9 fps)
+Frame 85000 (37.1 fps)
+Frame 90000 (37.1 fps)
+Frame 95000 (37.2 fps)
+Frame 100000 (37.3 fps)
+Registered 100000 frames in 2682.9 seconds (37.3 fps)
+Elapsed time is 2682.911832 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   463
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×6 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   221   222   223   224
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 15 MB/s 
+mouse 1350 date 211028 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1350 211028 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+     7
+
+TC extraction complete for runs-003
+26 set done out of 39
+
+iset =
+
+    27
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1351
+
+
+arg_date =
+
+    '220228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 218.153903 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     5
+
+Starting, frame 0
+Frame 5000 (36.3 fps)
+Frame 10000 (37.7 fps)
+Frame 15000 (38.2 fps)
+Frame 20000 (38.4 fps)
+Frame 25000 (38.5 fps)
+Frame 30000 (38.5 fps)
+Frame 35000 (38.6 fps)
+Frame 40000 (38.6 fps)
+Frame 45000 (38.7 fps)
+Frame 50000 (38.8 fps)
+Frame 55000 (38.8 fps)
+Frame 60000 (38.8 fps)
+Frame 65000 (38.8 fps)
+Frame 70000 (38.8 fps)
+Frame 75000 (38.9 fps)
+Frame 80000 (38.9 fps)
+Frame 85000 (38.8 fps)
+Frame 90000 (38.8 fps)
+Frame 95000 (38.9 fps)
+Frame 100000 (38.9 fps)
+Registered 100000 frames in 2569.4 seconds (38.9 fps)
+Elapsed time is 2569.369795 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   465
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+     9
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 12 MB/s 
+mouse 1351 date 220228 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1351 220228 002
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    63
+
+Cell #6 
+Cell #12 
+Cell #18 
+Cell #24 
+Cell #30 
+Cell #36 
+Cell #42 
+Cell #48 
+Cell #54 
+Cell #60 
+TC extraction complete for runs-002
+27 set done out of 39
+
+iset =
+
+    28
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1351
+
+
+arg_date =
+
+    '220228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    29
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 208.567940 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5000 (36.4 fps)
+Frame 10000 (38.0 fps)
+Frame 15000 (38.5 fps)
+Frame 20000 (38.9 fps)
+Frame 25000 (39.1 fps)
+Frame 30000 (39.2 fps)
+Frame 35000 (39.2 fps)
+Frame 40000 (39.3 fps)
+Frame 45000 (39.3 fps)
+Frame 50000 (39.3 fps)
+Frame 55000 (39.3 fps)
+Frame 60000 (39.4 fps)
+Frame 65000 (39.4 fps)
+Frame 70000 (39.4 fps)
+Frame 75000 (39.4 fps)
+Frame 80000 (39.5 fps)
+Frame 85000 (39.5 fps)
+Frame 90000 (39.5 fps)
+Frame 95000 (39.5 fps)
+Frame 100000 (39.5 fps)
+Registered 100000 frames in 2532.1 seconds (39.5 fps)
+Elapsed time is 2532.058678 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   464
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    10
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 16 MB/s 
+mouse 1380 date 230110 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1380 230110 002
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    53
+
+Cell #5 
+Cell #10 
+Cell #15 
+Cell #20 
+Cell #25 
+Cell #30 
+Cell #35 
+Cell #40 
+Cell #45 
+Cell #50 
+TC extraction complete for runs-002
+29 set done out of 39
+
+iset =
+
+    30
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 233.107224 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5000 (36.0 fps)
+Frame 10000 (37.4 fps)
+Frame 15000 (38.0 fps)
+Frame 20000 (38.3 fps)
+Frame 25000 (38.4 fps)
+Frame 30000 (38.0 fps)
+Frame 35000 (38.2 fps)
+Frame 40000 (38.3 fps)
+Frame 45000 (38.4 fps)
+Frame 50000 (38.6 fps)
+Frame 55000 (38.6 fps)
+Frame 60000 (38.7 fps)
+Frame 65000 (38.8 fps)
+Frame 70000 (38.9 fps)
+Frame 75000 (38.9 fps)
+Frame 80000 (39.0 fps)
+Frame 85000 (39.0 fps)
+Frame 90000 (39.0 fps)
+Frame 95000 (39.1 fps)
+Frame 100000 (39.0 fps)
+Registered 100000 frames in 2563.4 seconds (39.0 fps)
+Elapsed time is 2563.437029 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   463
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   2   3   4
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    7    8    9   22   23
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   10   11   12   26
+
+
+ans =
+
+  1×7 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208   209   222   223   224
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 9 MB/s 
+mouse 1380 date 230110 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1380 230110 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    13
+
+Cell #1 
+Cell #2 
+Cell #3 
+Cell #4 
+Cell #5 
+Cell #6 
+Cell #7 
+Cell #8 
+Cell #9 
+Cell #10 
+Cell #11 
+Cell #12 
+Cell #13 
+TC extraction complete for runs-003
+30 set done out of 39
+
+iset =
+
+    31
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230221'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 210.822761 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     5
+
+Starting, frame 0
+Frame 5400 (30.9 fps)
+Frame 10800 (32.1 fps)
+Frame 16200 (32.6 fps)
+Frame 21600 (32.8 fps)
+Frame 27000 (32.9 fps)
+Frame 32400 (33.0 fps)
+Frame 37800 (33.1 fps)
+Frame 43200 (33.1 fps)
+Frame 48600 (33.2 fps)
+Frame 54000 (33.2 fps)
+Frame 59400 (33.3 fps)
+Frame 64800 (33.3 fps)
+Frame 70200 (33.6 fps)
+Frame 75600 (33.9 fps)
+Frame 81000 (34.0 fps)
+Frame 86400 (34.3 fps)
+Frame 91800 (34.5 fps)
+Frame 97200 (34.8 fps)
+Frame 102600 (34.9 fps)
+Frame 108000 (35.1 fps)
+Registered 108000 frames in 3080.4 seconds (35.1 fps)
+Elapsed time is 3080.374344 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   501
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 18 MB/s 
+mouse 1380 date 230221 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1380 230221 002
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    67
+
+Cell #6 
+Cell #12 
+Cell #18 
+Cell #24 
+Cell #30 
+Cell #36 
+Cell #42 
+Cell #48 
+Cell #54 
+Cell #60 
+Cell #66 
+TC extraction complete for runs-002
+31 set done out of 39
+
+iset =
+
+    32
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230221'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 235.735713 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     8
+
+Starting, frame 0
+Frame 5400 (36.7 fps)
+Frame 10800 (38.0 fps)
+Frame 16200 (38.6 fps)
+Frame 21600 (39.0 fps)
+Frame 27000 (39.3 fps)
+Frame 32400 (39.4 fps)
+Frame 37800 (39.5 fps)
+Frame 43200 (39.7 fps)
+Frame 48600 (39.8 fps)
+Frame 54000 (39.8 fps)
+Frame 59400 (39.9 fps)
+Frame 64800 (39.9 fps)
+Frame 70200 (40.0 fps)
+Frame 75600 (40.0 fps)
+Frame 81000 (40.0 fps)
+Frame 86400 (40.1 fps)
+Frame 91800 (40.1 fps)
+Frame 97200 (40.1 fps)
+Frame 102600 (40.1 fps)
+Frame 108000 (40.1 fps)
+Registered 108000 frames in 2691.2 seconds (40.1 fps)
+Elapsed time is 2691.187879 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   502
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 18 MB/s 
+mouse 1380 date 230221 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1380 230221 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    36
+
+Cell #3 
+Cell #6 
+Cell #9 
+Cell #12 
+Cell #15 
+Cell #18 
+Cell #21 
+Cell #24 
+Cell #27 
+Cell #30 
+Cell #33 
+Cell #36 
+TC extraction complete for runs-003
+32 set done out of 39
+
+iset =
+
+    33
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 212.042598 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     2
+
+Starting, frame 0
+Frame 5400 (36.6 fps)
+Frame 10800 (38.3 fps)
+Frame 16200 (38.9 fps)
+Frame 21600 (39.2 fps)
+Frame 27000 (39.3 fps)
+Frame 32400 (39.5 fps)
+Frame 37800 (39.6 fps)
+Frame 43200 (39.6 fps)
+Frame 48600 (39.7 fps)
+Frame 54000 (39.7 fps)
+Frame 59400 (39.7 fps)
+Frame 64800 (39.8 fps)
+Frame 70200 (39.8 fps)
+Frame 75600 (39.8 fps)
+Frame 81000 (39.9 fps)
+Frame 86400 (39.9 fps)
+Frame 91800 (39.9 fps)
+Frame 97200 (39.9 fps)
+Frame 102600 (39.9 fps)
+Frame 108000 (39.9 fps)
+Registered 108000 frames in 2705.2 seconds (39.9 fps)
+Elapsed time is 2705.173030 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   502
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23   24
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26   27
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 19 MB/s 
+mouse 1373 date 230228 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1373 230228 002
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    73
+
+Cell #7 
+Cell #14 
+Cell #21 
+Cell #28 
+Cell #35 
+Cell #42 
+Cell #49 
+Cell #56 
+Cell #63 
+Cell #70 
+TC extraction complete for runs-002
+33 set done out of 39
+
+iset =
+
+    34
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 256.230586 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     6
+
+Starting, frame 0
+Frame 5400 (37.1 fps)
+Frame 10800 (38.5 fps)
+Frame 16200 (39.0 fps)
+Frame 21600 (39.2 fps)
+Frame 27000 (39.4 fps)
+Frame 32400 (39.5 fps)
+Frame 37800 (39.6 fps)
+Frame 43200 (39.6 fps)
+Frame 48600 (39.7 fps)
+Frame 54000 (39.7 fps)
+Frame 59400 (39.8 fps)
+Frame 64800 (39.8 fps)
+Frame 70200 (39.8 fps)
+Frame 75600 (39.8 fps)
+Frame 81000 (39.9 fps)
+Frame 86400 (39.9 fps)
+Frame 91800 (39.9 fps)
+Frame 97200 (39.9 fps)
+Frame 102600 (39.9 fps)
+Frame 108000 (39.9 fps)
+Registered 108000 frames in 2705.3 seconds (39.9 fps)
+Elapsed time is 2705.254410 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   503
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 19 MB/s 
+mouse 1373 date 230228 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1373 230228 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+stackGetTimeCourses: elapsed time is 5.39314 seconds.
+
+nCells =
+
+    86
+
+Cell #8 
+Cell #16 
+Cell #24 
+Cell #32 
+Cell #40 
+Cell #48 
+Cell #56 
+Cell #64 
+Cell #72 
+Cell #80 
+TC extraction complete for runs-003
+34 set done out of 39
+
+iset =
+
+    35
+
+
+nset =
+
+    39
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230302'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 4050 frames 
+Elapsed time is 18.034855 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+  0×1 empty <a href="matlab:helpPopup double" style="font-weight:bold">double</a> column vector
+
+Starting, frame 0
+Frame 202 (20.4 fps)
+Frame 404 (21.3 fps)
+Frame 606 (21.5 fps)
+Frame 808 (21.7 fps)
+Frame 1010 (21.8 fps)
+Frame 1212 (21.9 fps)
+Frame 1414 (22.0 fps)
+Frame 1616 (22.0 fps)
+Frame 1818 (22.0 fps)
+Frame 2020 (22.0 fps)
+Frame 2222 (22.0 fps)
+Frame 2424 (22.0 fps)
+Frame 2626 (22.1 fps)
+Frame 2828 (22.1 fps)
+Frame 3030 (22.1 fps)
+Frame 3232 (22.1 fps)
+Frame 3434 (22.1 fps)
+Frame 3636 (22.1 fps)
+Frame 3838 (22.1 fps)
+Frame 4040 (22.1 fps)
+Registered 4050 frames in 183.1 seconds (22.1 fps)
+Elapsed time is 183.136435 seconds.
+registration finished
+Index in position 3 exceeds array bounds. Index must not exceed 4050.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 93)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',93,0)">line 93</a>)
+figure; imagesq(mean(data_reg(:,:,1:10000),3)); truesize;
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_single_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_single_sess.m', 60)" style="font-weight:bold">TC_extract_single_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_single_sess.m',60,0)">line 60</a>)
+[data_reg, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+% register every sess against itself: single sess registration
+
+iset
+
+iset =
+
+    35
+
+arg_date
+
+arg_date =
+
+    '230302'
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   10-Mar-2023 10:21:42
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    23
+
+
+ans =
+
+    18
+
+
+iset =
+
+     1
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    12
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    13
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    14
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    15
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    16
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    17
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    18
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1338
+
+
+arg_date =
+
+    '210325'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    19
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1338
+
+
+arg_date =
+
+    '210805'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    20
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210908'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    21
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    22
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    23
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211020'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    24
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211020'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    25
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    26
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    27
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1351
+
+
+arg_date =
+
+    '220228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    28
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1351
+
+
+arg_date =
+
+    '220228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 212.731071 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     2
+
+Starting, frame 0
+Frame 5000 (36.1 fps)
+Frame 10000 (37.9 fps)
+Frame 15000 (38.5 fps)
+Frame 20000 (38.8 fps)
+Frame 25000 (38.4 fps)
+Frame 30000 (38.3 fps)
+Frame 35000 (38.4 fps)
+Frame 40000 (38.5 fps)
+Frame 45000 (38.4 fps)
+Frame 50000 (38.3 fps)
+Frame 55000 (37.9 fps)
+Frame 60000 (37.4 fps)
+Frame 65000 (37.1 fps)
+Frame 70000 (36.8 fps)
+Frame 75000 (36.6 fps)
+Frame 80000 (36.7 fps)
+Frame 85000 (36.6 fps)
+Frame 90000 (36.5 fps)
+Frame 95000 (36.3 fps)
+Frame 100000 (36.2 fps)
+Registered 100000 frames in 2762.0 seconds (36.2 fps)
+Elapsed time is 2762.030728 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   465
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      100000x1             800000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    10
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 7 MB/s 
+mouse 1351 date 220228 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1351 220228 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+stackGetTimeCourses: elapsed time is 5.0576 seconds.
+
+nCells =
+
+    72
+
+Cell #7 
+Cell #14 
+Cell #21 
+Cell #28 
+Cell #35 
+Cell #42 
+Cell #49 
+Cell #56 
+Cell #63 
+Cell #70 
+TC extraction complete for runs-003
+28 set done out of 41
+
+iset =
+
+    29
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    30
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    31
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230221'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    32
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230221'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    33
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    34
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    35
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230302'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 825.475164 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 5400 (36.2 fps)
+Frame 10800 (37.4 fps)
+Frame 16200 (37.2 fps)
+Frame 21600 (37.4 fps)
+Frame 27000 (37.6 fps)
+Frame 32400 (37.9 fps)
+Frame 37800 (38.1 fps)
+Frame 43200 (38.3 fps)
+Frame 48600 (38.4 fps)
+Frame 54000 (38.5 fps)
+Frame 59400 (38.6 fps)
+Frame 64800 (38.7 fps)
+Frame 70200 (38.8 fps)
+Frame 75600 (38.8 fps)
+Frame 81000 (38.9 fps)
+Frame 86400 (38.9 fps)
+Frame 91800 (38.9 fps)
+Frame 97200 (39.0 fps)
+Frame 102600 (39.0 fps)
+Frame 108000 (39.0 fps)
+Registered 108000 frames in 2767.3 seconds (39.0 fps)
+Elapsed time is 2767.304498 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   503
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 15 MB/s 
+mouse 1373 date 230302 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1373 230302 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+stackGetTimeCourses: elapsed time is 8.63544 seconds.
+
+nCells =
+
+   139
+
+Cell #13 
+Cell #26 
+Cell #39 
+Cell #52 
+Cell #65 
+Cell #78 
+Cell #91 
+Cell #104 
+Cell #117 
+Cell #130 
+TC extraction complete for runs-003
+35 set done out of 41
+
+iset =
+
+    36
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230302'
+
+
+arg_ImgFolder =
+
+    '004'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108001 frames 
+
+nframes =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   108000
+
+corrected nframes to read sbx
+Elapsed time is 251.028197 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     6
+
+Starting, frame 0
+Frame 5400 (35.7 fps)
+Frame 10800 (37.3 fps)
+Frame 16200 (37.8 fps)
+Frame 21600 (38.2 fps)
+Frame 27000 (38.1 fps)
+Frame 32400 (38.1 fps)
+Frame 37800 (38.2 fps)
+Frame 43200 (37.9 fps)
+Frame 48600 (37.8 fps)
+Frame 54000 (37.3 fps)
+Frame 59400 (37.0 fps)
+Frame 64800 (36.7 fps)
+Frame 70200 (36.5 fps)
+Frame 75600 (36.2 fps)
+Frame 81000 (36.1 fps)
+Frame 86400 (35.9 fps)
+Frame 91800 (35.7 fps)
+Frame 97200 (35.6 fps)
+Frame 102600 (35.5 fps)
+Frame 108000 (35.4 fps)
+Registered 108000 frames in 3055.1 seconds (35.4 fps)
+Elapsed time is 3055.145992 seconds.
+registration finished
+grating
+runs-004
+
+nTrials =
+
+   501
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   2   3   4
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    7    8   23
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   25   26
+
+
+ans =
+
+  1×6 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   209   222   223   224
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 12 MB/s 
+mouse 1373 date 230302 runs-004 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1373 230302 004
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+stackGetTimeCourses: elapsed time is 12.6785 seconds.
+
+nCells =
+
+   142
+
+Cell #14 
+Cell #28 
+Cell #42 
+Cell #56 
+Cell #70 
+Cell #84 
+Cell #98 
+Cell #112 
+Cell #126 
+Cell #140 
+TC extraction complete for runs-004
+36 set done out of 41
+
+iset =
+
+    37
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230307'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 194.854927 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     5
+
+Starting, frame 0
+Frame 5400 (33.4 fps)
+Frame 10800 (35.1 fps)
+Frame 16200 (35.8 fps)
+Frame 21600 (36.1 fps)
+Frame 27000 (36.3 fps)
+Frame 32400 (36.4 fps)
+Frame 37800 (36.6 fps)
+Frame 43200 (36.7 fps)
+Frame 48600 (36.7 fps)
+Frame 54000 (37.0 fps)
+Frame 59400 (37.3 fps)
+Frame 64800 (37.5 fps)
+Frame 70200 (37.7 fps)
+Frame 75600 (37.8 fps)
+Frame 81000 (37.9 fps)
+Frame 86400 (38.0 fps)
+Frame 91800 (38.0 fps)
+Frame 97200 (38.1 fps)
+Frame 102600 (38.2 fps)
+Frame 108000 (38.3 fps)
+Registered 108000 frames in 2823.0 seconds (38.3 fps)
+Elapsed time is 2822.982408 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   501
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    10
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 15 MB/s 
+mouse 1381 date 230307 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1381 230307 002
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+stackGetTimeCourses: elapsed time is 5.30267 seconds.
+
+nCells =
+
+    87
+
+Cell #8 
+Cell #16 
+Cell #24 
+Cell #32 
+Cell #40 
+Cell #48 
+Cell #56 
+Cell #64 
+Cell #72 
+Cell #80 
+TC extraction complete for runs-002
+37 set done out of 41
+
+iset =
+
+    38
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230307'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 223.816102 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     8
+
+Starting, frame 0
+Frame 5400 (36.3 fps)
+Frame 10800 (37.0 fps)
+Frame 16200 (37.4 fps)
+Frame 21600 (37.4 fps)
+Frame 27000 (37.4 fps)
+Frame 32400 (37.5 fps)
+Frame 37800 (37.4 fps)
+Frame 43200 (37.5 fps)
+Frame 48600 (37.6 fps)
+Frame 54000 (37.8 fps)
+Frame 59400 (38.0 fps)
+Frame 64800 (38.1 fps)
+Frame 70200 (38.2 fps)
+Frame 75600 (38.3 fps)
+Frame 81000 (38.4 fps)
+Frame 86400 (38.5 fps)
+Frame 91800 (38.6 fps)
+Frame 97200 (38.7 fps)
+Frame 102600 (38.8 fps)
+Frame 108000 (38.8 fps)
+Registered 108000 frames in 2784.6 seconds (38.8 fps)
+Elapsed time is 2784.556245 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   501
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   209   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 10 MB/s 
+mouse 1381 date 230307 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1381 230307 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+stackGetTimeCourses: elapsed time is 5.82231 seconds.
+
+nCells =
+
+    98
+
+Cell #9 
+Cell #18 
+Cell #27 
+Cell #36 
+Cell #45 
+Cell #54 
+Cell #63 
+Cell #72 
+Cell #81 
+Cell #90 
+TC extraction complete for runs-003
+38 set done out of 41
+
+iset =
+
+    39
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230307'
+
+
+arg_ImgFolder =
+
+    '004'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 218.825758 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     8
+
+Starting, frame 0
+Frame 5400 (31.3 fps)
+Frame 10800 (32.5 fps)
+Frame 16200 (32.8 fps)
+Frame 21600 (33.0 fps)
+Frame 27000 (33.1 fps)
+Frame 32400 (33.2 fps)
+Frame 37800 (33.3 fps)
+Frame 43200 (33.3 fps)
+Frame 48600 (33.4 fps)
+Frame 54000 (33.4 fps)
+Frame 59400 (33.4 fps)
+Frame 64800 (33.9 fps)
+Frame 70200 (34.3 fps)
+Frame 75600 (34.7 fps)
+Frame 81000 (35.0 fps)
+Frame 86400 (35.2 fps)
+Frame 91800 (35.5 fps)
+Frame 97200 (35.7 fps)
+Frame 102600 (35.9 fps)
+Frame 108000 (36.1 fps)
+Registered 108000 frames in 2994.0 seconds (36.1 fps)
+Elapsed time is 2994.027611 seconds.
+registration finished
+grating
+runs-004
+
+nTrials =
+
+   501
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   3   4
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    7    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×7 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208   212   222   223   224
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    14
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 19 MB/s 
+mouse 1381 date 230307 runs-004 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1381 230307 004
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+stackGetTimeCourses: elapsed time is 5.98093 seconds.
+
+nCells =
+
+   100
+
+Cell #10 
+Cell #20 
+Cell #30 
+Cell #40 
+Cell #50 
+Cell #60 
+Cell #70 
+Cell #80 
+Cell #90 
+Cell #100 
+TC extraction complete for runs-004
+39 set done out of 41
+
+iset =
+
+    40
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230309'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 213.639988 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     5
+
+Starting, frame 0
+Frame 5400 (37.5 fps)
+Frame 10800 (39.0 fps)
+Frame 16200 (39.5 fps)
+Frame 21600 (39.8 fps)
+Frame 27000 (40.0 fps)
+Frame 32400 (40.1 fps)
+Frame 37800 (40.3 fps)
+Frame 43200 (40.4 fps)
+Frame 48600 (40.4 fps)
+Frame 54000 (40.4 fps)
+Frame 59400 (40.4 fps)
+Frame 64800 (40.4 fps)
+Frame 70200 (40.4 fps)
+Frame 75600 (40.4 fps)
+Frame 81000 (40.4 fps)
+Frame 86400 (40.4 fps)
+Frame 91800 (40.4 fps)
+Frame 97200 (40.4 fps)
+Frame 102600 (40.4 fps)
+Frame 108000 (40.4 fps)
+Registered 108000 frames in 2671.7 seconds (40.4 fps)
+Elapsed time is 2671.714430 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   502
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 18 MB/s 
+mouse 1381 date 230309 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1381 230309 002
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+stackGetTimeCourses: elapsed time is 6.83887 seconds.
+
+nCells =
+
+   113
+
+Cell #11 
+Cell #22 
+Cell #33 
+Cell #44 
+Cell #55 
+Cell #66 
+Cell #77 
+Cell #88 
+Cell #99 
+Cell #110 
+TC extraction complete for runs-002
+40 set done out of 41
+
+iset =
+
+    41
+
+
+nset =
+
+    41
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230309'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 229.534183 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     2
+
+Starting, frame 0
+Frame 5400 (37.2 fps)
+Frame 10800 (38.9 fps)
+Frame 16200 (39.5 fps)
+Frame 21600 (39.7 fps)
+Frame 27000 (39.9 fps)
+Frame 32400 (40.1 fps)
+Frame 37800 (40.3 fps)
+Frame 43200 (40.4 fps)
+Frame 48600 (40.5 fps)
+Frame 54000 (40.6 fps)
+Frame 59400 (40.6 fps)
+Frame 64800 (40.6 fps)
+Frame 70200 (40.6 fps)
+Frame 75600 (40.7 fps)
+Frame 81000 (40.7 fps)
+Frame 86400 (40.7 fps)
+Frame 91800 (40.7 fps)
+Frame 97200 (40.7 fps)
+Frame 102600 (40.7 fps)
+Frame 108000 (40.7 fps)
+Registered 108000 frames in 2650.6 seconds (40.7 fps)
+Elapsed time is 2650.553668 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   479
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   2   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   10   11   26
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   209   222   223
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    10
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 19 MB/s 
+mouse 1381 date 230309 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1381 230309 003
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC
+
+nCells =
+
+    33
+
+Cell #3 
+Cell #6 
+Cell #9 
+Cell #12 
+Cell #15 
+Cell #18 
+Cell #21 
+Cell #24 
+Cell #27 
+Cell #30 
+Cell #33 
+TC extraction complete for runs-003
+41 set done out of 41
