@@ -1,5 +1,5 @@
 %% init
-% this script takes in a single session timecourse, and aligns it to trial start and stimulus id
+% this script takes in a MULTI session timecourse, and aligns it to trial start and stimulus id
 % output: trace_trial_stim.mat 
 % code is inherited from adp_mag_pipeline_mix50.m and adp_mag_pipeline_grating.m
 
