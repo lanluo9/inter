@@ -7,9 +7,9 @@ clc
 
 %%
 
-mouse = '1380'
-date = '230330'
-time = '1139'
+mouse = '1381'
+date = '230404'
+time = '1107'
 ImgFolder = '001'
 
 imouse = ['i' mouse];
@@ -36,6 +36,7 @@ irun = 1;
     CD = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\' imouse '\' date  '\' ImgFolder(irun,:)];
 %     end
     
+    disp('waiting for file transfer')
     while 1==1
         try
             cd(CD);
@@ -44,14 +45,18 @@ irun = 1;
             disp('found mat file')
             break
         catch
-            disp('waiting for file transfer')
             pause(10)
         end
     end
 
-    disp('continue running with found files')
     nframes = info.config.frames;
-    data_temp = sbxread([ImgFolder(irun,:) '_000_000'],0,nframes);
+    disp('waiting for file transfer')
+    try
+        data_temp = sbxread([ImgFolder(irun,:) '_000_000'],0,nframes);
+        disp('found sbx file')
+    catch
+        pause(10)
+    end
     
 % date = '201127'; time = '1356';
 % mouse = '1328';

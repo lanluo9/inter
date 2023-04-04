@@ -1,3 +1,6 @@
+%% readme
+% this script register a multi-session dataset, then extract timecourse from cells segmented by cellpose
+% it only support ONE single day multi sess at the moment. can refactor to loop over days
 
 clear all
 close all
@@ -5,30 +8,15 @@ clc
 
 %% setup
 
-% database_path = 'C:/Users/GlickfeldLab/Documents/test/inter/';
-% database_path = 'C:\Users\ll357\Documents\inter\';
-% master_xls = [database_path, 'data/mix50_grat1.csv'];
 dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
 dataset_meta = readtable(dir_meta);
 
 clearvars -except dataset_meta
 clearvars –global
 
-stim_type = 'grat6' % 3 sessions of mix50 must be registered to align
-% 
-% dataset_mix = dataset_meta(ismember(dataset_meta.stim_type, 'mix'),:);
-% dataset_grat1 = dataset_meta(ismember(dataset_meta.stim_type, 'grating'),:);
-% dataset_grat6 = dataset_meta(ismember(dataset_meta.stim_type, 'grat6'),:);
-% 
-% if strcmp(stim_type, 'mix')
-%     dataset_table = dataset_mix;
-% elseif strcmp(stim_type, 'grating')
-%     dataset_table = dataset_grat1
-% elseif strcmp(stim_type, 'grat6')
-%     dataset_table = dataset_grat6
-% end
+stim_type = 'bunny' % grat_SF6_allen_nat8 will pretend to be bunny, since they share bunnies6.mwel
 
-dataset_table = dataset_meta(dataset_meta.date == 230214, :)
+dataset_table = dataset_meta(dataset_meta.date == 230330, :)
 nset = size(dataset_table,1);
 
 %% draw cellpose_tif for each sess
@@ -40,8 +28,6 @@ dataset_now = dataset_table(iset,:);
 arg_mouse = dataset_now.mouse
 arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num{1};
-% arg_ImgFolder = ['00', num2str(arg_ImgFolder)]
-% ref_ImgFolder = ['00', num2str(dataset_table(1,:).num(1))];
 ref_ImgFolder = dataset_table(1,:).num{1}
 run_str_ref = ['runs-' ref_ImgFolder(1,:)]
 

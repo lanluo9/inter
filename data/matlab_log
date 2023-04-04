@@ -84846,3 +84846,81 @@ Cell #30
 Cell #33 
 TC extraction complete for runs-003
 41 set done out of 41
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_SF_bunny.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi.m',1)
+uiimport('Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i1373_230214_cellpose\trace_trial_stim.mat',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_single_sess.m',1)
+dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
+ 
+dataset_meta = readtable(dir_meta);
+ 
+
+clearvars -except dataset_meta
+clearvars –global
+edit get_data_reg_cellpose_tif
+stim_type = 'bunny' % grat_SF6_allen_nat8 will pretend to be bunny, since they share bunnies6.mwel
+
+stim_type =
+
+    'bunny'
+
+ 
+dataset_table = dataset_meta(dataset_meta.date == 230330, :)
+
+dataset_table =
+
+  3×11 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>           <strong>paradigm</strong>            <strong>gcamp</strong>      <strong>AWS</strong>        <strong>note</strong>   
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>_______________________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>__________</strong>
+
+    1380     2.3033e+05    {'V1'}     200     {'002'}       false        {0×0 char}    {'grat_SF6_allen_nat8'}    {'6s'}    false    {0×0 char}
+    1380     2.3033e+05    {'V1'}     200     {'003'}       false        {0×0 char}    {'grat_SF6_allen_nat8'}    {'6s'}    false    {0×0 char}
+    1380     2.3033e+05    {'V1'}     200     {'004'}       false        {0×0 char}    {'grat_SF6_allen_nat8'}    {'6s'}    false    {0×0 char}
+
+ 
+nset = size(dataset_table,1);
+ 
+
+iset =
+
+     1
+
+
+nset =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230330'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of mix50 as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them
+valid MATLAB identifiers before creating variable names for the
+table. The original column headers are saved in the
+VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
