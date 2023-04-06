@@ -1800,3 +1800,144 @@ INFO:cellpose.models:[ 12.66 ]
 INFO:cellpose.models:~~~ FINDING MASKS ~~~
 INFO:cellpose.models:>>>> TOTAL TIME 1.24 sec
 INFO:root:number of cells detected: 33 at time 2023-03-10 17:41:22.962719. for mouse i1381, date 230309, run-003
+INFO:root:2023-04-05 16:26:41.388763
+INFO:root:cellpose segmenting: mouse i1323, date 200721, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1323, date 200723, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1324, date 200729, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1322, date 200804, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1322, date 200806, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201119, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201127, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201202, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1328, date 201202, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 201217, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 201217, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 210113, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1329, date 210113, run-006
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1337, date 210127, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1337, date 210127, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1337, date 210203, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1337, date 210203, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1338, date 210325, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1338, date 210805, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1339, date 210908, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1339, date 210930, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1339, date 210930, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1350, date 211020, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1350, date 211020, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1350, date 211028, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1350, date 211028, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1351, date 220228, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1351, date 220228, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1380, date 230110, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1380, date 230110, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1380, date 230221, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1380, date 230221, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1373, date 230228, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1373, date 230228, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1373, date 230302, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1373, date 230302, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1381, date 230307, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1381, date 230307, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1381, date 230307, run-004
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1381, date 230309, run-002
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1381, date 230309, run-003
+INFO:root:cellpose or manual time course exists, skip to next set
+INFO:root:cellpose segmenting: mouse i1386, date 230322, run-002
+INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:** TORCH CUDA version installed and working. **
+INFO:cellpose.core:>>>> using GPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.dynamics:No cell pixels found.
+INFO:cellpose.models:estimated cell diameter(s) in 5.06 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 30.00 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 5.36 sec
+INFO:root:number of cells detected: 19 at time 2023-04-05 16:26:49.807163. for mouse i1386, date 230322, run-002
+INFO:root:cellpose segmenting: mouse i1386, date 230322, run-003
+INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:** TORCH CUDA version installed and working. **
+INFO:cellpose.core:>>>> using GPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.dynamics:No cell pixels found.
+INFO:cellpose.models:estimated cell diameter(s) in 0.75 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 30.00 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 1.02 sec
+INFO:root:number of cells detected: 14 at time 2023-04-05 17:18:54.025086. for mouse i1386, date 230322, run-003
+INFO:root:cellpose segmenting: mouse i1374, date 230323, run-002
+INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:** TORCH CUDA version installed and working. **
+INFO:cellpose.core:>>>> using GPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.models:estimated cell diameter(s) in 0.86 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 11.70 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 1.39 sec
+INFO:root:number of cells detected: 114 at time 2023-04-05 18:10:58.781039. for mouse i1374, date 230323, run-002
+INFO:root:cellpose segmenting: mouse i1374, date 230323, run-003
+INFO:root:waiting for tif
+INFO:root:found tif
+INFO:cellpose.core:** TORCH CUDA version installed and working. **
+INFO:cellpose.core:>>>> using GPU
+INFO:cellpose.models:>> cyto << model set to be used
+INFO:cellpose.models:>>>> model diam_mean =  30.000 (ROIs rescaled to this size during training)
+INFO:cellpose.models:~~~ ESTIMATING CELL DIAMETER(S) ~~~
+INFO:cellpose.models:estimated cell diameter(s) in 0.65 sec
+INFO:cellpose.models:>>> diameter(s) = 
+INFO:cellpose.models:[ 13.11 ]
+INFO:cellpose.models:~~~ FINDING MASKS ~~~
+INFO:cellpose.models:>>>> TOTAL TIME 1.10 sec
+INFO:root:number of cells detected: 65 at time 2023-04-05 19:04:03.113474. for mouse i1374, date 230323, run-003

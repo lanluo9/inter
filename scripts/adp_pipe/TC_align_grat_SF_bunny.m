@@ -16,24 +16,26 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
 dataset_meta = readtable(dir_meta);
 
-stim_type = 'grating' % grat_8ori_3isi
+stim_type = 'grat_SF6_allen_nat8'
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
-area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'LI'));
-dataset_table = dataset_table(area_bool, :);
-sum(strcmp(dataset_meta.area, 'LM')) % count LM data, grat_8ori_3isi
-sum(strcmp(dataset_meta.area, 'LI')) % count LI
+% area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'LI'));
+% dataset_table = dataset_table(area_bool, :);
+% sum(strcmp(dataset_meta.area, 'LM')) % count LM data, grat_8ori_3isi
+% sum(strcmp(dataset_meta.area, 'LI')) % count LI
 
-nset = size(dataset_table,1);
+% nset = size(dataset_table,1); % if using single day multi sess data, nset here is in fact nsess
+% TODO: refactor to differentiate inner loop across sessions, and outer loop across days
 
 %% find TC.mat
 
-for iset = 1:nset
+% for iset = 1:nset
 
 clear global; close all
-iset, nset
+% iset, nset
+iset = 1;
 
-dataset_now = dataset_table(iset,:);
+dataset_now = dataset_table(iset,:); % get mouse date & first sess from sess-002
 arg_mouse = dataset_now.mouse
 arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num{1}
@@ -48,13 +50,13 @@ catch
     cd(dir_analysis)
 end
 
-% check if time course exists
-if ~isempty(dir('*TC*.mat'))
-    disp('timecourse exists, start generating trace_trial_stim.mat')
-else
-    disp('timecourse doesnt exist yet, skip to next set')
-    continue
-end
+% % check if time course exists. only useful if using multi day, multi sess data
+% if ~isempty(dir('*TC*.mat'))
+%     disp('timecourse exists, start generating trace_trial_stim.mat')
+% else
+%     disp('timecourse doesnt exist yet, skip to next set')
+%     continue
+% end
 
 %%
 % declare all global var for single dataset
@@ -85,29 +87,34 @@ df_flat = [];
 nframe_seq = [];
 
 for i = 1:length(sess_id_arr)
-    ImgFolder = dataset_now.num{i};
+    ImgFolder = dataset_table.num{i};
     fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
         [arg_date, '_', imouse, '_runs-', ImgFolder, '_input.mat']);
     temp = load(fName); % load behavior data "input", which clashes with built-in function
-    input_behav_seq(i) = temp.input; 
-    frame_rate = temp.input.frameRateHz;
+    try
+        input_behav_seq(i) = temp.input; 
+        frame_rate = temp.input.frameRateHz;
+    catch
+        input_behav_seq(i) = temp.behav_input; 
+        frame_rate = temp.behav_input.frameRateHz;
+    end
     clear temp
 
     cd(fullfile(tc_fn, [arg_date '_' imouse]))
     cd([arg_date '_' imouse '_runs-', ImgFolder])
-    segment_suffix = '' % default suffix is empty -> using manual segment
+    segment_suffix = ''; % default suffix is empty -> using manual segment
     try
         tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_addfake.mat']); % try manual TC first
     catch
         tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']); % if not, use cellpose TC
-        segment_suffix = '_cellpose' % add cellpose suffix for mat_inter subdir, if segmented by cellpose
+        segment_suffix = '_cellpose'; % add cellpose suffix for mat_inter subdir, if segmented by cellpose
     end
     df_flat = [df_flat; tc.npSub_tc];
 
     [nframe, ncell] = size(tc.npSub_tc);
     nframe_seq = [nframe_seq, nframe];
 end
-nframe, ncell
+nframe, ncell, size(df_flat)
 
 disp('loaded cellpose timecourse & visual input')
 try
@@ -153,7 +160,11 @@ for isess = 1 : length(sess_id_arr)
         target_id_sess = adapter_id_sess;
     end
     adapter_id_sess = adapter_id_sess(1:ntrial_sess);
-    assert(size(adapter_id_sess, 1) > size(adapter_id_sess, 2)) % ensure its a column vector
+    try
+        assert(size(adapter_id_sess, 1) > size(adapter_id_sess, 2)) % ensure its a column vector
+    catch
+        adapter_id_sess = adapter_id_sess';
+    end
     adapter_id = [adapter_id; adapter_id_sess];
     target_id_sess = target_id_sess(1:ntrial_sess);
     target_id = [target_id; target_id_sess];
@@ -309,4 +320,4 @@ open trial_filter_by_pupil_or_speed.m
 
 %% find visually driven cells -> vis_driven.ipynb
 
-end
+% end

@@ -19,16 +19,16 @@ dataset_meta = readtable(dir_meta);
 stim_type = 'grating' % grat_8ori_3isi
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
-area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'LI'));
+area_bool = logical(strcmp(dataset_table.area, 'LM')); % + strcmp(dataset_table.area, 'LI'));
 dataset_table = dataset_table(area_bool, :);
-sum(strcmp(dataset_meta.area, 'LM')) % count LM data, grat_8ori_3isi
-sum(strcmp(dataset_meta.area, 'LI')) % count LI
+sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
+% sum(strcmp(dataset_table.area, 'LI')) % count LI
 
 nset = size(dataset_table,1);
 
 %% find TC.mat
 
-for iset = 21:nset % 1:nset
+for iset = 1:nset
 
 clear global; close all
 iset, nset
@@ -107,12 +107,12 @@ for i = 1:length(sess_id_arr)
 
     cd(fullfile(tc_fn, [arg_date '_' imouse]))
     cd([arg_date '_' imouse '_runs-', ImgFolder])
-    segment_suffix = '' % default suffix is empty -> using manual segment
+    segment_suffix = ''; % default suffix is empty -> using manual segment
     try
         tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_addfake.mat']); % try manual TC first
     catch
         tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']); % if not, use cellpose TC
-        segment_suffix = '_cellpose' % add cellpose suffix for mat_inter subdir, if segmented by cellpose
+        segment_suffix = '_cellpose'; % add cellpose suffix for mat_inter subdir, if segmented by cellpose
     end
     df_flat = [df_flat; tc.npSub_tc];
 
@@ -174,6 +174,11 @@ nrep_stim = unique(t(:,2))
 % always use frame_ad as the end point of trial-specific baseline
 
 cd(result_folder)
+
+if ~isempty(dir('*trace_trial_stim*.mat')) && ~isempty(dir('*resp_base_trialwise*.mat'))
+    disp('TC align result exists, skip to next dataset:')
+    continue
+end
 
 npSub_tc = df_flat;
 tc_align_ad = align_tc(frame_ad, npSub_tc);
