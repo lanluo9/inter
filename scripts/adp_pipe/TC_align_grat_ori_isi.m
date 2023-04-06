@@ -1,5 +1,10 @@
 %% init
-% this script takes in a single session timecourse, and aligns it to trial start and stimulus id
+% this script takes in a single session timecourse from one day, 
+% and aligns it to trial start and stimulus id
+
+% NOTE: there can be multiple single sessions (typically diff depth of 
+% same mouse & area) from one single day, so outer loop is over date_sess, not date alone
+
 % output: trace_trial_stim.mat 
 % code is inherited from adp_mag_pipeline_mix50.m and adp_mag_pipeline_grating.m
 
@@ -129,13 +134,13 @@ catch
     disp('some cell at the final frame has fluo value 65535 -> corrupted')
 end
 
-areamousedate = [area '_' imouse '_' arg_date];
+area_mouse_date_sess = [area '_' imouse '_' arg_date '_' arg_ImgFolder];
 mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
-result_folder = [mapped_path, '\mat_inter\', areamousedate, segment_suffix];
+result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
 
-%% concat trial stim info for each session
+%% find trial stim info for each session
 % index by adapter contrast, target ori, isi
 
 input_behav = input_behav_seq;
