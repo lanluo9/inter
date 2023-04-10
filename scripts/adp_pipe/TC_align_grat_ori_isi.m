@@ -24,10 +24,15 @@ dataset_meta = readtable(dir_meta);
 stim_type = 'grating' % grat_8ori_3isi
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
-area_bool = logical(strcmp(dataset_table.area, 'LM')); % + strcmp(dataset_table.area, 'LI'));
+area_bool = logical(strcmp(dataset_table.area, 'V1')) ;
+% area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'LI'));
 dataset_table = dataset_table(area_bool, :);
-sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
+% sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
 % sum(strcmp(dataset_table.area, 'LI')) % count LI
+
+dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
+seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-segmented data
+dataset_table = dataset_table(seg_bool, :);
 
 nset = size(dataset_table,1);
 
@@ -180,10 +185,10 @@ nrep_stim = unique(t(:,2))
 
 cd(result_folder)
 
-if ~isempty(dir('*trace_trial_stim*.mat')) && ~isempty(dir('*resp_base_trialwise*.mat'))
-    disp('TC align result exists, skip to next dataset:')
-    continue
-end
+% if ~isempty(dir('*trace_trial_stim*.mat')) && ~isempty(dir('*resp_base_trialwise*.mat'))
+%     disp('TC align result exists, skip to next dataset:')
+%     continue
+% end
 
 npSub_tc = df_flat;
 tc_align_ad = align_tc(frame_ad, npSub_tc);

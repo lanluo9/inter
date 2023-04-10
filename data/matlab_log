@@ -90810,3 +90810,32 @@ peak_id =
 
     14
 
+clear all
+clc
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_function\well_fit_cell_criteria.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_function\vis_cell_criteria.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\deprecated\adp_mag_pipeline_grating.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\deprecated\adp_mag_pipeline.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_single_sess.m',1)
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   10-Apr-2023 12:13:27
+
+area_bool = logical(strcmp(dataset_table.area, 'V1')) ;
+{Unable to resolve the name 'dataset_table.area'.
+} 
+
+stim_type =
+
+    'grating'
+
+dataset_table
+ 
+dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
+ 
+dataset_table
+ 

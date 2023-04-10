@@ -241,72 +241,72 @@ dfof_base2_trial = dfof_base2_trial(:,:,3);
 if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
         dfof_base_trial dfof_base2_trial; end
 
-% %% response to adapter & targets. get trace (bunny mode: isi=250 only)
-% % dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
-% 
-% [dfof_ad, dfof_ad_sem, dfof_ad_std] = dfof_resp(dfof_align_ad, 'tg', 0); % tg mode aka separate diff stim images, but use adapter resp
-% [dfof_tg, dfof_tg_sem, dfof_tg_std] = dfof_resp(dfof_align_tg, 'tg', 0);
-% % dfof_ad = dfof_ad(:,:,3); dfof_ad_sem = dfof_ad_sem(:,:,3); dfof_ad_std = dfof_ad_std(:,:,3); % keep isi=250 only
-% % dfof_tg = dfof_tg(:,:,3); dfof_tg_sem = dfof_tg_sem(:,:,3); dfof_tg_std = dfof_tg_std(:,:,3);
-% if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
-% 
-% % trace = ncell x nori x nisi3 [noad 750 250]
-% [trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
-% size(trace_avg)
-% % trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:));
-% if save_flag; save trace_aligned.mat trace_avg trace_sem; end
-% 
-% %% trial-wise response and baseline
-% 
-% [dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
-% % dfof_ad_trial = dfof_ad_trial(:,:,3);
-% % dfof_base_trial = dfof_base_trial(:,:,3);
-% 
-% [dfof_tg_trial, dfof_base2_trial] = dfof_resp_trialwise(dfof_align_tg, save_flag);
-% % dfof_tg_trial = dfof_tg_trial(:,:,3);
-% % dfof_base2_trial = dfof_base2_trial(:,:,3);
-% 
-% if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
-%         dfof_base_trial dfof_base2_trial; end
+%% response to adapter & targets. get trace (bunny mode: isi=250 only)
+% dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
 
-%%
-% %% visually driven cells
-% % cells responsive to ad / noad tg (all oris)
-% 
-% sig_alpha = 0.01;
-% [sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
-% [sig_vis_noad_tg, p_vis_noad_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
-% vis_cell_ad = logical(sig_vis_ad');
-% vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
-% vis_cell_any = logical(vis_cell_ad | vis_cell_noad_tg);
-% sum(vis_cell_ad) % vis driven by ad = 118 manual
-% sum(vis_cell_noad_tg) % vis driven by noad tg = 87 manual
-% sum(vis_cell_any) % vis driven by any = 123 manual
-% 
-% % find(vis_cell_ad==0) % not vis driven by ad
-% % find(vis_cell_noad_tg==0) % not vis driven by noad tg
-% % find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
-% 
-% %% well-fit cells
-% % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
-% 
-% % bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-% % if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
-% % else
-%     cd(result_folder); nrun = 1000; save_flag = 1;
-%     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-% % end
-% % sum(well_fit_cell)
-% 
-% %% fit tuning
-% % fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
-% [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
-% 
-% %% cell property
-% 
-% if save_flag
-%     save cell_property_loose.mat vis_cell_ad vis_cell_noad_tg sig_vis_ad sig_vis_noad_tg...
-%     ori_pref % well_fit_cell
+[dfof_ad, dfof_ad_sem, dfof_ad_std] = dfof_resp(dfof_align_ad, 'tg', 0); % tg mode aka separate diff stim images, but use adapter resp
+[dfof_tg, dfof_tg_sem, dfof_tg_std] = dfof_resp(dfof_align_tg, 'tg', 0);
+% dfof_ad = dfof_ad(:,:,3); dfof_ad_sem = dfof_ad_sem(:,:,3); dfof_ad_std = dfof_ad_std(:,:,3); % keep isi=250 only
+% dfof_tg = dfof_tg(:,:,3); dfof_tg_sem = dfof_tg_sem(:,:,3); dfof_tg_std = dfof_tg_std(:,:,3);
+if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem dfof_tg_std; end 
+
+% trace = ncell x nori x nisi3 [noad 750 250]
+[trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
+size(trace_avg)
+% trace_avg = squeeze(trace_avg(:,:,3,:)); trace_sem = squeeze(trace_sem(:,:,3,:));
+if save_flag; save trace_aligned.mat trace_avg trace_sem; end
+
+%% trial-wise response and baseline
+
+[dfof_ad_trial, dfof_base_trial] = dfof_resp_trialwise(dfof_align_ad, save_flag);
+% dfof_ad_trial = dfof_ad_trial(:,:,3);
+% dfof_base_trial = dfof_base_trial(:,:,3);
+
+[dfof_tg_trial, dfof_base2_trial] = dfof_resp_trialwise(dfof_align_tg, save_flag);
+% dfof_tg_trial = dfof_tg_trial(:,:,3);
+% dfof_base2_trial = dfof_base2_trial(:,:,3);
+
+if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
+        dfof_base_trial dfof_base2_trial; end
+
+%
+%% visually driven cells
+% cells responsive to ad / noad tg (all oris)
+
+sig_alpha = 0.01;
+[sig_vis_ad, p_vis_ad, ~] = vis_cell_criteria(dfof_align_ad, 'ad', sig_alpha);
+[sig_vis_noad_tg, p_vis_noad_tg, ~] = vis_cell_criteria(dfof_align_tg, 'tg_any', sig_alpha);
+vis_cell_ad = logical(sig_vis_ad');
+vis_cell_noad_tg = logical(sum(sig_vis_noad_tg, 2));
+vis_cell_any = logical(vis_cell_ad | vis_cell_noad_tg);
+sum(vis_cell_ad) % vis driven by ad = 118 manual
+sum(vis_cell_noad_tg) % vis driven by noad tg = 87 manual
+sum(vis_cell_any) % vis driven by any = 123 manual
+
+% find(vis_cell_ad==0) % not vis driven by ad
+% find(vis_cell_noad_tg==0) % not vis driven by noad tg
+% find(~vis_cell_ad & ~vis_cell_noad_tg) % not vis driven by anything
+
+%% well-fit cells
+% cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+
+% bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
+% if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
+% else
+    cd(result_folder); nrun = 1000; save_flag = 1;
+    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
 % end
+% sum(well_fit_cell)
+
+%% fit tuning
+% fit tuning under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
+[fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
+
+%% cell property
+
+if save_flag
+    save cell_property_loose.mat vis_cell_ad vis_cell_noad_tg sig_vis_ad sig_vis_noad_tg...
+    ori_pref % well_fit_cell
+end
 
 % end
