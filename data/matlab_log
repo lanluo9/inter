@@ -90839,3 +90839,540 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
  
 dataset_table
  
+
+stim_type =
+
+    'grating'
+
+dataset_table.cellpose_seg
+
+ans =
+
+  8×1 <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a> array
+
+   0
+   0
+   0
+   0
+   0
+   0
+   1
+   0
+
+dataset_table.manual_seg
+
+ans =
+
+  8×1 <a href="matlab:helpPopup cell" style="font-weight:bold">cell</a> array
+
+    {'true'  }
+    {'true'  }
+    {'true'  }
+    {'true'  }
+    {'true'  }
+    {'TODO'  }
+    {0×0 char}
+    {'TODO'  }
+
+dataset_table
+ 
+seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO'));
+ 
+dataset_table
+
+dataset_table =
+
+  8×11 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>     <strong>paradigm</strong>      <strong>gcamp</strong>      <strong>AWS</strong>        <strong>note</strong>   
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>___________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>__________</strong>
+
+    1323     2.0072e+05    {'V1'}     200     {'003'}       false        {'true'  }    {'grating'}    {'6s'}    true     {0×0 char}
+    1324     2.0073e+05    {'V1'}     200     {'003'}       false        {'true'  }    {'grating'}    {'6s'}    false    {0×0 char}
+    1322      2.008e+05    {'V1'}     200     {'002'}       false        {'true'  }    {'grating'}    {'6s'}    false    {0×0 char}
+    1328     2.0102e+05    {'V1'}     200     {'004'}       false        {'true'  }    {'grating'}    {'6s'}    true     {0×0 char}
+    1329     2.0121e+05    {'V1'}     200     {'002'}       false        {'true'  }    {'grating'}    {'6s'}    false    {0×0 char}
+    1337     2.1012e+05    {'V1'}     200     {'002'}       false        {'TODO'  }    {'grating'}    {'6s'}    false    {0×0 char}
+    1337     2.1012e+05    {'V1'}     150     {'003'}       true         {0×0 char}    {'grating'}    {'6s'}    false    {0×0 char}
+    1338     2.1023e+05    {'V1'}     200     {'002'}       false        {'TODO'  }    {'grating'}    {'6s'}    false    {0×0 char}
+
+seg_bool
+
+seg_bool =
+
+  8×1 <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a> array
+
+   1
+   1
+   1
+   1
+   1
+   0
+   1
+   0
+
+dataset_table = dataset_table(seg_bool, :);
+ 
+dataset_table
+ 
+
+stim_type =
+
+    'grating'
+
+nset
+
+nset =
+
+     6
+
+dataset_table
+ 
+iset = 1
+
+iset =
+
+     1
+
+
+iset =
+
+     1
+
+
+nset =
+
+     6
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200720'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+sess_id_arr
+
+sess_id_arr =
+
+     3
+
+
+nframe =
+
+       99865
+
+
+ncell =
+
+   103
+
+loaded cellpose timecourse & visual input
+result_folder
+
+result_folder =
+
+    'Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i1323_200720_003'
+
+ls(result_folder)
+
+.   ..  
+
+
+nrep_stim =
+
+    55
+    57
+    59
+    60
+
+Error: File:
+C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi.m
+Line: 190
+A CONTINUE may only be used within a FOR or WHILE loop, and then only
+within the same file as its corresponding FOR or WHILE statement.
+
+ls
+
+.                     trace_trial_stim.mat  
+..                    
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+iset
+
+iset =
+
+     1
+
+
+iset =
+
+     1
+
+
+nset =
+
+     6
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200720'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99865
+
+
+ncell =
+
+   103
+
+loaded cellpose timecourse & visual input
+
+nrep_stim =
+
+    55
+    57
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+iset =
+
+     2
+
+
+nset =
+
+     6
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200728'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99806
+
+
+ncell =
+
+    93
+
+loaded cellpose timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+iset =
+
+     3
+
+
+nset =
+
+     6
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200803'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99816
+
+
+ncell =
+
+    97
+
+loaded cellpose timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+iset =
+
+     4
+
+
+nset =
+
+     6
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201015'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    82
+
+loaded cellpose timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+iset =
+
+     5
+
+
+nset =
+
+     6
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201209'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+   146
+
+loaded cellpose timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+iset =
+
+     6
+
+
+nset =
+
+     6
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210120'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    62
+
+loaded cellpose timecourse & visual input
+
+nrep_stim =
+
+    55
+    56
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+     9
+
