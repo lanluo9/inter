@@ -91376,3 +91376,63 @@ peak_id =
 
      9
 
+open quickRet_LL.m
+
+mouse =
+
+    '1374'
+
+
+date =
+
+    '230411'
+
+
+time =
+
+    '1109'
+
+
+ImgFolder =
+
+    '001'
+
+start quickRet
+waiting for file transfer
+found mat file
+waiting for file transfer
+found sbx file
+Loaded 4050 frames 
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load')" style="font-weight:bold">load</a>
+Unable to find file or directory
+'\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\Behavior\Data\data-i1374-230411-1109.mat'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('quickRet_LL', 'C:\Users\ll357\Documents\inter\scripts\misc\personalized_matlab\quickRet_LL.m', 84)" style="font-weight:bold">quickRet_LL</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\misc\personalized_matlab\quickRet_LL.m',84,0)">line 84</a>)
+    load(fName);
+
+
+mouse =
+
+    '1374'
+
+
+date =
+
+    '230411'
+
+
+time =
+
+    '1109'
+
+
+ImgFolder =
+
+    '001'
+
+start quickRet
+waiting for file transfer
+found mat file
+waiting for file transfer
+found sbx file
+Loaded 4050 frames 
