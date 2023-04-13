@@ -294,19 +294,25 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
-% bootstrap_file = fullfile(result_folder, 'fit_bootstrap.mat');
-% if exist(bootstrap_file, 'file'); load(bootstrap_file, 'well_fit_cell')
-% else
+bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
+if exist(bootstrap_file, 'file')
+    tmp = load(bootstrap_file, 'ori_pref_runs');
+    if size(tmp, 2) == 1000
+        disp('skip well fit boots, already done')
+        continue
+    end
+else
     save_flag = 1;
     nrun = 1000; 
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-% end
-% sum(well_fit_cell)
+end
+% sum(well_fit_cell) / length(well_fit_cell)
 
 %% fit von mises tuning curve
 % fit_param under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
 % ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
 
+save_flag = 1;
 [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
 end
