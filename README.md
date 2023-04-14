@@ -1,6 +1,7 @@
 # Optimization of visual representations by recent experience
 
 main results:  
+[Neural decoder in the face of history dependency](https://docs.google.com/presentation/d/1nUdT5WyY9DpLUSfw9GVtocoAG8LeTVNV2N7Od6F-rlg/edit?usp=sharing)  
 [Decoding history dependent neural activity in visual areas.ppt](https://docs.google.com/presentation/d/1PZvVA3_MYgnJ2v66bIFv9w3ss1ItqlKIM-0LZMmWxiQ/edit?usp=sharing)  
 [/results/poster/poster neurobio retreat 2022.pdf](https://github.com/lanluo9/inter/blob/9fe485964d835c5011d88248cfd7a0a942c51848/results/poster%202022/poster%202022%20Lan.pdf)  
 [/results/student seminar/student seminar final.pdf](https://github.com/lanluo9/inter/blob/4cfd5f89c713439b94803b5e078b1dff518a8834/results/student%20seminar/student%20seminar%20final.pdf)  
