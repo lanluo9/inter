@@ -336,7 +336,7 @@ end
 save_flag = 1;
 [fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
 
-% % fit twice with no adapter trials, as a control plot for tuning bias plot
-% ori_pref_runs = fit_tuning_noad_twice(dfof_align_tg, save_flag);
+% fit twice with no adapter trials, as a control plot for tuning bias plot
+ori_pref_runs = fit_tuning_noad_twice(dfof_align_tg, save_flag);
 
 end
