@@ -4,15 +4,15 @@ function ori_pref_runs = fit_tuning_noad_twice(dfof_align_tg, save_flag)
 % input: dfof_align_tg. output: ori_pref_runs, where nrun = 2
 
 global ncell nori id_ori ori_list id_noad range_base range_resp
-nrun = 2 % split no adapter trials into two halves
+nrun = 2; % split no adapter trials into two halves
 dfof_avg_runs = pi * ones(ncell, nori, nrun); % dfof_ste_runs = pi * ones(ncell, nori, nrun);
 fit_param_runs = pi * ones(ncell, 7, nrun); ori_pref_runs = pi * ones(ncell, nrun);
 
 disp('start bootstrap runs')
 for irun = 1 : nrun
-    if ~mod(irun, 100); disp(num2str(irun)); end
+    disp(num2str(irun));
 
-for icell = 1 : ncell        
+for icell = 1 : ncell
     for iori = 1 : nori
         idx = intersect(id_ori{iori}, id_noad);
         ntrials_ori_noad = length(idx);
