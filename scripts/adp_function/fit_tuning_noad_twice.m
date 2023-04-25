@@ -10,8 +10,6 @@ fit_param_runs = pi * ones(ncell, 7, nrun); ori_pref_runs = pi * ones(ncell, nru
 
 disp('start bootstrap runs')
 for irun = 1 : nrun
-    disp(num2str(irun));
-
 for icell = 1 : ncell
     for iori = 1 : nori
         idx = intersect(id_ori{iori}, id_noad);

@@ -19,7 +19,8 @@ for icond = 1:ncond
         data = dfof_cond(icell,:); 
         [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(ori_rad, data);
         fit_param(icell, :, icond) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
-    %   icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+        % icell, baseline|offset, k1 sharpness, R peak response, u1 preferred orientation, 
+        % sse sum of squared error, R2
     end
     ori_pref_cond = rad2deg(fit_param(:, 5, icond)); % = u1_hat
     ori_pref_cond(ori_pref_cond < 0) = ori_pref_cond(ori_pref_cond < 0) + 180; 
