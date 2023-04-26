@@ -91436,3 +91436,639 @@ found mat file
 waiting for file transfer
 found sbx file
 Loaded 4050 frames 
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   26-Apr-2023 17:37:12
+
+
+stim_type =
+
+    'grating'
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   26-Apr-2023 17:38:14
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    22
+
+dataset_table
+ 
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    22
+
+seg_todo = logical(strcmp(dataset_table.manual_seg, 'TODO'));
+ 
+dataset_table = dataset_table(~seg_todo, :);
+ 
+nset = size(dataset_table,1);
+ 
+dataset_table
+ 
+nset
+
+nset =
+
+    20
+
+
+iset =
+
+     1
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     6
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     7
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     8
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     9
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    10
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    11
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    12
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    13
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    14
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    15
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    16
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    17
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230309'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    18
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230309'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    19
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1374
+
+
+arg_date =
+
+    '230323'
+
+
+arg_ImgFolder =
+
+    '002'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+    20
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1374
+
+
+arg_date =
+
+    '230323'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\230323_i1374\230323_i1374_runs-003'
+
+dir('*TC*.mat')
+
+230323_i1374_runs-003_TCs_cellpose.mat  
+
+
+iset = 1
+
+iset =
+
+     1
+
+dataset_now = dataset_table(iset,:);
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1323
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '200723'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder = arg_ImgFolder; % dataset_table(1,:).num{1} for multisess, ref is the same as arg_ImgFolder if single sess
+run_str_ref = ['runs-' ref_ImgFolder(1,:)];
+
+imouse = ['i', num2str(arg_mouse)];
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\200723_i1323\200723_i1323_runs-003'
+
+dir('*TC*.mat')
+
+200723_i1323_runs-003_TCs_addfake.mat  
+
+
+dataset_table
+ 
