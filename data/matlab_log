@@ -92072,3 +92072,531 @@ dir('*TC*.mat')
 
 dataset_table
  
+edit get_cellpose_timecourse
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   27-Apr-2023 11:01:24
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    22
+
+dataset_table
+ 
+edit get_data_reg_cellpose_tif
+edit get_data_reg_cellpose_tif
+assert(exist('cellpose_mask_v2.mat','file'))
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('assert')" style="font-weight:bold">assert</a>
+Assertion failed.
+} 
+dir_analysis
+{Unrecognized function or variable 'dir_analysis'.
+} 
+iset = 1;
+
+iset, nset
+
+iset =
+
+     1
+
+
+nset =
+
+    20
+
+dataset_now = dataset_table(iset,:);
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1323
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '200723'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder = arg_ImgFolder; % dataset_table(1,:).num{1} for multisess, ref is the same as arg_ImgFolder if single sess
+run_str_ref = ['runs-' ref_ImgFolder(1,:)];
+
+imouse = ['i', num2str(arg_mouse)];
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\200723_i1323\200723_i1323_runs-003'
+
+dir('*TCs_addfake.mat')
+
+200723_i1323_runs-003_TCs_addfake.mat  
+
+
+assert(exist('cellpose_mask_v2.mat','file'))
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('assert')" style="font-weight:bold">assert</a>
+Assertion failed.
+} 
+iset=10
+
+iset =
+
+    10
+
+set
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('set')" style="font-weight:bold">set</a>
+Not enough input arguments.
+} 
+matlab.internal.language.introspective.errorDocCallback('set')
+
+iset, nset
+
+iset =
+
+    10
+
+
+nset =
+
+    20
+
+dataset_now = dataset_table(iset,:);
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1339
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '210930'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder = arg_ImgFolder; % dataset_table(1,:).num{1} for multisess, ref is the same as arg_ImgFolder if single sess
+run_str_ref = ['runs-' ref_ImgFolder(1,:)];
+
+imouse = ['i', num2str(arg_mouse)];
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\210930_i1339\210930_i1339_runs-003'
+
+assert(exist('cellpose_mask_v2.mat','file'))
+ 
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   27-Apr-2023 11:09:32
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    22
+
+
+iset =
+
+     1
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     2
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     3
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     4
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+timecourse exists, skip to next dataset:
+
+iset =
+
+     5
+
+
+nset =
+
+    20
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 178.613780 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 735.6 seconds (136.0 fps)
+registration finished
+got data_reg & cellpose tif for 1329 210113 004
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load')" style="font-weight:bold">load</a>
+'cellpose_mask_v2.mat' is not found in the current folder or on the
+MATLAB path, but exists in:
+    Z:\All_Staff\home\lan\Analysis\2P\210930_i1339\210930_i1339_runs-003
+
+    Z:\All_Staff\home\lan\Analysis\2P\230323_i1374\230323_i1374_runs-003
+
+    \\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\230323_i1374\230323_i1374_runs-003
+
+    \\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\230309_i1381\230309_i1381_runs-003
+
+Change the MATLAB current folder or add its folder to the MATLAB path.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_cellpose_timecourse', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_cellpose_timecourse.m', 4)" style="font-weight:bold">get_cellpose_timecourse</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_cellpose_timecourse.m',4,0)">line 4</a>)
+t = load(tif_name);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_single_sess_temp', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\deprecated\TC_extract_single_sess_temp.m', 79)" style="font-weight:bold">TC_extract_single_sess_temp</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\deprecated\TC_extract_single_sess_temp.m',79,0)">line 79</a>)
+npSub_tc = get_cellpose_timecourse(data_reg, tif_name, ...
+
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\210113_i1329\210113_i1329_runs-004'
+
+exist('cellpose_mask_v2.mat','file')
+
+ans =
+
+     0
+
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\deprecated\TC_extract_single_sess_temp.m',79,0)
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_cellpose_timecourse.m',4,0)
+pwd
+
+ans =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1329\210113\004'
+
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\210113_i1329\210113_i1329_runs-004'
+
+ls(cd(dir_analysis))
+
+.                         004_000_000.sbx           
+..                        004_000_000_eye.mat       
+004_000_000.ephys         004_000_000_realtime.mat  
+004_000_000.mat           
+
+ls((dir_analysis))
+
+.                                              
+..                                             
+210113_i1329_runs-004_FOV_avg.pdf              
+210113_i1329_runs-004_FOV_byFrame.pdf          
+210113_i1329_runs-004_TCs_cellpose.mat         
+210113_i1329_runs-004_data_avg.mat             
+210113_i1329_runs-004_input.mat                
+210113_i1329_runs-004_reg_shifts.mat           
+210113_i1329_runs-004_select_register_ref.pdf  
+Thumbs.db                                      
+cellpose_mask.mat                              
+cellpose_mask.pdf                              
+cellpose_mask_v2.mat                           
+cellpose_stim_resp_gauss.tif                   
+cellpose_stim_resp_gauss_seg.npy               
+data_dfof.mat                                  
+find_ca_latency.jpg                            
+find_ca_latency.mat                            
+find_ca_latency_ca_window.jpg                  
+find_ca_latency_zoomin.jpg                     
+
+
+tif_name = [dir_analysis, '/cellpose_mask_v2.mat'];
+ 
+tif_name
+
+tif_name =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\210113_i1329\210113_i1329_runs-004/cellpose_mask_v2.mat'
+
+tif_name = [dir_analysis, '\cellpose_mask_v2.mat'];
+ 
+tif_name
+
+tif_name =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\210113_i1329\210113_i1329_runs-004\cellpose_mask_v2.mat'
+
+LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
+ 
+npSub_tc = get_cellpose_timecourse(data_reg, tif_name, ...
+    LL_base, arg_date, imouse, run_str);
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('stackGroupProject')" style="font-weight:bold">stackGroupProject</a>
+
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_cellpose_timecourse', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_cellpose_timecourse.m', 21)" style="font-weight:bold">get_cellpose_timecourse</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_cellpose_timecourse.m',21,0)">line 21</a>)
+        data_reg_down  = stackGroupProject(data_reg,down);
+} 
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   27-Apr-2023 11:34:58
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    22
+
+edit get_cellpose_timecourse
+
+iset =
+
+     1
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 47.737815 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000

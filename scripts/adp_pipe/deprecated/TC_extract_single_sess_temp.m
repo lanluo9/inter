@@ -1,4 +1,7 @@
 %% readme
+% this is a temp script for LI data, bc we had to hand select cell mask in
+% cellpose version 2 (v2)
+
 % this script register a single-session dataset, then extract timecourse from cells segmented by cellpose
 % code is inherited from batch_cellpose.m and TC_extract_multi_sess.m (previously named adp_mag_mix50.m)
 
@@ -26,8 +29,8 @@ dataset_table = dataset_table(area_bool, :);
 % sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
 sum(strcmp(dataset_table.area, 'LI')) % count LI
 
-seg_todo = logical(strcmp(dataset_table.manual_seg, 'TODO'));
-dataset_table = dataset_table(~seg_todo, :);
+seg_hand_selected = logical(strcmp(dataset_table.manual_seg, 'RECHECK'));
+dataset_table = dataset_table(seg_hand_selected, :);
 
 nset = size(dataset_table,1);
 
@@ -60,19 +63,18 @@ if ~isempty(dir('*TCs_addfake.mat')) % only skip if manual TC exist. cellpose TC
     continue
 end
 
+if ~exist('cellpose_mask_v2.mat','file')
+    disp('cellpose_mask_v2.mat doesnt exist, skip to next dataset:')
+    continue
+end
+
 disp('add your stim_type into function: bunny, mix, grat6, grating(grat1)')
 [data_reg, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(... % register every sess against itself: single sess registration
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); 
 disp(['got data_reg & cellpose tif for ', num2str(arg_mouse), ' ', arg_date, ' ', arg_ImgFolder])
 close all
 
-disp('wait for batch_cellpose.ipynb')
-while ~exist('cellpose_mask.mat','file')
-    pause(60) % wait for cellpose to run in ipynb
-end
-disp('got cellpose mask, now extract TC')
-
-tif_name = 'cellpose_mask.mat';
+tif_name = [dir_analysis, '\cellpose_mask_v2.mat'];
 LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
 npSub_tc = get_cellpose_timecourse(data_reg, tif_name, ...
     LL_base, arg_date, imouse, run_str);
@@ -82,3 +84,5 @@ clear data_reg
 clear global % suspect weird trace is bc residual global var affecting sbxread
 
 end
+
+disp('uncomment in function get_data_reg_cellpose_tif')
