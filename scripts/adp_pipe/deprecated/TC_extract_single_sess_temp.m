@@ -85,4 +85,4 @@ clear global % suspect weird trace is bc residual global var affecting sbxread
 
 end
 
-disp('uncomment in function get_data_reg_cellpose_tif')
+% disp('uncomment in function get_data_reg_cellpose_tif')

@@ -93480,3 +93480,35 @@ ans =
 
     'data corruption not detected'
 
+start registration. using middle section as motion correct ref
+
+select =
+
+     5
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5400
+Frame 10800
+Frame 16200
+Frame 21600
+Frame 27000
+Frame 32400
+Frame 37800
+Frame 43200
+Frame 48600
+Frame 54000
+Frame 59400
+Frame 64800
+Frame 70200
+Frame 75600
+Frame 81000
+Frame 86400
+Frame 91800
+Frame 97200
+Frame 102600
+Frame 108000
+Registered 108000 frames in 796.4 seconds (135.6 fps)
+registration finished
+got data_reg & cellpose tif for 1381 230309 002
+stackGetTimeCourses: elapsed time is 9.99598 seconds.
