@@ -53,13 +53,14 @@
 % % legend
 
 %%
+% icell = 64;
+icell = 71;
 
 figure;
 subplot(1,2,1)
 
 icond = 1;
 dfof_cond = dfof_tg(:,:,icond); 
-icell = 64;
 ori_rad = deg2rad(ori_list);
 data = dfof_cond(icell,:); 
 [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(ori_rad, data);
@@ -75,7 +76,6 @@ subplot(1,2,2)
 
 icond = 3;
 dfof_cond = dfof_tg(:,:,icond); 
-icell = 64;
 ori_rad = deg2rad(ori_list);
 data = dfof_cond(icell,:); 
 [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(ori_rad, data);

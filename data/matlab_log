@@ -92770,3 +92770,713 @@ Frame 25000
 Frame 30000
 Frame 35000
 Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 740.7 seconds (135.0 fps)
+registration finished
+got data_reg & cellpose tif for 1337 210203 003
+
+nCells =
+
+    43
+
+Cell #4 
+Cell #8 
+Cell #12 
+Cell #16 
+Cell #20 
+Cell #24 
+Cell #28 
+Cell #32 
+Cell #36 
+Cell #40 
+TC extraction complete for runs-003
+3 set done out of 11
+
+iset =
+
+     4
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '004'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 193.876246 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     3
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 725.3 seconds (137.9 fps)
+registration finished
+got data_reg & cellpose tif for 1337 210203 004
+
+nCells =
+
+    25
+
+Cell #2 
+Cell #4 
+Cell #6 
+Cell #8 
+Cell #10 
+Cell #12 
+Cell #14 
+Cell #16 
+Cell #18 
+Cell #20 
+Cell #22 
+Cell #24 
+TC extraction complete for runs-004
+4 set done out of 11
+
+iset =
+
+     5
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 254.815979 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     5
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 746.1 seconds (134.0 fps)
+registration finished
+got data_reg & cellpose tif for 1339 210930 002
+
+nCells =
+
+    24
+
+Cell #2 
+Cell #4 
+Cell #6 
+Cell #8 
+Cell #10 
+Cell #12 
+Cell #14 
+Cell #16 
+Cell #18 
+Cell #20 
+Cell #22 
+Cell #24 
+TC extraction complete for runs-002
+5 set done out of 11
+
+iset =
+
+     6
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 211.493490 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 743.3 seconds (134.5 fps)
+registration finished
+got data_reg & cellpose tif for 1339 210930 003
+
+nCells =
+
+    25
+
+Cell #2 
+Cell #4 
+Cell #6 
+Cell #8 
+Cell #10 
+Cell #12 
+Cell #14 
+Cell #16 
+Cell #18 
+Cell #20 
+Cell #22 
+Cell #24 
+TC extraction complete for runs-003
+6 set done out of 11
+
+iset =
+
+     7
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 179.201373 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     8
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 745.9 seconds (134.1 fps)
+registration finished
+got data_reg & cellpose tif for 1350 211028 002
+
+nCells =
+
+    35
+
+Cell #3 
+Cell #6 
+Cell #9 
+Cell #12 
+Cell #15 
+Cell #18 
+Cell #21 
+Cell #24 
+Cell #27 
+Cell #30 
+Cell #33 
+TC extraction complete for runs-002
+7 set done out of 11
+
+iset =
+
+     8
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 198.016827 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 739.0 seconds (135.3 fps)
+registration finished
+got data_reg & cellpose tif for 1350 211028 003
+
+nCells =
+
+    34
+
+Cell #3 
+Cell #6 
+Cell #9 
+Cell #12 
+Cell #15 
+Cell #18 
+Cell #21 
+Cell #24 
+Cell #27 
+Cell #30 
+Cell #33 
+TC extraction complete for runs-003
+8 set done out of 11
+
+iset =
+
+     9
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 194.344167 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 754.3 seconds (132.6 fps)
+registration finished
+got data_reg & cellpose tif for 1380 230110 002
+
+nCells =
+
+    35
+
+Cell #3 
+Cell #6 
+Cell #9 
+Cell #12 
+Cell #15 
+Cell #18 
+Cell #21 
+Cell #24 
+Cell #27 
+Cell #30 
+Cell #33 
+TC extraction complete for runs-002
+9 set done out of 11
+
+iset =
+
+    10
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '003'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 100000 frames 
+Elapsed time is 175.944659 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+re-register from reg_shifts.mat
+Starting, frame 0
+Frame 5000
+Frame 10000
+Frame 15000
+Frame 20000
+Frame 25000
+Frame 30000
+Frame 35000
+Frame 40000
+Frame 45000
+Frame 50000
+Frame 55000
+Frame 60000
+Frame 65000
+Frame 70000
+Frame 75000
+Frame 80000
+Frame 85000
+Frame 90000
+Frame 95000
+Frame 100000
+Registered 100000 frames in 743.5 seconds (134.5 fps)
+registration finished
+got data_reg & cellpose tif for 1380 230110 003
+
+nCells =
+
+    15
+
+Cell #1 
+Cell #2 
+Cell #3 
+Cell #4 
+Cell #5 
+Cell #6 
+Cell #7 
+Cell #8 
+Cell #9 
+Cell #10 
+Cell #11 
+Cell #12 
+Cell #13 
+Cell #14 
+Cell #15 
+TC extraction complete for runs-003
+10 set done out of 11
+
+iset =
+
+    11
+
+
+nset =
+
+    11
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230309'
+
+
+arg_ImgFolder =
+
+    '002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid
+MATLAB identifiers before creating variable names for the table. The
+original column headers are saved in the VariableDescriptions
+property.
+Set 'VariableNamingRule' to 'preserve' to use the original column
+headers as table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 203.328633 seconds.
+
+ans =
+
+    'data corruption not detected'
+

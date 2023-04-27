@@ -24,15 +24,17 @@ dataset_meta = readtable(dir_meta);
 stim_type = 'grating' % grat_8ori_3isi
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
-area_bool = logical(strcmp(dataset_table.area, 'V1')) ;
+% area_bool = logical(strcmp(dataset_table.area, 'V1')) ;
 % area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'LI'));
-dataset_table = dataset_table(area_bool, :);
+% dataset_table = dataset_table(area_bool, :);
 % sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
 % sum(strcmp(dataset_table.area, 'LI')) % count LI
 
-dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
-seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-segmented data
-dataset_table = dataset_table(seg_bool, :);
+% dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
+% seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-segmented data
+% dataset_table = dataset_table(seg_bool, :);
+
+dataset_table = dataset_table(dataset_table.date == 201119, :)
 
 nset = size(dataset_table,1);
 
