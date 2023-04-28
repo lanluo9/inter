@@ -93512,3 +93512,21 @@ Registered 108000 frames in 796.4 seconds (135.6 fps)
 registration finished
 got data_reg & cellpose tif for 1381 230309 002
 stackGetTimeCourses: elapsed time is 9.99598 seconds.
+
+nCells =
+
+    94
+
+Cell #9 
+Cell #18 
+Cell #27 
+Cell #36 
+Cell #45 
+Cell #54 
+Cell #63 
+Cell #72 
+Cell #81 
+Cell #90 
+TC extraction complete for runs-002
+11 set done out of 11
+uncomment in function get_data_reg_cellpose_tif
