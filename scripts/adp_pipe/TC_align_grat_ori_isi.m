@@ -24,20 +24,18 @@ dataset_meta = readtable(dir_meta);
 stim_type = 'grating' % grat_8ori_3isi
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
-% area_bool = logical(strcmp(dataset_table.area, 'V1')) ;
-% area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'LI'));
-% dataset_table = dataset_table(area_bool, :);
+area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'V1'));
+dataset_table = dataset_table(area_bool, :);
 % sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
-% sum(strcmp(dataset_table.area, 'LI')) % count LI
 
-% dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
-% seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-segmented data
-% dataset_table = dataset_table(seg_bool, :);
+dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
+seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-segmented data
+dataset_table = dataset_table(seg_bool, :);
 
 % dataset_table = dataset_table(dataset_table.date == 201119, :)
-dataset_table = dataset_table(dataset_table.date == 200720, :)
+% dataset_table = dataset_table(dataset_table.date == 200720, :)
 
-nset = size(dataset_table,1);
+nset = size(dataset_table, 1);
 
 %% find TC.mat
 
@@ -257,7 +255,29 @@ xline(range_resp(1), 'k--')
 xline(range_resp(end), 'k--')
 grid on; grid minor
 set(gcf, 'Position', get(0, 'Screensize'));
-saveas(gcf, 'find_ca_latency_ca_window.jpg')
+if save_flag; saveas(gcf, 'find_ca_latency_ca_window.jpg'); end
+
+%% use resp window to cut trace_by_trial
+% aka slicing dfof_align_ad & dfof_align_tg
+
+close all
+save_flag = 1;
+
+R1_cell_trial = mean(dfof_align_ad(:, :, range_resp), 3) ...
+              - mean(dfof_align_ad(:, :, range_base), 3); % ncell x ntrial, avg over resp time win
+R2_cell_trial = mean(dfof_align_tg(:, :, range_resp), 3) ...
+              - mean(dfof_align_tg(:, :, range_base), 3); % separate 250 vs 750 isi by saved var isi_nframe
+
+figure
+subplot(211)
+imshow(R1_cell_trial, 'InitialMagnification', 800);
+colorbar;
+subplot(212)
+imshow(R2_cell_trial, 'InitialMagnification', 800);
+colorbar;
+
+if save_flag; save('trace_trial_stim.mat', 'R1_cell_trial', 'R2_cell_trial', '-append'); end
+save_flag = 0;
 
 %% response to adapter & targets. get trace (bunny mode: isi=250 only)
 % dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
@@ -295,6 +315,18 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 
 %% find visually driven cells -> vis_driven.ipynb
 
+%% fit von mises tuning curve
+% fit_param under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
+% ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
+% save tuning curve for each cell & isi
+
+save_flag = 1;
+[fit_param, ori_pref, tuning_curve_cell_isi] = fit_tuning(dfof_tg, save_flag);
+save_flag = 0;
+
+% % fit twice with no adapter trials, as a control plot for tuning bias plot
+% ori_pref_runs = fit_tuning_noad_twice(dfof_align_tg, save_flag);
+
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
@@ -331,15 +363,5 @@ end
 % plot(ori_pref_noad_boot_med)
 % plot(ori_pref_noad)
 % legend('boot avg', 'boot med', 'fit')
-
-%% fit von mises tuning curve
-% fit_param under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
-% ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
-
-save_flag = 1;
-[fit_param, ori_pref] = fit_tuning(dfof_tg, save_flag);
-
-% fit twice with no adapter trials, as a control plot for tuning bias plot
-ori_pref_runs = fit_tuning_noad_twice(dfof_align_tg, save_flag);
 
 end
