@@ -34,7 +34,8 @@ dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 % seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-segmented data
 % dataset_table = dataset_table(seg_bool, :);
 
-dataset_table = dataset_table(dataset_table.date == 201119, :)
+% dataset_table = dataset_table(dataset_table.date == 201119, :)
+dataset_table = dataset_table(dataset_table.date == 200720, :)
 
 nset = size(dataset_table,1);
 

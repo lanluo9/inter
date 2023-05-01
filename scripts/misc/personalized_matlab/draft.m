@@ -53,8 +53,8 @@
 % % legend
 
 %%
-% icell = 64;
-icell = 71;
+icell = 64;
+% icell = 71;
 
 figure;
 subplot(1,2,1)
