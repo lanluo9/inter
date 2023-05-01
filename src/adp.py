@@ -46,7 +46,7 @@ def load_trace_trial_data(dir_path, vis_filter=True):
     try:
         stim_seq = data["stim_seq"]
         stim_id = [i[0] for i in stim_seq]  # flatten list
-        if stim_seq.shape[1] > stim_seq.shape[0]: # if stim_seq is a column vector
+        if stim_seq.shape[1] > stim_seq.shape[0]:  # if stim_seq is a column vector
             stim_id = stim_seq
     except:
         stim_ori = data["stim_ori"]
@@ -65,7 +65,7 @@ def load_trace_trial_data(dir_path, vis_filter=True):
         trace_by_trial = trace_by_trial[
             vis_driven, :, :
         ]  # only keep trace of vis-driven cells
-        print('alert! only vis driven cells are kept!')
+        print("alert! only vis driven cells are kept!")
 
     ncell = trace_by_trial.shape[0]
     try:
@@ -81,6 +81,59 @@ def load_trace_trial_data(dir_path, vis_filter=True):
         stim_id,
         trace_by_trial,
     )  # ncell, nstim, ntrial, nframe
+
+
+def load_resp_trial(dir_path, vis_filter=False):
+    """
+    load resp_cell_trial and stim_info data from directory
+    for grat_8ori_3isi paradigm
+
+    args:
+        dir_path (raw string): directory path, compatible with windows path containing '\\'
+        vis_filter (boolean): whether to filter by visually driven cells
+
+    returns:
+        R1/R2_cell_trial (ndarray): neural activity of shape: ncell x ntrial, avg over resp time window from matlab
+        stim_id (ndarray): stim2 identity, isi, stim1 contrast for each trial
+    """
+    file_path = dir_path.replace("\\", "/")
+    data = sio.loadmat(file_path + "/trace_trial_stim.mat")
+    # print(data.keys())
+
+    try:
+        stim_seq = data["stim_seq"]
+        stim_id = [i[0] for i in stim_seq]  # flatten list
+        if stim_seq.shape[1] > stim_seq.shape[0]:  # if stim_seq is a column vector
+            stim_id = stim_seq
+    except:
+        stim_ori = data["stim_ori"]
+        isi_nframe = data["isi_nframe"]
+        adapter_contrast = data["adapter_contrast"]
+        stim_id = dict(
+            stim_ori=stim_ori, isi_nframe=isi_nframe, adapter_contrast=adapter_contrast
+        )
+    R1_cell_trial = data["R1_cell_trial"]  # ncell x ntrial, actually not a trace
+    R2_cell_trial = data["R2_cell_trial"]
+
+    if vis_filter:
+        with open(file_path + "/vis_driven.pickle", "rb") as handle:
+            vis = pickle.load(handle)
+            vis_driven = vis["vis_driven"]
+            vis_driven = [v[0] for v in vis_driven]  # flatten list
+        R1_cell_trial = R1_cell_trial[
+            vis_driven, :, :
+        ]  # only keep trace of vis-driven cells
+        R2_cell_trial = R2_cell_trial[
+            vis_driven, :, :
+        ]  # only keep trace of vis-driven cells
+        print("alert! only vis driven cells are kept!")
+
+    ncell = R1_cell_trial.shape[0]
+    nstim = len(np.unique(stim_id['stim_ori']))
+    ntrial = R1_cell_trial.shape[1]
+    print(f"ncell: {ncell}, nstim: {nstim}, ntrial: {ntrial}")
+
+    return (stim_id, R1_cell_trial, R2_cell_trial)
 
 
 def calc_trace_stim(trace_by_trial, stim_id):
