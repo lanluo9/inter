@@ -24,7 +24,8 @@ dataset_meta = readtable(dir_meta);
 stim_type = 'grating' % grat_8ori_3isi
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
-area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'V1'));
+% area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'V1'));
+area_bool = logical(strcmp(dataset_table.area, 'LI'));
 dataset_table = dataset_table(area_bool, :);
 % sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
 
@@ -33,7 +34,7 @@ seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-seg
 dataset_table = dataset_table(seg_bool, :);
 
 % dataset_table = dataset_table(dataset_table.date == 201119, :)
-dataset_table = dataset_table(dataset_table.date == 200720, :)
+% dataset_table = dataset_table(dataset_table.date == 200720, :)
 
 nset = size(dataset_table, 1);
 
@@ -80,7 +81,7 @@ global frame_rate range_base range_resp ...
     nisi nori ori_list...
     id_ad id_noad id_isi2 id_isi3 id_ori
 
-save_flag = 0; % toggle this to save/skip all .mat creation below
+save_flag = 1; % toggle this to save/skip all .mat creation below
 
 % try % if data folder contains 2p imaging note.xls
 %     stim_protocol = 'grat_SF6'
@@ -132,7 +133,7 @@ for i = 1:length(sess_id_arr)
 end
 nframe, ncell
 
-disp('loaded cellpose timecourse & visual input')
+disp('loaded timecourse & visual input')
 try
     assert(sum(df_flat(nframe,:) < 65535) == ncell)
 catch
@@ -199,7 +200,7 @@ dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
 dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
 
 trace_by_trial = dfof_align_ad;
-stim_ori = ori_seq'; % stim as 
+stim_ori = ori_seq'; % stim as col
 isi_nframe = isi_seq'; % ISI as number of frames in each trial
 adapter_contrast = contrast_ad'; % contrast of adapter (R1)
 if save_flag; save trace_trial_stim.mat trace_by_trial ...
@@ -261,7 +262,6 @@ if save_flag; saveas(gcf, 'find_ca_latency_ca_window.jpg'); end
 % aka slicing dfof_align_ad & dfof_align_tg
 
 close all
-% save_flag = 1;
 
 R1_cell_trial = mean(dfof_align_ad(:, :, range_resp), 3) ...
               - mean(dfof_align_ad(:, :, range_base), 3); % ncell x ntrial, avg over resp time win
@@ -275,9 +275,9 @@ colorbar;
 subplot(212)
 imshow(R2_cell_trial, 'InitialMagnification', 800);
 colorbar;
+set(gcf, 'Position', get(0, 'Screensize'));
 
 if save_flag; save('trace_trial_stim.mat', 'R1_cell_trial', 'R2_cell_trial', '-append'); end
-save_flag = 0;
 
 %% response to adapter & targets. get trace (bunny mode: isi=250 only)
 % dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
@@ -320,12 +320,7 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 % ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
 % save tuning curve for each cell & isi
 
-% save_flag = 1;
 [fit_param, ori_pref, tuning_curve_cell_isi] = fit_tuning(dfof_tg, save_flag);
-% save_flag = 0;
-
-% % fit twice with no adapter trials, as a control plot for tuning bias plot
-% ori_pref_runs = fit_tuning_noad_twice(dfof_align_tg, save_flag);
 
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
@@ -335,7 +330,7 @@ if exist(bootstrap_file, 'file')
     tmp = load(bootstrap_file, 'ori_pref_runs');
     if size(tmp.ori_pref_runs, 2) == 1000
         disp('already done 1k bootstraps for well_fit, skip')
-        continue
+%         continue
     end
 else
     save_flag = 1;

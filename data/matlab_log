@@ -93530,3 +93530,7 @@ Cell #90
 TC extraction complete for runs-002
 11 set done out of 11
 uncomment in function get_data_reg_cellpose_tif
+uiimport('Z:\All_Staff\home\lan\Data\2P_images\mat_inter\LM_i1328_201119_003\fit_tuning_isi3.mat',1)
+edit get_cellpose_timecourse
+edit 
+open get_cellpose_timecourse
