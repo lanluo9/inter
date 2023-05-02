@@ -33,7 +33,7 @@ seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-seg
 dataset_table = dataset_table(seg_bool, :);
 
 % dataset_table = dataset_table(dataset_table.date == 201119, :)
-% dataset_table = dataset_table(dataset_table.date == 200720, :)
+dataset_table = dataset_table(dataset_table.date == 200720, :)
 
 nset = size(dataset_table, 1);
 
@@ -261,7 +261,7 @@ if save_flag; saveas(gcf, 'find_ca_latency_ca_window.jpg'); end
 % aka slicing dfof_align_ad & dfof_align_tg
 
 close all
-save_flag = 1;
+% save_flag = 1;
 
 R1_cell_trial = mean(dfof_align_ad(:, :, range_resp), 3) ...
               - mean(dfof_align_ad(:, :, range_base), 3); % ncell x ntrial, avg over resp time win
@@ -320,9 +320,9 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 % ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
 % save tuning curve for each cell & isi
 
-save_flag = 1;
+% save_flag = 1;
 [fit_param, ori_pref, tuning_curve_cell_isi] = fit_tuning(dfof_tg, save_flag);
-save_flag = 0;
+% save_flag = 0;
 
 % % fit twice with no adapter trials, as a control plot for tuning bias plot
 % ori_pref_runs = fit_tuning_noad_twice(dfof_align_tg, save_flag);

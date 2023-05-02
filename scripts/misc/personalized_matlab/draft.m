@@ -56,6 +56,8 @@
 icell = 64;
 % icell = 71;
 
+hist(fit_param(:, end, end))
+
 figure;
 subplot(1,2,1)
 
