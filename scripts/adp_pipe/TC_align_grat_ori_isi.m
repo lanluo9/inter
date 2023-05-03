@@ -81,7 +81,7 @@ global frame_rate range_base range_resp ...
     nisi nori ori_list...
     id_ad id_noad id_isi2 id_isi3 id_ori
 
-save_flag = 1; % toggle this to save/skip all .mat creation below
+save_flag = 0; % toggle this to save/skip all .mat creation below
 
 % try % if data folder contains 2p imaging note.xls
 %     stim_protocol = 'grat_SF6'
@@ -325,18 +325,31 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
 
-bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
+% bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
+% if exist(bootstrap_file, 'file')
+%     tmp = load(bootstrap_file, 'ori_pref_runs');
+%     if size(tmp.ori_pref_runs, 2) == 1000
+%         disp('already done 1k bootstraps for well_fit, skip')
+% %         continue
+%     end
+% else
+%     save_flag = 1;
+%     nrun = 1000; 
+%     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
+%     % sum(well_fit_cell) / length(well_fit_cell)
+% end
+
+% relax well_fit_cell_criteria to a lower percentile
+bootstrap_file = fullfile(result_folder, 'fit_bootstrap_relax.mat');
 if exist(bootstrap_file, 'file')
-    tmp = load(bootstrap_file, 'ori_pref_runs');
-    if size(tmp.ori_pref_runs, 2) == 1000
-        disp('already done 1k bootstraps for well_fit, skip')
-%         continue
-    end
+    continue
 else
     save_flag = 1;
-    nrun = 1000; 
-    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-    % sum(well_fit_cell) / length(well_fit_cell)
+    nrun = 1000;
+    percentile_threshold = 0.7;
+    well_fit_cell = well_fit_cell_criteria_relax(percentile_threshold, nrun, save_flag);
+    disp('well_fit_cell percent:')
+    sum(well_fit_cell) / length(well_fit_cell) * 100
 end
 
 % % validation that well_fit cells' tuning is comparable no matter how you
