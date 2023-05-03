@@ -28,13 +28,14 @@ dataset_date = dataset_table(dataset_table.date == date_arr(idate), :);
 clear global
 close all
 
-dataset_now = dataset_date(end, :); % get metadata from final sess of this date
+iset = 1;
+dataset_now = dataset_table(iset,:); % get mouse date & first sess from sess-002
 arg_mouse = dataset_now.mouse
 arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num{1}
 area = dataset_now.area{1}
-imouse = ['i', num2str(arg_mouse)];
 
+imouse = ['i', num2str(arg_mouse)];
 dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
     '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
 try cd(dir_analysis)
@@ -43,13 +44,13 @@ catch
     cd(dir_analysis)
 end
 
-% % check if time course exists for final sess. only useful for multi day, multi sess data
-if ~isempty(dir('*TC*.mat'))
-    disp('timecourse exists, start generating trace_trial_stim.mat')
-else
-    disp('timecourse doesnt exist yet, skip to next set')
-    continue
-end
+% % check if time course exists. only useful if using multi day, multi sess data
+% if ~isempty(dir('*TC*.mat'))
+%     disp('timecourse exists, start generating trace_trial_stim.mat')
+% else
+%     disp('timecourse doesnt exist yet, skip to next set')
+%     continue
+% end
 
 %%
 % declare all global var for single dataset
@@ -61,7 +62,7 @@ global frame_rate range_base range_resp ...
 save_flag = 1; % toggle this to save/skip all .mat creation below
 
 try % if data folder contains 2p imaging note.xls
-    stim_protocol = 'grat_SF6_allen_nat8' % 'grat_SF6'
+    stim_protocol = 'grat_SF6'
     xls_dir = fullfile(data_fn, imouse, arg_date)
     cd(xls_dir)
     xls_file = dir('*.xlsx');
@@ -80,7 +81,7 @@ df_flat = [];
 nframe_seq = [];
 
 for i = 1:length(sess_id_arr)
-    ImgFolder = dataset_date.num{i};
+    ImgFolder = dataset_table.num{i};
     fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
         [arg_date, '_', imouse, '_runs-', ImgFolder, '_input.mat']);
     temp = load(fName); % load behavior data "input", which clashes with built-in function
@@ -122,11 +123,6 @@ mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
 result_folder = [mapped_path, '\mat_inter\', areamousedate, segment_suffix];
 if ~exist(result_folder); mkdir(result_folder); end
 cd(result_folder)
-
-if ~isempty(dir('*trace_trial_stim*.mat')) && ~isempty(dir('*resp_base_trialwise*.mat'))
-    disp('TC align result exists, skip to next dataset:')
-    continue
-end
 
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
@@ -216,6 +212,10 @@ cd(result_folder)
 npSub_tc = df_flat;
 tc_align_ad = align_tc(frame_ad, npSub_tc);
 tc_align_tg = align_tc(frame_tg, npSub_tc);
+
+% disp('caiman mode: skip trial-specific baselining')
+% dfof_align_ad = tc_align_ad; % did not do trial-specific baselining
+% dfof_align_tg = tc_align_tg; % which should have been dfof_align = (tc - base) / base
 dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
 dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
 
@@ -263,7 +263,7 @@ trace_start = t_ad(1:find_peak_bef);
 if peak_id < 6 % first peak should not be earlier than 6 frames
     disp('WARNING: strange trace or peak')
 end
-range_base = 1:3; range_resp = (peak_id-1):(peak_id+2); % fast climb, slow fall
+range_base = 1:3; range_resp = (peak_id-1):(peak_id+1);
 range_resp = range_resp - 1
 
 figure;
@@ -275,27 +275,6 @@ xline(range_resp(end), 'k--')
 grid on; grid minor
 set(gcf, 'Position', get(0, 'Screensize'));
 saveas(gcf, 'find_ca_latency_ca_window.jpg')
-
-%% use resp window to cut trace_by_trial
-% aka slicing dfof_align_ad & dfof_align_tg
-
-close all
-
-R1_cell_trial = mean(dfof_align_ad(:, :, range_resp), 3) ...
-              - mean(dfof_align_ad(:, :, range_base), 3); % ncell x ntrial, avg over resp time win
-R2_cell_trial = mean(dfof_align_tg(:, :, range_resp), 3) ...
-              - mean(dfof_align_tg(:, :, range_base), 3);
-
-figure
-subplot(211)
-imshow(R1_cell_trial, 'InitialMagnification', 800);
-colorbar;
-subplot(212)
-imshow(R2_cell_trial, 'InitialMagnification', 800);
-colorbar;
-set(gcf, 'Position', get(0, 'Screensize'));
-
-if save_flag; save('trace_trial_stim.mat', 'R1_cell_trial', 'R2_cell_trial', '-append'); end
 
 %% response to adapter & targets. get trace (bunny mode: isi=250 only)
 % dfof_ad = ncell x nstim. dfof_tg = ncell x nstim
@@ -325,11 +304,13 @@ dfof_base2_trial = dfof_base2_trial(:,:,3);
 if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
         dfof_base_trial dfof_base2_trial; end
 
-% %% discard trials by pupil or run speed -> trial_filter_by_pupil_or_speed.m
-% open trial_filter_by_pupil_or_speed.m
-% % TODO: when we integrate trial filter (bool) into dataframe, need to cut
-% % off final trial of each sess just like above:
-% % ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+%% discard trials by pupil or run speed -> trial_filter_by_pupil_or_speed.m
+
+open trial_filter_by_pupil_or_speed.m
+
+% TODO: when we integrate trial filter (bool) into dataframe, need to cut
+% off final trial of each sess just like above:
+% ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
 %% find visually driven cells -> vis_driven.ipynb
 

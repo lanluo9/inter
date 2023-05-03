@@ -110,12 +110,12 @@ for i = 1 : length(file_list)
     end
 
     file_name = [file_list(i).folder, '\', file_list(i).name];
-    load(file_name, 'out')
+    load(file_name, 'out');
     arg_ImgFolder = dataset_date(i,:).num{1};
 
     [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
     [outs, data_reg] = stackRegister_MA_LL(double(data), [], [], out); % re-register to get data_reg back
-    clear data
+    clear data outs
     
     cd(dir_final_tif)
     tif_name = [dir_final_tif, '\cellpose_mask.mat'];
@@ -124,7 +124,7 @@ for i = 1 : length(file_list)
         LL_base, arg_date, imouse, run_str_sess);
     
     disp([num2str(isess), ' sess done out of ', num2str(nsess)])
-    clear data_reg
+    clear data_reg npSub_tc
     clear global % suspect weird trace is bc residual global var affecting sbxread
 
 end

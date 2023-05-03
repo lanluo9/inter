@@ -94289,3 +94289,107 @@ Frame 64800
 Frame 70200
 Frame 75600
 Frame 81000
+Frame 86400
+Frame 91800
+Frame 97200
+Frame 102600
+Frame 108000
+Registered 108000 frames in 813.7 seconds (132.7 fps)
+
+tif_name =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\230404_i1381\cellpose_mask.mat'
+
+stackGetTimeCourses: elapsed time is 13.8489 seconds.
+
+nCells =
+
+   145
+
+Cell #14 
+Cell #28 
+Cell #42 
+Cell #56 
+Cell #70 
+Cell #84 
+Cell #98 
+Cell #112 
+Cell #126 
+Cell #140 
+TC extraction complete for runs-003
+3 sess done out of 3
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 232.807021 seconds.
+Starting, frame 0
+Frame 5400
+Frame 10800
+Frame 16200
+Frame 21600
+Frame 27000
+Frame 32400
+Frame 37800
+Frame 43200
+Frame 48600
+Frame 54000
+Frame 59400
+Frame 64800
+Frame 70200
+Frame 75600
+Frame 81000
+Frame 86400
+Frame 91800
+Frame 97200
+Frame 102600
+Frame 108000
+Registered 108000 frames in 840.0 seconds (128.6 fps)
+
+tif_name =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\230404_i1381\cellpose_mask.mat'
+
+stackGetTimeCourses: elapsed time is 13.85 seconds.
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mean')" style="font-weight:bold">mean</a>
+
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('stackGroupProject', 'C:\Users\ll357\Documents\ImagingCode-Glickfeld-Hull\core\calcium\stackGroupProject.m', 27)" style="font-weight:bold">stackGroupProject</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\ImagingCode-Glickfeld-Hull\core\calcium\stackGroupProject.m',27,0)">line 27</a>)
+array=reshape(mean(reshape(array(:,:,desfrns),ny,nx,ratio,siz),3),ny,nx,siz);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_cellpose_timecourse', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_cellpose_timecourse.m', 21)" style="font-weight:bold">get_cellpose_timecourse</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_cellpose_timecourse.m',21,0)">line 21</a>)
+        data_reg_down  = stackGroupProject(data_reg,down);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('LiveEditorEvaluationHelperE2042699866', 'C:\Users\ll357\AppData\Local\Temp\5\Editor_netaa\LiveEditorEvaluationHelperE2042699866.m', 123)" style="font-weight:bold">LiveEditorEvaluationHelperE2042699866</a> (<a href="matlab: opentoline('C:\Users\ll357\AppData\Local\Temp\5\Editor_netaa\LiveEditorEvaluationHelperE2042699866.m',123,0)">line 123</a>)
+    npSub_tc = get_cellpose_timecourse(data_reg, tif_name, ...
+} 
+    clear data_reg npSub_tc
+ 
+1+1
+
+ans =
+
+     2
+
+edit get_cellpose_timecourse
+outs
+ 
+npSub_tc
+ 
+isess
+
+isess =
+
+     3
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   03-May-2023 16:47:45
+
