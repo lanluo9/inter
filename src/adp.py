@@ -27,66 +27,66 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({"font.size": 10})
 
 # functions
-def load_trace_trial_data(dir_path, vis_filter=True):
-    """
-    load trace by trial .mat and stim info data from directory.
+# def load_trace_trial_data(dir_path, vis_filter=True): # deprecated
+#     """
+#     load trace by trial .mat and stim info data from directory.
 
-    args:
-        dir_path (raw string): directory path, compatible with windows path containing '\\'
-        vis_filter (boolean): whether to filter by visually driven cells
+#     args:
+#         dir_path (raw string): directory path, compatible with windows path containing '\\'
+#         vis_filter (boolean): whether to filter by visually driven cells
 
-    returns:
-        trace_by_trial (ndarray): neural activity of shape: ncell x ntrial x nframe
-        stim_id (ndarray): stim identity for each trial
-    """
-    file_path = dir_path.replace("\\", "/")
-    data = sio.loadmat(file_path + "/trace_trial_stim.mat")
-    # print(data.keys())
+#     returns:
+#         trace_by_trial (ndarray): neural activity of shape: ncell x ntrial x nframe
+#         stim_id (ndarray): stim identity for each trial
+#     """
+#     file_path = dir_path.replace("\\", "/")
+#     data = sio.loadmat(file_path + "/trace_trial_stim.mat")
+#     # print(data.keys())
 
-    try:
-        stim_seq = data["stim_seq"]
-        stim_id = [i[0] for i in stim_seq]  # flatten list
-        if stim_seq.shape[1] > stim_seq.shape[0]:  # if stim_seq is a column vector
-            stim_id = stim_seq
-    except:
-        stim_ori = data["stim_ori"]
-        isi_nframe = data["isi_nframe"]
-        adapter_contrast = data["adapter_contrast"]
-        stim_id = dict(
-            stim_ori=stim_ori, isi_nframe=isi_nframe, adapter_contrast=adapter_contrast
-        )
-    trace_by_trial = data["trace_by_trial"]
+#     try:
+#         stim_seq = data["stim_seq"]
+#         stim_id = [i[0] for i in stim_seq]  # flatten list
+#         if stim_seq.shape[1] > stim_seq.shape[0]:  # if stim_seq is a column vector
+#             stim_id = stim_seq
+#     except:
+#         stim_ori = data["stim_ori"]
+#         isi_nframe = data["isi_nframe"]
+#         adapter_contrast = data["adapter_contrast"]
+#         stim_id = dict(
+#             stim_ori=stim_ori, isi_nframe=isi_nframe, adapter_contrast=adapter_contrast
+#         )
+#     trace_by_trial = data["trace_by_trial"]
 
-    if vis_filter:
-        with open(file_path + "/vis_driven.pickle", "rb") as handle:
-            vis = pickle.load(handle)
-            vis_driven = vis["vis_driven"]
-            vis_driven = [v[0] for v in vis_driven]  # flatten list
-        trace_by_trial = trace_by_trial[
-            vis_driven, :, :
-        ]  # only keep trace of vis-driven cells
-        print("alert! only vis driven cells are kept!")
+#     if vis_filter:
+#         with open(file_path + "/vis_driven.pickle", "rb") as handle:
+#             vis = pickle.load(handle)
+#             vis_driven = vis["vis_driven"]
+#             vis_driven = [v[0] for v in vis_driven]  # flatten list
+#         trace_by_trial = trace_by_trial[
+#             vis_driven, :, :
+#         ]  # only keep trace of vis-driven cells
+#         print("alert! only vis driven cells are kept!")
 
-    ncell = trace_by_trial.shape[0]
-    try:
-        nstim = len(np.unique(stim_id))
-    except:
-        nstim = len(np.unique(stim_ori))
-    ntrial = trace_by_trial.shape[1]
-    nframe = trace_by_trial.shape[2]
-    print(f"ncell: {ncell}, nstim: {nstim}, ntrial: {ntrial}, nframe: {nframe}")
-    # print(ncell, nstim, ntrial, nframe)
+#     ncell = trace_by_trial.shape[0]
+#     try:
+#         nstim = len(np.unique(stim_id))
+#     except:
+#         nstim = len(np.unique(stim_ori))
+#     ntrial = trace_by_trial.shape[1]
+#     nframe = trace_by_trial.shape[2]
+#     print(f"ncell: {ncell}, nstim: {nstim}, ntrial: {ntrial}, nframe: {nframe}")
+#     # print(ncell, nstim, ntrial, nframe)
 
-    return (
-        stim_id,
-        trace_by_trial,
-    )  # ncell, nstim, ntrial, nframe
+#     return (
+#         stim_id,
+#         trace_by_trial,
+#     )  # ncell, nstim, ntrial, nframe
 
 
 def load_resp_trial(dir_path, vis_filter=False):
     """
     load resp_cell_trial and stim_info data from directory
-    for grat_8ori_3isi paradigm
+    for grat_8ori_3isi paradigm or mix14
 
     args:
         dir_path (raw string): directory path, compatible with windows path containing '\\'
@@ -129,7 +129,10 @@ def load_resp_trial(dir_path, vis_filter=False):
         print("alert! only vis driven cells are kept!")
 
     ncell = R1_cell_trial.shape[0]
-    nstim = len(np.unique(stim_id['stim_ori']))
+    try:
+        nstim = len(np.unique(stim_id["stim_ori"]))  # for grat_8ori_3isi
+    except:
+        nstim = len(np.unique(stim_id))  # for mix14
     ntrial = R1_cell_trial.shape[1]
     print(f"ncell: {ncell}, nstim: {nstim}, ntrial: {ntrial}")
 
