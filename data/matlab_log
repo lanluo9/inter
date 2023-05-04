@@ -94393,3 +94393,265 @@ ans =
 
    03-May-2023 16:47:45
 
+
+stim_type =
+
+    'bunny'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230330'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+cellpose tif exists, skip to next set:
+
+isess =
+
+     2
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230330'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+
+isess =
+
+     3
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230330'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 7 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '230330_i1380_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '230330_i1380_runs-003_reg_shifts.mat'
+
+
+ans =
+
+    '230330_i1380_runs-004_reg_shifts.mat'
+
+sess cellpose time course exists, skip to next set:
+     2
+
+sess cellpose time course exists, skip to next set:
+     3
+
+sess cellpose time course exists, skip to next set:
+     4
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230404'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+cellpose tif exists, skip to next set:
+
+isess =
+
+     2
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230404'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+
+isess =
+
+     3
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230404'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 5 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '230404_i1381_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '230404_i1381_runs-003_reg_shifts.mat'
+
+
+ans =
+
+    '230404_i1381_runs-004_reg_shifts.mat'
+
+sess cellpose time course exists, skip to next set:
+     2
+
+sess cellpose time course exists, skip to next set:
+     3
+
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 

@@ -22,7 +22,7 @@ date_arr = unique(dataset_table.date);
 
 %% find TC.mat for each date
 
-for idate = 1:ndate
+for idate = 3:ndate
 
 dataset_date = dataset_table(dataset_table.date == date_arr(idate), :);
 clear global
@@ -143,9 +143,10 @@ for isess = 1 : length(sess_id_arr)
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
     
+    disp('only support same stim1-stim2 pairs')
     try % randStim1_doSameStim2 with bunnies6.mwel
         adapter_id_sess = cell2mat(input_behav.tstimOne);
-        target_id_sess = cell2mat(input_behav.tstimTwo);
+%         target_id_sess = cell2mat(input_behav.tstimTwo);
     catch % grat_SF6 with twoStim.mwel
         SF_arr = sort(unique(cell2mat(input_behav.tStimOneGratingSpatialFreqCPD)));
         adapter_SF = cell2mat(input_behav.tStimOneGratingSpatialFreqCPD);
@@ -155,8 +156,9 @@ for isess = 1 : length(sess_id_arr)
         end
         tmp = cell2mat(input_behav.tStimTwoGratingSpatialFreqCPD) == cell2mat(input_behav.tStimOneGratingSpatialFreqCPD);
         assert(sum(tmp) == length(tmp)) % stim 1 vs 2 have same SF
-        target_id_sess = adapter_id_sess;
+%         target_id_sess = adapter_id_sess;
     end
+
     adapter_id_sess = adapter_id_sess(1:ntrial_sess);
     try
         assert(size(adapter_id_sess, 1) > size(adapter_id_sess, 2)) % ensure its a column vector
@@ -164,7 +166,8 @@ for isess = 1 : length(sess_id_arr)
         adapter_id_sess = adapter_id_sess';
     end
     adapter_id = [adapter_id; adapter_id_sess];
-    target_id_sess = target_id_sess(1:ntrial_sess);
+
+    target_id_sess = adapter_id_sess; % only support same stim1-stim2 pairs
     target_id = [target_id; target_id_sess];
 
     frame_ad_sess = double(cell2mat(input_behav.cStimOneOn)); 
@@ -263,7 +266,8 @@ trace_start = t_ad(1:find_peak_bef);
 if peak_id < 6 % first peak should not be earlier than 6 frames
     disp('WARNING: strange trace or peak')
 end
-range_base = 1:3; range_resp = (peak_id-1):(peak_id+2); % fast climb, slow fall
+range_base = 1:3
+range_resp = (peak_id-1):(peak_id+2); % fast climb, slow fall
 range_resp = range_resp - 1
 
 figure;
