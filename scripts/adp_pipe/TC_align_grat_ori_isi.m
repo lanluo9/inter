@@ -24,14 +24,16 @@ dataset_meta = readtable(dir_meta);
 stim_type = 'grating' % grat_8ori_3isi
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
-% area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'V1'));
-area_bool = logical(strcmp(dataset_table.area, 'LI'));
-dataset_table = dataset_table(area_bool, :);
-% sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
-
 dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
+
+% area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'V1'));
+% area_bool = logical(strcmp(dataset_table.area, 'LI'));
+% dataset_table = dataset_table(area_bool, :);
+sum(strcmp(dataset_table.area, 'V1')) % count LM data, grat_8ori_3isi
+sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
+sum(strcmp(dataset_table.area, 'LI')) % count LM data, grat_8ori_3isi
 
 % dataset_table = dataset_table(dataset_table.date == 201119, :)
 % dataset_table = dataset_table(dataset_table.date == 200720, :)
@@ -322,22 +324,28 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 
 [fit_param, ori_pref, tuning_curve_cell_isi] = fit_tuning(dfof_tg, save_flag);
 
-%% well-fit cells
-% cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+%% fit tuning curve with half trials
 
-bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
-if exist(bootstrap_file, 'file')
-    tmp = load(bootstrap_file, 'ori_pref_runs');
-    if size(tmp.ori_pref_runs, 2) == 1000
-        disp('already done 1k bootstraps for well_fit, skip')
-%         continue
-    end
-else
-    save_flag = 1;
-    nrun = 1000; 
-    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-    % sum(well_fit_cell) / length(well_fit_cell)
-end
+save_flag = 1
+fit_tuning_half_trials(dfof_align_tg, save_flag);
+save_flag = 0
+
+% %% well-fit cells
+% % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+% 
+% bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
+% if exist(bootstrap_file, 'file')
+%     tmp = load(bootstrap_file, 'ori_pref_runs');
+%     if size(tmp.ori_pref_runs, 2) == 1000
+%         disp('already done 1k bootstraps for well_fit, skip')
+% %         continue
+%     end
+% else
+%     save_flag = 1;
+%     nrun = 1000; 
+%     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
+%     % sum(well_fit_cell) / length(well_fit_cell)
+% end
 
 % % relax well_fit_cell_criteria to a lower percentile for LI
 % bootstrap_file = fullfile(result_folder, 'fit_bootstrap_relax.mat');
