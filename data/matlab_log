@@ -96907,3 +96907,4084 @@ Cell #171
 Cell #190 
 TC extraction complete for runs-004
 3 sess done out of 3
+uiimport('Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i1375_230425_cellpose\trace_trial_stim.mat',1)
+clear all
+clearvars –global
+close all
+clc
+uiimport('Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i1380_230330_cellpose\resp_base_trialwise.mat',1)
+uiimport('Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i1380_230330_cellpose\trace_trial_stim.mat',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',1)
+open TC_align_grat_SF_bunny
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+    22
+
+
+ans =
+
+    23
+
+
+ans =
+
+    22
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+     6
+
+
+ans =
+
+    22
+
+
+ans =
+
+    20
+
+fit_tuning
+ 
+edit fit_tuning
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_function\fit_tuning_noad_twice.m',1)
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_function\fit_tuning_half_trials.m',1)
+iset = 1
+
+iset =
+
+     1
+
+
+iset =
+
+     1
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200720'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99865
+
+
+ncell =
+
+   103
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    55
+    57
+    59
+    60
+
+save_flag
+
+save_flag =
+
+     0
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('fit_tuning_half_trials')" style="font-weight:bold">fit_tuning_half_trials</a>
+Too many output arguments.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_align_grat_ori_isi', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi.m', 330)" style="font-weight:bold">TC_align_grat_ori_isi</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi.m',330,0)">line 330</a>)
+[~, ~, ~] = fit_tuning_half_trials(dfof_tg, save_flag);
+
+<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi.m',330,3)">File: TC_align_grat_ori_isi.m Line: 330 Column: 3</a>
+Incorrect use of '=' operator. Assign a value to a variable using '=' and
+compare values for equality using '=='.
+
+
+save_flag =
+
+     1
+
+global ncell nori id_ori ori_list id_noad range_base range_resp
+ 
+nrun = 2; % split no adapter trials into two halves
+ 
+dfof_avg_runs = pi * ones(ncell, nori, nrun); % dfof_ste_runs = pi * ones(ncell, nori, nrun);
+ 
+fit_param_runs = pi * ones(ncell, 7, nrun); ori_pref_runs = pi * ones(ncell, nrun);
+ 
+irun = 1
+
+irun =
+
+     1
+
+icell = 1
+
+icell =
+
+     1
+
+iori = 1
+
+iori =
+
+     1
+
+        idx = intersect(id_ori{iori}, id_noad);
+ 
+idx
+
+idx =
+
+  Columns 1 through 12
+
+    35    37    62    94   128   148   198   223   237   241   247   317
+
+  Columns 13 through 18
+
+   366   379   382   413   420   462
+
+edit fit_tuning
+edit dfof_tg
+dfof_tg
+ 
+ori_pref_runs = pi * ones(ncell, nrun);
+ 
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.desktop.vareditor.VariableEditor.checkVariableName')" style="font-weight:bold">matlab.desktop.vareditor.VariableEditor.checkVariableName</a>
+The first argument to VariableEditor must be a valid variable name.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('openvar', 'C:\Program Files\MATLAB\R2022a\toolbox\matlab\codetools\openvar.m', 96)" style="font-weight:bold">openvar</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\matlab\codetools\openvar.m',96,0)">line 96</a>)
+    matlab.desktop.vareditor.VariableEditor.checkVariableName(name);
+} 
+ori_pref_runs
+ 
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('assert')" style="font-weight:bold">assert</a>
+Assertion failed.
+} 
+        ntrials_ori_noad = length(idx);
+ 
+ntrials_ori_noad
+
+ntrials_ori_noad =
+
+    18
+
+        bootstrap_draw = round(ntrials_ori_noad * 0.7);
+ 
+        bootstrap_draw = round(ntrials_ori_noad * 0.5);
+ 
+bootstrap_draw
+
+bootstrap_draw =
+
+     9
+
+ntrials_ori_noad
+
+ntrials_ori_noad =
+
+    18
+
+        idx_run = randsample(idx, bootstrap_draw, 0); % w replacement
+ 
+idx_run
+
+idx_run =
+
+   148    62   413   247   198   420   379   223   128
+
+        idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
+ 
+idx_run
+
+idx_run =
+
+   382   462   317    35   413   420   366   379   379
+
+        idx_run = randsample(idx, ntrials_ori_noad, 0); % w replacement
+ 
+idx_run
+
+idx_run =
+
+  Columns 1 through 12
+
+   128   366   198   223    62   462   148   247   382    35   379    37
+
+  Columns 13 through 18
+
+   241    94   413   420   237   317
+
+        idx_run = randsample(idx, ntrials_ori_noad, 1); % w replacement
+ 
+idx_run
+
+idx_run =
+
+  Columns 1 through 12
+
+   237   237   317   366   379   128   366   317    62    62   237   462
+
+  Columns 13 through 18
+
+   198   247   128   379   128   241
+
+idx
+
+idx =
+
+  Columns 1 through 12
+
+    35    37    62    94   128   148   198   223   237   241   247   317
+
+  Columns 13 through 18
+
+   366   379   382   413   420   462
+
+idx_run
+
+idx_run =
+
+  Columns 1 through 12
+
+   237   237   317   366   379   128   366   317    62    62   237   462
+
+  Columns 13 through 18
+
+   198   247   128   379   128   241
+
+        idx_run_complement = setdiff(idx, idx_run)
+
+idx_run_complement =
+
+    35    37    94   148   223   382   413   420
+
+ 
+idx_run_complement
+
+idx_run_complement =
+
+    35    37    94   148   223   382   413   420
+
+bootstrap_draw
+
+bootstrap_draw =
+
+     9
+
+        bootstrap_draw = round(ntrials_ori_noad * 0.5);
+ 
+        idx_run = randsample(idx, ntrials_ori_noad, 0); % without replacement
+ 
+        idx_run_complement = setdiff(idx, idx_run);
+ 
+idx
+
+idx =
+
+  Columns 1 through 12
+
+    35    37    62    94   128   148   198   223   237   241   247   317
+
+  Columns 13 through 18
+
+   366   379   382   413   420   462
+
+idx_run
+
+idx_run =
+
+  Columns 1 through 12
+
+   128   148   379   247   382   237   198   366   462   420    94   413
+
+  Columns 13 through 18
+
+    35   241   223    37   317    62
+
+idx_run_complement
+
+idx_run_complement =
+
+  1×0 empty <a href="matlab:helpPopup double" style="font-weight:bold">double</a> row vector
+
+bootstrap_draw = round(ntrials_ori_noad * 0.5);
+        idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+        idx_run_complement = setdiff(idx, idx_run);
+idx_run_complement
+
+idx_run_complement =
+
+    35    37    94   148   198   237   366   379   413
+
+edit dfof_resp
+global ncell nori id_ori ori_list id_isi3 range_base range_resp
+
+nisi = length(id_isi3);
+dfof_avg_runs = pi * ones(ncell, nori, nisi); 
+fit_param_runs = pi * ones(ncell, 7, nisi); 
+ori_pref_runs = pi * ones(ncell, nisi);
+nisi
+
+nisi =
+
+     3
+
+for iori = 1 : nori
+        for iisi =  1 : length(id_isi3) 
+            idx = intersect(id_ori{iori}, id_isi3{iisi});
+            ntrials_cond = length(idx);
+            bootstrap_draw = round(ntrials_cond * 0.5);
+            idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+            idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+    
+            base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+            resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+            dfof_avg_runs(icell, iori, irun) = mean( resp_win - base_win );
+        end
+    end
+{Index in position 2 exceeds array bounds. Index must not exceed 8.
+} 
+icell = 1
+
+icell =
+
+     1
+
+iori = 1
+
+iori =
+
+     1
+
+iisi =  1
+
+iisi =
+
+     1
+
+            idx = intersect(id_ori{iori}, id_isi3{iisi});
+ 
+            ntrials_cond = length(idx);
+ 
+            bootstrap_draw = round(ntrials_cond * 0.5);
+ 
+            idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+ 
+            idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+ 
+            base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+{Index in position 2 exceeds array bounds. Index must not exceed 8.
+} 
+idx_run
+
+idx_run =
+
+   148    37   241    94   462   413   317   420   247
+
+dfof_align_tg
+ 
+dfof_align_tg
+ 
+dfof_align_tg
+ 
+dfof_align_tg(1,1,1)
+
+ans =
+
+    0.0202
+
+if system_dependent('IsDebugMode')==1, dbquit all; end
+
+save_flag =
+
+     1
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+start bootstrap runs
+Index in position 2 is invalid. Array indices must be positive integers or
+logical values.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('fit_tuning_half_trials', 'C:\Users\ll357\Documents\inter\scripts\adp_function\fit_tuning_half_trials.m', 42)" style="font-weight:bold">fit_tuning_half_trials</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\fit_tuning_half_trials.m',42,0)">line 42</a>)
+ori_perc = ori_distance(:, percentile_idx);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_align_grat_ori_isi', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi.m', 330)" style="font-weight:bold">TC_align_grat_ori_isi</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi.m',330,0)">line 330</a>)
+fit_tuning_half_trials(dfof_align_tg, save_flag);
+
+
+save_flag =
+
+     1
+
+icell = 1
+
+icell =
+
+     1
+
+for iori = 1 : nori
+        for iisi =  1 : length(id_isi3) 
+            idx = intersect(id_ori{iori}, id_isi3{iisi});
+            ntrials_cond = length(idx);
+            bootstrap_draw = round(ntrials_cond * 0.5);
+            idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+            idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+    
+            base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+            resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+            dfof_avg_runs(icell, iori, irun) = mean( resp_win - base_win );
+        end
+    end
+{Unrecognized function or variable 'irun'.
+} 
+if system_dependent('IsDebugMode')==1, dbquit all; end
+
+save_flag =
+
+     1
+
+for iori = 1 : nori
+        for iisi =  1 : length(id_isi3) 
+            idx = intersect(id_ori{iori}, id_isi3{iisi});
+            ntrials_cond = length(idx);
+            bootstrap_draw = round(ntrials_cond * 0.5);
+            idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+            idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+    
+            base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+            resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+            dfof_avg_runs(icell, iori, irun) = mean( resp_win - base_win );
+        end
+    end
+{Unrecognized function or variable 'icell'.
+} 
+icell = 1
+
+icell =
+
+     1
+
+for iori = 1 : nori
+        for iisi =  1 : length(id_isi3) 
+            idx = intersect(id_ori{iori}, id_isi3{iisi});
+            ntrials_cond = length(idx);
+            bootstrap_draw = round(ntrials_cond * 0.5);
+            idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+            idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+    
+            base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+            resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+            dfof_avg_runs(icell, iori, irun) = mean( resp_win - base_win );
+        end
+    end
+{Unrecognized function or variable 'irun'.
+} 
+iori = 1 
+
+iori =
+
+     1
+
+iisi =  1
+
+iisi =
+
+     1
+
+            idx = intersect(id_ori{iori}, id_isi3{iisi});
+ 
+            ntrials_cond = length(idx);
+            bootstrap_draw = round(ntrials_cond * 0.5);
+            idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+            idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+    
+            base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+            resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+           
+            dfof_avg_runs(icell, iori, irun) = mean( resp_win - base_win );
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eval')" style="font-weight:bold">eval</a>
+Unrecognized function or variable 'irun'.
+} 
+if system_dependent('IsDebugMode')==1, dbquit all; end
+
+save_flag =
+
+     1
+
+icell = 1 
+
+icell =
+
+     1
+
+for iori = 1 : nori
+        for iisi =  1 : length(id_isi3) 
+            idx = intersect(id_ori{iori}, id_isi3{iisi});
+            ntrials_cond = length(idx);
+            bootstrap_draw = round(ntrials_cond * 0.5);
+            idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+            idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+    
+            base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+            resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+            dfof_avg_runs(icell, iori, iisi) = mean( resp_win - base_win );
+        end
+    end
+dfof_avg_runs
+ 
+dfof_avg_runs
+ 
+icell = 1
+
+icell =
+
+     1
+
+iisi =  1
+
+iisi =
+
+     1
+
+for iori = 1 : nori
+        idx = intersect(id_ori{iori}, id_isi3{iisi});
+        ntrials_cond = length(idx);
+        bootstrap_draw = round(ntrials_cond * 0.5);
+        idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+        idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+
+        base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+        resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+        dfof_avg_runs(icell, iori, iisi) = mean( resp_win - base_win );
+    end
+dfof_avg_runs
+ 
+    data = dfof_avg_runs(icell, :, iisi); 
+ 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(deg2rad(ori_list), data);
+ 
+    fit_param_runs(icell, :, iisi) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+ 
+fit_param_runs
+ 
+fit_param_runs
+ 
+    ori_pref = rad2deg(u1_hat);
+ 
+    ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+ 
+    ori_pref_runs(icell, irun) = ori_pref;
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eval')" style="font-weight:bold">eval</a>
+Unrecognized function or variable 'irun'.
+} 
+    ori_pref_runs(icell, iisi) = ori_pref;
+ 
+ori_pref_runs
+ 
+for icell = 1 : ncell
+for iisi =  1 : length(id_isi3) 
+    for iori = 1 : nori
+        idx = intersect(id_ori{iori}, id_isi3{iisi});
+        ntrials_cond = length(idx);
+        bootstrap_draw = round(ntrials_cond * 0.5);
+        idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+        idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+
+        base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+        resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+        dfof_avg_runs(icell, iori, iisi) = mean( resp_win - base_win );
+    end
+
+    data = dfof_avg_runs(icell, :, iisi); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(deg2rad(ori_list), data);
+    fit_param_runs(icell, :, iisi) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+%   icell, baseline offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+
+    ori_pref = rad2deg(u1_hat);
+    ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+    ori_pref_runs(icell, iisi) = ori_pref;
+end
+end
+ori_pref_runs
+ 
+for icell = 1 : ncell
+for iisi =  1 : length(id_isi3) 
+    for iori = 1 : nori
+        idx = intersect(id_ori{iori}, id_isi3{iisi});
+        ntrials_cond = length(idx);
+        bootstrap_draw = round(ntrials_cond * 0.5);
+        idx_run = randsample(idx, bootstrap_draw, 0); % without replacement
+        idx_run_complement = setdiff(idx, idx_run); % the other half of ntrials, no overlap
+
+        base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
+        resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+        dfof_avg(icell, iori, iisi) = mean( resp_win - base_win );
+    end
+
+    data = dfof_avg(icell, :, iisi); 
+    [b_hat, k1_hat, R1_hat, u1_hat, sse, R_square] = miaovonmisesfit_ori(deg2rad(ori_list), data);
+    fit_param(icell, :, iisi) = [icell, b_hat, k1_hat, R1_hat, u1_hat, sse, R_square];
+%   icell, baseline offset, k1 sharpness, R peak response, u1 preferred orientation, sse sum of squared error, R2
+
+    ori_pref = rad2deg(u1_hat);
+    ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
+    
+    irun = 1;
+    ori_pref_runs(icell, iisi, irun) = ori_pref;
+end
+end
+ori_pref_runs
+ 
+save_flag
+
+save_flag =
+
+     1
+
+dfof_align_tg
+ 
+dfof_tg_trial
+ 
+dfof_align_tg
+ 
+if system_dependent('IsDebugMode')==1, dbquit; end
+dfof_tg
+ 
+dfof_tg_trial
+ 
+R1_cell_trial
+ 
+
+save_flag =
+
+     1
+
+icell = 1
+
+icell =
+
+     1
+
+ iisi =  1
+
+iisi =
+
+     1
+
+iori = 1
+
+iori =
+
+     1
+
+        idx = intersect(id_ori{iori}, id_isi3{iisi});
+ 
+idx
+
+idx =
+
+  Columns 1 through 12
+
+    35    37    62    94   128   148   198   223   237   241   247   317
+
+  Columns 13 through 18
+
+   366   379   382   413   420   462
+
+        ntrials_cond = length(idx);
+ 
+        bootstrap_draw = round(ntrials_cond * 0.5);
+ 
+        idx_run = idx(1 : ntrial_draw);
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eval')" style="font-weight:bold">eval</a>
+Unrecognized function or variable 'ntrial_draw'.
+} 
+        ntrial_draw = round(ntrials_cond * 0.5);
+ 
+        idx_run = idx(1 : ntrial_draw);
+ 
+idx_run
+
+idx_run =
+
+    35    37    62    94   128   148   198   223   237
+
+        idx_run = idx(ntrial_draw : end);
+ 
+idx_run
+
+idx_run =
+
+   237   241   247   317   366   379   382   413   420   462
+
+if system_dependent('IsDebugMode')==1, dbquit all; end
+
+save_flag =
+
+     1
+
+ori_pref_runs
+ 
+ori_pref
+
+ori_pref =
+
+   22.0904
+
+if system_dependent('IsDebugMode')==1, dbquit; end
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+stim_type =
+
+    'grating'
+
+
+ans =
+
+     6
+
+
+ans =
+
+    22
+
+
+ans =
+
+    20
+
+
+iset =
+
+     1
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200720'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99865
+
+
+ncell =
+
+   103
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    55
+    57
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+     2
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200721'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99899
+
+
+ncell =
+
+    39
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+     3
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1323
+
+
+arg_date =
+
+    '200723'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99828
+
+
+ncell =
+
+    33
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+     4
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200728'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99806
+
+
+ncell =
+
+    93
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+     5
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1324
+
+
+arg_date =
+
+    '200729'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99881
+
+
+ncell =
+
+    52
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+     6
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200803'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99816
+
+
+ncell =
+
+    97
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+     7
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200804'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+       99952
+
+
+ncell =
+
+    69
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+     8
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1322
+
+
+arg_date =
+
+    '200806'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    53
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+     9
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201015'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    82
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    10
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201119'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    71
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    11
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    40
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    12
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+     9
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    13
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1328
+
+
+arg_date =
+
+    '201202'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    29
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    14
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201209'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+   146
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    15
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+   107
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    16
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '201217'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    90
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    17
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    22
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    55
+    56
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    10
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    18
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1329
+
+
+arg_date =
+
+    '210113'
+
+
+arg_ImgFolder =
+
+    '006'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    23
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    19
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210120'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    62
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    55
+    56
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+     9
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    20
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    86
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    21
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210127'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    62
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    22
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    43
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    55
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    23
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1337
+
+
+arg_date =
+
+    '210203'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    25
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    24
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1338
+
+
+arg_date =
+
+    '210325'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    85
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    25
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1338
+
+
+arg_date =
+
+    '210805'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    80
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    26
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    24
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    27
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1339
+
+
+arg_date =
+
+    '210930'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    25
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    28
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211020'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    62
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    29
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211020'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    68
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    14
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    30
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    35
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    31
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1350
+
+
+arg_date =
+
+    '211028'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    34
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    32
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1351
+
+
+arg_date =
+
+    '220228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    63
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    33
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1351
+
+
+arg_date =
+
+    '220228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    72
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    34
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    35
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    57
+    58
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    35
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230110'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      100000
+
+
+ncell =
+
+    15
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    56
+    57
+    58
+    59
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    36
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230221'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    67
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    60
+    61
+    63
+    64
+    65
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    37
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230221'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    36
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    61
+    62
+    63
+    64
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    14
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    38
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    73
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    61
+    62
+    64
+    66
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    39
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    86
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    61
+    62
+    63
+    64
+    65
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    14
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    40
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230302'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+   139
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    61
+    62
+    63
+    64
+    65
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    41
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1373
+
+
+arg_date =
+
+    '230302'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+   142
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    60
+    62
+    63
+    65
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    42
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230307'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    87
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    61
+    62
+    63
+    65
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    43
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230307'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    98
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    60
+    61
+    62
+    63
+    64
+    66
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    44
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230307'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+area =
+
+    'LM'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+   100
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    61
+    62
+    63
+    64
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    14
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    45
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230309'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    94
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    61
+    62
+    63
+    64
+    66
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    46
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '230309'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    33
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    59
+    60
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    47
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1374
+
+
+arg_date =
+
+    '230323'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+   114
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    60
+    61
+    62
+    63
+    64
+    66
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+
+iset =
+
+    48
+
+
+nset =
+
+    48
+
+
+arg_mouse =
+
+        1374
+
+
+arg_date =
+
+    '230323'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'LI'
+
+wait for timecourse
+timecourse exists, start generating trace_trial_stim.mat
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    65
+
+loaded timecourse & visual input
+
+nrep_stim =
+
+    60
+    63
+    64
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+
+save_flag =
+
+     1
+
+
+save_flag =
+
+     0
+
+ori_pref_runs
+ 
