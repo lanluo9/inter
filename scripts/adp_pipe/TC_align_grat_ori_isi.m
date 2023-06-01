@@ -35,8 +35,7 @@ sum(strcmp(dataset_table.area, 'V1'))
 sum(strcmp(dataset_table.area, 'LM'))
 sum(strcmp(dataset_table.area, 'LI'))
 
-% dataset_table = dataset_table(dataset_table.date == 201119, :)
-% dataset_table = dataset_table(dataset_table.date == 200720, :)
+dataset_table = dataset_table(dataset_table.date == 210120, :)
 
 nset = size(dataset_table, 1);
 
@@ -207,6 +206,37 @@ isi_nframe = isi_seq'; % ISI as number of frames in each trial
 adapter_contrast = contrast_ad'; % contrast of adapter (R1)
 if save_flag; save trace_trial_stim.mat trace_by_trial ...
         stim_ori isi_nframe adapter_contrast; end
+
+%% san check
+% what can generate possibly fake adp when adapter vs target are orthogonal?  
+% check if bin=90 tuning curve is real: plot timecourse for stim2=90, noad vs 250
+
+size(dfof_align_ad); % ncell x ntrial x nframe
+
+isi_nframe = isi_nframe(1:length(stim_ori)); % cut off final trial
+adapter_contrast = adapter_contrast(1:length(stim_ori));
+trial_id_noad_90 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter, stim2 ori=90
+trial_id_ad_90 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1);
+
+file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
+tmp = load(file);
+cell_id_filter = logical(tmp.vis_orimod_cell_bool');
+clear tmp
+
+trace_noad_90 = dfof_align_ad(cell_id_filter, trial_id_noad_90, :);
+trace_noad_90 = mean(trace_noad_90, 1);
+trace_noad_90 = mean(trace_noad_90, 2);
+trace_noad_90 = squeeze(trace_noad_90);
+
+trace_ad_90 = dfof_align_ad(cell_id_filter, trial_id_ad_90, :);
+trace_ad_90 = mean(trace_ad_90, 1);
+trace_ad_90 = mean(trace_ad_90, 2);
+trace_ad_90 = squeeze(trace_ad_90);
+
+plot(trace_noad_90, 'b')
+hold on
+plot(trace_ad_90, 'r')
+legend('noad', 'ad250');
 
 %% set resp window
 % find base window & resp window
