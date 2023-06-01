@@ -25,15 +25,15 @@ stim_type = 'grating' % grat_8ori_3isi
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
 dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
-seg_bool = logical(~strcmp(dataset_table.manual_seg, 'TODO')); % exclude not-segmented data
+seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
 % area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'V1'));
 % area_bool = logical(strcmp(dataset_table.area, 'LI'));
 % dataset_table = dataset_table(area_bool, :);
-sum(strcmp(dataset_table.area, 'V1')) % count LM data, grat_8ori_3isi
-sum(strcmp(dataset_table.area, 'LM')) % count LM data, grat_8ori_3isi
-sum(strcmp(dataset_table.area, 'LI')) % count LM data, grat_8ori_3isi
+sum(strcmp(dataset_table.area, 'V1'))
+sum(strcmp(dataset_table.area, 'LM'))
+sum(strcmp(dataset_table.area, 'LI'))
 
 % dataset_table = dataset_table(dataset_table.date == 201119, :)
 % dataset_table = dataset_table(dataset_table.date == 200720, :)
@@ -326,7 +326,7 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 
 %% fit tuning curve with half trials
 
-save_flag = 1
+% save_flag = 1
 fit_tuning_half_trials(dfof_align_tg, save_flag);
 save_flag = 0
 

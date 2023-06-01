@@ -1,0 +1,2 @@
+`python -m cellpose` in anaconda prompt
+for cellpose v2
