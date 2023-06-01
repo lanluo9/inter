@@ -215,28 +215,34 @@ size(dfof_align_ad); % ncell x ntrial x nframe
 
 isi_nframe = isi_nframe(1:length(stim_ori)); % cut off final trial
 adapter_contrast = adapter_contrast(1:length(stim_ori));
-trial_id_noad_90 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter, stim2 ori=90
-trial_id_ad_90 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1);
+trial_id_noad_1 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
+trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
+trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
 
 file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
 tmp = load(file);
 cell_id_filter = logical(tmp.vis_orimod_cell_bool');
 clear tmp
 
-trace_noad_90 = dfof_align_ad(cell_id_filter, trial_id_noad_90, :);
-trace_noad_90 = mean(trace_noad_90, 1);
-trace_noad_90 = mean(trace_noad_90, 2);
-trace_noad_90 = squeeze(trace_noad_90);
+trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+% trace_noad_90 = dfof_align_ad(cell_id_filter, trial_id_noad_90, :);
+% trace_noad_90 = nanmean(trace_noad_90, 1);
+% trace_noad_90 = nanmean(trace_noad_90, 2);
+% trace_noad_90 = squeeze(trace_noad_90); % avg over cells and trials
 
-trace_ad_90 = dfof_align_ad(cell_id_filter, trial_id_ad_90, :);
-trace_ad_90 = mean(trace_ad_90, 1);
-trace_ad_90 = mean(trace_ad_90, 2);
-trace_ad_90 = squeeze(trace_ad_90);
+% trace_ad_90 = dfof_align_ad(cell_id_filter, trial_id_ad_90, :);
+trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_90, :), 1), 2));
+% trace_ad_90 = nanmean(trace_ad_90, 2);
+% trace_ad_90 = squeeze(trace_ad_90);
 
-plot(trace_noad_90, 'b')
+figure;
+plot(trace_noad_1, 'b')
 hold on
-plot(trace_ad_90, 'r')
-legend('noad', 'ad250');
+plot(trace_noad_2, 'g')
+plot(trace_ad_250, 'r')
+legend('noad early', 'noad late', 'ad250');
+xlim([0, 60]);
 
 %% set resp window
 % find base window & resp window
@@ -287,7 +293,7 @@ xline(range_base(end), 'k--')
 xline(range_resp(1), 'k--')
 xline(range_resp(end), 'k--')
 grid on; grid minor
-set(gcf, 'Position', get(0, 'Screensize'));
+% set(gcf, 'Position', get(0, 'Screensize'));
 if save_flag; saveas(gcf, 'find_ca_latency_ca_window.jpg'); end
 
 %% use resp window to cut trace_by_trial
