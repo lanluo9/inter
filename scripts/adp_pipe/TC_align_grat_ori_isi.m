@@ -184,7 +184,7 @@ t = cell2mat(t(:,1));
 nrep_stim = unique(t(:,2))
 
 %% dfof aligned
-% align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
+% align tc by adapter or targ onset. normalize by "trial baseline" to get dfof
 % always use frame_ad as the end point of trial-specific baseline
 
 cd(result_folder)
@@ -194,10 +194,10 @@ cd(result_folder)
 %     continue
 % end
 
-npSub_tc = df_flat;
-tc_align_ad = align_tc(frame_ad, npSub_tc);
+npSub_tc = df_flat; % nframe x ncell
+tc_align_ad = align_tc(frame_ad, npSub_tc); % ncell x ntrial x nframe_trial
 tc_align_tg = align_tc(frame_tg, npSub_tc);
-dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
+dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad); % same as above but df/f
 dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
 
 trace_by_trial = dfof_align_ad;

@@ -47,12 +47,11 @@ if alarm >= 0.05; disp('trial baseline fluctuates too much!'); end
 % plot(t_base, 'k'); % saveas(gcf, ['trial base'], 'jpg'); close 
 
 tc_trial_base_avg = nanmean(tc_trial_base, 3);
-% figure
-% imagesc(tc_trial_base_avg) % no overall drift of baseline across trials in session
-
 dfof_align = zeros(ncell, ntrial, size(tc_aligned, 3));
 for icell = 1:ncell
 for itrial = 1:ntrial
     dfof_align(icell, itrial, :) = tc_aligned(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :) - 1;
 end
 end
+
+1+1
