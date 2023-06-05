@@ -148,12 +148,14 @@ id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1);
 % id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = []; 
 
 frame_ad = double(cell2mat(input_behav.cStimOn)); 
-frame_ad_off = double(cell2mat(input_behav.cStimOff));
+frame_ad_off = double(cell2mat(input_behav.cStimOff)); % NOTE error in frame_ad_off: not consecutive -> gap between trial 219 vs 220
 frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
-isi_seq = frame_tg - frame_ad_off; 
+isi_seq = frame_tg - frame_ad - 3; % due to error in frame_ad_off, has to calc isi this way
+unique(isi_seq)
+
 nisi = length(unique(frame_tg - frame_ad));
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
-id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
+% id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
 id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
@@ -161,7 +163,7 @@ trial_len_min = min(unique(diff(frame_ad)));
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
 ori_seq(ori_seq == 180) = 0;
-ori_seq(end) = [];
+% ori_seq(end) = [];
 ori_list = unique(ori_seq); 
 nori = length(ori_list); id_ori = cell(nori, 1);
 for iori  = 1 : nori
@@ -200,39 +202,31 @@ if save_flag; save trace_trial_stim.mat trace_by_trial ...
 % what can generate possibly fake adp when adapter vs target are orthogonal?  
 % check if bin=90 tuning curve is real: plot timecourse for stim2=90, noad vs 250
 
-size(dfof_align_ad); % ncell x ntrial x nframe
+% size(dfof_align_ad); % ncell x ntrial x nframe
 
-isi_nframe = isi_nframe(1:length(stim_ori)); % cut off final trial
-adapter_contrast = adapter_contrast(1:length(stim_ori));
+% isi_nframe = isi_nframe(1:length(stim_ori)); % cut off final trial
+% adapter_contrast = adapter_contrast(1:length(stim_ori));
 trial_id_noad_1 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
 trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
 trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
 
 
-file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
-tmp = load(file);
-cell_id_filter = logical(tmp.vis_orimod_cell_bool');
-clear tmp
+% file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
+% tmp = load(file);
+% cell_id_filter = logical(tmp.vis_orimod_cell_bool');
+% clear tmp
 
 % file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat';
 % tmp = load(file);
 % cell_id_filter = logical(tmp.vis_cell_bool');
 % clear tmp
 
-% cell_id_filter = ones(size(cell_id_filter)); % turn off cell filter
+cell_id_filter = ones(size(dfof_align_ad, 1), 1); % turn off cell filter
 
 
 trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
 trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-% trace_noad_90 = dfof_align_ad(cell_id_filter, trial_id_noad_90, :);
-% trace_noad_90 = nanmean(trace_noad_90, 1);
-% trace_noad_90 = nanmean(trace_noad_90, 2);
-% trace_noad_90 = squeeze(trace_noad_90); % avg over cells and trials
-
-% trace_ad_90 = dfof_align_ad(cell_id_filter, trial_id_ad_90, :);
-trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_90, :), 1), 2));
-% trace_ad_90 = nanmean(trace_ad_90, 2);
-% trace_ad_90 = squeeze(trace_ad_90);
+trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
 figure;
 plot(trace_noad_1, 'b')
@@ -241,6 +235,9 @@ plot(trace_noad_2, 'g')
 plot(trace_ad_250, 'r')
 legend('noad early', 'noad late', 'ad250');
 xlim([0, 60]);
+set(gcf, 'Position', get(0, 'Screensize')); 
+if save_flag; saveas(gcf, 'san check stim2=90, noad vs ad250', 'jpg'); end
+close
 
 %% set resp window
 % find base window & resp window
@@ -362,7 +359,7 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 
 % save_flag = 1
 fit_tuning_half_trials(dfof_align_tg, save_flag);
-save_flag = 0
+% save_flag = 0
 
 % %% well-fit cells
 % % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit

@@ -1,10 +1,11 @@
 
-% tmp = squeeze(mean(mean(dfof_align, 1), 2));
-tmp = squeeze(dfof_align_ad(25, 16, :));
+tmp = squeeze(nanmean(nanmean(dfof_align_ad, 1), 2));
+% tmp = squeeze(dfof_align_ad(25, 16, :));
 figure
 plot(tmp)
 hold on
 yline(0)
+xlim([0, 60]);
 
 % 10(11), 20(19), 34
 % 8 or 10 frame = 250 ms
