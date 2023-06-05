@@ -220,15 +220,15 @@ trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % tr
 trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
 
 
-% file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
-% tmp = load(file);
-% cell_id_filter = logical(tmp.vis_orimod_cell_bool');
-% clear tmp
-
-file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat';
+file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
 tmp = load(file);
-cell_id_filter = logical(tmp.vis_cell_bool');
+cell_id_filter = logical(tmp.vis_orimod_cell_bool');
 clear tmp
+
+% file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat';
+% tmp = load(file);
+% cell_id_filter = logical(tmp.vis_cell_bool');
+% clear tmp
 
 % cell_id_filter = ones(size(cell_id_filter)); % turn off cell filter
 
@@ -256,10 +256,10 @@ xlim([0, 60]);
 %% set resp window
 % find base window & resp window
 
-t = squeeze(nanmean(squeeze(dfof_align_ad(:,:,:)), 1)); 
-t_ad = squeeze(nanmean(t(:,:), 1)); 
-t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); 
-t_tg = squeeze(nanmean(t(:,:), 1)); 
+t = squeeze(nanmean(dfof_align_ad, 1));
+t_ad = squeeze(nanmean(t, 1)); 
+t = squeeze(nanmean(dfof_align_tg, 1));
+t_tg = squeeze(nanmean(t, 1)); 
 
 figure;
 range = 60;

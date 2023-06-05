@@ -1,5 +1,6 @@
 
-tmp = squeeze(mean(mean(dfof_align, 1), 2));
+% tmp = squeeze(mean(mean(dfof_align, 1), 2));
+tmp = squeeze(dfof_align_ad(25, 16, :));
 figure
 plot(tmp)
 hold on
