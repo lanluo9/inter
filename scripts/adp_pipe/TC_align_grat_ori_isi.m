@@ -219,10 +219,19 @@ trial_id_noad_1 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % tr
 trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
 trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
 
-file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
+
+% file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
+% tmp = load(file);
+% cell_id_filter = logical(tmp.vis_orimod_cell_bool');
+% clear tmp
+
+file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat';
 tmp = load(file);
-cell_id_filter = logical(tmp.vis_orimod_cell_bool');
+cell_id_filter = logical(tmp.vis_cell_bool');
 clear tmp
+
+% cell_id_filter = ones(size(cell_id_filter)); % turn off cell filter
+
 
 trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
 trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
