@@ -354,6 +354,8 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 % save tuning curve for each cell & isi
 
 [fit_param, ori_pref, tuning_curve_cell_isi] = fit_tuning(dfof_tg, save_flag);
+% TODO: bug - all cells failed to fit tuning due to max iter exceeded, even
+% though tuning curve looks fine
 
 %% fit tuning curve with half trials
 

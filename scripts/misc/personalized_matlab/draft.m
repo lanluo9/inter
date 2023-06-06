@@ -5,7 +5,7 @@ figure
 plot(tmp)
 hold on
 yline(0)
-xlim([0, 60]);
+% xlim([0, 60]);
 
 % 10(11), 20(19), 34
 % 8 or 10 frame = 250 ms
