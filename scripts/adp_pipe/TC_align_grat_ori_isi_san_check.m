@@ -353,64 +353,62 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 % ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
 % save tuning curve for each cell & isi
 
-[fit_param, ori_pref, tuning_curve_cell_isi] = fit_tuning(dfof_tg, save_flag);
-% TODO: bug - all cells failed to fit tuning due to max iter exceeded, even
-% though tuning curve looks fine
+[tuning_curve_cell_isi] = tuning_curve_nofit(dfof_tg, save_flag);
 
-%% fit tuning curve with half trials
-
-% save_flag = 1
-fit_tuning_half_trials(dfof_align_tg, save_flag);
-% save_flag = 0
-
-% %% well-fit cells
-% % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+% %% fit tuning curve with half trials
 % 
-% bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
-% if exist(bootstrap_file, 'file')
-%     tmp = load(bootstrap_file, 'ori_pref_runs');
-%     if size(tmp.ori_pref_runs, 2) == 1000
-%         disp('already done 1k bootstraps for well_fit, skip')
-% %         continue
-%     end
-% else
-%     save_flag = 1;
-%     nrun = 1000; 
-%     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-%     % sum(well_fit_cell) / length(well_fit_cell)
-% end
-
-% % relax well_fit_cell_criteria to a lower percentile for LI
-% bootstrap_file = fullfile(result_folder, 'fit_bootstrap_relax.mat');
-% if exist(bootstrap_file, 'file')
-%     continue
-% else
-%     save_flag = 1;
-%     nrun = 1000;
-%     percentile_threshold = 0.7;
-%     well_fit_cell = well_fit_cell_criteria_relax(percentile_threshold, nrun, save_flag);
-%     disp('well_fit_cell percent:')
-%     sum(well_fit_cell) / length(well_fit_cell) * 100
-% end
-
-% % validation that well_fit cells' tuning is comparable no matter how you
-% % calculate their tuning: by avg or med of ori_pref_runs, or by ori_pref
-% % generated from fit_tuning func
-% tmp = load(bootstrap_file);
-% well_fit_bool = tmp.well_fit_cell;
+% % save_flag = 1
+% fit_tuning_half_trials(dfof_align_tg, save_flag);
+% % save_flag = 0
 % 
-% ori_pref_noad = ori_pref(:, 1); % first col is no-adapter ori pref
-% ori_pref_noad_boot_avg = mean(tmp.ori_pref_runs, 2); % avg across boots
-% ori_pref_noad_boot_med = median(tmp.ori_pref_runs, 2);
+% % %% well-fit cells
+% % % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+% % 
+% % bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
+% % if exist(bootstrap_file, 'file')
+% %     tmp = load(bootstrap_file, 'ori_pref_runs');
+% %     if size(tmp.ori_pref_runs, 2) == 1000
+% %         disp('already done 1k bootstraps for well_fit, skip')
+% % %         continue
+% %     end
+% % else
+% %     save_flag = 1;
+% %     nrun = 1000; 
+% %     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
+% %     % sum(well_fit_cell) / length(well_fit_cell)
+% % end
 % 
-% ori_pref_noad = ori_pref_noad(well_fit_bool);
-% ori_pref_noad_boot_avg = ori_pref_noad_boot_avg(well_fit_bool);
-% ori_pref_noad_boot_med = ori_pref_noad_boot_med(well_fit_bool);
+% % % relax well_fit_cell_criteria to a lower percentile for LI
+% % bootstrap_file = fullfile(result_folder, 'fit_bootstrap_relax.mat');
+% % if exist(bootstrap_file, 'file')
+% %     continue
+% % else
+% %     save_flag = 1;
+% %     nrun = 1000;
+% %     percentile_threshold = 0.7;
+% %     well_fit_cell = well_fit_cell_criteria_relax(percentile_threshold, nrun, save_flag);
+% %     disp('well_fit_cell percent:')
+% %     sum(well_fit_cell) / length(well_fit_cell) * 100
+% % end
 % 
-% plot(ori_pref_noad_boot_avg)
-% hold on
-% plot(ori_pref_noad_boot_med)
-% plot(ori_pref_noad)
-% legend('boot avg', 'boot med', 'fit')
+% % % validation that well_fit cells' tuning is comparable no matter how you
+% % % calculate their tuning: by avg or med of ori_pref_runs, or by ori_pref
+% % % generated from fit_tuning func
+% % tmp = load(bootstrap_file);
+% % well_fit_bool = tmp.well_fit_cell;
+% % 
+% % ori_pref_noad = ori_pref(:, 1); % first col is no-adapter ori pref
+% % ori_pref_noad_boot_avg = mean(tmp.ori_pref_runs, 2); % avg across boots
+% % ori_pref_noad_boot_med = median(tmp.ori_pref_runs, 2);
+% % 
+% % ori_pref_noad = ori_pref_noad(well_fit_bool);
+% % ori_pref_noad_boot_avg = ori_pref_noad_boot_avg(well_fit_bool);
+% % ori_pref_noad_boot_med = ori_pref_noad_boot_med(well_fit_bool);
+% % 
+% % plot(ori_pref_noad_boot_avg)
+% % hold on
+% % plot(ori_pref_noad_boot_med)
+% % plot(ori_pref_noad)
+% % legend('boot avg', 'boot med', 'fit')
 
 end

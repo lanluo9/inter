@@ -207,43 +207,56 @@ adapter_contrast = contrast_ad'; % contrast of adapter (R1)
 if save_flag; save trace_trial_stim.mat trace_by_trial ...
         stim_ori isi_nframe adapter_contrast; end
 
+%% dfof_by_trial_base check
+% plot from previous trial's stim2 offset to next trial's stim1 onset
+% a full off-on-off cycle, to see if baseline falls back properly
+
+size(dfof_align_ad) % ncell x ntrial x nframe
+t = squeeze(nanmean(dfof_align_ad, 1));
+t_ad = squeeze(nanmean(t, 1)); 
+
+figure
+plot(t_ad)
+hold on
+yline(0)
+yline(0.01)
+
 %% san check
 % what can generate possibly fake adp when adapter vs target are orthogonal?  
 % check if bin=90 tuning curve is real: plot timecourse for stim2=90, noad vs 250
 
-size(dfof_align_ad); % ncell x ntrial x nframe
+size(dfof_align_ad) % ncell x ntrial x nframe
 
-isi_nframe = isi_nframe(1:length(stim_ori)); % cut off final trial
+isi_nframe = isi_nframe(1:length(stim_ori));
 adapter_contrast = adapter_contrast(1:length(stim_ori));
 trial_id_noad_1 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
 trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
 trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
 
 
-file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
+file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_driven_ttest_bonferroni.mat';
 tmp = load(file);
-cell_id_filter = logical(tmp.vis_orimod_cell_bool');
+cell_id_filter = logical(tmp.vis_driven');
+cell_id_filter_new = logical(tmp.vis_driven');
 clear tmp
 
-% file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat';
-% tmp = load(file);
-% cell_id_filter = logical(tmp.vis_cell_bool');
-% clear tmp
+file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat'; % old vis cells, from anova/kruskal AND evoked thresh
+tmp = load(file);
+cell_id_filter = logical(tmp.vis_cell_bool');
+cell_id_filter_old = logical(tmp.vis_cell_bool');
+clear tmp
 
+cell_id_filter = ~cell_id_filter; % only plot not-vis-driven cells
 % cell_id_filter = ones(size(cell_id_filter)); % turn off cell filter
 
 
 trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
 trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-% trace_noad_90 = dfof_align_ad(cell_id_filter, trial_id_noad_90, :);
-% trace_noad_90 = nanmean(trace_noad_90, 1);
-% trace_noad_90 = nanmean(trace_noad_90, 2);
-% trace_noad_90 = squeeze(trace_noad_90); % avg over cells and trials
+trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
-% trace_ad_90 = dfof_align_ad(cell_id_filter, trial_id_ad_90, :);
-trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_90, :), 1), 2));
-% trace_ad_90 = nanmean(trace_ad_90, 2);
-% trace_ad_90 = squeeze(trace_ad_90);
+% trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+% trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+% trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
 figure;
 plot(trace_noad_1, 'b')
@@ -252,6 +265,30 @@ plot(trace_noad_2, 'g')
 plot(trace_ad_250, 'r')
 legend('noad early', 'noad late', 'ad250');
 xlim([0, 60]);
+
+% vis_driven = cell_id_filter;
+% for icell = 1 : 10 %size(cell_id_filter, 1)
+% %     if vis_driven(icell) == 1
+% %         continue
+% %     end
+%     cell_id_filter = zeros(size(cell_id_filter));
+%     cell_id_filter(icell) = 1;
+%     cell_id_filter = logical(cell_id_filter); % only use a single cell
+%     
+%     trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+%     trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+%     trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+%     
+%     figure;
+%     plot(trace_noad_1, 'b')
+%     hold on
+%     plot(trace_noad_2, 'g')
+%     plot(trace_ad_250, 'r')
+%     legend('noad early', 'noad late', 'ad250');
+%     xlim([0, 60]);
+%     title(num2str(vis_driven(icell)))
+%     pause(2)
+% end
 
 %% set resp window
 % find base window & resp window
@@ -340,6 +377,35 @@ if save_flag; save dfof.mat dfof_ad dfof_ad_sem dfof_ad_std dfof_tg dfof_tg_sem 
 [trace_avg, trace_sem] = trace_grand_avg(dfof_align_ad, 0);
 % trace_avg = squeeze(trace_avg(:,:,3,:)); % trace_sem = squeeze(trace_sem(:,:,3,:));
 if save_flag; save trace_aligned.mat trace_avg trace_sem; end
+
+%% san check w only cells preferring stim2=90
+
+dfof_tg_noad = dfof_tg(:, :, 1); % no adapter, ncell x nstim
+[argvalue, argmax] = max(dfof_tg_noad, [], 2);
+cell_pref_90 = logical(argmax == 4); % 0, 22.5 .. 90 -> stim id = 4 is 90
+% cell_pref_almost_0 = logical(argmax == 8); % 0, 22.5 .. 90 -> stim id = 0 is 0 deg
+sum(cell_pref_90)
+
+cell_id_filter = cell_pref_id;
+dfof_tg_noad_cell_pref = nanmean(dfof_tg_noad(cell_id_filter, :), 1);
+figure; plot(dfof_tg_noad_cell_pref)
+
+% trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+% trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+% trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+
+trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+
+figure;
+plot(trace_noad_1, 'b')
+hold on
+plot(trace_noad_2, 'g')
+plot(trace_ad_250, 'r')
+legend('noad early', 'noad late', 'ad250');
+xlim([0, 60]);
+
 
 %% trial-wise response and baseline
 

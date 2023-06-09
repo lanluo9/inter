@@ -18,6 +18,12 @@ imagesc(tc_trial_base_avg)
 
 %%
 
+dfof_align_ad_respwin = squeeze(nanmean(dfof_align_ad(:, :, 20:30), 3));
+figure; imagesc(dfof_align_ad_respwin)
+colorbar
+
+%%
+
 
 % % % icell = 1
 % % % icond = 3 % isi = 250 ms

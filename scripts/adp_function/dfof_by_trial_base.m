@@ -56,4 +56,4 @@ for itrial = 1:ntrial
     dfof_align(icell, itrial, :) = tc_aligned(icell, itrial, :) ./ tc_trial_base_avg(icell, itrial, :) - 1;
 end
 end
-1+1
+% 1+1
