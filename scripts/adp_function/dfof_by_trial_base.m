@@ -29,7 +29,6 @@ global frame_rate ntrial ncell
 
 %%
 trial_base_len = frame_rate * 1; % 30 frame/sec * 1 sec
-% trial_base_len = frame_rate * 0.5;
 % trial_base_len = frame_rate * 0.1; % reduced trial base length for cellpose bunnytop
 tc_trial_base = zeros(ncell, ntrial, trial_base_len);
 for icell = 1:ncell
@@ -40,14 +39,14 @@ for icell = 1:ncell
     end
 end
 
-t = squeeze(nanmean(squeeze(tc_trial_base(:,:,:)), 1)); 
-t_base = squeeze(nanmean(t(:,:), 1)); 
+t = squeeze(nanmean(squeeze(tc_trial_base(:,:,:)), 1)); % agg over cells
+t_base = squeeze(nanmean(t(:,:), 1)); % agg over trials. len = nframe_base
 alarm = (max(t_base) - min(t_base)) / min(t_base);
 if alarm >= 0.05; disp('trial baseline fluctuates too much!'); end
 % figure;
 % plot(t_base, 'k'); % saveas(gcf, ['trial base'], 'jpg'); close 
 
-tc_trial_base_avg = nanmean(tc_trial_base, 3);
+tc_trial_base_avg = nanmean(tc_trial_base, 3); % agg over nframe_base
 % figure
 % imagesc(tc_trial_base_avg) % no overall drift of baseline across trials in session
 
@@ -63,7 +62,7 @@ end
 % plot from previous trial's stim2 offset to next trial's stim1 onset
 % a full off-on-off cycle, to see if baseline falls back properly
 
-iti_ms = 6000;
+iti_ms = 6000; % TODO: dont hard code it
 stim_ms = 100;
 max_isi_frame = 23;
 max_isi_ms = max_isi_frame / frame_rate * 1000;
@@ -79,8 +78,8 @@ dfof_align_tail = cat(2, dfof_align_tail(:, end, :), tmp); % move final ITI/2 to
 
 dfof_align_shift = cat(3, dfof_align_tail, dfof_align_shift);
 size(dfof_align_shift) % ncell x ntrial x nframe
-t = squeeze(nanmean(dfof_align_shift, 1));
-t = squeeze(nanmean(t, 1)); 
+t = squeeze(nanmedian(dfof_align_shift, 1));
+t = squeeze(nanmedian(t, 1)); 
 
 figure
 plot(t)
