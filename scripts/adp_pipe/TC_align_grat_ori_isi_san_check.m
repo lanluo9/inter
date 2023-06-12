@@ -141,7 +141,8 @@ cd(result_folder)
 
 input_behav = input_behav_seq;
 % input_behav.itiTimeMs
-ntrial = sum(input_behav.trialsSinceReset); % NOTE: did not discard final trial
+% ntrial = sum(input_behav.trialsSinceReset); % NOTE: did not discard final trial
+ntrial = ;
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
 id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 

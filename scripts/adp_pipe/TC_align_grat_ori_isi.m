@@ -221,6 +221,8 @@ hold on
 yline(0)
 yline(0.01)
 
+% TODO: unfinished
+
 %% san check
 % what can generate possibly fake adp when adapter vs target are orthogonal?  
 % check if bin=90 tuning curve is real: plot timecourse for stim2=90, noad vs 250
@@ -240,23 +242,24 @@ cell_id_filter = logical(tmp.vis_driven');
 cell_id_filter_new = logical(tmp.vis_driven');
 clear tmp
 
-file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat'; % old vis cells, from anova/kruskal AND evoked thresh
-tmp = load(file);
-cell_id_filter = logical(tmp.vis_cell_bool');
-cell_id_filter_old = logical(tmp.vis_cell_bool');
-clear tmp
+% file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat'; % old vis cells, from anova/kruskal AND evoked thresh
+% tmp = load(file);
+% cell_id_filter = logical(tmp.vis_cell_bool');
+% cell_id_filter_old = logical(tmp.vis_cell_bool');
+% clear tmp
 
-cell_id_filter = ~cell_id_filter; % only plot not-vis-driven cells
-% cell_id_filter = ones(size(cell_id_filter)); % turn off cell filter
+% cell_id_filter = ~cell_id_filter; % only plot not-vis-driven cells
+cell_id_filter = logical(ones(size(cell_id_filter))); % turn off cell filter
+% cell_id_filter = ones(size(cell_id_filter), 'like', cell_id_filter); % turn off cell filter
 
 
-trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+% trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+% trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+% trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
-% trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-% trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-% trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
 figure;
 plot(trace_noad_1, 'b')
@@ -265,6 +268,7 @@ plot(trace_noad_2, 'g')
 plot(trace_ad_250, 'r')
 legend('noad early', 'noad late', 'ad250');
 xlim([0, 60]);
+
 
 % vis_driven = cell_id_filter;
 % for icell = 1 : 10 %size(cell_id_filter, 1)
@@ -383,20 +387,19 @@ if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 dfof_tg_noad = dfof_tg(:, :, 1); % no adapter, ncell x nstim
 [argvalue, argmax] = max(dfof_tg_noad, [], 2);
 cell_pref_90 = logical(argmax == 4); % 0, 22.5 .. 90 -> stim id = 4 is 90
-% cell_pref_almost_0 = logical(argmax == 8); % 0, 22.5 .. 90 -> stim id = 0 is 0 deg
-sum(cell_pref_90)
+% cell_pref_almost_0 = logical((argmax == 8) + (argmax == 1) + (argmax == 0)); % 0, 22.5 .. 90 -> stim id = 0 is 0 deg
 
-cell_id_filter = cell_pref_id;
+cell_id_filter = cell_pref_90;
 dfof_tg_noad_cell_pref = nanmean(dfof_tg_noad(cell_id_filter, :), 1);
 figure; plot(dfof_tg_noad_cell_pref)
 
-% trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-% trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-% trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
-trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+% trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+% trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+% trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
 figure;
 plot(trace_noad_1, 'b')
