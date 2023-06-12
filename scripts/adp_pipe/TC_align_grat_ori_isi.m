@@ -41,8 +41,9 @@ nset = size(dataset_table, 1);
 
 %% find TC.mat
 
-for iset = 1:nset
+% for iset = 1:nset
 
+iset = 1
 clear global; close all
 iset, nset
 
@@ -152,7 +153,7 @@ cd(result_folder)
 % index by adapter contrast, target ori, isi
 
 input_behav = input_behav_seq;
-% input_behav.itiTimeMs
+iti_ms = input_behav.itiTimeMs;
 ntrial = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
@@ -162,6 +163,7 @@ id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = [];
 frame_ad = double(cell2mat(input_behav.cStimOn)); frame_ad_off = double(cell2mat(input_behav.cStimOff));
 frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
 isi_seq = frame_tg - frame_ad_off; 
+max_isi_ms = max(isi_seq);
 nisi = length(unique(frame_tg - frame_ad));
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
 id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
@@ -169,6 +171,9 @@ id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
 trial_len_min = min(unique(diff(frame_ad)));
+
+stim1_ms = input_behav.stimOnTimeMs;
+stim2_ms = input_behav.targetOnTimeMs;
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
 ori_seq(ori_seq == 180) = 0;
@@ -206,22 +211,6 @@ isi_nframe = isi_seq'; % ISI as number of frames in each trial
 adapter_contrast = contrast_ad'; % contrast of adapter (R1)
 if save_flag; save trace_trial_stim.mat trace_by_trial ...
         stim_ori isi_nframe adapter_contrast; end
-
-%% dfof_by_trial_base check
-% plot from previous trial's stim2 offset to next trial's stim1 onset
-% a full off-on-off cycle, to see if baseline falls back properly
-
-size(dfof_align_ad) % ncell x ntrial x nframe
-t = squeeze(nanmean(dfof_align_ad, 1));
-t_ad = squeeze(nanmean(t, 1)); 
-
-figure
-plot(t_ad)
-hold on
-yline(0)
-yline(0.01)
-
-% TODO: unfinished
 
 %% san check
 % what can generate possibly fake adp when adapter vs target are orthogonal?  
@@ -494,4 +483,4 @@ save_flag = 0
 % plot(ori_pref_noad)
 % legend('boot avg', 'boot med', 'fit')
 
-end
+% end

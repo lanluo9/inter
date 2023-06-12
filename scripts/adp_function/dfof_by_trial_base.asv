@@ -59,9 +59,6 @@ end
 end
 
 %% plot trial trace as: off/2 -> on -> off/2 
-% %% dfof_by_trial_base check
-% plot from previous trial's stim2 offset to next trial's stim1 onset
-% a full off-on-off cycle, to see if baseline falls back properly
 
 iti_ms = 6000;
 stim_ms = 100;
@@ -75,17 +72,6 @@ dfof_align_tail = dfof_align(:, :, (end-half_off_frame):end); % off/2
 
 dfof_align_tail(:, end, :) = 0; % final ITI/2 is useless
 tmp = dfof_align_tail(:, 1:(end-1), :);
-dfof_align_tail = cat(2, dfof_align_tail(:, end, :), tmp); % move final ITI/2 to first trial to act as padding
+dfof_align_tail = cat(2, dfof_align_tail(:, end, :), tmp); % move final trial's off/2 
 
-dfof_align_shift = cat(3, dfof_align_tail, dfof_align_shift);
-size(dfof_align_shift) % ncell x ntrial x nframe
-t = squeeze(nanmean(dfof_align_shift, 1));
-t = squeeze(nanmean(t, 1)); 
-
-figure
-plot(t)
-hold on
-yline(0)
-yline(0.01)
-xline(double(half_off_frame))
 
