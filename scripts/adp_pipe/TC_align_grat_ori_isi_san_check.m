@@ -37,7 +37,7 @@ nset = size(dataset_table, 1);
 
 %% find TC.mat
 
-for iset = 1:nset
+for iset = 3:nset
 
 clear global; close all
 iset, nset
@@ -140,9 +140,8 @@ cd(result_folder)
 % index by adapter contrast, target ori, isi
 
 input_behav = input_behav_seq;
-% input_behav.itiTimeMs
-% ntrial = sum(input_behav.trialsSinceReset); % NOTE: did not discard final trial
-ntrial = ;
+% ntrial = sum(input_behav.trialsSinceReset); % NOTE: cant use due to mismatch
+ntrial = length(input_behav.tBaseGratingContrast); % must use length of stim info
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
 id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 
@@ -161,6 +160,11 @@ id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
 trial_len_min = min(unique(diff(frame_ad)));
+
+paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
+paradigm_ms.stim2_ms = input_behav.targetOnTimeMs;
+paradigm_ms.max_isi_ms = max(isi_seq);
+paradigm_ms.iti_ms = input_behav.itiTimeMs;
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
 ori_seq(ori_seq == 180) = 0;
@@ -189,8 +193,9 @@ cd(result_folder)
 npSub_tc = df_flat; % nframe x ncell
 tc_align_ad = align_tc(frame_ad, npSub_tc); % ncell x ntrial x nframe_trial
 tc_align_tg = align_tc(frame_tg, npSub_tc);
-dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad); % same as above but df/f
-dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
+
+dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad, paradigm_ms); % same as above but df/f
+dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad, paradigm_ms);
 
 trace_by_trial = dfof_align_ad;
 stim_ori = ori_seq'; % stim as col
@@ -237,8 +242,8 @@ plot(trace_ad_250, 'r')
 legend('noad early', 'noad late', 'ad250');
 xlim([0, 60]);
 set(gcf, 'Position', get(0, 'Screensize')); 
-if save_flag; saveas(gcf, 'san check stim2=90, noad vs ad250', 'jpg'); end
-close
+% if save_flag; saveas(gcf, 'san check stim2=90, noad vs ad250', 'jpg'); end
+% close
 
 %% set resp window
 % find base window & resp window
@@ -283,12 +288,13 @@ end
 range_base = 1:3; range_resp = (peak_id-2):(peak_id+2);
 
 figure;
-plot(t_ad(1:40)); hold on;
-plot(t_tg(1:40));
+plot(t_ad); hold on;
+plot(t_tg);
 xline(range_base(end), 'k--')
 xline(range_resp(1), 'k--')
 xline(range_resp(end), 'k--')
 grid on; grid minor
+xlim([0, 40])
 % set(gcf, 'Position', get(0, 'Screensize'));
 if save_flag; saveas(gcf, 'find_ca_latency_ca_window.jpg'); end
 

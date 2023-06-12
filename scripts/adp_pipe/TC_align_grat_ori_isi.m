@@ -153,7 +153,6 @@ cd(result_folder)
 % index by adapter contrast, target ori, isi
 
 input_behav = input_behav_seq;
-iti_ms = input_behav.itiTimeMs;
 ntrial = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
@@ -163,7 +162,6 @@ id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = [];
 frame_ad = double(cell2mat(input_behav.cStimOn)); frame_ad_off = double(cell2mat(input_behav.cStimOff));
 frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
 isi_seq = frame_tg - frame_ad_off; 
-max_isi_ms = max(isi_seq);
 nisi = length(unique(frame_tg - frame_ad));
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
 id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
@@ -172,8 +170,10 @@ id_isi2 = {id_ad750, id_ad250};
 id_isi3 = {id_noad, id_ad750, id_ad250};
 trial_len_min = min(unique(diff(frame_ad)));
 
-stim1_ms = input_behav.stimOnTimeMs;
-stim2_ms = input_behav.targetOnTimeMs;
+paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
+paradigm_ms.stim2_ms = input_behav.targetOnTimeMs;
+paradigm_ms.max_isi_ms = max(isi_seq);
+paradigm_ms.iti_ms = input_behav.itiTimeMs;
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
 ori_seq(ori_seq == 180) = 0;
@@ -202,8 +202,8 @@ cd(result_folder)
 npSub_tc = df_flat; % nframe x ncell
 tc_align_ad = align_tc(frame_ad, npSub_tc); % ncell x ntrial x nframe_trial
 tc_align_tg = align_tc(frame_tg, npSub_tc);
-dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad); % same as above but df/f
-dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
+dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad, paradigm_ms); % same as above but df/f
+dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad, paradigm_ms);
 
 trace_by_trial = dfof_align_ad;
 stim_ori = ori_seq'; % stim as col
