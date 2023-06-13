@@ -153,7 +153,6 @@ cd(result_folder)
 % index by adapter contrast, target ori, isi
 
 input_behav = input_behav_seq;
-iti_ms = input_behav.itiTimeMs;
 ntrial = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
@@ -163,7 +162,6 @@ id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = [];
 frame_ad = double(cell2mat(input_behav.cStimOn)); frame_ad_off = double(cell2mat(input_behav.cStimOff));
 frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
 isi_seq = frame_tg - frame_ad_off; 
-max_isi_ms = max(isi_seq);
 nisi = length(unique(frame_tg - frame_ad));
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
 id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
@@ -172,8 +170,10 @@ id_isi2 = {id_ad750, id_ad250};
 id_isi3 = {id_noad, id_ad750, id_ad250};
 trial_len_min = min(unique(diff(frame_ad)));
 
-stim1_ms = input_behav.stimOnTimeMs;
-stim2_ms = input_behav.targetOnTimeMs;
+paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
+paradigm_ms.stim2_ms = input_behav.targetOnTimeMs;
+paradigm_ms.max_isi_ms = max(isi_seq);
+paradigm_ms.iti_ms = input_behav.itiTimeMs;
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
 ori_seq(ori_seq == 180) = 0;
@@ -202,8 +202,8 @@ cd(result_folder)
 npSub_tc = df_flat; % nframe x ncell
 tc_align_ad = align_tc(frame_ad, npSub_tc); % ncell x ntrial x nframe_trial
 tc_align_tg = align_tc(frame_tg, npSub_tc);
-dfof_align_ad = dfof_by_trial_base(tc_align_ad); % same as above but df/f
-dfof_align_tg = dfof_by_trial_base(tc_align_tg);
+dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad, paradigm_ms); % same as above but df/f
+dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad, paradigm_ms);
 
 trace_by_trial = dfof_align_ad;
 stim_ori = ori_seq'; % stim as col
@@ -211,22 +211,6 @@ isi_nframe = isi_seq'; % ISI as number of frames in each trial
 adapter_contrast = contrast_ad'; % contrast of adapter (R1)
 if save_flag; save trace_trial_stim.mat trace_by_trial ...
         stim_ori isi_nframe adapter_contrast; end
-
-%% dfof_by_trial_base check
-% plot from previous trial's stim2 offset to next trial's stim1 onset
-% a full off-on-off cycle, to see if baseline falls back properly
-
-size(dfof_align) % ncell x ntrial x nframe
-t = squeeze(nanmean(dfof_align, 1));
-t_ad = squeeze(nanmean(t, 1)); 
-
-figure
-plot(t_ad)
-hold on
-yline(0)
-yline(0.01)
-
-% TODO: unfinished
 
 %% san check
 % what can generate possibly fake adp when adapter vs target are orthogonal?  
@@ -236,10 +220,15 @@ size(dfof_align_ad) % ncell x ntrial x nframe
 
 isi_nframe = isi_nframe(1:length(stim_ori));
 adapter_contrast = adapter_contrast(1:length(stim_ori));
-trial_id_noad_1 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
-trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
-trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
-
+stim_id_now = 90;
+trial_id_noad_1 = (stim_ori==stim_id_now) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
+trial_id_noad_2 = (stim_ori==stim_id_now) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
+trial_id_ad_250 = (stim_ori==stim_id_now) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
+trial_id_noad_1 = (stim_ori==stim_id_now) & (isi_nframe>10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
+sum(trial_id_ad_750)
+sum(trial_id_ad_750)
+sum(trial_id_ad_750)
+sum(trial_id_ad_750)
 
 file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_driven_ttest_bonferroni.mat';
 tmp = load(file);
@@ -258,13 +247,13 @@ cell_id_filter = logical(ones(size(cell_id_filter))); % turn off cell filter
 % cell_id_filter = ones(size(cell_id_filter), 'like', cell_id_filter); % turn off cell filter
 
 
-% trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-% trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-% trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
-trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+% trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+% trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+% trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
 figure;
 plot(trace_noad_1, 'b')
@@ -391,10 +380,11 @@ if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 dfof_tg_noad = dfof_tg(:, :, 1); % no adapter, ncell x nstim
 [argvalue, argmax] = max(dfof_tg_noad, [], 2);
-cell_pref_90 = logical(argmax == 4); % 0, 22.5 .. 90 -> stim id = 4 is 90
+cell_pref_90 = logical(argmax == 5); % 0, 22.5 .. 90 -> stim id = 5 is 90. NOTE: 1-based indexing!!!
 % cell_pref_almost_0 = logical((argmax == 8) + (argmax == 1) + (argmax == 0)); % 0, 22.5 .. 90 -> stim id = 0 is 0 deg
 
 cell_id_filter = cell_pref_90;
+sum(cell_id_filter)
 dfof_tg_noad_cell_pref = nanmean(dfof_tg_noad(cell_id_filter, :), 1);
 figure; plot(dfof_tg_noad_cell_pref)
 

@@ -220,10 +220,15 @@ size(dfof_align_ad) % ncell x ntrial x nframe
 
 isi_nframe = isi_nframe(1:length(stim_ori));
 adapter_contrast = adapter_contrast(1:length(stim_ori));
-trial_id_noad_1 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
-trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
-trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
-
+stim_id_now = 90-22.5;
+trial_id_noad_1 = (stim_ori==stim_id_now) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
+trial_id_noad_2 = (stim_ori==stim_id_now) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
+trial_id_ad_250 = (stim_ori==stim_id_now) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
+trial_id_ad_750 = (stim_ori==stim_id_now) & (isi_nframe>10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
+sum(trial_id_noad_1)
+sum(trial_id_noad_2)
+sum(trial_id_ad_250)
+sum(trial_id_ad_750)
 
 file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_driven_ttest_bonferroni.mat';
 tmp = load(file);
@@ -242,13 +247,13 @@ cell_id_filter = logical(ones(size(cell_id_filter))); % turn off cell filter
 % cell_id_filter = ones(size(cell_id_filter), 'like', cell_id_filter); % turn off cell filter
 
 
-% trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-% trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-% trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
-trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+% trace_noad_1 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+% trace_noad_2 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+% trace_ad_250 = squeeze(nanmedian(nanmedian(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
 
 figure;
 plot(trace_noad_1, 'b')
@@ -375,10 +380,11 @@ if save_flag; save trace_aligned.mat trace_avg trace_sem; end
 
 dfof_tg_noad = dfof_tg(:, :, 1); % no adapter, ncell x nstim
 [argvalue, argmax] = max(dfof_tg_noad, [], 2);
-cell_pref_90 = logical(argmax == 4); % 0, 22.5 .. 90 -> stim id = 4 is 90
+cell_pref_90 = logical(argmax == 5); % 0, 22.5 .. 90 -> stim id = 5 is 90. NOTE: 1-based indexing!!!
 % cell_pref_almost_0 = logical((argmax == 8) + (argmax == 1) + (argmax == 0)); % 0, 22.5 .. 90 -> stim id = 0 is 0 deg
 
 cell_id_filter = cell_pref_90;
+sum(cell_id_filter)
 dfof_tg_noad_cell_pref = nanmean(dfof_tg_noad(cell_id_filter, :), 1);
 figure; plot(dfof_tg_noad_cell_pref)
 
