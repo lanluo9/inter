@@ -37,7 +37,7 @@ nset = size(dataset_table, 1);
 
 %% find TC.mat
 
-for iset = 3:nset
+for iset = 1:nset
 
 clear global; close all
 iset, nset
@@ -47,6 +47,7 @@ arg_mouse = dataset_now.mouse
 arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num{1}
 area = dataset_now.area{1}
+gcamp = dataset_now.gcamp{1}
 
 imouse = ['i', num2str(arg_mouse)];
 dir_analysis = ['Z:\All_Staff\home\lindsey\Analysis\2P\', arg_date, '_', imouse, ...
@@ -278,14 +279,20 @@ if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 
 %% find calcium resp window
 
-find_peak_bef = 15;
+find_peak_bef = 13; % had to make it earlier due to miaomiao 6s data
 disp('assume: first peak comes before n frames. second peak comes after')
 trace_start = t_ad(1:find_peak_bef) + t_tg(1:find_peak_bef);
 [~, peak_id] = max(trace_start)
 if peak_id < 6 % first peak should not be earlier than 6 frames
     disp('WARNING: strange trace or peak')
 end
-range_base = 1:3; range_resp = (peak_id-2):(peak_id+2);
+range_base = 1:3; 
+
+if strcmp(gcamp, '6s')
+    range_resp = (peak_id-2):(peak_id+2);
+elseif strcmp(gcamp, '6f')
+    range_resp = (peak_id-1):(peak_id+1);
+end
 
 figure;
 plot(t_ad); hold on;
