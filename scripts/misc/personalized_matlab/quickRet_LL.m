@@ -8,8 +8,8 @@ clc
 %%
 
 mouse = '1380'
-date = '230509'
-time = '1115'
+date = '230622'
+time = '1325'
 ImgFolder = '001'
 
 imouse = ['i' mouse];
