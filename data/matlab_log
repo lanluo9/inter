@@ -101161,3 +101161,143 @@ ans =
 
    29-Jun-2023 14:04:42
 
+%% setup
+
+dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
+dataset_meta = readtable(dir_meta);
+
+% clearvars -except dataset_meta
+% clearvars –global
+
+stim_type = 'grating' % grating_8ori_multisess will pretend to be grating, since they share flashing stim 2p frames.xml
+
+stim_type =
+
+    'grating'
+
+dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_8ori_multisess'), :);
+% dataset_table = dataset_meta(dataset_meta.date == 230330, :)
+
+ndate = length(unique(dataset_table.date));
+date_arr = unique(dataset_table.date);
+date_arr
+
+date_arr =
+
+      230622
+
+ idate = 1
+
+idate =
+
+     1
+
+
+dataset_date  = dataset_table(dataset_table.date == date_arr(idate), :);
+nsess = size(dataset_date, 1);
+isess = 1
+
+isess =
+
+     1
+
+
+isess, nsess
+
+isess =
+
+     1
+
+
+nsess =
+
+     3
+
+dataset_now = dataset_date(isess,:);
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1380
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '230622'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder = dataset_date(1,:).num{1}
+
+ref_ImgFolder =
+
+    '002'
+
+run_str_ref = ['runs-' ref_ImgFolder(1,:)]
+
+run_str_ref =
+
+    'runs-002'
+
+if isess == 1
+    disp('take first session 002 of multisess data as ref session')
+end
+take first session 002 of multisess data as ref session
+
+imouse = ['i', num2str(arg_mouse)];
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\230622_i1380\230622_i1380_runs-002'
+
+
+disp('add your stim_type into function: bunny, mix, grat6, grating(grat1)')
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+% % register every sess against data_avg of session 002
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); 
+<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,1)">5   </a>[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+mouse
+
+mouse =
+
+        1380
+
+,
+arg_date
+
+arg_date =
+
+    '230622'
+
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 268.982287 seconds.
+ 
+1+1
+
+ans =
+
+     2
+
