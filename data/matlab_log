@@ -100988,3 +100988,176 @@ save_flag =
 
 ori_pref_runs
  
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   29-Jun-2023 13:56:15
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   29-Jun-2023 13:56:37
+
+edit get_data_reg_cellpose_tif
+dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
+dataset_meta = readtable(dir_meta);
+
+% clearvars -except dataset_meta
+% clearvars –global
+
+stim_type = 'grating' % grating_8ori_multisess will pretend to be grating, since they share flashing stim 2p frames.xml
+
+stim_type =
+
+    'grating'
+
+dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_8ori_multisess'), :);
+% dataset_table = dataset_meta(dataset_meta.date == 230330, :)
+
+ndate = length(unique(dataset_table.date));
+date_arr = unique(dataset_table.date);
+ndate
+
+ndate =
+
+     1
+
+date_arr
+
+date_arr =
+
+      230323
+
+dataset_table
+ 
+idate = 1
+
+idate =
+
+     1
+
+dataset_date  = dataset_table(dataset_table.date == date_arr(idate), :);
+ 
+nsess = size(dataset_date, 1);
+ 
+nsess
+
+nsess =
+
+     3
+
+isess = 1
+
+isess =
+
+     1
+
+isess, nsess
+
+isess =
+
+     1
+
+
+nsess =
+
+     3
+
+dataset_now = dataset_date(isess,:);
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1380
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '230323'
+
+arg_ImgFolder = dataset_now.num{1};
+arg_ImgFolder
+
+arg_ImgFolder =
+
+    '002'
+
+ref_ImgFolder = dataset_date(1,:).num{1}
+
+ref_ImgFolder =
+
+    '002'
+
+ 
+run_str_ref = ['runs-' ref_ImgFolder(1,:)]
+
+run_str_ref =
+
+    'runs-002'
+
+ 
+if isess == 1
+    disp('take first session 002 of multisess data as ref session')
+end
+take first session 002 of multisess data as ref session
+imouse = ['i', num2str(arg_mouse)];
+ 
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\230323_i1380\230323_i1380_runs-002'
+
+
+% % check if cellpose tif exists in date folder, bc TC is in sess folder
+if ~isempty(dir('cellpose_stim_resp_gauss.tif'))
+    disp('cellpose tif exists, skip to next set:')
+    continue
+end
+{Error: A CONTINUE may only be used within a FOR or WHILE loop.
+} 
+disp('add your stim_type into function: bunny, mix, grat6, grating(grat1)')
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+ 
+get_data_reg_cellpose_tif
+ 
+edit get_data_reg_cellpose_tif
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); 
+<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,1)">5   </a>[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+mouse
+
+mouse =
+
+        1380
+
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+start running get_data_reg_cellpose_tif.m
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cd')" style="font-weight:bold">cd</a>
+Unable to change current folder to
+'\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\230323'
+(Name is nonexistent or not a folder).
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 10)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',10,0)">line 10</a>)
+xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
+} 
+if system_dependent('IsDebugMode')==1, dbquit; end
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   29-Jun-2023 14:04:42
+
