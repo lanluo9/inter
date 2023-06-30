@@ -328,7 +328,7 @@ trace_start = t_ad(1:find_peak_bef) + t_tg(1:find_peak_bef);
 if peak_id < 6 % first peak should not be earlier than 6 frames
     disp('WARNING: strange trace or peak')
 end
-range_base = 1:3; range_resp = (peak_id-2):(peak_id+2);
+range_base = 1:5; range_resp = (peak_id-2):(peak_id+2);
 
 figure;
 plot(t_ad(1:40)); hold on;

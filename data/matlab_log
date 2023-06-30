@@ -101994,3 +101994,829 @@ ans =
     'data corruption not detected'
 
 Starting, frame 0
+Frame 5400 (35.2 fps)
+Frame 10800 (37.2 fps)
+Frame 16200 (37.9 fps)
+Frame 21600 (38.3 fps)
+Frame 27000 (38.6 fps)
+Frame 32400 (38.8 fps)
+Frame 37800 (38.9 fps)
+Frame 43200 (39.0 fps)
+Frame 48600 (39.1 fps)
+Frame 54000 (39.1 fps)
+Frame 59400 (39.2 fps)
+Frame 64800 (39.2 fps)
+Frame 70200 (39.3 fps)
+Frame 75600 (39.3 fps)
+Frame 81000 (39.3 fps)
+Frame 86400 (39.3 fps)
+Frame 91800 (39.3 fps)
+Frame 97200 (39.4 fps)
+Frame 102600 (39.4 fps)
+Frame 108000 (39.4 fps)
+Registered 108000 frames in 2741.7 seconds (39.4 fps)
+Elapsed time is 2741.651516 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   502
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   2   3
+
+
+ans =
+
+  1×2 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    8   23
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   10   11   26
+
+
+ans =
+
+  1×5 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223   224
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    10
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 9 MB/s 
+mouse 1380 date 230622 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1380 230622 003
+
+isess =
+
+     3
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230622'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Index in position 1 exceeds array bounds.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 33)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',33,0)">line 33</a>)
+    fName =
+    ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-'
+    imouse '-' date '-' time(irun,:) '.mat'];
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] =
+load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 70)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',70,0)">line 70</a>)
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('assert')" style="font-weight:bold">assert</a>
+Assertion failed.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 83)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',83,0)">line 83</a>)
+assert(size(file_list, 1) == nsess); % ensure each session saved a mat for
+cellpose tiff
+
+wait for batch_cellpose.ipynb
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('LiveEditorEvaluationHelperE847284043')" style="font-weight:bold">LiveEditorEvaluationHelperE847284043</a>
+} 
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',83,0)
+nsess
+
+nsess =
+
+     3
+
+size(file_list, 1)
+
+ans =
+
+     2
+
+file_list
+
+file_list = 
+
+  2×1 <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> array with fields:
+
+    name
+    folder
+    date
+    bytes
+    isdir
+    datenum
+
+file_list
+ 
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',33,0)
+isess = nsess
+
+isess =
+
+     3
+
+edit get_data_reg_cellpose_tif
+
+isess, nsess
+
+isess =
+
+     3
+
+
+nsess =
+
+     3
+
+dataset_now = dataset_date(isess,:);
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1380
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '230622'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '004'
+
+
+ref_ImgFolder = dataset_date(1,:).num{1}
+
+ref_ImgFolder =
+
+    '002'
+
+run_str_ref = ['runs-' ref_ImgFolder(1,:)]
+
+run_str_ref =
+
+    'runs-002'
+
+if isess == 1
+    disp('take first session 002 of multisess data as ref session')
+end
+
+imouse = ['i', num2str(arg_mouse)];
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
+
+% % check if cellpose tif exists in date folder, bc TC is in sess folder
+if ~isempty(dir('cellpose_stim_resp_gauss.tif'))
+    disp('cellpose tif exists, skip to next set:')
+    continue
+end
+{Error: A CONTINUE may only be used within a FOR or WHILE loop.
+} 
+
+isess, nsess
+
+isess =
+
+     3
+
+
+nsess =
+
+     3
+
+dataset_now = dataset_date(isess,:);
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1380
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '230622'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '004'
+
+
+ref_ImgFolder = dataset_date(1,:).num{1}
+
+ref_ImgFolder =
+
+    '002'
+
+run_str_ref = ['runs-' ref_ImgFolder(1,:)]
+
+run_str_ref =
+
+    'runs-002'
+
+if isess == 1
+    disp('take first session 002 of multisess data as ref session')
+end
+
+imouse = ['i', num2str(arg_mouse)];
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\230622_i1380\230622_i1380_runs-004'
+
+~isempty(dir('cellpose_stim_resp_gauss.tif'))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   0
+
+
+disp('add your stim_type into function: bunny, mix, grat6, grating(grat1)')
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+% % register every sess against data_avg of session 002
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); 
+<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,1)">5   </a>[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+mouse
+
+mouse =
+
+        1380
+
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+{Index in position 1 exceeds array bounds.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 33)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',33,0)">line 33</a>)
+    fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' imouse '-' date '-' time(irun,:) '.mat'];
+} 
+if system_dependent('IsDebugMode')==1, dbstep in; end
+disp('start running get_data_reg_cellpose_tif.m')
+start running get_data_reg_cellpose_tif.m
+ 
+mouse = arg_mouse;
+ 
+imouse = ['i', num2str(mouse)];
+ 
+date = num2str(arg_date);
+ 
+ImgFolder = arg_ImgFolder;
+ 
+fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
+ 
+xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
+ 
+xls_file = dir('*.xlsx'); clear dataset_meta
+ 
+dataset_meta = readtable(xls_file.name); 
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+ 
+idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
+ 
+time = num2str(dataset_meta.(8)(idx));
+ 
+nrun = size(ImgFolder,1);
+ 
+run_str = catRunName(ImgFolder, nrun);
+ 
+
+% load and register
+disp('start loading sbx')
+start loading sbx
+tic
+data = [];
+clear temp
+trial_n = [];
+offset = 0;
+nrun
+
+nrun =
+
+     1
+
+irun = 1
+
+irun =
+
+     1
+
+LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
+    CD = [LL_base '\Data\2P_images\' imouse '\' date '\' ImgFolder(irun,:)];
+    cd(CD);
+(
+ (
+  ↑
+{Invalid expression. When calling a function or indexing a variable, use
+parentheses. Otherwise, check for mismatched delimiters.
+} 
+CD
+
+CD =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan\Data\2P_images\i1380\230622\004'
+
+    imgMatFile = [ImgFolder(irun,:) '_000_000.mat'];
+ 
+    load(imgMatFile);
+ 
+    fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' imouse '-' date '-' time(irun,:) '.mat'];
+{Index in position 1 exceeds array bounds.
+} 
+time
+
+time =
+
+  0×0 empty <a href="matlab:helpPopup char" style="font-weight:bold">char</a> array
+
+date
+
+date =
+
+    '230622'
+
+dataset_meta
+ 
+idx
+
+idx =
+
+  0×1 empty <a href="matlab:helpPopup double" style="font-weight:bold">double</a> column vector
+
+ImgFolder
+
+ImgFolder =
+
+    '004'
+
+if system_dependent('IsDebugMode')==1, dbstep out; end
+start running get_data_reg_cellpose_tif.m
+dbup 1;
+if system_dependent('IsDebugMode')==1, dbquit; end
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.io.spreadsheet.internal.createWorkbook>constructWorkbook')" style="font-weight:bold">matlab.io.spreadsheet.internal.createWorkbook>constructWorkbook</a>
+
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.io.spreadsheet.internal.createWorkbook', 'C:\Program Files\MATLAB\R2022a\toolbox\shared\spreadsheet\+matlab\+io\+spreadsheet\+internal\createWorkbook.m', 93)" style="font-weight:bold">matlab.io.spreadsheet.internal.createWorkbook</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\shared\spreadsheet\+matlab\+io\+spreadsheet\+internal\createWorkbook.m',93,0)">line 93</a>)
+        book = constructWorkbook(format, filename, tryInterop, sheet, sheetNamesOnly, range);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.io.internal.functions.UsesWorksheet/openBook', 'C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\spreadsheet\+matlab\+io\+internal\+functions\UsesWorksheet.m', 35)" style="font-weight:bold">matlab.io.internal.functions.UsesWorksheet/openBook</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\spreadsheet\+matlab\+io\+internal\+functions\UsesWorksheet.m',35,0)">line 35</a>)
+                obj.WorkbookObj = createWorkbook(fmt, filename, UseExcel, sheet, false, range);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.io.internal.functions.DetectImportOptionsSpreadsheet/openBookAndSheet', 'C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\spreadsheet\+matlab\+io\+internal\+functions\DetectImportOptionsSpreadsheet.m', 64)" style="font-weight:bold">matlab.io.internal.functions.DetectImportOptionsSpreadsheet/openBookAndSheet</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\spreadsheet\+matlab\+io\+internal\+functions\DetectImportOptionsSpreadsheet.m',64,0)">line 64</a>)
+                func.WorkSheet.openBook(func.Filename, func.Sheet, fmt, ...
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.io.internal.functions.DetectImportOptionsSpreadsheet/execute', 'C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\spreadsheet\+matlab\+io\+internal\+functions\DetectImportOptionsSpreadsheet.m', 32)" style="font-weight:bold">matlab.io.internal.functions.DetectImportOptionsSpreadsheet/execute</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\spreadsheet\+matlab\+io\+internal\+functions\DetectImportOptionsSpreadsheet.m',32,0)">line 32</a>)
+            openBookAndSheet(func, supplied, fmt, true);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.io.internal.functions.DetectImportOptions/execute', 'C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\functions\+matlab\+io\+internal\+functions\DetectImportOptions.m', 75)" style="font-weight:bold">matlab.io.internal.functions.DetectImportOptions/execute</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\functions\+matlab\+io\+internal\+functions\DetectImportOptions.m',75,0)">line 75</a>)
+                    opts = func.execute@matlab.io.internal.functions.DetectImportOptionsSpreadsheet(supplied);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.io.internal.functions.ReadTable/execute', 'C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\functions\+matlab\+io\+internal\+functions\ReadTable.m', 35)" style="font-weight:bold">matlab.io.internal.functions.ReadTable/execute</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\matlab\io\functions\+matlab\+io\+internal\+functions\ReadTable.m',35,0)">line 35</a>)
+            func.Options = func.execute@matlab.io.internal.functions.DetectImportOptions(supplied);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.io.internal.functions.ExecutableFunction/validateAndExecute', 'C:\Program Files\MATLAB\R2022a\toolbox\shared\io\general\+matlab\+io\+internal\+functions\ExecutableFunction.m', 68)" style="font-weight:bold">matlab.io.internal.functions.ExecutableFunction/validateAndExecute</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\shared\io\general\+matlab\+io\+internal\+functions\ExecutableFunction.m',68,0)">line 68</a>)
+            [varargout{1:nargout}] = func.execute(supplied,additionalArgs{:});
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('readtable', 'C:\Program Files\MATLAB\R2022a\toolbox\matlab\iofun\readtable.m', 515)" style="font-weight:bold">readtable</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2022a\toolbox\matlab\iofun\readtable.m',515,0)">line 515</a>)
+        t = func.validateAndExecute(filename,varargin{:});
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 12)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',12,0)">line 12</a>)
+dataset_meta = readtable(xls_file.name);
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+} 
+
+disp('add your stim_type into function: bunny, mix, grat6, grating(grat1)')
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+% % register every sess against data_avg of session 002
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); 
+<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,1)">5   </a>[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 72000 frames 
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('sbxread')" style="font-weight:bold">sbxread</a>
+
+
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 41)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',41,0)">line 41</a>)
+        data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+} 
+
+disp('add your stim_type into function: bunny, mix, grat6, grating(grat1)')
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+% % register every sess against data_avg of session 002
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); 
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 72000 frames 
+Elapsed time is 33.955044 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+Starting, frame 0
+Frame 3600 (36.1 fps)
+Frame 7200 (37.6 fps)
+Frame 10800 (38.4 fps)
+Frame 14400 (38.9 fps)
+Frame 18000 (39.2 fps)
+Frame 21600 (39.4 fps)
+Frame 25200 (39.5 fps)
+Frame 28800 (39.6 fps)
+Frame 32400 (39.7 fps)
+Frame 36000 (39.7 fps)
+Frame 39600 (39.8 fps)
+Frame 43200 (39.8 fps)
+Frame 46800 (39.8 fps)
+Frame 50400 (39.9 fps)
+Frame 54000 (39.9 fps)
+Frame 57600 (39.9 fps)
+Frame 61200 (39.9 fps)
+Frame 64800 (39.9 fps)
+Frame 68400 (40.0 fps)
+Frame 72000 (40.0 fps)
+Registered 72000 frames in 1801.3 seconds (40.0 fps)
+Elapsed time is 1801.335671 seconds.
+registration finished
+grating
+runs-004
+
+nTrials =
+
+   334
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   2   3   4
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+    7    8   23
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   11   25   26
+
+
+ans =
+
+  1×4 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   207   208   222   223
+
+  Name               Size             Bytes  Class     Attributes
+
+  tc_screen      72000x1             576000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+     9
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+[> In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('Fast_BigTiff_Write/WriteIMG', 'C:\Users\ll357\Documents\inter\scripts\misc\borrowed\Fast_Tiff_Write\Fast_BigTiff_Write.m', 87)" style="font-weight:bold">Fast_BigTiff_Write/WriteIMG</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\misc\borrowed\Fast_Tiff_Write\Fast_BigTiff_Write.m',87,0)">line 87</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('save_mat_as_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\save_mat_as_tif.m', 15)" style="font-weight:bold">save_mat_as_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\save_mat_as_tif.m',15,0)">line 15</a>)
+In <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 478)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',478,0)">line 478</a>)] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 9 MB/s 
+mouse 1380 date 230622 runs-004 - finished data_reg & cellpose tif
+disp(['got data_reg & cellpose tif for ', ...
+    num2str(arg_mouse), ' ', arg_date, ' ', arg_ImgFolder])
+got data_reg & cellpose tif for 1380 230622 004
+close all
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 6 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '230622_i1380_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '230622_i1380_runs-003_reg_shifts.mat'
+
+
+ans =
+
+    '230622_i1380_runs-004_reg_shifts.mat'
+
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 306.767919 seconds.
+Starting, frame 0
+Frame 5400
+Frame 10800
+Frame 16200
+Frame 21600
+Frame 27000
+Frame 32400
+Frame 37800
+Frame 43200
+Frame 48600
+Frame 54000
+Frame 59400
+Frame 64800
+Frame 70200
+Frame 75600
+Frame 81000
+Frame 86400
+Frame 91800
+Frame 97200
+Frame 102600
+Frame 108000
+Registered 108000 frames in 813.9 seconds (132.7 fps)
+stackGetTimeCourses: elapsed time is 14.426 seconds.
+
+nCells =
+
+   160
+
+Cell #16 
+Cell #32 
+Cell #48 
+Cell #64 
+Cell #80 
+Cell #96 
+Cell #112 
+Cell #128 
+Cell #144 
+Cell #160 
+TC extraction complete for runs-002
+3 sess done out of 3
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+Elapsed time is 174.403742 seconds.
+Starting, frame 0
+Frame 5400
+Frame 10800
+Frame 16200
+Frame 21600
+Frame 27000
+Frame 32400
+Frame 37800
+Frame 43200
+Frame 48600
+Frame 54000
+Frame 59400
+Frame 64800
+Frame 70200
+Frame 75600
+Frame 81000
+Frame 86400
+Frame 91800
+Frame 97200
+Frame 102600
+Frame 108000
+Registered 108000 frames in 810.1 seconds (133.3 fps)
+stackGetTimeCourses: elapsed time is 14.6539 seconds.
+
+nCells =
+
+   160
+
+Cell #16 
+Cell #32 
+Cell #48 
+Cell #64 
+Cell #80 
+Cell #96 
+Cell #112 
+Cell #128 
+Cell #144 
+Cell #160 
+TC extraction complete for runs-003
+3 sess done out of 3
+start running get_data_reg_cellpose_tif.m
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 72000 frames 
+Elapsed time is 200.343063 seconds.
+Starting, frame 0
+Frame 3600
+Frame 7200
+Frame 10800
+Frame 14400
+Frame 18000
+Frame 21600
+Frame 25200
+Frame 28800
+Frame 32400
+Frame 36000
+Frame 39600
+Frame 43200
+Frame 46800
+Frame 50400
+Frame 54000
+Frame 57600
+Frame 61200
+Frame 64800
+Frame 68400
+Frame 72000
+Registered 72000 frames in 545.4 seconds (132.0 fps)
+stackGetTimeCourses: elapsed time is 9.82938 seconds.
+
+nCells =
+
+   160
+
+Cell #16 
+Cell #32 
+Cell #48 
+Cell #64 
+Cell #80 
+Cell #96 
+Cell #112 
+Cell #128 
+Cell #144 
+Cell #160 
+TC extraction complete for runs-004
+3 sess done out of 3
+TC_align_grat_SF_bunny
+
+arg_mouse =
+
+        1369
+
+
+arg_date =
+
+    '220526'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+area =
+
+    'V1'
+
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lindsey\Analysis\2P\220526_i1369\220526_i1369_runs-002'
+
+this dir exist as a shortcut
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'grat_SF6_allen_nat8'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1369\220526'
+
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+if system_dependent('IsDebugMode')==1, dbquit; end
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   30-Jun-2023 12:55:00
+
