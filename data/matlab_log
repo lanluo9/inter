@@ -102820,3 +102820,692 @@ ans =
 
    30-Jun-2023 12:55:00
 
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230622'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+cellpose tif exists, skip to next set:
+
+isess =
+
+     2
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230622'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+
+isess =
+
+     3
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230622'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 3 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '230622_i1380_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '230622_i1380_runs-003_reg_shifts.mat'
+
+
+ans =
+
+    '230622_i1380_runs-004_reg_shifts.mat'
+
+sess cellpose time course exists, skip to next set:
+     2
+
+sess cellpose time course exists, skip to next set:
+     3
+
+sess cellpose time course exists, skip to next set:
+     4
+
+
+tmp =
+
+     2
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230622'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+cellpose tif exists, skip to next set:
+
+isess =
+
+     2
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230622'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+
+isess =
+
+     3
+
+
+nsess =
+
+     3
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '230622'
+
+
+arg_ImgFolder =
+
+    '004'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 14 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '230622_i1380_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '230622_i1380_runs-003_reg_shifts.mat'
+
+
+ans =
+
+    '230622_i1380_runs-004_reg_shifts.mat'
+
+sess cellpose time course exists, skip to next set:
+     2
+
+sess cellpose time course exists, skip to next set:
+     3
+
+sess cellpose time course exists, skip to next set:
+     4
+
+
+stim_type =
+
+    'grating_8ori_multisess'
+
+
+ans =
+
+     0
+
+
+stim_type =
+
+    'grating_8ori_multisess'
+
+
+ans =
+
+     3
+
+date_arr
+
+date_arr =
+
+      230622
+
+idate = 1
+
+idate =
+
+     1
+
+Error: File:
+C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m
+Line: 58
+A CONTINUE may only be used within a FOR or WHILE loop, and then only within
+the same file as its corresponding FOR or WHILE statement.
+
+~isempty(dir('*TC*.mat'))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   0
+
+dir_analysis
+{Unrecognized function or variable 'dir_analysis'.
+} 
+idate
+
+idate =
+
+     1
+
+
+dataset_date = dataset_table(dataset_table.date == date_arr(idate), :);
+clear global
+close all
+
+dataset_now = dataset_date(end, :); % get metadata from final sess of this date
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1380
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '230622'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '004'
+
+area = dataset_now.area{1}
+
+area =
+
+    'V1'
+
+imouse = ['i', num2str(arg_mouse)];
+
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+%     mkdir(dir_analysis)
+    dir_analysis = strrep(dir_analysis, 'lan', 'lindsey')
+    disp('this dir exist as a shortcut')
+    cd(dir_analysis)
+end
+dir_analysis
+
+dir_analysis =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\230622_i1380\230622_i1380_runs-004'
+
+~isempty(dir('*TC*.mat'))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+if ~isempty(dir('*TC*.mat'))
+    disp('timecourse exists, start generating trace_trial_stim.mat')
+else
+    disp('timecourse doesnt exist yet, skip to next set')
+%     continue
+end
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'grat_SF6_allen_nat8'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\230622'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  0×10 empty <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+sess_id_arr
+
+sess_id_arr =
+
+     4
+
+global frame_rate range_base range_resp ...
+    ncell ntrial trial_len_min ...
+    nisi nori ori_list...
+    id_ad id_noad id_isi2 id_isi3 id_ori
+
+save_flag = 1; % toggle this to save/skip all .mat creation below
+
+try % if data folder contains 2p imaging note.xls
+    stim_protocol = 'grat_SF6_allen_nat8' % 'grat_SF6'
+    xls_dir = fullfile(data_fn, imouse, arg_date)
+    cd(xls_dir)
+    xls_file = dir('*.xlsx');
+    data_now_meta = readtable(xls_file.name);
+    sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
+    data_now_meta(sess_id_arr,:)
+    frame_rate = data_now_meta.(5)(sess_id_arr(end));
+catch % if data folder has been transferred to AWS, cannot read 2p imaging note.xls anymore
+    sess_id_arr = str2num(dataset_now.num{1}(end));
+    disp('only works for single session data. TODO: fix sess_id_arr and ImgFolder')
+end
+
+stim_protocol =
+
+    'grat_SF6_allen_nat8'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\230622'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  0×10 empty <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+only works for single session data. TODO: fix sess_id_arr and ImgFolder
+data_now_meta
+ 
+    stim_protocol = 'PP_randInt_rand_Targ'
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+ 
+    xls_dir = fullfile(data_fn, imouse, arg_date)
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\230622'
+
+ 
+    cd(xls_dir)
+ 
+    xls_file = dir('*.xlsx');
+ 
+    data_now_meta = readtable(xls_file.name);
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+ 
+    sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
+ 
+    data_now_meta(sess_id_arr,:)
+
+ans =
+
+  3×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                        <strong>StimulusSet</strong>                          <strong>Notes</strong>   
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>___________________________________________________</strong>    <strong>__________</strong>
+
+    {'002_000_000'}     200     0.55     13         30         2      1.08e+05    1335    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+    {'003_000_000'}     200     0.55     13         30         2      1.08e+05    1441    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+    {'004_000_000'}     200     0.55     13         30         2         72000    1546    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+
+ 
+sess_id_arr
+
+sess_id_arr =
+
+     2
+     3
+     4
+
+try % if data folder contains 2p imaging note.xls
+    stim_protocol = 'PP_randInt_rand_Targ'
+    xls_dir = fullfile(data_fn, imouse, arg_date)
+    cd(xls_dir)
+    xls_file = dir('*.xlsx');
+    data_now_meta = readtable(xls_file.name);
+    sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
+    data_now_meta(sess_id_arr,:)
+    frame_rate = data_now_meta.(5)(sess_id_arr(end));
+catch % if data folder has been transferred to AWS, cannot read 2p imaging note.xls anymore
+    sess_id_arr = str2num(dataset_now.num{1}(end));
+    disp('only works for single session data. TODO: fix sess_id_arr and ImgFolder')
+end
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\230622'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  3×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                        <strong>StimulusSet</strong>                          <strong>Notes</strong>   
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>___________________________________________________</strong>    <strong>__________</strong>
+
+    {'002_000_000'}     200     0.55     13         30         2      1.08e+05    1335    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+    {'003_000_000'}     200     0.55     13         30         2      1.08e+05    1441    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+    {'004_000_000'}     200     0.55     13         30         2         72000    1546    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+
+
+df_flat = [];
+nframe_seq = [];
+
+for i = 1:length(sess_id_arr)
+    ImgFolder = dataset_date.num{i};
+    fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
+        [arg_date, '_', imouse, '_runs-', ImgFolder, '_input.mat']);
+    temp = load(fName); % load behavior data "input", which clashes with built-in function
+    try
+        input_behav_seq(i) = temp.input; 
+        frame_rate = temp.input.frameRateHz;
+    catch
+        input_behav_seq(i) = temp.behav_input; 
+        frame_rate = temp.behav_input.frameRateHz;
+    end
+    clear temp
+
+    cd(fullfile(tc_fn, [arg_date '_' imouse]))
+    cd([arg_date '_' imouse '_runs-', ImgFolder])
+    segment_suffix = ''; % default suffix is empty -> using manual segment
+    try
+        tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_addfake.mat']); % try manual TC first
+    catch
+        tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']); % if not, use cellpose TC
+        segment_suffix = '_cellpose'; % add cellpose suffix for mat_inter subdir, if segmented by cellpose
+    end
+    df_flat = [df_flat; tc.npSub_tc];
+
+    [nframe, ncell] = size(tc.npSub_tc);
+    nframe_seq = [nframe_seq, nframe];
+end
+nframe, ncell, size(df_flat)
+
+nframe =
+
+       72000
+
+
+ncell =
+
+   160
+
+
+ans =
+
+      288000         160
+
+108000*2+72000
+
+ans =
+
+      288000
+
+
+disp('loaded cellpose timecourse & visual input')
+loaded cellpose timecourse & visual input
+try
+    assert(sum(df_flat(nframe,:) < 65535) == ncell)
+catch
+    plot(df_flat(nframe,:)) 
+    disp('some cell at the final frame has fluo value 65535 -> corrupted')
+end
+
+areamousedate = [area '_' imouse '_' arg_date];
+mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
+result_folder = [mapped_path, '\mat_inter\', areamousedate, segment_suffix];
+if ~exist(result_folder); mkdir(result_folder); end
+cd(result_folder)
+result_folder
+
+result_folder =
+
+    'Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i1380_230622_cellpose'
+
+~isempty(dir('*trace_trial_stim*.mat')) && ~isempty(dir('*resp_base_trialwise*.mat'))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   0
+
+
+ntrial = 0;
+adapter_id = [];
+target_id = [];
+frame_ad = [];
+frame_ad_off = [];
+frame_tg = [];
+isess = 1
+
+isess =
+
+     1
+
+    input_behav = input_behav_seq(isess);
+ 
+input_behav_seq
+ 
+    ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+ 
+ntrial_sess
+
+ntrial_sess =
+
+   500
+
+input_behav.trialSinceReset
+
+ans =
+
+   501
+
+    ntrial = ntrial + ntrial_sess;
+ 
+ntrial
+
+ntrial =
+
+   500
+

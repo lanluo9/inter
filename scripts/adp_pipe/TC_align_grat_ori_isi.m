@@ -172,7 +172,7 @@ trial_len_min = min(unique(diff(frame_ad)));
 
 paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
 paradigm_ms.stim2_ms = input_behav.targetOnTimeMs;
-paradigm_ms.max_isi_ms = max(isi_seq);
+paradigm_ms.max_isi_ms = max(isi_seq) / frame_rate * 1000; % fixed frame-to-ms bug on 20230703
 paradigm_ms.iti_ms = input_behav.itiTimeMs;
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
