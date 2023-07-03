@@ -180,24 +180,24 @@ for isess = 1 : length(sess_id_arr)
 
     frame_ad_sess = double(cell2mat(input_behav.cStimOneOn)); 
     frame_ad_sess = frame_ad_sess(1:ntrial_sess);
-    frame_ad_off_sess = double(cell2mat(input_behav.cStimOneOn)); 
-    frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
+%     frame_ad_off_sess = double(cell2mat(input_behav.cStimOneOn)); % TODO: fix bug!!!
+%     frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
     frame_tg_sess = double(cell2mat(input_behav.cStimTwoOn)); 
     frame_tg_sess = frame_tg_sess(1:ntrial_sess);
     if isess > 1
         frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:isess-1));
-        frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:isess-1));
+%         frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:isess-1));
         frame_tg_sess = frame_tg_sess + sum(nframe_seq(1:isess-1));
     end
     frame_ad = [frame_ad, frame_ad_sess];
-    frame_ad_off = [frame_ad_off, frame_ad_off_sess];
+%     frame_ad_off = [frame_ad_off, frame_ad_off_sess];
     frame_tg = [frame_tg, frame_tg_sess];
 end
 
 adapter_list = unique(adapter_id); n_adapter = length(adapter_list);
 target_list = unique(target_id); n_target = length(target_list);
 id_noad = []; id_ad = 1:ntrial; 
-isi_seq = frame_tg - frame_ad_off; 
+% isi_seq = frame_tg - frame_ad_off; % isi_seq was never used, so bug in frame_ad_off_sess did not affect anything
 trial_len_min = min(unique(diff(frame_ad)));
 
 nisi = length(unique(frame_tg - frame_ad));

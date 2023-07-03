@@ -138,9 +138,10 @@ cd(result_folder)
 %% concat trial stim info for each session
 % index by adapter contrast, target ori, isi
 
+% % concat multi session trial info 
 ntrial = 0;
-adapter_id = [];
-target_id = [];
+contrast_ad = [];
+ori_seq = [];
 frame_ad = [];
 frame_ad_off = [];
 frame_tg = [];
@@ -149,39 +150,34 @@ for isess = 1 : length(sess_id_arr)
     input_behav = input_behav_seq(isess);
     ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
     ntrial = ntrial + ntrial_sess;
-    
-    disp('only support same stim1-stim2 pairs')
-    try % randStim1_doSameStim2 with bunnies6.mwel
-        adapter_id_sess = cell2mat(input_behav.tstimOne);
-%         target_id_sess = cell2mat(input_behav.tstimTwo);
-    catch % grat_SF6 with twoStim.mwel
-        SF_arr = sort(unique(cell2mat(input_behav.tStimOneGratingSpatialFreqCPD)));
-        adapter_SF = cell2mat(input_behav.tStimOneGratingSpatialFreqCPD);
-        adapter_id_sess = zeros(length(adapter_SF), 1);
-        for iSF = 1 : length(adapter_SF)
-            adapter_id_sess(iSF) = find(SF_arr==adapter_SF(iSF));
-        end
-        tmp = cell2mat(input_behav.tStimTwoGratingSpatialFreqCPD) == cell2mat(input_behav.tStimOneGratingSpatialFreqCPD);
-        assert(sum(tmp) == length(tmp)) % stim 1 vs 2 have same SF
-%         target_id_sess = adapter_id_sess;
-    end
 
-    adapter_id_sess = adapter_id_sess(1:ntrial_sess);
+% % R1 / adapter contrast
+    contrast_ad_sess = celleqel2mat_padded(input_behav.tBaseGratingContrast)';
+    contrast_ad_sess = contrast_ad_sess(1:ntrial_sess);
     try
-        assert(size(adapter_id_sess, 1) > size(adapter_id_sess, 2)) % ensure its a column vector
+        assert(size(contrast_ad_sess, 1) > size(contrast_ad_sess, 2)) % ensure its a column vector
     catch
-        adapter_id_sess = adapter_id_sess';
+        contrast_ad_sess = contrast_ad_sess';
     end
-    adapter_id = [adapter_id; adapter_id_sess];
+    contrast_ad = [contrast_ad; contrast_ad_sess];
 
-    target_id_sess = adapter_id_sess; % only support same stim1-stim2 pairs
-    target_id = [target_id; target_id_sess];
+% % R2 / target orientation
+    ori_seq_sess = celleqel2mat_padded(input_behav.tGratingDirectionDeg)'; 
+    ori_seq_sess(ori_seq_sess == 180) = 0;
+    ori_seq_sess = ori_seq_sess(1:ntrial_sess);
+    try
+        assert(size(ori_seq_sess, 1) > size(ori_seq_sess, 2)) % ensure its a column vector
+    catch
+        ori_seq_sess = ori_seq_sess';
+    end
+    ori_seq = [ori_seq; ori_seq_sess];
 
-    frame_ad_sess = double(cell2mat(input_behav.cStimOneOn)); 
+% % frame of adapter or target onset -> ISI. take nsess into account
+    frame_ad_sess = double(cell2mat(input_behav.cStimOn)); 
     frame_ad_sess = frame_ad_sess(1:ntrial_sess);
-    frame_ad_off_sess = double(cell2mat(input_behav.cStimOneOn)); 
+    frame_ad_off_sess = double(cell2mat(input_behav.cStimOff));
     frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
-    frame_tg_sess = double(cell2mat(input_behav.cStimTwoOn)); 
+    frame_tg_sess = double(celleqel2mat_padded(input_behav.cTargetOn));
     frame_tg_sess = frame_tg_sess(1:ntrial_sess);
     if isess > 1
         frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:isess-1));
@@ -193,13 +189,20 @@ for isess = 1 : length(sess_id_arr)
     frame_tg = [frame_tg, frame_tg_sess];
 end
 
-adapter_list = unique(adapter_id); n_adapter = length(adapter_list);
-target_list = unique(target_id); n_target = length(target_list);
-id_noad = []; id_ad = 1:ntrial; 
-isi_seq = frame_tg - frame_ad_off; 
-trial_len_min = min(unique(diff(frame_ad)));
 
-nisi = length(unique(frame_tg - frame_ad));
+unique(contrast_ad)
+id_noad = find(contrast_ad == 0); 
+id_ad = find(contrast_ad == 1); 
+
+unique(ori_seq)
+
+trial_len_min = min(unique(diff(frame_ad)));
+isi_seq = (frame_tg - frame_ad_off)';
+nisi = 2; % hard coded due to frame jittering. isi = 250 ms -> 7-9 frames, 750 ms -> 22-24 frames 
+
+
+
+
 id_750 = []; id_250 = 1:ntrial; 
 id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
