@@ -60,17 +60,13 @@ end
 
 %% plot trial trace as: off/2 -> on -> off/2 
 % %% dfof_by_trial_base check
-% plot from previous trial's stim2 offset to next trial's stim1 onset
-% a full off-on-off cycle, to see if baseline falls back properly
+% plot half of previous trial's ITI (after stim2 offset) until next trial's stim1 onset
+% a off/2-on-off/2 cycle, to see if baseline falls back properly
 
-% iti_ms = 6000; % TODO: dont hard code it
-% stim_ms = 100;
-% max_isi_frame = 23;
-% max_isi_ms = max_isi_frame / frame_rate * 1000;
 half_off_ms = (paradigm_ms.iti_ms...
                - paradigm_ms.stim1_ms - paradigm_ms.stim2_ms ...
                - paradigm_ms.max_isi_ms) / 2;
-half_off_frame = frame_rate * half_off_ms/1000;
+half_off_frame = frame_rate * half_off_ms / 1000;
 half_off_frame = int64(half_off_frame);
 
 dfof_align_shift = dfof_align(:, :, 1:(end-half_off_frame)); % on -> off/2
@@ -104,4 +100,7 @@ yline(0)
 yline(0.01)
 xline(double(half_off_frame))
 title('median')
+
+set(gcf, 'Position', get(0, 'Screensize')); 
+saveas(gcf, 'trial trace - stim off-on-off', 'jpg'); end
 

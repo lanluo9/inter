@@ -103510,3 +103510,265 @@ ntrial =
    500
 
 edit dfof_by_trial_base
+frame_tg
+
+frame_tg =
+
+     []
+
+isess = 1
+
+isess =
+
+     1
+
+    input_behav = input_behav_seq(isess);
+ 
+input_behav_seq
+ 
+input_behav
+ 
+    ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+ 
+    ntrial = ntrial + ntrial_sess;
+ 
+ntrial
+
+ntrial =
+
+        1000
+
+ntrial = 0;
+adapter_id = [];
+target_id = [];
+frame_ad = [];
+frame_ad_off = [];
+frame_tg = [];
+isess = 1
+
+isess =
+
+     1
+
+    input_behav = input_behav_seq(isess);
+ 
+    ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+ 
+    ntrial = ntrial + ntrial_sess;
+ 
+ntrial
+
+ntrial =
+
+   500
+
+ntrial_sess
+
+ntrial_sess =
+
+   500
+
+open draft
+nframe_seq
+
+nframe_seq =
+
+      108000      108000       72000
+
+ntrial
+
+ntrial =
+
+   500
+
+    contrast_ad_sess = celleqel2mat_padded(input_behav.tBaseGratingContrast)';
+ 
+contrast_ad_sess
+ 
+    contrast_ad_sess = contrast_ad_sess(1:ntrial_sess);
+ 
+contrast_ad_sess
+ 
+try
+        assert(size(contrast_ad_sess, 1) > size(contrast_ad_sess, 2)) % ensure its a column vector
+    catch
+        contrast_ad_sess = contrast_ad_sess';
+    end
+    contrast_ad = [contrast_ad; contrast_ad_sess];
+{Unrecognized function or variable 'contrast_ad'.
+} 
+contrast_ad
+ 
+contrast_ad = [];
+ 
+ori_seq = [];
+ 
+frame_ad = [];
+ 
+frame_ad_off = [];
+ 
+frame_tg = [];
+ 
+
+% % R1 / adapter contrast
+    contrast_ad_sess = celleqel2mat_padded(input_behav.tBaseGratingContrast)';
+    contrast_ad_sess = contrast_ad_sess(1:ntrial_sess);
+    try
+        assert(size(contrast_ad_sess, 1) > size(contrast_ad_sess, 2)) % ensure its a column vector
+    catch
+        contrast_ad_sess = contrast_ad_sess';
+    end
+    contrast_ad = [contrast_ad; contrast_ad_sess];
+contrast_ad
+ 
+ori_seq_sess = celleqel2mat_padded(input_behav.tGratingDirectionDeg)'; 
+    ori_seq_sess(ori_seq_sess == 180) = 0;
+    try
+        assert(size(ori_seq_sess, 1) > size(ori_seq_sess, 2)) % ensure its a column vector
+    catch
+        ori_seq_sess = ori_seq_sess';
+    end
+    ori_seq = [ori_seq; ori_seq_sess];
+ori_seq
+ 
+ori_seq_sess = celleqel2mat_padded(input_behav.tGratingDirectionDeg)'; 
+    ori_seq_sess(ori_seq_sess == 180) = 0;
+    ori_seq_sess = ori_seq_sess(1:ntrial_sess);
+    try
+        assert(size(ori_seq_sess, 1) > size(ori_seq_sess, 2)) % ensure its a column vector
+    catch
+        ori_seq_sess = ori_seq_sess';
+    end
+    ori_seq = [ori_seq; ori_seq_sess];
+ori_seq = [];
+ 
+ori_seq_sess = celleqel2mat_padded(input_behav.tGratingDirectionDeg)'; 
+    ori_seq_sess(ori_seq_sess == 180) = 0;
+    ori_seq_sess = ori_seq_sess(1:ntrial_sess);
+    try
+        assert(size(ori_seq_sess, 1) > size(ori_seq_sess, 2)) % ensure its a column vector
+    catch
+        ori_seq_sess = ori_seq_sess';
+    end
+    ori_seq = [ori_seq; ori_seq_sess];
+frame_ad_sess = double(cell2mat(input_behav.cStimOn)); 
+    frame_ad_sess = frame_ad_sess(1:ntrial_sess);
+    frame_ad_off_sess = double(cell2mat(input_behav.cStimOff));
+    frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
+    frame_tg_sess = double(celleqel2mat_padded(input_behav.cTargetOn));
+    frame_tg_sess = frame_tg_sess(1:ntrial_sess);
+    if isess > 1
+        frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:isess-1));
+        frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:isess-1));
+        frame_tg_sess = frame_tg_sess + sum(nframe_seq(1:isess-1));
+    end
+    frame_ad = [frame_ad, frame_ad_sess];
+    frame_ad_off = [frame_ad_off, frame_ad_off_sess];
+    frame_tg = [frame_tg, frame_tg_sess];
+frame_tg
+ 
+frame_ad_off
+ 
+frame_ad
+ 
+contrast_ad_list = unique(contrast_ad); n_contrast_ad = length(contrast_ad_list);
+ 
+contrast_ad_list
+ 
+n_contrast_ad
+ 
+target_list = unique(ori_seq);
+ 
+target_list
+ 
+unique(contrast_ad)
+
+ans =
+
+     0
+     1
+
+ 
+unique(ori_seq)
+
+ans =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+ 
+contrast_ad
+ 
+unique(contrast_ad)
+
+ans =
+
+     0
+     1
+
+id_noad = find(contrast_ad == 0); 
+id_ad = find(contrast_ad == 1); 
+id_noad
+ 
+id_ad
+ 
+unique(ori_seq)
+
+ans =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+ 
+isi_seq = (frame_tg - frame_ad_off)';
+ 
+isi_seq
+ 
+trial_len_min = min(unique(diff(frame_ad)));
+ 
+trial_len_min
+ 
+nisi = length(unique(frame_tg - frame_ad));
+ 
+nisi
+
+nisi =
+
+     4
+
+unique(frame_tg - frame_ad)
+
+ans =
+
+    11    12    26    27
+
+nisi = length(unique(frame_tg - frame_ad_off));
+ 
+nisi
+
+nisi =
+
+     6
+
+unique(frame_tg - frame_ad_off)
+
+ans =
+
+     7     8     9    22    23    24
+
+isi_seq
+ 
+edit align_tc
+edit dfof_by_trial_base

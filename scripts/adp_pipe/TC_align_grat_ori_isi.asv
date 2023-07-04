@@ -162,17 +162,21 @@ id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = [];
 frame_ad = double(cell2mat(input_behav.cStimOn)); frame_ad_off = double(cell2mat(input_behav.cStimOff));
 frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
 isi_seq = frame_tg - frame_ad_off; 
-nisi = length(unique(frame_tg - frame_ad));
+
+% nisi = length(unique(frame_tg - frame_ad)); % NOTE: fixed bug 230704, did
+% not rerun pipeline bc it doens't seem to affect anything
+
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
 id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
 id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
+nisi = length(id_isi3); % redefine n_isi
 trial_len_min = min(unique(diff(frame_ad)));
 
 paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
 paradigm_ms.stim2_ms = input_behav.targetOnTimeMs;
-paradigm_ms.max_isi_ms = max(isi_seq);
+paradigm_ms.max_isi_ms = max(isi_seq) / frame_rate * 1000; % fixed frame-to-ms bug on 20230703
 paradigm_ms.iti_ms = input_behav.itiTimeMs;
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
@@ -220,14 +224,14 @@ size(dfof_align_ad) % ncell x ntrial x nframe
 
 isi_nframe = isi_nframe(1:length(stim_ori));
 adapter_contrast = adapter_contrast(1:length(stim_ori));
-stim_id_now = 90;
+stim_id_now = 90-22.5;
 trial_id_noad_1 = (stim_ori==stim_id_now) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
 trial_id_noad_2 = (stim_ori==stim_id_now) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
 trial_id_ad_250 = (stim_ori==stim_id_now) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
-trial_id_noad_1 = (stim_ori==stim_id_now) & (isi_nframe>10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
-sum(trial_id_ad_750)
-sum(trial_id_ad_750)
-sum(trial_id_ad_750)
+trial_id_ad_750 = (stim_ori==stim_id_now) & (isi_nframe>10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
+sum(trial_id_noad_1)
+sum(trial_id_noad_2)
+sum(trial_id_ad_250)
 sum(trial_id_ad_750)
 
 file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_driven_ttest_bonferroni.mat';
@@ -328,7 +332,7 @@ trace_start = t_ad(1:find_peak_bef) + t_tg(1:find_peak_bef);
 if peak_id < 6 % first peak should not be earlier than 6 frames
     disp('WARNING: strange trace or peak')
 end
-range_base = 1:3; range_resp = (peak_id-2):(peak_id+2);
+range_base = 1:5; range_resp = (peak_id-2):(peak_id+2);
 
 figure;
 plot(t_ad(1:40)); hold on;

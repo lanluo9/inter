@@ -189,52 +189,60 @@ for isess = 1 : length(sess_id_arr)
     frame_tg = [frame_tg, frame_tg_sess];
 end
 
-
-unique(contrast_ad)
+% % stim 1 info: contrast
+contrast_list = unique(contrast_ad)
 id_noad = find(contrast_ad == 0); 
 id_ad = find(contrast_ad == 1); 
 
-unique(ori_seq)
-
-trial_len_min = min(unique(diff(frame_ad)));
-isi_seq = (frame_tg - frame_ad_off)';
-nisi = 2; % hard coded due to frame jittering. isi = 250 ms -> 7-9 frames, 750 ms -> 22-24 frames 
-
-
-
-
-id_750 = []; id_250 = 1:ntrial; 
-id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
-id_isi2 = {id_ad750, id_ad250}; 
-id_isi3 = {id_noad, id_ad750, id_ad250};
-
-ori_seq = adapter_id;
-ori_list = adapter_list; 
-nori = length(ori_list); id_ori = cell(nori, 1);
+% % stim 2 info: orientation
+ori_list = unique(ori_seq)
+nori = length(ori_list); 
+id_ori = cell(nori, 1);
 for iori  = 1 : nori
     id_ori{iori} = find(ori_seq == ori_list(iori)); 
 end
-
 t = cellfun(@size,id_ori,'uni',false);
 t = cell2mat(t(:,1));
-nrep_stim = unique(t(:))
-disp('ignore `1`')
+nrep_stim = unique(t(:));
+nrep_stim = nrep_stim(nrep_stim ~= 1)
+
+% % ISI info
+trial_len_min = min(unique(diff(frame_ad)));
+isi_seq = (frame_tg - frame_ad_off)';
+id_750 = find(isi_seq > mean(isi_seq)); 
+id_250 = find(isi_seq < mean(isi_seq)); 
+id_ad750 = intersect(id_ad, id_750); 
+id_ad250 = intersect(id_ad, id_250);
+id_isi2 = {id_ad750, id_ad250}; 
+id_isi3 = {id_noad, id_ad750, id_ad250};
+nisi = length(id_isi3); % cannot use unique(isi_seq) due to frame jittering. isi = 250 ms -> 7-9 frames, 750 ms -> 22-24 frames 
+
+% % trial structure info
+paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
+paradigm_ms.stim2_ms = input_behav.targetOnTimeMs;
+frame_rate = double(frame_rate); % convert int to double first
+paradigm_ms.max_isi_ms = max(isi_seq) / frame_rate * 1000; % somewhat accurate max isi
+paradigm_ms.iti_ms = input_behav.itiTimeMs;
 
 %% dfof aligned
-% align tc by adapter or targ onset. normalize by 1-sec "trial baseline" to get dfof
+% align tc by adapter or targ onset. normalize by "trial baseline" to get dfof
 % always use frame_ad as the end point of trial-specific baseline
 
 cd(result_folder)
 
-npSub_tc = df_flat;
-tc_align_ad = align_tc(frame_ad, npSub_tc);
+npSub_tc = df_flat; % nframe x ncell
+tc_align_ad = align_tc(frame_ad, npSub_tc); % ncell x ntrial x nframe_trial
 tc_align_tg = align_tc(frame_tg, npSub_tc);
-dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad);
-dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad);
+dfof_align_ad = dfof_by_trial_base(tc_align_ad, npSub_tc, frame_ad, paradigm_ms); % same as above but df/f
+dfof_align_tg = dfof_by_trial_base(tc_align_tg, npSub_tc, frame_ad, paradigm_ms);
 
 trace_by_trial = dfof_align_ad;
-stim_seq = adapter_id';
-if save_flag; save trace_trial_stim.mat trace_by_trial stim_seq; end
+stim_ori = ori_seq'; % stim as col
+isi_nframe = isi_seq'; % ISI as number of frames in each trial
+adapter_contrast = contrast_ad'; % contrast of adapter (R1)
+if save_flag; save trace_trial_stim.mat trace_by_trial ...
+        stim_ori isi_nframe adapter_contrast; end
+close all
 
 %% set resp window
 % find base window & resp window
@@ -276,7 +284,7 @@ trace_start = t_ad(1:find_peak_bef);
 if peak_id < 6 % first peak should not be earlier than 6 frames
     disp('WARNING: strange trace or peak')
 end
-range_base = 1:3
+range_base = 1:4
 range_resp = (peak_id-1):(peak_id+2); % fast climb, slow fall
 range_resp = range_resp - 1
 

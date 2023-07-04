@@ -162,12 +162,16 @@ id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = [];
 frame_ad = double(cell2mat(input_behav.cStimOn)); frame_ad_off = double(cell2mat(input_behav.cStimOff));
 frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
 isi_seq = frame_tg - frame_ad_off; 
-nisi = length(unique(frame_tg - frame_ad));
+
+% nisi = length(unique(frame_tg - frame_ad)); % NOTE: fixed bug 230704, did
+% not rerun pipeline bc it doens't seem to affect anything
+
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
 id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
 id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
+nisi = length(id_isi3); % redefine n_isi
 trial_len_min = min(unique(diff(frame_ad)));
 
 paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
