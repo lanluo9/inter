@@ -3,5 +3,5 @@ mat/
 plot/
 *.log
 *matlab_log*
-results/tuning bias single cell/*/*.png
-results/tuning bias single cell/*.png
+results/tuning bias single cell/*/*.*
+results/tuning bias single cell/*.*
