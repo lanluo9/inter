@@ -5,3 +5,4 @@ plot/
 *matlab_log*
 results/tuning bias single cell/*/*.*
 results/tuning bias single cell/*.*
+results/decoder_grat8/aware decoder/reg_across_areas/*.*
