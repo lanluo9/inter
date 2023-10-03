@@ -6,3 +6,4 @@ plot/
 results/tuning bias single cell/*/*.*
 results/tuning bias single cell/*.*
 results/decoder_grat8/aware decoder/reg_across_areas/*
+results/decoder_grat8/aware decoder/10 cell in model, detailed C param tuning/*
