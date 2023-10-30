@@ -37,12 +37,8 @@ eval(call_help);
 
 %% startup 
 restoredefaultpath;matlabrc
-repo_dir = 'C:\Users\ll357\Documents\'
+repo_dir = 'C:\Users\ll357\Documents\';
 addpath(genpath(repo_dir))
-% addpath(genpath('C:\Users\GlickfeldLab\Documents\test\inter'))
-% addpath(genpath('C:\Users\GlickfeldLab\Documents\test\ImagingCode-Glickfeld-Hull'))
-% addpath(genpath('C:\Users\GlickfeldLab\Documents\test\BehaviorCode-Glickfeld-Hull'))
-% addpath(genpath('C:\Users\GlickfeldLab\Documents\test\Scanbox'))
 
 % svnroot = [repo_dir, 'ImagingCode-Glickfeld-Hull'];
 % ijroot = 'C:\Program Files\ImageJ';
