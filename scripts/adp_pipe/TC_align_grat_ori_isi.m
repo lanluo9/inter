@@ -454,16 +454,20 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 
 bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
 if exist(bootstrap_file, 'file')
-    tmp = load(bootstrap_file, 'ori_pref_runs');
-    if size(tmp.ori_pref_runs, 2) == 1000
-        disp('already done 1k bootstraps for well_fit, skip')
-%         continue
-    end
+    tmp = load(bootstrap_file, 'ori_perc');
+    theta_90 = tmp.ori_perc'; % shape = [1 x ncell]. 90 percentile distance from avg fitted ori_pref
+    
+    % tmp = load(bootstrap_file, 'ori_pref_runs');
+    % if size(tmp.ori_pref_runs, 2) == 1000
+    %     disp('already done 1k bootstraps for well_fit, skip')
+    % end
 else
     save_flag = 1;
     nrun = 1000; 
     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-    % sum(well_fit_cell) / length(well_fit_cell)
+
+    tmp = load(bootstrap_file, 'ori_perc');
+    theta_90 = tmp.ori_perc'; % shape = [1 x ncell]. 90 percentile distance from avg fitted ori_pref
 end
 
 % % relax well_fit_cell_criteria to a lower percentile for LI
