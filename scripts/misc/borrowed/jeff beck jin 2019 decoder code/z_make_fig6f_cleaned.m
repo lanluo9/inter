@@ -198,6 +198,6 @@ hold off
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
-axis([0, 90, 0.4, 1])
-legend('250', '750')
+axis([-5, 95, 0.4, 1])
+legend('250', '750', 'Location','southeast')
 % end
