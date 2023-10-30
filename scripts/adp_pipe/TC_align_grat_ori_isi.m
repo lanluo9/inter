@@ -433,8 +433,6 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 % off final trial of each sess just like above:
 % ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
-%% find visually driven cells -> vis_driven.ipynb
-
 %% fit von mises tuning curve
 % fit_param under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
 % ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
@@ -502,6 +500,14 @@ end
 % % plot(ori_pref_noad_boot_med)
 % % plot(ori_pref_noad)
 % % legend('boot avg', 'boot med', 'fit')
+
+%% find visually driven cells -> vis_driven.ipynb
+% read pickle data
+
+vis_file = fullfile(result_folder, 'vis_driven_ttest_bonferroni_jeff.mat');
+tmp = load(vis_file);
+vis_bool = tmp.vis_driven';
+
 
 %% (un)comment loop over sess
 
