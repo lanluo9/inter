@@ -41,9 +41,9 @@ nset = size(dataset_table, 1);
 
 %% find TC.mat
 
-% for iset = 1:nset
+for iset = 1:nset
 
-iset = 1
+% iset = 1
 clear global; close all
 iset, nset
 
@@ -506,9 +506,27 @@ end
 
 vis_file = fullfile(result_folder, 'vis_driven_ttest_bonferroni_jeff.mat');
 tmp = load(vis_file);
-vis_bool = tmp.vis_driven';
+vis_bool = tmp.vis_driven'; % column vector
+
+%% save data for jeff population vector decoder, (un)masked with NaN
+
+save_flag = 1;
+
+size(ori_fit) % 181 x ncell
+size(R_sq) % ncell x 1
+size(theta_90) % 1 x ncell
+
+if save_flag; save pop_vec_decoder_jeff.mat ...
+    ppResp ori_fit R_sq theta_90; end
+
+ori_fit(:, ~vis_bool) = NaN;
+R_sq(~vis_bool) = NaN;
+theta_90(~vis_bool') = NaN;
+
+if save_flag; save pop_vec_decoder_jeff_nan.mat ...
+    ppResp ori_fit R_sq theta_90; end
 
 
 %% (un)comment loop over sess
 
-% end
+end
