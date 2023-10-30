@@ -20,7 +20,7 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-area_bool = logical(strcmp(dataset_table.area, 'V1'));
+area_bool = logical(strcmp(dataset_table.area, 'LM'));
 dataset_table = dataset_table(area_bool, :);
 
 sum(strcmp(dataset_table.area, 'V1'))
@@ -201,3 +201,7 @@ xlabel('Orientation difference')
 axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 % end
+
+cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+save pop_vec_decoder_jeff_res.mat AUROC
+
