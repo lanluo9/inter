@@ -512,9 +512,9 @@ vis_bool = tmp.vis_driven'; % column vector
 
 save_flag = 1;
 
-size(ori_fit) % 181 x ncell
-size(R_sq) % ncell x 1
-size(theta_90) % 1 x ncell
+% size(ori_fit) % 181 x ncell
+% size(R_sq) % ncell x 1
+% size(theta_90) % 1 x ncell
 
 if save_flag; save pop_vec_decoder_jeff.mat ...
     ppResp ori_fit R_sq theta_90; end
