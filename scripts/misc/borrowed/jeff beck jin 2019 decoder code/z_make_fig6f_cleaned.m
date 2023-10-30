@@ -1,4 +1,4 @@
-function make_fig6f_cleaned()
+function z_make_fig6f_cleaned()
 % This function generates Figure 6f based on data from multiple files.
 
 %% Data Preparation
@@ -134,6 +134,6 @@ hold off
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
-axis([0, 90, 0, 1])
+axis([0, 90, 0.4, 1])
 legend('250', '750')
 end
