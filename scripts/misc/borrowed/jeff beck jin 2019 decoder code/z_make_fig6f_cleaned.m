@@ -68,18 +68,39 @@ DVAll.Y = [];
 DVAll.cond = [];
 DVAll.PV = [];
 
-% Loop through files
+% check if session has any good units
+exclude_sess = []
+sess_kept = []
 for n = 1:length(filename)
     % Load data from files
     load([filename{n}]);
-    % load([filename{n}, '_newFits.mat']);
     
     [~, loc] = max(ori_fit);
     prefs{n} = loc / 180 * 2 * pi;
     idxn{n} = find(theta_90 < 22.5);
     
     % Display the number of good units using theta_90
-    disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90!']);
+    disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
+    if length(idxn{n}) == 0
+        disp(['skipping dataset ', num2str(n), ' due to 0 good (well fit) units'])
+        exclude_sess = [exclude_sess, n];
+    end
+    sess_kept = [sess_kept, ~ismember(n, exclude_sess)];
+end
+sess_kept = logical(sess_kept);
+filename = filename(1, sess_kept);
+
+% Loop through files
+for n = 1:length(filename)
+    % Load data from files
+    load([filename{n}]);
+    
+    [~, loc] = max(ori_fit);
+    prefs{n} = loc / 180 * 2 * pi;
+    idxn{n} = find(theta_90 < 22.5);
+    
+    % Display the number of good units using theta_90
+    disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
     
     prefs{n} = prefs{n}(idxn{n});
     f{n} = ori_fit(:, idxn{n});
@@ -181,7 +202,7 @@ end
 xa = [0, 22.5, 45, 67.5, 90];
 
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
-row_id = tmp_250(:, 1) > 0; % exclude nan and zero % TODO: why is there nan and 0???
+row_id = tmp_250(:, 1) > 0; % exclude nan and zero % TODO: why is there nan and 0? bc i added loop for k=1:8?
 tmp_250 = tmp_250(row_id, :);
 
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
@@ -203,5 +224,5 @@ legend('250', '750', 'Location','southeast')
 % end
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_jeff_res.mat AUROC
+save pop_vec_decoder_jeff_res_LM.mat AUROC
 

@@ -20,7 +20,7 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-area_bool = logical(strcmp(dataset_table.area, 'V1'));
+area_bool = logical(strcmp(dataset_table.area, 'LM'));
 dataset_table = dataset_table(area_bool, :);
 
 sum(strcmp(dataset_table.area, 'V1'))
@@ -68,6 +68,25 @@ DVAll.Y = [];
 DVAll.cond = [];
 DVAll.PV = [];
 
+% check if session has any good units
+exclude_sess = []
+for n = 1:length(filename)
+    % Load data from files
+    load([filename{n}]);
+    % load([filename{n}, '_newFits.mat']);
+    
+    [~, loc] = max(ori_fit);
+    prefs{n} = loc / 180 * 2 * pi;
+    idxn{n} = find(theta_90 < 22.5);
+    
+    % Display the number of good units using theta_90
+    disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90!']);
+    if num2str(length(idxn{n})) == 0
+        disp(['skipping dataset ', num2str(n), 'due to no good (well fit) units'])
+        exclude_sess = [exclude_sess, n]
+    end
+end
+
 % Loop through files
 for n = 1:length(filename)
     % Load data from files
@@ -80,6 +99,10 @@ for n = 1:length(filename)
     
     % Display the number of good units using theta_90
     disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90!']);
+    % if num2str(length(idxn{n})) == 0
+    %     disp(['skipping dataset ', num2str(n), 'due to no good (well fit) units'])
+    %     continue
+    % end
     
     prefs{n} = prefs{n}(idxn{n});
     f{n} = ori_fit(:, idxn{n});
@@ -202,6 +225,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 % end
 
-save pop_vec_decoder_jeff_res.mat ...
-    AUROC ori_fit R_sq theta_90
+cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+save pop_vec_decoder_jeff_res_LM.mat AUROC
 
