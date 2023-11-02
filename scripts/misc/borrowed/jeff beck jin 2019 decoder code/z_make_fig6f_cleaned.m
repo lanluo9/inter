@@ -226,3 +226,4 @@ legend('250', '750', 'Location','southeast')
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
 save pop_vec_decoder_jeff_res_LM.mat AUROC
 
+%%
