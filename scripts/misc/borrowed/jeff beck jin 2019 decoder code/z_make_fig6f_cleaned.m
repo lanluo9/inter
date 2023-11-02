@@ -20,7 +20,8 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-area_bool = logical(strcmp(dataset_table.area, 'LM'));
+select_area = 'LI';
+area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
 sum(strcmp(dataset_table.area, 'V1'))
@@ -69,7 +70,27 @@ DVAll.cond = [];
 DVAll.PV = [];
 
 % check if session has any good units
-exclude_sess = []
+if strcmp(select_area, 'LM')
+    exclude_sess = [6];
+else
+    exclude_sess = [];
+end
+    % % skip LM dataset 6 due to: Dataset 6 has 20 good units using theta_90
+    % % Warning: Iteration limit reached. 
+    % % Warning: The estimated coefficients perfectly separate failures from successes.
+    % % This means the theoretical best estimates are not finite. For the fitted linear
+    % % combination XB of the predictors, the sample proportions P of Y=N in the data
+    % % satisfy:
+    % %    XB<-0.163971: P=0
+    % %    XB>-0.163971: P=1 
+
+ncell_wellfit_thresh = 3;
+theta90_wellfit_thresh = 22.5;
+if strcmp(select_area, 'LI')
+    ncell_wellfit_thresh = 0;
+    theta90_wellfit_thresh = 45;
+end
+    
 sess_kept = []
 for n = 1:length(filename)
     % Load data from files
@@ -77,18 +98,20 @@ for n = 1:length(filename)
     
     [~, loc] = max(ori_fit);
     prefs{n} = loc / 180 * 2 * pi;
-    idxn{n} = find(theta_90 < 22.5);
+    idxn{n} = find(theta_90 < theta90_wellfit_thresh);
     
     % Display the number of good units using theta_90
     disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
-    if length(idxn{n}) == 0
-        disp(['skipping dataset ', num2str(n), ' due to 0 good (well fit) units'])
+    if length(idxn{n}) <= ncell_wellfit_thresh
+        % disp(['skipping dataset ', num2str(n), ' ', filename{n}, ' due to 0 good (well fit) units'])
         exclude_sess = [exclude_sess, n];
     end
     sess_kept = [sess_kept, ~ismember(n, exclude_sess)];
 end
 sess_kept = logical(sess_kept);
 filename = filename(1, sess_kept);
+
+%%
 
 % Loop through files
 for n = 1:length(filename)
@@ -163,14 +186,16 @@ for n = 1:length(filename)
     end
 end
 
-%% Plotting
-not8 = [1, 2, 3, 5, 6, 7];
+%% auroc
+not8 = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
 NDC = 500;
 dv = [0:NDC] / NDC;
-usedatasets = [2:4, 6:12];
+usedatasets = [1 : max(DVAll.dataset)];
+norm_ndata = max(DVAll.dataset);
 kk = 0;
 
-for k = 1:8
+clear AUROC
+% for k = 1:8
 for dataset = usedatasets
     kk = kk + 1;
     for j = 1:2
@@ -188,7 +213,8 @@ for dataset = usedatasets
                 case 5
                     not8 = 4;
             end
-            idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & logical(sum(DVAll.dataset == dataset, 2)));
+            idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
+                logical(sum(DVAll.dataset == dataset, 2)));
             DVtemp = abs(getfield(DVAll, 'PV'));
             CD = mean(DVtemp(idxcd) > dv);
             FP = mean(DVtemp(idxfp) >= dv);
@@ -197,12 +223,24 @@ for dataset = usedatasets
         end
     end
 end
-end
+% end
+
+%% Plotting
+
+tmp = load('pop_vec_decoder_jeff_res_V1.mat');
+AUROC = tmp.AUROC;
+norm_ndata = tmp.norm_ndata;
+
+% if select_area == 'V1'
+%     norm_ndata = 6;
+% elseif select_area == 'LM'
+%     norm_ndata = 14;
+% end
 
 xa = [0, 22.5, 45, 67.5, 90];
 
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
-row_id = tmp_250(:, 1) > 0; % exclude nan and zero % TODO: why is there nan and 0? bc i added loop for k=1:8?
+row_id = tmp_250(:, 1) > 0; % exclude nan and zero bc i added loop for k=1:8
 tmp_250 = tmp_250(row_id, :);
 
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
@@ -210,20 +248,19 @@ row_id = tmp_750(:, 1) > 0;
 tmp_750 = tmp_750(row_id, :);
 
 figure
-errorbar(xa, nanmean(tmp_250), ...
-            nanstd(tmp_250) / (length(usedatasets)), 'b')
+errorbar(xa, nanmedian(tmp_250), ...
+            nanstd(tmp_250) / norm_ndata, 'b')
 hold on
 errorbar(xa, nanmean(tmp_750), ...
-            nanstd(tmp_750) / (length(usedatasets)), 'r')
+            nanstd(tmp_750) / norm_ndata, 'r')
 hold off
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
 axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
-% end
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_jeff_res_LM.mat AUROC
+save pop_vec_decoder_jeff_res_LI.mat AUROC norm_ndata
 
 %%
