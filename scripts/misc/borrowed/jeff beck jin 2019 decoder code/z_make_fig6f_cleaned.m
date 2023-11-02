@@ -227,9 +227,9 @@ end
 
 %% Plotting
 
-tmp = load('pop_vec_decoder_jeff_res_V1.mat');
-AUROC = tmp.AUROC;
-norm_ndata = tmp.norm_ndata;
+% tmp = load('pop_vec_decoder_jeff_res_V1.mat');
+% AUROC = tmp.AUROC;
+% norm_ndata = tmp.norm_ndata;
 
 % if select_area == 'V1'
 %     norm_ndata = 6;
@@ -248,11 +248,12 @@ row_id = tmp_750(:, 1) > 0;
 tmp_750 = tmp_750(row_id, :);
 
 figure
-errorbar(xa, nanmedian(tmp_250), ...
-            nanstd(tmp_250) / norm_ndata, 'b')
 hold on
 errorbar(xa, nanmean(tmp_750), ...
-            nanstd(tmp_750) / norm_ndata, 'r')
+            nanstd(tmp_750) / norm_ndata, 'b')
+errorbar(xa, nanmean(tmp_250), ...
+            nanstd(tmp_250) / norm_ndata, 'r')
+
 hold off
 title('PV')
 ylabel('AUROC')
@@ -261,6 +262,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_jeff_res_LI.mat AUROC norm_ndata
+% save pop_vec_decoder_jeff_res_LI.mat AUROC norm_ndata
 
 %%
