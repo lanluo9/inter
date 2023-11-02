@@ -120,7 +120,7 @@ for n = 1:length(filename)
     
     [~, loc] = max(ori_fit);
     prefs{n} = loc / 180 * 2 * pi;
-    idxn{n} = find(theta_90 < 22.5);
+    idxn{n} = find(theta_90 < theta90_wellfit_thresh);
     
     % Display the number of good units using theta_90
     disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
