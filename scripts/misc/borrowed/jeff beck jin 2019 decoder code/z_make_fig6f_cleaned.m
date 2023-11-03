@@ -20,7 +20,7 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-select_area = 'LI';
+select_area = 'LM';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -70,11 +70,10 @@ DVAll.cond = [];
 DVAll.PV = [];
 
 % check if session has any good units
+exclude_sess = [];
 if strcmp(select_area, 'LM')
-    exclude_sess = [6];
-else
-    exclude_sess = [];
-end
+    exclude_sess = []; % what if do not exclude LM sess 6
+    % exclude_sess = [6];
     % % skip LM dataset 6 due to: Dataset 6 has 20 good units using theta_90
     % % Warning: Iteration limit reached. 
     % % Warning: The estimated coefficients perfectly separate failures from successes.
@@ -83,8 +82,9 @@ end
     % % satisfy:
     % %    XB<-0.163971: P=0
     % %    XB>-0.163971: P=1 
+end
 
-ncell_wellfit_thresh = 3;
+ncell_wellfit_thresh = 2; % exclude sessions with only 0-2 well fit cells
 theta90_wellfit_thresh = 22.5;
 if strcmp(select_area, 'LI')
     ncell_wellfit_thresh = 0;
@@ -195,7 +195,7 @@ norm_ndata = max(DVAll.dataset);
 kk = 0;
 
 clear AUROC
-% for k = 1:8
+for k = 1:8
 for dataset = usedatasets
     kk = kk + 1;
     for j = 1:2
@@ -223,7 +223,7 @@ for dataset = usedatasets
         end
     end
 end
-% end
+end
 
 %% Plotting
 
@@ -258,7 +258,7 @@ figure
 errorbar(xa, nanmedian(tmp_250), ...
             nanstd(tmp_250) / norm_ndata, 'b')
 hold on
-errorbar(xa, nanmean(tmp_750), ...
+errorbar(xa, nanmedian(tmp_750), ...
             nanstd(tmp_750) / norm_ndata, 'r')
 hold off
 title('PV')
@@ -268,6 +268,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jeff_res_LI.mat AUROC norm_ndata
+% save pop_vec_decoder_jeff_res_kloop_LM.mat AUROC norm_ndata
 
 %%
