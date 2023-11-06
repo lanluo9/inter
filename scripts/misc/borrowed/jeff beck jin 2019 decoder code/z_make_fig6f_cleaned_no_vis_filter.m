@@ -20,7 +20,7 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-select_area = 'LM';
+select_area = 'V1';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -49,7 +49,7 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_nan.mat');
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff.mat');
     filename{1, iset} = jeff_file;
 end
 
@@ -124,9 +124,7 @@ for n = 1:length(filename)
     idxn{n} = find(theta_90 < theta90_wellfit_thresh);
     
     % Display the number of good units using theta_90
-    disp(['Dataset ', num2str(n), ... 
-        ' out of ', num2str(length(filename)), ...
-        ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
+    disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
     
     prefs{n} = prefs{n}(idxn{n});
     f{n} = ori_fit(:, idxn{n});
