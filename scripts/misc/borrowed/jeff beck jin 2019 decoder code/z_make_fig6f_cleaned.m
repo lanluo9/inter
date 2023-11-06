@@ -90,7 +90,7 @@ if strcmp(select_area, 'LI')
     theta90_wellfit_thresh = 45; % relax well fit criteria for LI
 end
     
-sess_kept = []
+sess_kept = [];
 for n = 1:length(filename)
     % Load data from files
     load([filename{n}]);
@@ -245,14 +245,14 @@ tmp_750 = squeeze(AUROC{k}(:, 2, :));
 % tmp_750 = tmp_750(row_id, :);
 
 
-% % for LM, strict filter sess ncell wellfit. but need to deal with
-% % first data point of ISI 250
-% figure 
-% hold on
-% errorbar(xa, nanmedian(tmp_750), ...
-%             nanstd(tmp_750) / norm_ndata, 'b')
-% errorbar(xa, nanmean(tmp_250), ...
-%             nanstd(tmp_250) / norm_ndata, 'r')
+% for LM, strict filter sess ncell wellfit. but need to deal with
+% first data point of ISI 250
+figure 
+hold on
+errorbar(xa, nanmedian(tmp_750), ...
+            nanstd(tmp_750) / norm_ndata, 'b')
+errorbar(xa, nanmedian(tmp_250), ...
+            nanstd(tmp_250) / norm_ndata, 'r')
 
 % % for LI, strict filter sess ncell wellfit. but need to deal with
 % % first data point of ISI 250
@@ -264,12 +264,12 @@ tmp_750 = squeeze(AUROC{k}(:, 2, :));
 %             nanstd(tmp_250) / norm_ndata, 'r')
 
 
-figure
-errorbar(xa, nanmedian(tmp_250), ...
-            nanstd(tmp_250) / norm_ndata, 'b')
-hold on
-errorbar(xa, nanmedian(tmp_750), ...
-            nanstd(tmp_750) / norm_ndata, 'r')
+% figure
+% errorbar(xa, nanmedian(tmp_250), ...
+%             nanstd(tmp_250) / norm_ndata, 'b')
+% hold on
+% errorbar(xa, nanmedian(tmp_750), ...
+%             nanstd(tmp_750) / norm_ndata, 'r')
 
 title('PV')
 ylabel('AUROC')
@@ -278,6 +278,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_jeff_res_LM_filter_sess.mat AUROC norm_ndata
+% save pop_vec_decoder_jeff_res_LM_filter_sess.mat AUROC norm_ndata
 
 %%

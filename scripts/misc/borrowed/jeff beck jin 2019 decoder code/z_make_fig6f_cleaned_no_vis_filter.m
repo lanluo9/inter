@@ -20,7 +20,7 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-select_area = 'LI';
+select_area = 'V1';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -49,7 +49,7 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff.mat');
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_nan.mat');
     filename{1, iset} = jeff_file;
 end
 
@@ -90,7 +90,7 @@ if strcmp(select_area, 'LI')
     theta90_wellfit_thresh = 45; % relax well fit criteria for LI
 end
     
-sess_kept = []
+sess_kept = [];
 for n = 1:length(filename)
     % Load data from files
     load([filename{n}]);
@@ -124,7 +124,9 @@ for n = 1:length(filename)
     idxn{n} = find(theta_90 < theta90_wellfit_thresh);
     
     % Display the number of good units using theta_90
-    disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
+    disp(['Dataset ', num2str(n), ... 
+        ' out of ', num2str(length(filename)), ...
+        ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
     
     prefs{n} = prefs{n}(idxn{n});
     f{n} = ori_fit(:, idxn{n});
@@ -232,12 +234,6 @@ end
 % AUROC = tmp.AUROC;
 % norm_ndata = tmp.norm_ndata;
 
-% if select_area == 'V1'
-%     norm_ndata = 6;
-% elseif select_area == 'LM'
-%     norm_ndata = 14;
-% end
-
 xa = [0, 22.5, 45, 67.5, 90];
 
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
@@ -248,12 +244,25 @@ tmp_750 = squeeze(AUROC{k}(:, 2, :));
 % row_id = tmp_750(:, 1) > 0;
 % tmp_750 = tmp_750(row_id, :);
 
-% figure
+
+% % for LM, strict filter sess ncell wellfit. but need to deal with
+% % first data point of ISI 250
+% figure 
 % hold on
-% errorbar(xa, nanmean(tmp_750), ...
+% errorbar(xa, nanmedian(tmp_750), ...
 %             nanstd(tmp_750) / norm_ndata, 'b')
 % errorbar(xa, nanmean(tmp_250), ...
 %             nanstd(tmp_250) / norm_ndata, 'r')
+
+% % for LI, strict filter sess ncell wellfit. but need to deal with
+% % first data point of ISI 250
+% figure 
+% hold on
+% errorbar(xa, nanmedian(tmp_750), ...
+%             nanstd(tmp_750) / norm_ndata, 'b')
+% errorbar(xa, nanmedian(tmp_250), ...
+%             nanstd(tmp_250) / norm_ndata, 'r')
+
 
 figure
 errorbar(xa, nanmedian(tmp_250), ...
@@ -261,7 +270,7 @@ errorbar(xa, nanmedian(tmp_250), ...
 hold on
 errorbar(xa, nanmedian(tmp_750), ...
             nanstd(tmp_750) / norm_ndata, 'r')
-hold off
+
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
@@ -269,6 +278,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jeff_res_kloop_LM.mat AUROC norm_ndata
+save pop_vec_decoder_jeff_res_V1_filter_sess.mat AUROC norm_ndata
 
 %%
