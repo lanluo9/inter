@@ -20,7 +20,7 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-select_area = 'V1';
+select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -72,9 +72,9 @@ DVAll.PV = [];
 % check if session has any good units
 exclude_sess = [];
 if strcmp(select_area, 'LM')
-    exclude_sess = []; % what if do not exclude LM sess 6
+    exclude_sess = [18]; % too many well fit cells, unlikely to be LM
     % exclude_sess = [6];
-    % % skip LM dataset 6 due to: Dataset 6 has 20 good units using theta_90
+    % % skip LM dataset 6 due to: 
     % % Warning: Iteration limit reached. 
     % % Warning: The estimated coefficients perfectly separate failures from successes.
     % % This means the theoretical best estimates are not finite. For the fitted linear
@@ -241,12 +241,12 @@ end
 xa = [0, 22.5, 45, 67.5, 90];
 
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
-row_id = tmp_250(:, 1) > 0; % exclude nan and zero bc i added loop for k=1:8
-tmp_250 = tmp_250(row_id, :);
+% row_id = tmp_250(:, 1) > 0; % exclude nan and zero bc i added loop for k=1:8
+% tmp_250 = tmp_250(row_id, :);
 
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
-row_id = tmp_750(:, 1) > 0;
-tmp_750 = tmp_750(row_id, :);
+% row_id = tmp_750(:, 1) > 0;
+% tmp_750 = tmp_750(row_id, :);
 
 % figure
 % hold on

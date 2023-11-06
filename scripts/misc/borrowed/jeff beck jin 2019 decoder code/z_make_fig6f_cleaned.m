@@ -72,9 +72,9 @@ DVAll.PV = [];
 % check if session has any good units
 exclude_sess = [];
 if strcmp(select_area, 'LM')
-    exclude_sess = []; % what if do not exclude LM sess 6
+    exclude_sess = [18]; % too many well fit cells, unlikely to be LM
     % exclude_sess = [6];
-    % % skip LM dataset 6 due to: Dataset 6 has 20 good units using theta_90
+    % % skip LM dataset 6 due to: 
     % % Warning: Iteration limit reached. 
     % % Warning: The estimated coefficients perfectly separate failures from successes.
     % % This means the theoretical best estimates are not finite. For the fitted linear
@@ -234,28 +234,35 @@ end
 % AUROC = tmp.AUROC;
 % norm_ndata = tmp.norm_ndata;
 
-% if select_area == 'V1'
-%     norm_ndata = 6;
-% elseif select_area == 'LM'
-%     norm_ndata = 14;
-% end
-
 xa = [0, 22.5, 45, 67.5, 90];
 
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
-row_id = tmp_250(:, 1) > 0; % exclude nan and zero bc i added loop for k=1:8
-tmp_250 = tmp_250(row_id, :);
+% row_id = tmp_250(:, 1) > 0; % exclude nan and zero bc i added loop for k=1:8
+% tmp_250 = tmp_250(row_id, :);
 
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
-row_id = tmp_750(:, 1) > 0;
-tmp_750 = tmp_750(row_id, :);
+% row_id = tmp_750(:, 1) > 0;
+% tmp_750 = tmp_750(row_id, :);
 
-% figure
+
+% % for LM, strict filter sess ncell wellfit. but need to deal with
+% % first data point of ISI 250
+% figure 
 % hold on
-% errorbar(xa, nanmean(tmp_750), ...
+% errorbar(xa, nanmedian(tmp_750), ...
 %             nanstd(tmp_750) / norm_ndata, 'b')
 % errorbar(xa, nanmean(tmp_250), ...
 %             nanstd(tmp_250) / norm_ndata, 'r')
+
+% % for LI, strict filter sess ncell wellfit. but need to deal with
+% % first data point of ISI 250
+% figure 
+% hold on
+% errorbar(xa, nanmedian(tmp_750), ...
+%             nanstd(tmp_750) / norm_ndata, 'b')
+% errorbar(xa, nanmedian(tmp_250), ...
+%             nanstd(tmp_250) / norm_ndata, 'r')
+
 
 figure
 errorbar(xa, nanmedian(tmp_250), ...
@@ -263,7 +270,7 @@ errorbar(xa, nanmedian(tmp_250), ...
 hold on
 errorbar(xa, nanmedian(tmp_750), ...
             nanstd(tmp_750) / norm_ndata, 'r')
-hold off
+
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
@@ -271,6 +278,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jeff_res_kloop_LM.mat AUROC norm_ndata
+save pop_vec_decoder_jeff_res_LM_filter_sess.mat AUROC norm_ndata
 
 %%
