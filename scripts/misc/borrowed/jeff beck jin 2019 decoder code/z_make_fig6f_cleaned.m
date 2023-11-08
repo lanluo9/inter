@@ -238,7 +238,7 @@ xa = [0, 22.5, 45, 67.5, 90];
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
 
-
+close all
 figure;
 hold on
 
