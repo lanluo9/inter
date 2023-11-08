@@ -263,13 +263,13 @@ tmp_750 = squeeze(AUROC{k}(:, 2, :));
 % errorbar(xa, nanmedian(tmp_250), ...
 %             nanstd(tmp_250) / norm_ndata, 'r')
 
-
-figure
-errorbar(xa, nanmedian(tmp_250), ...
-            nanstd(tmp_250) / norm_ndata, 'b')
-hold on
-errorbar(xa, nanmedian(tmp_750), ...
-            nanstd(tmp_750) / norm_ndata, 'r')
+% % for V1, need to deal with first two data points
+% figure
+% errorbar(xa, nanmean(tmp_250), ...
+%             nanstd(tmp_250) / norm_ndata, 'b')
+% hold on
+% errorbar(xa, nanmedian(tmp_750), ...
+%             nanstd(tmp_750) / norm_ndata, 'r')
 
 title('PV')
 ylabel('AUROC')
@@ -278,6 +278,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_jeff_res_V1_filter_sess.mat AUROC norm_ndata
+% save pop_vec_decoder_jeff_res_V1_filter_sess.mat AUROC norm_ndata
 
 %%

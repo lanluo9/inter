@@ -20,7 +20,7 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-select_area = 'LM';
+select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -49,7 +49,7 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_nan.mat');
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp.mat');
     filename{1, iset} = jeff_file;
 end
 
@@ -230,45 +230,26 @@ end
 
 %% Plotting
 
-% tmp = load('pop_vec_decoder_jeff_res_V1.mat');
+% tmp = load('pop_vec_decoder_jeff_res_V1_filter_sess.mat');
 % AUROC = tmp.AUROC;
-% norm_ndata = tmp.norm_ndata;
+% norm_ndata = size(tmp.AUROC{1, 8}, 1);
 
 xa = [0, 22.5, 45, 67.5, 90];
-
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
-% row_id = tmp_250(:, 1) > 0; % exclude nan and zero bc i added loop for k=1:8
-% tmp_250 = tmp_250(row_id, :);
-
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
-% row_id = tmp_750(:, 1) > 0;
-% tmp_750 = tmp_750(row_id, :);
 
 
-% for LM, strict filter sess ncell wellfit. but need to deal with
-% first data point of ISI 250
-figure 
+figure;
 hold on
-errorbar(xa, nanmedian(tmp_750), ...
-            nanstd(tmp_750) / norm_ndata, 'b')
-errorbar(xa, nanmedian(tmp_250), ...
-            nanstd(tmp_250) / norm_ndata, 'r')
 
-% % for LI, strict filter sess ncell wellfit. but need to deal with
-% % first data point of ISI 250
-% figure 
-% hold on
-% errorbar(xa, nanmedian(tmp_750), ...
-%             nanstd(tmp_750) / norm_ndata, 'b')
-% errorbar(xa, nanmedian(tmp_250), ...
-%             nanstd(tmp_250) / norm_ndata, 'r')
+errorbar(xa, nanmean(tmp_250), ...
+            nanstd(tmp_250) / norm_ndata, 'b')
+errorbar(xa+1, nanmean(tmp_750), ...
+            nanstd(tmp_750) / norm_ndata, 'r')
 
-
-% figure
 % errorbar(xa, nanmedian(tmp_250), ...
 %             nanstd(tmp_250) / norm_ndata, 'b')
-% hold on
-% errorbar(xa, nanmedian(tmp_750), ...
+% errorbar(xa+1, nanmedian(tmp_750), ...
 %             nanstd(tmp_750) / norm_ndata, 'r')
 
 title('PV')
@@ -278,6 +259,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jeff_res_LM_filter_sess.mat AUROC norm_ndata
+% save pop_vec_decoder_jeff_res_LI_visp.mat AUROC
 
 %%

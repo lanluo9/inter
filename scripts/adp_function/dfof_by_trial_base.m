@@ -58,49 +58,49 @@ for itrial = 1:ntrial
 end
 end
 
-%% plot trial trace as: off/2 -> on -> off/2 
-% %% dfof_by_trial_base check
-% plot half of previous trial's ITI (after stim2 offset) until next trial's stim1 onset
-% a off/2-on-off/2 cycle, to see if baseline falls back properly
-
-half_off_ms = (paradigm_ms.iti_ms...
-               - paradigm_ms.stim1_ms - paradigm_ms.stim2_ms ...
-               - paradigm_ms.max_isi_ms) / 2;
-half_off_frame = frame_rate * half_off_ms / 1000;
-half_off_frame = int64(half_off_frame);
-
-dfof_align_shift = dfof_align(:, :, 1:(end-half_off_frame)); % on -> off/2
-dfof_align_tail = dfof_align(:, :, (end-half_off_frame):end); % off/2
-
-dfof_align_tail(:, end, :) = 0; % final ITI/2 is useless
-tmp = dfof_align_tail(:, 1:(end-1), :);
-dfof_align_tail = cat(2, dfof_align_tail(:, end, :), tmp); % move final ITI/2 to first trial to act as padding
-
-dfof_align_shift = cat(3, dfof_align_tail, dfof_align_shift);
-% size(dfof_align_shift) % ncell x ntrial x nframe
-
-t1 = squeeze(nanmean(dfof_align_shift, 1));
-t1 = squeeze(nanmean(t1, 1)); 
-t2 = squeeze(nanmedian(dfof_align_shift, 1));
-t2 = squeeze(nanmedian(t2, 1)); 
-
-figure
-subplot(121)
-plot(t1)
-hold on
-yline(0)
-yline(0.01)
-xline(double(half_off_frame))
-title('mean')
-
-subplot(122)
-plot(t2)
-hold on
-yline(0)
-yline(0.01)
-xline(double(half_off_frame))
-title('median')
-
-set(gcf, 'Position', get(0, 'Screensize')); 
-saveas(gcf, 'trial trace - stim off-on-off', 'jpg'); end
+% %% plot trial trace as: off/2 -> on -> off/2 
+% % %% dfof_by_trial_base check
+% % plot half of previous trial's ITI (after stim2 offset) until next trial's stim1 onset
+% % a off/2-on-off/2 cycle, to see if baseline falls back properly
+% 
+% half_off_ms = (paradigm_ms.iti_ms...
+%                - paradigm_ms.stim1_ms - paradigm_ms.stim2_ms ...
+%                - paradigm_ms.max_isi_ms) / 2;
+% half_off_frame = frame_rate * half_off_ms / 1000;
+% half_off_frame = int64(half_off_frame);
+% 
+% dfof_align_shift = dfof_align(:, :, 1:(end-half_off_frame)); % on -> off/2
+% dfof_align_tail = dfof_align(:, :, (end-half_off_frame):end); % off/2
+% 
+% dfof_align_tail(:, end, :) = 0; % final ITI/2 is useless
+% tmp = dfof_align_tail(:, 1:(end-1), :);
+% dfof_align_tail = cat(2, dfof_align_tail(:, end, :), tmp); % move final ITI/2 to first trial to act as padding
+% 
+% dfof_align_shift = cat(3, dfof_align_tail, dfof_align_shift);
+% % size(dfof_align_shift) % ncell x ntrial x nframe
+% 
+% t1 = squeeze(nanmean(dfof_align_shift, 1));
+% t1 = squeeze(nanmean(t1, 1)); 
+% t2 = squeeze(nanmedian(dfof_align_shift, 1));
+% t2 = squeeze(nanmedian(t2, 1)); 
+% 
+% figure
+% subplot(121)
+% plot(t1)
+% hold on
+% yline(0)
+% yline(0.01)
+% xline(double(half_off_frame))
+% title('mean')
+% 
+% subplot(122)
+% plot(t2)
+% hold on
+% yline(0)
+% yline(0.01)
+% xline(double(half_off_frame))
+% title('median')
+% 
+% set(gcf, 'Position', get(0, 'Screensize')); 
+% saveas(gcf, 'trial trace - stim off-on-off', 'jpg'); end
 
