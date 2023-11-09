@@ -73,15 +73,6 @@ DVAll.PV = [];
 exclude_sess = [];
 if strcmp(select_area, 'LM')
     exclude_sess = [18]; % too many well fit cells, unlikely to be LM
-    % exclude_sess = [6];
-    % % skip LM dataset 6 due to: 
-    % % Warning: Iteration limit reached. 
-    % % Warning: The estimated coefficients perfectly separate failures from successes.
-    % % This means the theoretical best estimates are not finite. For the fitted linear
-    % % combination XB of the predictors, the sample proportions P of Y=N in the data
-    % % satisfy:
-    % %    XB<-0.163971: P=0
-    % %    XB>-0.163971: P=1 
 end
 
 ncell_wellfit_thresh = 5; % exclude sessions with only 0-n well fit cells
