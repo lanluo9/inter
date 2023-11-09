@@ -20,7 +20,7 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-select_area = 'V1';
+select_area = 'LM';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -230,15 +230,16 @@ end
 
 %% Plotting
 
-% tmp = load('pop_vec_decoder_jeff_res_V1_filter_sess.mat');
+% tmp = load('pop_vec_decoder_jeff_res_LI_visp.mat');
 % AUROC = tmp.AUROC;
 % norm_ndata = size(tmp.AUROC{1, 8}, 1);
+% % norm_ndata = sqrt(norm_ndata);
 
 xa = [0, 22.5, 45, 67.5, 90];
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
 
-close all
+% close all
 figure;
 hold on
 
@@ -259,6 +260,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_jeff_res_V1_visp.mat AUROC
+% save pop_vec_decoder_jeff_res_LM_visp.mat AUROC
 
 %%
