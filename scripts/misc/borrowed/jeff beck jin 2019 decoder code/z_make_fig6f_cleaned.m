@@ -221,17 +221,25 @@ end
 
 %% Plotting
 
-% tmp = load('pop_vec_decoder_jeff_res_LI_visp.mat');
+% tmp = load('pop_vec_decoder_jeff_res_V1_visp_sqrt.mat');
 % AUROC = tmp.AUROC;
 % norm_ndata = size(tmp.AUROC{1, 8}, 1);
+% k = 8;
+
+close all
 
 xa = [0, 22.5, 45, 67.5, 90];
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
 
-close all
+[~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
+
+
+%%
+
 figure;
 hold on
+norm_ndata = sqrt(norm_ndata);
 
 errorbar(xa, nanmean(tmp_250), ...
             nanstd(tmp_250) / norm_ndata, 'b')
@@ -250,6 +258,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jeff_res_LI_visp.mat AUROC
+% save pop_vec_decoder_jeff_res_V1_visp_sqrt.mat AUROC
 
 %%
