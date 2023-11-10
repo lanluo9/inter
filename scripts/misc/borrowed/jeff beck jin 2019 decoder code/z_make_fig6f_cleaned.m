@@ -219,7 +219,7 @@ for dataset = usedatasets
 end
 % end
 
-%% Plotting
+%% stats
 
 % tmp = load('pop_vec_decoder_jeff_res_V1_visp_sqrt.mat');
 % AUROC = tmp.AUROC;
@@ -235,7 +235,7 @@ tmp_750 = squeeze(AUROC{k}(:, 2, :));
 [~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
 
 
-%%
+%% Plotting
 
 figure;
 hold on
@@ -258,6 +258,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jeff_res_V1_visp_sqrt.mat AUROC
+% save pop_vec_decoder_jeff_res_LI_visp_sqrt.mat AUROC
 
 %%
