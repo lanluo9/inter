@@ -221,10 +221,10 @@ end
 
 %% stats
 
-% tmp = load('pop_vec_decoder_jeff_res_V1_visp_sqrt.mat');
-% AUROC = tmp.AUROC;
-% norm_ndata = size(tmp.AUROC{1, 8}, 1);
-% k = 8;
+tmp = load('pop_vec_decoder_jeff_res_LI_visp_sqrt.mat');
+AUROC = tmp.AUROC;
+norm_ndata = size(tmp.AUROC{1, 8}, 1);
+k = 8;
 
 close all
 
@@ -258,6 +258,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jeff_res_LI_visp_sqrt.mat AUROC
+% save pop_vec_decoder_jeff_res_LI_visp_sqrt_agg.mat tmp_250 tmp_750 norm_ndata
 
 %%
