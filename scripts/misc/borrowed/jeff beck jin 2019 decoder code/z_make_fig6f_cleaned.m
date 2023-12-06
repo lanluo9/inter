@@ -21,8 +21,8 @@ seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-
 dataset_table = dataset_table(seg_bool, :);
 
 % select_area = 'V1';
-select_area = 'LM';
-% select_area = 'LI';
+% select_area = 'LM';
+select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -220,8 +220,9 @@ end
 
 %% stats
 
-% tmp = load('pop_vec_decoder_jeff_res_LI_visp_sqrt.mat');
-% AUROC = tmp.AUROC;
+% tmp = load('pop_vec_decoder_jeff_res_V1_visp_6k_wellmax.mat');
+% tmp_250 = tmp.tmp_250;
+% tmp_750 = tmp.tmp_750;
 % norm_ndata = size(tmp.AUROC{1, 8}, 1);
 % k = 8;
 
@@ -229,9 +230,9 @@ close all
 
 xa = [0, 22.5, 45, 67.5, 90];
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
-tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
+% tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
-tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
+% tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
 
 [~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
 
@@ -259,6 +260,7 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_jeff_res_LM_visp_6k_wellmax.mat tmp_250 tmp_750 norm_ndata
+% save pop_vec_decoder_jeff_res_LI_visp_6k_wellmax.mat tmp_250 tmp_750 norm_ndata
+close all
 
 %%
