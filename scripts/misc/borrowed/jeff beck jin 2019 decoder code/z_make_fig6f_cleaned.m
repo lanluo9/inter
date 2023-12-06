@@ -21,8 +21,8 @@ seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-
 dataset_table = dataset_table(seg_bool, :);
 
 % select_area = 'V1';
-% select_area = 'LM';
-select_area = 'LI';
+select_area = 'LM';
+% select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -51,7 +51,7 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp.mat');
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k.mat');
     filename{1, iset} = jeff_file;
 end
 
@@ -77,25 +77,23 @@ if strcmp(select_area, 'LM')
     exclude_sess = [18]; % too many well fit cells, unlikely to be LM
 end
 
-ncell_wellfit_thresh = 5; % exclude sessions with only 0-n well fit cells
-theta90_wellfit_thresh = 22.5;
-if strcmp(select_area, 'LI')
-    theta90_wellfit_thresh = 45; % relax well fit criteria for LI
-end
+ncell_good_thresh = 5; % exclude sessions with only 0-n well fit cells
+% theta90_wellfit_thresh = 22.5;
+% if strcmp(select_area, 'LI')
+%     theta90_wellfit_thresh = 45; % relax well fit criteria for LI
+% end
     
 sess_kept = [];
 for n = 1:length(filename)
-    % Load data from files
     load([filename{n}]);
     
     [~, loc] = max(ori_fit);
     prefs{n} = loc / 180 * 2 * pi;
-    idxn{n} = find(theta_90 < theta90_wellfit_thresh);
+    % idxn{n} = find(theta_90 < theta90_wellfit_thresh);
+    idxn{n} = find(well_max > 0);
     
-    % Display the number of good units using theta_90
-    disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
-    if length(idxn{n}) <= ncell_wellfit_thresh
-        % disp(['skipping dataset ', num2str(n), ' ', filename{n}, ' due to 0 good (well fit) units'])
+    disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units']);
+    if length(idxn{n}) <= ncell_good_thresh
         exclude_sess = [exclude_sess, n];
     end
     sess_kept = [sess_kept, ~ismember(n, exclude_sess)];
@@ -109,17 +107,16 @@ disp(['kept ', num2str(sum(sess_kept)), ' out of ', num2str(length(sess_kept)), 
 
 % Loop through files
 for n = 1:length(filename)
-    % Load data from files
     load([filename{n}]);
     
     [~, loc] = max(ori_fit);
     prefs{n} = loc / 180 * 2 * pi;
-    idxn{n} = find(theta_90 < theta90_wellfit_thresh);
+    % idxn{n} = find(theta_90 < theta90_wellfit_thresh);
+    idxn{n} = find(well_max > 0);
     
-    % Display the number of good units using theta_90
     disp(['Dataset ', num2str(n), ... 
         ' out of ', num2str(length(filename)), ...
-        ' has ', num2str(length(idxn{n})), ' good units using theta_90']);
+        ' has ', num2str(length(idxn{n})), ' good units']);
     
     prefs{n} = prefs{n}(idxn{n});
     f{n} = ori_fit(:, idxn{n});
@@ -223,16 +220,18 @@ end
 
 %% stats
 
-tmp = load('pop_vec_decoder_jeff_res_LI_visp_sqrt.mat');
-AUROC = tmp.AUROC;
-norm_ndata = size(tmp.AUROC{1, 8}, 1);
-k = 8;
+% tmp = load('pop_vec_decoder_jeff_res_LI_visp_sqrt.mat');
+% AUROC = tmp.AUROC;
+% norm_ndata = size(tmp.AUROC{1, 8}, 1);
+% k = 8;
 
 close all
 
 xa = [0, 22.5, 45, 67.5, 90];
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
+tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
+tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
 
 [~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
 
@@ -260,6 +259,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jeff_res_LI_visp_sqrt_agg.mat tmp_250 tmp_750 norm_ndata
+save pop_vec_decoder_jeff_res_LM_visp_6k_wellmax.mat tmp_250 tmp_750 norm_ndata
 
 %%
