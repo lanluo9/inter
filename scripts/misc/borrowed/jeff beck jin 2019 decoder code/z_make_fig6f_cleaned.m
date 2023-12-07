@@ -20,9 +20,9 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-% select_area = 'V1';
+select_area = 'V1';
 % select_area = 'LM';
-select_area = 'LI';
+% select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -180,15 +180,18 @@ for n = 1:length(filename)
 end
 
 %% auroc
-not8 = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
+ori_neighbor = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
 NDC = 500;
 dv = [0:NDC] / NDC;
 usedatasets = [1 : max(DVAll.dataset)];
 norm_ndata = max(DVAll.dataset);
 kk = 0;
+clear AUROC
+
+%%
+% % decoder ori=0 vs other
 
 clear AUROC
-% for k = 1:8
 for dataset = usedatasets
     kk = kk + 1;
     for j = 1:2
@@ -216,7 +219,49 @@ for dataset = usedatasets
         end
     end
 end
-% end
+
+%%
+% % decode each ori against its left neighbor (sorted by ori_dist from adapter)
+% % when ori=0, decode against itself
+
+clear AUROC
+for dataset = usedatasets
+    kk = kk + 1;
+    for j = 1:2
+        for pair = 1:5
+            switch pair
+                case 1
+                    ori_self = 8;
+                    ori_neighbor = 8;
+                case 2
+                    ori_self = [1, 7];
+                    ori_neighbor = 8;
+                case 3
+                    ori_self = [2, 6];
+                    ori_neighbor = [1, 7];
+                case 4
+                    ori_self = [3, 5];
+                    ori_neighbor = [2, 6];
+                case 5
+                    ori_self = 4;
+                    ori_neighbor = [3, 5];
+            end
+            idxfp = (logical(sum(DVAll.Y == ori_self, 2)) ...
+                & DVAll.cond == 1 ...
+                & logical(sum(DVAll.dataset == dataset, 2)));
+
+            idxcd = (logical(sum(DVAll.Y == ori_neighbor, 2)) ...
+                & DVAll.cond == j ...
+                & logical(sum(DVAll.dataset == dataset, 2)));
+
+            DVtemp = abs(getfield(DVAll, 'PV'));
+            CD = mean(DVtemp(idxcd) > dv);
+            FP = mean(DVtemp(idxfp) >= dv);
+
+            AUROC{k}(kk, j, pair) = -trapz(FP, CD);
+        end
+    end
+end
 
 %% stats
 
@@ -256,11 +301,11 @@ errorbar(xa+1, nanmean(tmp_750), ...
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
-axis([-5, 95, 0.4, 1])
+% axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+save pop_vec_decoder_V1_visp_6k_wellmax_correct_isi.mat tmp_250 tmp_750
 % save pop_vec_decoder_LI_visp_6k_wellmax_neighbor.mat tmp_250 tmp_750
-close all
 
 %%
