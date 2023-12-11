@@ -21,8 +21,8 @@ seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-
 dataset_table = dataset_table(seg_bool, :);
 
 % select_area = 'V1';
-select_area = 'LM';
-% select_area = 'LI';
+% select_area = 'LM';
+select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -323,6 +323,6 @@ xlabel('Orientation difference')
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_LM_visp_6k_wellmax_neighbor_v1.mat tmp_250 tmp_750
+% save pop_vec_decoder_LI_visp_6k_wellmax_neighbor_v1.mat tmp_250 tmp_750
 
 %%
