@@ -20,8 +20,8 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-% select_area = 'V1';
-select_area = 'LM';
+select_area = 'V1';
+% select_area = 'LM';
 % select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
@@ -290,7 +290,7 @@ tmp_250 = squeeze(AUROC{k}(:, 1, :));
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
 
 tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
-tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
+tmp_750_fold = [tmp_750(1:2), mean(tmp_750(3:4)), mean(tmp_750(5:6)), tmp_750(end)];
 tmp_250 = tmp_250_fold;
 tmp_750 = tmp_750_fold;
 
@@ -323,6 +323,7 @@ xlabel('Orientation difference')
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_LM_visp_6k_wellmax_neighbor.mat tmp_250 tmp_750
+% save pop_vec_decoder_V1_visp_6k_wellmax_correct_isi.mat tmp_250 tmp_750
+% save pop_vec_decoder_LI_visp_6k_wellmax_neighbor.mat tmp_250 tmp_750
 
 %%
