@@ -21,8 +21,8 @@ seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-
 dataset_table = dataset_table(seg_bool, :);
 
 % select_area = 'V1';
-select_area = 'LM';
-% select_area = 'LI';
+% select_area = 'LM';
+select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -51,7 +51,7 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k.mat');
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor.mat');
     filename{1, iset} = jeff_file;
 end
 
@@ -257,7 +257,7 @@ for dataset = usedatasets
                     ori_fp = [3, 5];
             end
             idxfp = (logical(sum(DVAll.Y == ori_fp, 2)) ...
-                & DVAll.cond == 1 ...
+                & DVAll.cond == j ... % NOTE: in neighbor task, compare within isi condition, instead of always comparing to isi=250 ori=0
                 & logical(sum(DVAll.dataset == dataset, 2)));
 
             idxcd = (logical(sum(DVAll.Y == ori_cd, 2)) ...
@@ -274,8 +274,8 @@ for dataset = usedatasets
 end
 
 %% stats
-
-% tmp = load('pop_vec_decoder_jeff_res_V1_visp_6k_wellmax.mat');
+ 
+% tmp = load('pop_vec_decoder_LI_visp_6k_wellmax_neighbor_ver3.mat');
 % tmp_250 = tmp.tmp_250;
 % tmp_750 = tmp.tmp_750;
 % norm_ndata = size(tmp.AUROC{1, 8}, 1);
@@ -296,6 +296,14 @@ tmp_750 = tmp_750_fold;
 
 % tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
 % tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
+
+if strcmp(select_area, 'LI')
+    thresh = 0.4
+else
+    thresh = 0.5
+end
+tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
 [~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
 
@@ -319,10 +327,10 @@ errorbar(xa+1, nanmean(tmp_750), ...
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
-% axis([-5, 95, 0.4, 1])
+axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_LM_visp_6k_wellmax_neighbor_v1.mat tmp_250 tmp_750
+% save pop_vec_decoder_LI_visp_6k_wellmax_neighbor_ver4.mat tmp_250 tmp_750
 
 %%
