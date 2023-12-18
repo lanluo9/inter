@@ -73,9 +73,9 @@ DVAll.PV = [];
 
 % check if session has any good units
 exclude_sess = [];
-if strcmp(select_area, 'LM')
-    exclude_sess = [18]; % too many well fit cells, unlikely to be LM
-end
+% if strcmp(select_area, 'LM')
+%     exclude_sess = [18]; % too many well fit cells, unlikely to be LM
+% end
 
 ncell_good_thresh = 5; % exclude sessions with only 0-n well fit cells
 % theta90_wellfit_thresh = 22.5;
@@ -182,6 +182,7 @@ end
 %% auroc
 % % decoder ori=0 vs other
 
+decoder_mode = 0; % 0 vs other ori
 ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
 NDC = 500;
 dv = [0:NDC] / NDC;
@@ -222,6 +223,7 @@ end
 % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
 % % when ori=0, decode against itself
 
+decoder_mode = 1; % decode neighboring ori
 NDC = 500;
 dv = [0:NDC] / NDC;
 usedatasets = [1 : max(DVAll.dataset)];
@@ -274,46 +276,44 @@ for dataset = usedatasets
 end
 
 %% stats
- 
-% tmp = load('pop_vec_decoder_LI_visp_6k_wellmax_neighbor_ver3.mat');
-% tmp_250 = tmp.tmp_250;
-% tmp_750 = tmp.tmp_750;
-% norm_ndata = size(tmp.AUROC{1, 8}, 1);
-% k = 8;
 
 close all
-
 xa = [0, 22.5, 45, 67.5, 90];
-% xa = [0, 22.5, 45, 45, 67.5, 67.5, 90];
-
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
 
-tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
-tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
-tmp_250 = tmp_250_fold;
-tmp_750 = tmp_750_fold;
+if decoder_mode == 1
+    tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
+    tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
+    tmp_250 = tmp_250_fold;
+    tmp_750 = tmp_750_fold;
 
-% tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
-% tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
+    if strcmp(select_area, 'LI')
+        thresh = 0.4
+    else
+        thresh = 0.5
+    end
+    tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+    tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
-if strcmp(select_area, 'LI')
-    thresh = 0.4
-else
-    thresh = 0.5
+elseif decoder_mode == 0
+    tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
+    tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
 end
-tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
-[~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
-
+% [~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
+[~, p, ~, ~] = ttest(tmp_250(:, 2), tmp_750(:, 2), "Tail","right")
 
 %% Plotting
 
+% tmp = load('pop_vec_decoder_LI_visp_6k_wellmax_neighbor_ver4.mat');
+% tmp_250 = tmp.tmp_250;
+% tmp_750 = tmp.tmp_750;
+
 figure;
 hold on
-norm_ndata = sqrt(max(DVAll.dataset));
 
+norm_ndata = sqrt(size(tmp_250, 1));
 errorbar(xa, nanmean(tmp_250), ...
             nanstd(tmp_250) / norm_ndata, 'b')
 errorbar(xa+1, nanmean(tmp_750), ...
@@ -331,6 +331,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_LI_visp_6k_wellmax_neighbor_ver4.mat tmp_250 tmp_750
+% save pop_vec_decoder_LI_visp_6k_wellmax_neighbor_ver5.mat tmp_250 tmp_750
 
 %%
