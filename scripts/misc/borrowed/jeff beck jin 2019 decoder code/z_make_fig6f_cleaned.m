@@ -20,8 +20,8 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-select_area = 'V1';
-% select_area = 'LM';
+% select_area = 'V1';
+select_area = 'LM';
 % select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
@@ -51,8 +51,8 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    % jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor.mat');
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor.mat');
+    % jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
     filename{1, iset} = jeff_file;
 end
 
@@ -307,7 +307,7 @@ end
 
 %% Plotting
 
-% tmp = load('pop_vec_decoder_LI_visp_6k_wellmax_neighbor_ver4.mat');
+% tmp = load('pop_vec_decoder_V1_visp_6k_wellmax_neighbor_ver5.mat');
 % tmp_250 = tmp.tmp_250;
 % tmp_750 = tmp.tmp_750;
 
@@ -332,6 +332,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_V1_visp_6k_wellmax_neighbor_ver6.mat tmp_250 tmp_750
+% save pop_vec_decoder_LM_visp_6k_wellmax_neighbor_ver5.mat tmp_250 tmp_750
 
 %%
