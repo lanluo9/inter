@@ -20,8 +20,8 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-select_area = 'V1';
-% select_area = 'LM';
+% select_area = 'V1';
+select_area = 'LM';
 % select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
@@ -289,13 +289,13 @@ if decoder_mode == 1
     tmp_250 = tmp_250_fold;
     tmp_750 = tmp_750_fold;
 
-    % if strcmp(select_area, 'LI')
-    %     thresh = 0.4
-    % else
-    %     thresh = 0.5
-    % end
-    % tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-    % tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+    if strcmp(select_area, 'LI')
+        thresh = 0.4
+    else
+        thresh = 0.5
+    end
+    tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+    tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
 elseif decoder_mode == 0
     tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
@@ -332,6 +332,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_V1_visp_6k_wellmax_neighbor_ver6.mat tmp_250 tmp_750
+% save pop_vec_decoder_LM_visp_6k_wellmax_neighbor_ver6.mat tmp_250 tmp_750
 
 %%
