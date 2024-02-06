@@ -1,50 +1,6 @@
-% Observed data
 
-% %% vis p<0.05 bonf
-% % V1 vs LM
-% n1 = 286; N1 = 583;
-% n2 = 620; N2 = 1715;
-
-% % V1 vs LI
-% n1 = 286; N1 = 583;
-% n2 = 123; N2 = 691;
-
-% LM vs LI
-% n1 = 620; N1 = 1715;
-% n2 = 123; N2 = 691;
-
-% %% well tuned isi=6k
-
-% % % V1 vs LM
-% n1 = 296; N1 = 449;
-% n2 = 578; N2 = 983;
-
-% % % V1 vs LI
-% n1 = 296; N1 = 449;
-% n2 = 96; N2 = 222;
-
-% % LM vs LI
-% n1 = 578; N1 = 983;
-% n2 = 96; N2 = 222;
-
-% %% well tuned isi=250
-% % V1 vs LM
-% n1 = 281; N1 = 449;
-% n2 = 532; N2 = 983;
-
-% % % V1 vs LI
-% n1 = 281; N1 = 449;
-% n2 = 112; N2 = 222;
-
-% % LM vs LI
-% n1 = 532; N1 = 983;
-% n2 = 112; N2 = 222;
-
-x1 = [repmat('a',N1,1); repmat('b',N2,1)];
-x2 = [repmat(1,n1,1); repmat(2,N1-n1,1); repmat(1,n2,1); repmat(2,N2-n2,1)];
-
-[tbl, chi2stat, pval] = crosstab(x1,x2);
-pval
+filename = 'Z:\All_Staff\home\lindsey\Data\2P_images\i1380\240206\index.pdf'
+data = readPDFFormData(filename)
 
 
 

@@ -2,7 +2,8 @@ function [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref)
 
 mouse = arg_mouse;
-[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+    arg_mouse, arg_date, arg_ImgFolder);
 
 % check data corruption
 data_frame_avg = squeeze(mean(mean(data, 1) ,2));

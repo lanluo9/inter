@@ -1,11 +1,13 @@
 %% readme
 % this script register a multi-session dataset, 
 % then extract timecourse from cells segmented by cellpose
-% it only support ONE single day multi sess at the moment
-% refactored to loop over days: 2023-05-03
+
+% previously, it only support ONE single day multi sess
+% now can loop over days: 2023-05-03
+% used on multisess grating 2 ori (22 vs 0) 2 isi (6000 vs 250) dataset: 2024-02-06
 
 clear all
-clearvars –global
+clearvars �global
 close all
 clc
 
@@ -20,14 +22,16 @@ dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xl
 dataset_meta = readtable(dir_meta);
 
 % clearvars -except dataset_meta
-% clearvars –global
+% clearvars �global
 
 stim_type = 'grating' % grating_8ori_multisess will pretend to be grating, since they share flashing stim 2p frames.xml
-dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_8ori_multisess'), :);
+dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess'), :);
 % dataset_table = dataset_meta(dataset_meta.date == 230330, :)
 
 ndate = length(unique(dataset_table.date));
 date_arr = unique(dataset_table.date);
+
+%%
 
 for idate = 1:ndate
 

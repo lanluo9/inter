@@ -10,26 +10,15 @@ try
     fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
     xls_dir = fullfile(fn_base, imouse, date)
     cd(xls_dir)
-
+    
     xls_file = dir('*.xlsx')
     clear dataset_meta
     dataset_meta = readtable(xls_file.name); 
-
     idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
     time = num2str(dataset_meta.(8)(idx));
 catch
     fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lindsey\Data\2P_images';
-    
-    dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
-    dataset_meta = readtable(dir_meta);
-    dataset_meta = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess'), :);
-    
-    idx = find(all(ismember(dataset_meta.(5), ImgFolder),2));
-    time = num2str(dataset_meta.(10)(idx));
-end
 
-if length(time) == 3
-    time = ['0', time]
 end
 nrun = size(ImgFolder,1);
 run_str = catRunName(ImgFolder, nrun);
@@ -43,16 +32,9 @@ trial_n = [];
 offset = 0;
 
 for irun = 1 : nrun
-    
-    try
-        LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
-        CD = [LL_base '\Data\2P_images\' imouse '\' date '\' ImgFolder(irun,:)];
-        cd(CD);
-    catch
-        LG_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lindsey';
-        CD = [LG_base '\Data\2P_images\' imouse '\' date '\' ImgFolder(irun,:)];
-        cd(CD);
-
+    LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan';
+    CD = [LL_base '\Data\2P_images\' imouse '\' date '\' ImgFolder(irun,:)];
+    cd(CD);
     
     imgMatFile = [ImgFolder(irun,:) '_000_000.mat'];
     load(imgMatFile);

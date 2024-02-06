@@ -104082,3 +104082,576 @@ isi_nframe
  
 adapter_contrast
  
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 15:18:15
+
+
+stim_type =
+
+    'grating'
+
+date_arr
+
+date_arr =
+
+      240206
+
+ndate
+
+ndate =
+
+     1
+
+edit load_sbx_data
+open draft.m
+filename = 'Z:\All_Staff\home\lindsey\Data\2P_images\i1380\240206\index.pdf'
+
+filename =
+
+    'Z:\All_Staff\home\lindsey\Data\2P_images\i1380\240206\index.pdf'
+
+ 
+data = readPDFFormData(filename)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eval')" style="font-weight:bold">eval</a>
+'readPDFFormData' requires <a href="matlab:matlab.internal.addons.launchers.showExplorer('ErrorRecovery', 'identifier', 'TA', 'focused', 'readPDFFormData');">Text Analytics Toolbox</a>.
+} 
+idate = 1
+
+idate =
+
+     1
+
+nsess
+
+nsess =
+
+     2
+
+isess = 1
+
+isess =
+
+     1
+
+dataset_now = dataset_date(isess,:);
+ 
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1380
+
+ 
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '240206'
+
+ 
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '002'
+
+ 
+ref_ImgFolder = dataset_date(1,:).num{1}
+
+ref_ImgFolder =
+
+    '002'
+
+ 
+run_str_ref = ['runs-' ref_ImgFolder(1,:)]
+
+run_str_ref =
+
+    'runs-002'
+
+ 
+if isess == 1
+    disp('take first session 002 of multisess data as ref session')
+end
+take first session 002 of multisess data as ref session
+imouse = ['i', num2str(arg_mouse)];
+ 
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+    mkdir(dir_analysis)
+    cd(dir_analysis)
+end
+
+% % check if cellpose tif exists in date folder, bc TC is in sess folder
+if ~isempty(dir('cellpose_stim_resp_gauss.tif'))
+    disp('cellpose tif exists, skip to next set:')
+    continue
+end
+{Error: A CONTINUE may only be used within a FOR or WHILE loop.
+} 
+edit get_data_reg_cellpose_tif
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+    arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref); 
+<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,1)">5   </a>[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+if system_dependent('IsDebugMode')==1, dbstep in; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+start running get_data_reg_cellpose_tif.m
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+imouse
+
+imouse =
+
+    'i1380'
+
+date
+
+date =
+
+    '240206'
+
+ImgFolder
+
+ImgFolder =
+
+    '002'
+
+fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
+    xls_dir = fullfile(fn_base, imouse, date); cd(xls_dir)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cd')" style="font-weight:bold">cd</a>
+Unable to change current folder to
+'\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+(Name is nonexistent or not a folder).
+} 
+fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lindsey\Data\2P_images';
+    xls_dir = fullfile(fn_base, imouse, date)
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lindsey\Data\2P_images\i1380\240206'
+
+    cd(xls_dir)
+dataset_table
+ 
+dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
+    dataset_meta = readtable(dir_meta);
+    dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess'), :);
+dataset_table
+ 
+idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
+    time = num2str(dataset_table.(10)(idx));
+idx
+
+idx =
+
+  0×1 empty <a href="matlab:helpPopup double" style="font-weight:bold">double</a> column vector
+
+ImgFolder
+
+ImgFolder =
+
+    '002'
+
+dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
+    dataset_meta = readtable(dir_meta);
+    dataset_meta = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess'), :);
+    
+    idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
+    time = num2str(dataset_meta.(10)(idx));
+idx
+
+idx =
+
+  0×1 empty <a href="matlab:helpPopup double" style="font-weight:bold">double</a> column vector
+
+dataset_meta
+ 
+    idx = find(all(ismember(dataset_meta.(5), ImgFolder),2));
+ 
+idx
+
+idx =
+
+     1
+
+    time = num2str(dataset_meta.(10)(idx));
+ 
+time
+
+time =
+
+    '951'
+
+if system_dependent('IsDebugMode')==1, dbquit all; end
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 15:46:02
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+start loading sbx
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cd')" style="font-weight:bold">cd</a>
+Unable to change current folder to
+'\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan\Data\2P_images\i1380\240206\002'
+(Name is nonexistent or not a folder).
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 44)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',44,0)">line 44</a>)
+    cd(CD);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 74)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',74,0)">line 74</a>)
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',44,0)
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 15:46:55
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+start loading sbx
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('vertcat')" style="font-weight:bold">vertcat</a>
+Dimensions of arrays being concatenated are not consistent.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 55)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',55,0)">line 55</a>)
+    fName =
+    ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-'
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 74)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',74,0)">line 74</a>)
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',55,0)
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 15:47:16
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+start loading sbx
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load')" style="font-weight:bold">load</a>
+Unable to find file or directory
+'\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-i1380-240206-951.mat'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 56)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',56,0)">line 56</a>)
+    behav_mat = load(fName);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 74)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',74,0)">line 74</a>)
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 15:48:32
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+start loading sbx
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load')" style="font-weight:bold">load</a>
+Unable to find file or directory
+'\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-i1380-240206-951.mat'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 56)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',56,0)">line 56</a>)
+    behav_mat = load(fName);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 74)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',74,0)">line 74</a>)
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 15:48:47
+
+
+stim_type =
+
+    'grating'
+
+dataset_table
+
+dataset_table =
+
+  2×12 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>             <strong>paradigm</strong>             <strong>gcamp</strong>     <strong>time</strong>     <strong>AWS</strong>                                    <strong>note</strong>                               
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>__________________________</strong>    <strong>______</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>__________________________________________________________________</strong>
+
+    1380     2.4021e+05    {'V1'}     NaN     {'002'}       false          false       {'grating_2ori_multisess'}    {'6s'}     951    false    {'grating_2ori_multisess: ori = 22 or 0, isi = 6000 or 250'      }
+    1380     2.4021e+05    {'V1'}     NaN     {'003'}       false          false       {'grating_2ori_multisess'}    {'6s'}    1139    false    {'marked timestamp because lindsey use pdf not xls for exp notes'}
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 15:49:37
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+
+time =
+
+    '0951'
+
+start loading sbx

@@ -2,7 +2,8 @@ function [data_reg, LL_base, date, imouse, run_str] = get_data_reg_cellpose_tif(
     arg_mouse, arg_date, arg_ImgFolder, stim_type, run_str_ref)
 
 mouse = arg_mouse;
-[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+    arg_mouse, arg_date, arg_ImgFolder);
 
 % check data corruption
 data_frame_avg = squeeze(mean(mean(data, 1) ,2));
@@ -300,7 +301,6 @@ data_trial = zeros(min(unique(trial_len)), nTrials); % take 1-200 frame of every
 data_trial_real = zeros(max(trial_len), nTrials);
 for it = 1:(nTrials-1)
     start_id = cStimOn(it);
-    
     try
         data_trial(:,it) = tc_screen(start_id : start_id + min(unique(trial_len)) - 1);
         data_trial_real(:,it) = [tc_screen(start_id : start_id + trial_len(it) - 1); NaN(max(trial_len) - trial_len(it), 1)];
