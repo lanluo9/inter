@@ -17,7 +17,7 @@ dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xl
 dataset_meta = readtable(dir_meta);
 
 dataset_table = dataset_meta( ...
-    logical(strcmp(dataset_meta.paradigm, 'grating_8ori_multisess') ...
+    logical(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess') ...
     ), :);
 
 % dataset_table = dataset_table(~contains(dataset_table.note, 'bad'), :); % exclude bad
@@ -77,8 +77,10 @@ try % if data folder contains 2p imaging note.xls
     data_now_meta(sess_id_arr,:)
     frame_rate = data_now_meta.(5)(sess_id_arr(end));
 catch % if data folder has been transferred to AWS, cannot read 2p imaging note.xls anymore
-    sess_id_arr = str2num(dataset_now.num{1}(end));
-    disp('the line above only works for single session data. TODO: fix sess_id_arr and ImgFolder')
+    % sess_id_arr = str2num(dataset_now.num{1}(end));
+    sess_id_arr = [2,3];
+    frame_rate = 30;
+    disp('hard coded. TODO: fix sess_id_arr and ImgFolder')
 end
 
 %% load input_behav & npSubTC for eash sess
@@ -209,8 +211,9 @@ nrep_stim = nrep_stim(nrep_stim ~= 1)
 % % ISI info
 trial_len_min = min(unique(diff(frame_ad)));
 isi_seq = (frame_tg - frame_ad_off)';
-id_750 = find(isi_seq > mean(isi_seq)); 
-id_250 = find(isi_seq < mean(isi_seq)); 
+isi_thresh = 10 % 250 ms = 7-9 frame. 10 frame divides 250 vs 750 ms isi
+id_750 = find(isi_seq > isi_thresh); 
+id_250 = find(isi_seq < isi_thresh); 
 id_ad750 = intersect(id_ad, id_750); 
 id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 

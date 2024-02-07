@@ -6,7 +6,7 @@ imouse = ['i', num2str(mouse)];
 date = num2str(arg_date);
 ImgFolder = arg_ImgFolder;
 
-try
+try % for self data, read out of experiment note xls in session data folder
     fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images';
     xls_dir = fullfile(fn_base, imouse, date)
     cd(xls_dir)
@@ -17,7 +17,7 @@ try
 
     idx = find(all(ismember(dataset_meta.(1),[ImgFolder,'_000_000']),2));
     time = num2str(dataset_meta.(8)(idx));
-catch
+catch % for lindsey data, rely on timestamp in adp_dataset_master.xls
     fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lindsey\Data\2P_images';
     
     dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
