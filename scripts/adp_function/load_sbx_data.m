@@ -29,7 +29,7 @@ catch
 end
 
 if length(time) == 3
-    time = ['0', time]
+    time = ['0', time] % zero-padding for time, so it is always 4 digit number converted to string
 end
 nrun = size(ImgFolder,1);
 run_str = catRunName(ImgFolder, nrun);

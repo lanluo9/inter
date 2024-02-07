@@ -104655,3 +104655,408 @@ time =
     '0951'
 
 start loading sbx
+Reading run 1, consisting of 162000 frames 
+
+nframes =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   162000
+
+corrected nframes to read sbx
+Undefined function 'sbxread' for input arguments of type 'int64'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load_sbx_data', 'C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m', 71)" style="font-weight:bold">load_sbx_data</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',71,0)">line 71</a>)
+        data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 74)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',74,0)">line 74</a>)
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\load_sbx_data.m',71,0)
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 16:39:09
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+
+time =
+
+    '0951'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+
+nframes =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   162000
+
+corrected nframes to read sbx
+imgMatFile
+
+imgMatFile =
+
+    '002_000_000.mat'
+
+nframes
+
+nframes =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   162000
+
+data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+{Unrecognized function or variable 'sbxread'.
+} 
+edit sbxread
+if system_dependent('IsDebugMode')==1, dbquit; end
+startup done
+edit sbxread
+startup done
+edit sbxread
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   06-Feb-2024 16:44:55
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+
+time =
+
+    '0951'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 219.426495 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     3
+
+Starting, frame 0
+Frame 8100 (42.2 fps)
+Frame 16200 (44.2 fps)
+Frame 24300 (44.4 fps)
+Frame 32400 (44.7 fps)
+Frame 40500 (44.7 fps)
+Frame 48600 (44.8 fps)
+Frame 56700 (44.8 fps)
+Frame 64800 (44.8 fps)
+Frame 72900 (44.7 fps)
+Frame 81000 (44.7 fps)
+Frame 89100 (44.7 fps)
+Frame 97200 (44.7 fps)
+Frame 105300 (44.8 fps)
+Frame 113400 (44.9 fps)
+Frame 121500 (44.9 fps)
+Frame 129600 (45.0 fps)
+Frame 137700 (45.0 fps)
+Frame 145800 (45.0 fps)
+Frame 153900 (45.0 fps)
+Frame 162000 (45.0 fps)
+Registered 162000 frames in 3596.6 seconds (45.0 fps)
+Elapsed time is 3596.584582 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   779
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   8
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   11
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208
+
+  Name                Size              Bytes  Class     Attributes
+
+  tc_screen      162000x1             1296000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 9 MB/s 
+mouse 1380 date 240206 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1380 240206 002
+
+isess =
+
+     2
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 226.705720 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+Starting, frame 0
+Frame 8100 (42.6 fps)
+Frame 16200 (44.3 fps)
+Frame 24300 (44.8 fps)
+Frame 32400 (45.2 fps)
+Frame 40500 (45.3 fps)
+Frame 48600 (45.3 fps)
+Frame 56700 (45.4 fps)
+Frame 64800 (45.4 fps)
+Frame 72900 (45.5 fps)
+Frame 81000 (45.5 fps)
+Frame 89100 (45.6 fps)
+Frame 97200 (45.6 fps)
+Frame 105300 (45.7 fps)
+Frame 113400 (45.8 fps)
+Frame 121500 (45.8 fps)
+Frame 129600 (45.8 fps)
+Frame 137700 (45.8 fps)
+Frame 145800 (45.8 fps)
+Frame 153900 (45.9 fps)
+Frame 162000 (45.9 fps)
+Registered 162000 frames in 3532.9 seconds (45.9 fps)
+Elapsed time is 3532.934362 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   779
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   8
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   11
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208
+
+  Name                Size              Bytes  Class     Attributes
+
+  tc_screen      162000x1             1296000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 21 MB/s 
+mouse 1380 date 240206 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1380 240206 003
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 18 MB/s 
+wait for batch_cellpose.ipynb
