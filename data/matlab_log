@@ -105073,3 +105073,716 @@ ans =
 
    07-Feb-2024 15:04:13
 
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+cellpose tif exists, skip to next set:
+
+isess =
+
+     2
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 5 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '240206_i1380_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '240206_i1380_runs-003_reg_shifts.mat'
+
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+
+time =
+
+    '0951'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 202.379286 seconds.
+Starting, frame 0
+Frame 8100
+Frame 16200
+Frame 24300
+Frame 32400
+Frame 40500
+Frame 48600
+Frame 56700
+Frame 64800
+Frame 72900
+Frame 81000
+Frame 89100
+Frame 97200
+Frame 105300
+Frame 113400
+Frame 121500
+Frame 129600
+Frame 137700
+Frame 145800
+Frame 153900
+Frame 162000
+Registered 162000 frames in 1100.9 seconds (147.2 fps)
+stackGetTimeCourses: elapsed time is 19.0941 seconds.
+stackGetTimeCourses: elapsed time is 15.1488 seconds.
+
+nCells =
+
+   126
+
+stackGetTimeCourses: elapsed time is 5.80624 seconds.
+stackGetTimeCourses: elapsed time is 5.08859 seconds.
+stackGetTimeCourses: elapsed time is 5.10951 seconds.
+stackGetTimeCourses: elapsed time is 5.07978 seconds.
+stackGetTimeCourses: elapsed time is 5.19541 seconds.
+stackGetTimeCourses: elapsed time is 5.04343 seconds.
+Cell #12 
+stackGetTimeCourses: elapsed time is 5.04639 seconds.
+stackGetTimeCourses: elapsed time is 5.10672 seconds.
+stackGetTimeCourses: elapsed time is 5.11236 seconds.
+Cell #24 
+stackGetTimeCourses: elapsed time is 5.06086 seconds.
+Cell #36 
+stackGetTimeCourses: elapsed time is 5.00731 seconds.
+Cell #48 
+Cell #60 
+Cell #72 
+Cell #84 
+Cell #96 
+Cell #108 
+Cell #120 
+TC extraction complete for runs-002
+2 sess done out of 2
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 209.801673 seconds.
+Starting, frame 0
+Frame 8100
+Frame 16200
+Frame 24300
+Frame 32400
+Frame 40500
+Frame 48600
+Frame 56700
+Frame 64800
+Frame 72900
+Frame 81000
+Frame 89100
+Frame 97200
+Frame 105300
+Frame 113400
+Frame 121500
+Frame 129600
+Frame 137700
+Frame 145800
+Frame 153900
+Frame 162000
+Registered 162000 frames in 1065.4 seconds (152.1 fps)
+stackGetTimeCourses: elapsed time is 20.171 seconds.
+stackGetTimeCourses: elapsed time is 47.3625 seconds.
+
+nCells =
+
+   126
+
+Cell #12 
+Cell #24 
+Cell #36 
+Cell #48 
+Cell #60 
+Cell #72 
+Cell #84 
+Cell #96 
+Cell #108 
+Cell #120 
+TC extraction complete for runs-003
+2 sess done out of 2
+
+tmp =
+
+     2
+
+edit TC_align_grat_ori_isi_multisess
+date_arr
+
+date_arr =
+
+      240206
+
+idate = 1
+
+idate =
+
+     1
+
+Error: File:
+C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m
+Line: 58
+A CONTINUE may only be used within a FOR or WHILE loop, and then only within
+the same file as its corresponding FOR or WHILE statement.
+
+
+dataset_date = dataset_table(dataset_table.date == date_arr(idate), :);
+clear global
+close all
+
+dataset_now = dataset_date(end, :); % get metadata from final sess of this date
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1380
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '240206'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '003'
+
+area = dataset_now.area{1}
+
+area =
+
+    'V1'
+
+imouse = ['i', num2str(arg_mouse)];
+
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+%     mkdir(dir_analysis)
+    dir_analysis = strrep(dir_analysis, 'lan', 'lindsey')
+    disp('this dir exist as a shortcut')
+    cd(dir_analysis)
+end
+~isempty(dir('*TC*.mat'))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+    disp('timecourse exists, start generating trace_trial_stim.mat')
+timecourse exists, start generating trace_trial_stim.mat
+ 
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+the line above only works for single session data. TODO: fix sess_id_arr and ImgFolder
+data_now_meta
+ 
+sess_id_arr
+
+sess_id_arr =
+
+     3
+
+dataset_now
+
+dataset_now =
+
+  1×12 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>             <strong>paradigm</strong>             <strong>gcamp</strong>     <strong>time</strong>     <strong>AWS</strong>                                    <strong>note</strong>                               
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>__________________________</strong>    <strong>______</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>__________________________________________________________________</strong>
+
+    1380     2.4021e+05    {'V1'}     NaN     {'003'}       false          false       {'grating_2ori_multisess'}    {'6s'}    1139    false    {'marked timestamp because lindsey use pdf not xls for exp notes'}
+
+arg_ImgFolder
+
+arg_ImgFolder =
+
+    '003'
+
+date_arr
+
+date_arr =
+
+      230622
+
+idate = 1
+
+idate =
+
+     1
+
+dataset_date = dataset_table(dataset_table.date == date_arr(idate), :);
+clear global
+close all
+
+dataset_now = dataset_date(end, :); % get metadata from final sess of this date
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1380
+
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '230622'
+
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '004'
+
+area = dataset_now.area{1}
+
+area =
+
+    'V1'
+
+imouse = ['i', num2str(arg_mouse)];
+
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+%     mkdir(dir_analysis)
+    dir_analysis = strrep(dir_analysis, 'lan', 'lindsey')
+    disp('this dir exist as a shortcut')
+    cd(dir_analysis)
+end
+
+% % check if time course exists for final sess. only useful for multi day, multi sess data
+if ~isempty(dir('*TC*.mat'))
+    disp('timecourse exists, start generating trace_trial_stim.mat')
+~isempty(dir('*TC*.mat'))
+end
+timecourse exists, start generating trace_trial_stim.mat
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+global frame_rate range_base range_resp ...
+    ncell ntrial trial_len_min ...
+    nisi nori ori_list...
+    id_ad id_noad id_isi2 id_isi3 id_ori
+
+save_flag = 1; % toggle this to save/skip all .mat creation below
+    stim_protocol = 'PP_randInt_rand_Targ'
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+ 
+    xls_dir = fullfile(data_fn, imouse, arg_date)
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\230622'
+
+ 
+    cd(xls_dir)
+ 
+    xls_file = dir('*.xlsx');
+ 
+    data_now_meta = readtable(xls_file.name);
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+ 
+    sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
+ 
+sess_id_arr
+
+sess_id_arr =
+
+     2
+     3
+     4
+
+    data_now_meta(sess_id_arr,:)
+
+ans =
+
+  3×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                        <strong>StimulusSet</strong>                          <strong>Notes</strong>   
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>___________________________________________________</strong>    <strong>__________</strong>
+
+    {'002_000_000'}     200     0.55     13         30         2      1.08e+05    1335    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+    {'003_000_000'}     200     0.55     13         30         2      1.08e+05    1441    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+    {'004_000_000'}     200     0.55     13         30         2         72000    1546    {'PP_randInt_rand_Targ in flashing stim 2p frames'}    {0×0 char}
+
+ 
+    frame_rate = data_now_meta.(5)(sess_id_arr(end));
+ 
+frame_rate
+
+frame_rate =
+
+    30
+
+sess_id_arr
+
+sess_id_arr =
+
+     2
+     3
+     4
+
+arg_ImgFolder
+
+arg_ImgFolder =
+
+    '004'
+
+sess_id_arr
+
+sess_id_arr =
+
+     2
+     3
+     4
+
+sess_id_arr(1)
+
+ans =
+
+     2
+
+    sess_id_arr = [2,3]
+
+sess_id_arr =
+
+     2     3
+
+ 
+idate = 1
+
+idate =
+
+     1
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+hard coded. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      162000
+
+
+ncell =
+
+   126
+
+
+ans =
+
+      324000         126
+
+loaded cellpose timecourse & visual input
+
+% % concat multi session trial info 
+ntrial = 0;
+contrast_ad = [];
+ori_seq = [];
+frame_ad = [];
+frame_ad_off = [];
+frame_tg = [];
+
+for isess = 1 : length(sess_id_arr)
+    input_behav = input_behav_seq(isess);
+    ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+    ntrial = ntrial + ntrial_sess;
+
+% % R1 / adapter contrast
+    contrast_ad_sess = celleqel2mat_padded(input_behav.tBaseGratingContrast)';
+    contrast_ad_sess = contrast_ad_sess(1:ntrial_sess);
+    try
+        assert(size(contrast_ad_sess, 1) > size(contrast_ad_sess, 2)) % ensure its a column vector
+    catch
+        contrast_ad_sess = contrast_ad_sess';
+    end
+    contrast_ad = [contrast_ad; contrast_ad_sess];
+
+% % R2 / target orientation
+    ori_seq_sess = celleqel2mat_padded(input_behav.tGratingDirectionDeg)'; 
+    ori_seq_sess(ori_seq_sess == 180) = 0;
+    ori_seq_sess = ori_seq_sess(1:ntrial_sess);
+    try
+        assert(size(ori_seq_sess, 1) > size(ori_seq_sess, 2)) % ensure its a column vector
+    catch
+        ori_seq_sess = ori_seq_sess';
+    end
+    ori_seq = [ori_seq; ori_seq_sess];
+
+% % frame of adapter or target onset -> ISI. take nsess into account
+    frame_ad_sess = double(cell2mat(input_behav.cStimOn)); 
+    frame_ad_sess = frame_ad_sess(1:ntrial_sess);
+    frame_ad_off_sess = double(cell2mat(input_behav.cStimOff));
+    frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
+    frame_tg_sess = double(celleqel2mat_padded(input_behav.cTargetOn));
+    frame_tg_sess = frame_tg_sess(1:ntrial_sess);
+    if isess > 1
+        frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:isess-1));
+        frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:isess-1));
+        frame_tg_sess = frame_tg_sess + sum(nframe_seq(1:isess-1));
+    end
+    frame_ad = [frame_ad, frame_ad_sess];
+    frame_ad_off = [frame_ad_off, frame_ad_off_sess];
+    frame_tg = [frame_tg, frame_tg_sess];
+end
+contrast_list = unique(contrast_ad)
+
+contrast_list =
+
+     0
+     1
+
+ 
+id_noad = find(contrast_ad == 0); 
+ 
+id_ad = find(contrast_ad == 1); 
+ 
+
+% % stim 2 info: orientation
+ori_list = unique(ori_seq)
+
+ori_list =
+
+         0
+  157.5000
+
+nori = length(ori_list); 
+id_ori = cell(nori, 1);
+for iori  = 1 : nori
+    id_ori{iori} = find(ori_seq == ori_list(iori)); 
+end
+t = cellfun(@size,id_ori,'uni',false);
+t = cell2mat(t(:,1));
+nrep_stim = unique(t(:));
+nrep_stim = nrep_stim(nrep_stim ~= 1)
+
+nrep_stim =
+
+   774
+   782
+
+
+% % ISI info
+trial_len_min = min(unique(diff(frame_ad)));
+isi_seq = (frame_tg - frame_ad_off)';
+id_750 = find(isi_seq > mean(isi_seq)); 
+id_250 = find(isi_seq < mean(isi_seq)); 
+id_ad750 = intersect(id_ad, id_750); 
+id_ad250 = intersect(id_ad, id_250);
+id_isi2 = {id_ad750, id_ad250}; 
+id_isi3 = {id_noad, id_ad750, id_ad250};
+nisi = length(id_isi3); % cannot use unique(isi_seq) due to frame jittering. isi = 250 ms -> 7-9 frames, 750 ms -> 22-24 frames 
+isi_seq
+ 
+id_ad250
+ 
+id_250
+ 
+isi_seq
+ 
+% % ISI info
+trial_len_min = min(unique(diff(frame_ad)));
+isi_seq = (frame_tg - frame_ad_off)';
+isi_thresh = 10 % 250 ms = 7-9 frame. 10 frame divides 250 vs 750 ms isi
+
+isi_thresh =
+
+    10
+
+id_750 = find(isi_seq > isi_thresh); 
+id_250 = find(isi_seq < isi_thresh); 
+id_ad750 = intersect(id_ad, id_750); 
+id_ad250 = intersect(id_ad, id_250);
+id_isi2 = {id_ad750, id_ad250}; 
+id_isi3 = {id_noad, id_ad750, id_ad250};
+nisi = length(id_isi3); % cannot use unique(isi_seq) due to frame jittering. isi = 250 ms -> 7-9 frames, 750 ms -> 22-24 frames 
+id_ad250
+ 
+id_noad
+ 
+nisi
+
+nisi =
+
+     3
+
+id_ad750
+ 
+% % trial structure info
+paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
+paradigm_ms.stim2_ms = input_behav.targetOnTimeMs;
+frame_rate = double(frame_rate); % convert int to double first
+paradigm_ms.max_isi_ms = max(isi_seq) / frame_rate * 1000; % somewhat accurate max isi
+paradigm_ms.iti_ms = input_behav.itiTimeMs;
+paradigm_ms
+ 
+trace_by_trial
+ 
+stim_ori
+ 
+trace_by_trial
+ 
+isi_nframe
+ 
+adapter_contrast
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    13
+
+
+range_base =
+
+     1     2     3     4
+
+
+range_resp =
+
+    11    12    13    14
+
+dfof_tg_trial
+ 
+R1_cell_trial
+ 
