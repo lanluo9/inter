@@ -23,6 +23,7 @@ catch % for lindsey data, rely on timestamp in adp_dataset_master.xls
     dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
     dataset_meta = readtable(dir_meta);
     dataset_meta = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess'), :);
+    dataset_meta = dataset_meta(dataset_meta.date == str2num(arg_date), :);
     
     idx = find(all(ismember(dataset_meta.(5), ImgFolder),2));
     time = num2str(dataset_meta.(10)(idx));
