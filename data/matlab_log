@@ -106754,3 +106754,208 @@ out of memory atm, retrying in a bit
 stackGetTimeCourses: elapsed time is 133.649 seconds.
 start stack_group_proj
 start modify in place
+1+1
+
+ans =
+
+     2
+
+data_reg
+ 
+data
+ 
+    npart = 2;
+ 
+ipart = 1
+
+ipart =
+
+     1
+
+        nframe_total = size(data_reg, 3);
+ 
+nframe_total
+
+nframe_total =
+
+      162000
+
+        nframe_half = floor(nframe_total / 2);
+ 
+nframe_half
+
+nframe_half =
+
+       81000
+
+ipart == 1
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+            frame_range_now = 1 : nframe_half;
+ 
+frame_range_now
+ 
+        data_reg_part = data_reg(:, :, frame_range_now);
+ 
+ 
+1+1
+
+ans =
+
+     2
+
+data_reg_part
+ 
+        clear data_reg
+ 
+1+1
+
+ans =
+
+     2
+
+        cd(dir_final_tif)
+ 
+        tif_name = [dir_final_tif, '\cellpose_mask.mat'];
+ 
+        LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from function load_sbx_data
+ 
+        npSub_tc = get_cellpose_timecourse(data_reg_part, tif_name, ...
+            LL_base, arg_date, imouse, run_str_sess, ipart);
+stackGetTimeCourses: elapsed time is 9.50095 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   129
+
+Cell #12 
+Cell #24 
+Cell #36 
+Cell #48 
+Cell #60 
+Cell #72 
+Cell #84 
+Cell #96 
+Cell #108 
+Cell #120 
+out of memory atm, retrying in a bit
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_cellpose_timecourse')" style="font-weight:bold">get_cellpose_timecourse</a>
+} 
+data_reg_part
+ 
+npSub_tc = get_cellpose_timecourse(data_reg_part, tif_name, ...
+            LL_base, arg_date, imouse, run_str_sess, ipart);
+stackGetTimeCourses: elapsed time is 9.48798 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   129
+
+Cell #12 
+Cell #24 
+Cell #36 
+Cell #48 
+Cell #60 
+Cell #72 
+Cell #84 
+Cell #96 
+Cell #108 
+Cell #120 
+<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_cellpose_timecourse.m',41,1)">41  </a>            ii= 0.01:0.01:1;
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbcont; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbcont; end
+date
+
+date =
+
+    '240212'
+
+ipart
+
+ipart =
+
+     1
+
+if system_dependent('IsDebugMode')==1, dbquit all; end
+npSub_tc = get_cellpose_timecourse(data_reg_part, tif_name, ...
+            LL_base, arg_date, imouse, run_str_sess, ipart);
+stackGetTimeCourses: elapsed time is 9.42689 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   129
+
+Cell #12 
+Cell #24 
+Cell #36 
+Cell #48 
+Cell #60 
+Cell #72 
+Cell #84 
+Cell #96 
+Cell #108 
+Cell #120 
+TC extraction complete for runs-002 part1
+out of memory atm or bugged out, retrying in a bit
+out of memory atm or bugged out, retrying in a bit
+out of memory atm or bugged out, retrying in a bit
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_cellpose_timecourse')" style="font-weight:bold">get_cellpose_timecourse</a>
+} 
+        disp([num2str(ipart), ' part done out of ', num2str(npart)])
+1 part done out of 2
+ 
+        clear npSub_tc
+ 
+ipart=2
+
+ipart =
+
+     2
+
+[data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240212'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 243.746411 seconds.
+        [~, data_reg] = stackRegister_MA_LL(double(data), [], [], out); % re-register to get data_reg back
+Starting, frame 0
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('stackRegister_MA_LL')" style="font-weight:bold">stackRegister_MA_LL</a>
+} 

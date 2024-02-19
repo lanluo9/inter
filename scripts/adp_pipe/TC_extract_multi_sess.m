@@ -122,9 +122,14 @@ for i = 1 : length(file_list)
     npart = 2;
     for ipart = 1:npart
         
-        if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % pass if multisess cellpose time course exist
-            disp('sess cellpose time course exists, skip to next set:')
-            disp(i+1)
+        run_str = catRunName(arg_ImgFolder, 1);
+        TC_isess_ipart_filename = fullfile(LL_base, 'Analysis\2P', [arg_date '_' imouse], ...
+            [arg_date '_' imouse '_' run_str], ...
+            [arg_date '_' imouse '_' run_str '_' num2str(ipart) '_TCs_cellpose.mat']);
+
+        if ~isempty(dir(TC_isess_ipart_filename)) % pass if ipart time course exist
+            disp('ipart cellpose time course exists, skip to next part:')
+            disp(ipart+1)
             continue
         end
 
@@ -134,7 +139,7 @@ for i = 1 : length(file_list)
 
         nframe_total = size(data_reg, 3);
         nframe_half = floor(nframe_total / 2);
-        if ipart == 1
+        if ipart == 1 % TODO: fix hard coding frame_range_now
             frame_range_now = 1 : nframe_half;
         elseif ipart == 2
             frame_range_now = (nframe_half+1) : nframe_total;
