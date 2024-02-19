@@ -108,11 +108,11 @@ disp('got cellpose mask, now extract TC from each sess')
 file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));
 file_list.name
 for i = 1 : length(file_list)
-    if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % pass if multisess cellpose time course exist
-        disp('sess cellpose time course exists, skip to next set:')
-        disp(i+1)
-        continue
-    end
+    % if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % pass if multisess cellpose time course exist
+    %     disp('sess cellpose time course exists, skip to next set:')
+    %     disp(i+1)
+    %     continue
+    % end
 
     file_name = [file_list(i).folder, '\', file_list(i).name];
     load(file_name, 'out');
@@ -123,6 +123,7 @@ for i = 1 : length(file_list)
     for ipart = 1:npart
         
         run_str = catRunName(arg_ImgFolder, 1);
+        LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from function load_sbx_data
         TC_isess_ipart_filename = fullfile(LL_base, 'Analysis\2P', [arg_date '_' imouse], ...
             [arg_date '_' imouse '_' run_str], ...
             [arg_date '_' imouse '_' run_str '_' num2str(ipart) '_TCs_cellpose.mat']);
@@ -134,22 +135,16 @@ for i = 1 : length(file_list)
         end
 
         [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
-        [~, data_reg] = stackRegister_MA_LL(double(data), [], [], out); % re-register to get data_reg back
-        clear data
-
-        nframe_total = size(data_reg, 3);
+        nframe_total = size(data, 3);
         nframe_half = floor(nframe_total / 2);
-        if ipart == 1 % TODO: fix hard coding frame_range_now
-            frame_range_now = 1 : nframe_half;
-        elseif ipart == 2
-            frame_range_now = (nframe_half+1) : nframe_total;
-        end
-        data_reg_part = data_reg(:, :, frame_range_now);
-        clear data_reg
+        data_part = data(:, :, ( 1+nframe_half*(ipart-1) : nframe_half*ipart ));
+        out_part = 0; % fix register ref frame? or is it reg_shift? who named this variable so confusingly?
+
+        [~, data_reg_part] = stackRegister_MA_LL(double(data_part), [], [], out_part); % re-register to get data_reg back
+        clear data
 
         cd(dir_final_tif)
         tif_name = [dir_final_tif, '\cellpose_mask.mat'];
-        LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from function load_sbx_data
         npSub_tc = get_cellpose_timecourse(data_reg_part, tif_name, ...
             LL_base, arg_date, imouse, run_str_sess, ipart);
         

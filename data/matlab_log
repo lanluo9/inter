@@ -106959,3 +106959,424 @@ Elapsed time is 243.746411 seconds.
 Starting, frame 0
 {Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('stackRegister_MA_LL')" style="font-weight:bold">stackRegister_MA_LL</a>
 } 
+file_list(i).folder
+
+ans =
+
+    'Z:\All_Staff\home\lan\Analysis\2P\240212_i1381\240212_i1381_runs-002'
+
+isempty(dir([file_list(i).folder, '\', '*', num2str(ipart), '*TCs_cellpose.mat'])) % pass if ipart time course exist
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   0
+
+ipart
+
+ipart =
+
+     2
+
+ipart = 1
+
+ipart =
+
+     1
+
+isempty(dir([file_list(i).folder, '\', '*', num2str(ipart), '*TCs_cellpose.mat'])) % pass if ipart time course exist
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   0
+
+dir([file_list(i).folder, '\', '*', num2str(ipart), '*TCs_cellpose.mat'])
+
+240212_i1381_runs-002_1_TCs_cellpose.mat  
+
+
+~isempty(dir([file_list(i).folder, '\', '*', num2str(ipart), '*TCs_cellpose.mat']))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+ipart=2
+
+ipart =
+
+     2
+
+~isempty(dir([file_list(i).folder, '\', '*', num2str(ipart), '*TCs_cellpose.mat'])) % pass if ipart time course exist
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+~isempty(dir([file_list(i).folder, '\', '*', num2str(ipart), '*TCs_cellpose.mat']))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+dir([file_list(i).folder, '\', '*', num2str(ipart), '*TCs_cellpose.mat'])
+
+240212_i1381_runs-002_1_TCs_cellpose.mat  
+
+
+LL_base
+
+LL_base =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'
+
+date
+
+ans =
+
+    '19-Feb-2024'
+
+arg_date
+
+arg_date =
+
+    '240212'
+
+imouse
+
+imouse =
+
+    'i1381'
+
+run_str
+{Unrecognized function or variable 'run_str'.
+} 
+edit load_sbx_data
+ImgFolder
+{Unrecognized function or variable 'ImgFolder'.
+} 
+        run_str = catRunName(arg_ImgFolder, nrun);
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('eval')" style="font-weight:bold">eval</a>
+Unrecognized function or variable 'nrun'.
+} 
+edit catRunName
+        run_str = catRunName(arg_ImgFolder, 1);
+ 
+run_str
+
+run_str =
+
+    'runs-002'
+
+ipart
+
+ipart =
+
+     2
+
+run_str = catRunName(arg_ImgFolder, 1);
+        TC_isess_ipart_filename = fullfile(LL_base, 'Analysis\2P', [arg_date '_' imouse], ...
+            [arg_date '_' imouse '_' run_str], ...
+            [arg_date '_' imouse '_' run_str '_' num2str(ipart) '_TCs_cellpose.mat']);
+TC_isess_ipart_filename
+
+TC_isess_ipart_filename =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan\Analysis\2P\240212_i1381\240212_i1381_runs-002\240212_i1381_runs-002_2_TCs_cellpose.mat'
+
+~isempty(TC_isess_ipart_filename)
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+~exist(TC_isess_ipart_filename)
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+~isempty(dir(TC_isess_ipart_filename))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   0
+
+isempty(dir(TC_isess_ipart_filename))
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   1
+
+npart
+
+npart =
+
+     2
+
+ipart
+
+ipart =
+
+     2
+
+        run_str = catRunName(arg_ImgFolder, 1);
+ 
+        TC_isess_ipart_filename = fullfile(LL_base, 'Analysis\2P', [arg_date '_' imouse], ...
+            [arg_date '_' imouse '_' run_str], ...
+            [arg_date '_' imouse '_' run_str '_' num2str(ipart) '_TCs_cellpose.mat']);
+if ~isempty(dir(TC_isess_ipart_filename)) % pass if ipart time course exist
+            disp('ipart cellpose time course exists, skip to next part:')
+            disp(ipart+1)
+            % continue
+        end
+data_reg
+ 
+data
+ 
+[~, data_reg] = stackRegister_MA_LL(double(data), [], [], out); % re-register to get data_reg back
+Starting, frame 0
+{Operation terminated by user during <a href="matlab:matlab.internal.language.introspective.errorDocCallback('stackRegister_MA_LL')" style="font-weight:bold">stackRegister_MA_LL</a>
+} 
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   19-Feb-2024 14:10:26
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240212'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+cellpose tif exists, skip to next set:
+
+isess =
+
+     2
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240212'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 3 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '240212_i1381_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '240212_i1381_runs-003_reg_shifts.mat'
+
+sess cellpose time course exists, skip to next set:
+     2
+
+Unrecognized function or variable 'LL_base'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 126)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',126,0)">line 126</a>)
+        TC_isess_ipart_filename = fullfile(LL_base, 'Analysis\2P', [arg_date
+        '_' imouse], ...
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   19-Feb-2024 14:16:56
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240212'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+cellpose tif exists, skip to next set:
+
+isess =
+
+     2
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240212'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 13 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '240212_i1381_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '240212_i1381_runs-003_reg_shifts.mat'
+
+ipart cellpose time course exists, skip to next part:
+     2
+
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240212'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
