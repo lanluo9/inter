@@ -138,7 +138,7 @@ for i = 1 : length(file_list)
         nframe_total = size(data, 3);
         nframe_half = floor(nframe_total / 2);
         data_part = data(:, :, ( 1+nframe_half*(ipart-1) : nframe_half*ipart ));
-        out_part = 0; % fix register ref frame? or is it reg_shift? who named this variable so confusingly?
+        out_part = out( ( 1+nframe_half*(ipart-1) : nframe_half*ipart ), :); % out shape = nframe x 4
 
         [~, data_reg_part] = stackRegister_MA_LL(double(data_part), [], [], out_part); % re-register to get data_reg back
         clear data

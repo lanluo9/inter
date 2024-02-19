@@ -107380,3 +107380,135 @@ xls_dir =
 
 start loading sbx
 Reading run 1, consisting of 162000 frames 
+Elapsed time is 462.695555 seconds.
+Starting, frame 0
+Frame 8100
+Frame 16200
+Frame 24300
+Frame 32400
+Frame 40500
+Frame 48600
+Frame 56700
+Frame 64800
+Frame 72900
+Frame 81000
+Frame 89100
+Frame 97200
+Frame 105300
+Frame 113400
+Frame 121500
+Frame 129600
+Frame 137700
+Frame 145800
+Frame 153900
+Frame 162000
+Registered 162000 frames in 1090.7 seconds (148.5 fps)
+stackGetTimeCourses: elapsed time is 9.84549 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   129
+
+Cell #12 
+Cell #24 
+Cell #36 
+Cell #48 
+Cell #60 
+Cell #72 
+Cell #84 
+Cell #96 
+Cell #108 
+Cell #120 
+TC extraction complete for runs-002 part2
+2 part done out of 2
+2 sess done out of 2
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240212'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+        x = reshape(x,[info.nchan info.sz(2) info.recordsPerBuffer  N]);
+ 
+    catch
+{Error: Illegal use of reserved keyword "catch".
+} 
+if system_dependent('IsDebugMode')==1, dbstep out; end
+1+!
+ 1+!
+   ↑
+{Invalid use of operator.
+} 
+1+1
+
+ans =
+
+     2
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+Elapsed time is 357.690458 seconds.
+ipart
+
+ipart =
+
+     1
+
+arg_ImgFolder
+
+arg_ImgFolder =
+
+    '003'
+
+isess
+
+isess =
+
+     2
+
+nsess
+
+nsess =
+
+     2
+
+dataset_date
+
+dataset_date =
+
+  2×12 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>             <strong>paradigm</strong>             <strong>gcamp</strong>     <strong>time</strong>     <strong>AWS</strong>                                         <strong>note</strong>                                     
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>__________________________</strong>    <strong>______</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_____________________________________________________________________________</strong>
+
+    1381     2.4021e+05    {'V1'}     NaN     {'002'}       false          false       {'grating_2ori_multisess'}    {'6s'}    1459    false    {'You can find the data in lindsey/Data/2P_images/i1381/240212/002 and /003'}
+    1381     2.4021e+05    {'V1'}     NaN     {'003'}       false          false       {'grating_2ori_multisess'}    {'6s'}    1637    false    {'You can find the data in lindsey/Data/2P_images/i1381/240212/002 and /003'}
+
+if system_dependent('IsDebugMode')==1, dbcont; end
+Starting, frame 0
+Frame 8100
+Frame 16200
+Frame 24300
+Frame 32400
+Frame 40500
+Frame 48600
+Frame 56700
+Frame 64800
+Frame 72900
+Frame 81000
+Frame 89100
+Frame 97200
+Frame 105300
+Frame 113400
+Frame 121500
+Frame 129600
+Frame 137700
+Frame 145800
+Frame 153900
