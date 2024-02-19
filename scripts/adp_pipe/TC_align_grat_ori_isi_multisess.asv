@@ -88,12 +88,8 @@ end
 % % check if time course is cut into n parts to avoid out of memory, 
 % % if so, concat within sess, save to sess subdir
 
-tc_part1 = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(end)),'_1_TCs_cellpose.mat'];
-if exist(tc_part1) % confirm tc was cut into parts within session
-    tc_concat = [];
-    tc_part_file_list = dir(fullfile(dir_analysis, '**\*_TCs_cellpose.mat'));
-    file_list.name
-end
+tc_part1 = load([arg_date '_' imouse '_runs-00', num2str(sess_id_arr(1)),'_TCs_cellpose.mat']);
+
 
 
 %% load input_behav & npSubTC for eash sess

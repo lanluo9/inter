@@ -107512,3 +107512,170 @@ Frame 129600
 Frame 137700
 Frame 145800
 Frame 153900
+Frame 162000
+Registered 162000 frames in 1061.0 seconds (152.7 fps)
+stackGetTimeCourses: elapsed time is 9.8802 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   129
+
+Cell #12 
+Cell #24 
+Cell #36 
+Cell #48 
+Cell #60 
+Cell #72 
+Cell #84 
+Cell #96 
+Cell #108 
+Cell #120 
+TC extraction complete for runs-003 part1
+1 part done out of 2
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240212'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 75.928062 seconds.
+Starting, frame 0
+Frame 8100
+Frame 16200
+Frame 24300
+Frame 32400
+Frame 40500
+Frame 48600
+Frame 56700
+Frame 64800
+Frame 72900
+Frame 81000
+Frame 89100
+Frame 97200
+Frame 105300
+Frame 113400
+Frame 121500
+Frame 129600
+Frame 137700
+Frame 145800
+Frame 153900
+Frame 162000
+Registered 162000 frames in 1077.6 seconds (150.3 fps)
+stackGetTimeCourses: elapsed time is 9.69071 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   129
+
+Cell #12 
+Cell #24 
+Cell #36 
+Cell #48 
+Cell #60 
+Cell #72 
+Cell #84 
+Cell #96 
+Cell #108 
+Cell #120 
+TC extraction complete for runs-003 part2
+2 part done out of 2
+2 sess done out of 2
+
+tmp =
+
+     2
+
+ipart
+ 
+size(out)
+
+ans =
+
+      162000           4
+
+ls
+
+.                                 cellpose_mask.pdf                 
+..                                cellpose_stim_resp_gauss.tif      
+240212_i1381_runs-002             cellpose_stim_resp_gauss_seg.npy  
+240212_i1381_runs-003             
+cellpose_mask.mat                 
+
+uiopen('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m',1)
+ndate
+
+ndate =
+
+     2
+
+date_arr
+
+date_arr =
+
+      240206
+      240212
+
+idate = 1
+
+idate =
+
+     1
+
+Error: File:
+C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m
+Line: 58
+A CONTINUE may only be used within a FOR or WHILE loop, and then only within
+the same file as its corresponding FOR or WHILE statement.
+
+
+arg_mouse =
+
+        1380
+
+
+arg_date =
+
+    '240206'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1380\240206'
+
+hard coded. TODO: fix sess_id_arr and ImgFolder
+sess_id_arr
+
+sess_id_arr =
+
+     2     3
+

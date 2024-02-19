@@ -1,6 +1,4 @@
 
-filename = 'Z:\All_Staff\home\lindsey\Data\2P_images\i1380\240206\index.pdf'
-data = readPDFFormData(filename)
 
 
 
