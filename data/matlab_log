@@ -106602,3 +106602,155 @@ desfrns
  
 if system_dependent('IsDebugMode')==1, dbquit all; end
 edit stackGroupProject
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   19-Feb-2024 11:07:11
+
+
+stim_type =
+
+    'grating'
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240212'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+cellpose tif exists, skip to next set:
+
+isess =
+
+     2
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240212'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 10 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '240212_i1381_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '240212_i1381_runs-003_reg_shifts.mat'
+
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240212'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 255.528783 seconds.
+Starting, frame 0
+Frame 8100
+Frame 16200
+Frame 24300
+Frame 32400
+Frame 40500
+Frame 48600
+Frame 56700
+Frame 64800
+Frame 72900
+Frame 81000
+Frame 89100
+Frame 97200
+Frame 105300
+Frame 113400
+Frame 121500
+Frame 129600
+Frame 137700
+Frame 145800
+Frame 153900
+Frame 162000
+Registered 162000 frames in 1057.4 seconds (153.2 fps)
+stackGetTimeCourses: elapsed time is 19.6241 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+out of memory atm, retrying in a bit
+stackGetTimeCourses: elapsed time is 166.151 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+out of memory atm, retrying in a bit
+stackGetTimeCourses: elapsed time is 146.532 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+out of memory atm, retrying in a bit
+stackGetTimeCourses: elapsed time is 133.649 seconds.
+start stack_group_proj
+start modify in place

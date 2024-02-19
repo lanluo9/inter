@@ -118,20 +118,42 @@ for i = 1 : length(file_list)
     load(file_name, 'out');
     arg_ImgFolder = dataset_date(i,:).num{1};
 
-    [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
-    [outs, data_reg] = stackRegister_MA_LL(double(data), [], [], out); % re-register to get data_reg back
-    clear data outs
-    
-    cd(dir_final_tif)
-    tif_name = [dir_final_tif, '\cellpose_mask.mat'];
-    LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from function load_sbx_data
-    npSub_tc = get_cellpose_timecourse(data_reg, tif_name, ...
-        LL_base, arg_date, imouse, run_str_sess);
-    
-    disp([num2str(isess), ' sess done out of ', num2str(nsess)])
-    clear data_reg npSub_tc
-    clear global % suspect weird trace is bc residual global var affecting sbxread
+    % due to out of memory issue, we chop data_reg into n parts, save npSub_tc separately
+    npart = 2;
+    for ipart = 1:npart
+        
+        if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % pass if multisess cellpose time course exist
+            disp('sess cellpose time course exists, skip to next set:')
+            disp(i+1)
+            continue
+        end
 
+        [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+        [~, data_reg] = stackRegister_MA_LL(double(data), [], [], out); % re-register to get data_reg back
+        clear data
+
+        nframe_total = size(data_reg, 3);
+        nframe_half = floor(nframe_total / 2);
+        if ipart == 1
+            frame_range_now = 1 : nframe_half;
+        elseif ipart == 2
+            frame_range_now = (nframe_half+1) : nframe_total;
+        end
+        data_reg_part = data_reg(:, :, frame_range_now);
+        clear data_reg
+
+        cd(dir_final_tif)
+        tif_name = [dir_final_tif, '\cellpose_mask.mat'];
+        LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from function load_sbx_data
+        npSub_tc = get_cellpose_timecourse(data_reg_part, tif_name, ...
+            LL_base, arg_date, imouse, run_str_sess, ipart);
+        
+        disp([num2str(ipart), ' part done out of ', num2str(npart)])
+        clear npSub_tc data_reg_part
+    end
+    disp([num2str(isess), ' sess done out of ', num2str(nsess)])
+    
+    clear global % suspect weird trace is bc residual global var affecting sbxread
 end
 
 %%
