@@ -88,11 +88,26 @@ end
 % % check if time course is cut into n parts to avoid out of memory, 
 % % if so, concat within sess, save to sess subdir
 
-tc_part1 = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(end)),'_1_TCs_cellpose.mat'];
-if exist(tc_part1) % confirm tc was cut into parts within session
-    tc_concat = [];
-    tc_part_file_list = dir(fullfile(dir_analysis, '**\*_TCs_cellpose.mat'));
-    file_list.name
+for isess = 1 : length(sess_id_arr)
+    dir_sess = [dir_analysis(1:end-1), num2str(sess_id_arr(isess))];
+    cd(dir_sess) % go within analysis folder of each sess, where tc_part is stored
+
+    tc_part1 = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess)),'_1_TCs_cellpose.mat'];
+    if exist(tc_part1) % confirm tc was cut into parts within session
+    
+        tc_concat = [];
+        tc_part_file_list = dir(fullfile(dir_sess, '**\*_TCs_cellpose.mat'));
+        
+        for ipart = 1 : size(tc_part_file_list, 1) % nrow of tc_part_file_list = nparts in session
+            tc_part = load(tc_part_file_list(ipart).name, 'npSub_tc');
+            tc_concat = [tc_concat; tc_part.npSub_tc]; % concat on row axis (frame)
+        end
+    end
+
+    tc_sess = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess)),'_TCs_cellpose.mat'];
+    npSub_tc = tc_concat;
+    save(tc_sess, "npSub_tc") % save full tc within sess (concat across parts)
+    clear npSub_tc
 end
 
 
