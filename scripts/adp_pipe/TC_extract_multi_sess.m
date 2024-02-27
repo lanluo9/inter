@@ -25,8 +25,8 @@ dataset_meta = readtable(dir_meta);
 % clearvars global
 
 stim_type = 'grating' % grating_8ori_multisess will pretend to be grating, since they share flashing stim 2p frames.xml
-dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_8ori_2isi_multisess'), :);
-dataset_table = dataset_meta(dataset_meta.date == 240226, :);
+% dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_8ori_2isi_multisess'), :);
+dataset_table = dataset_meta(dataset_meta.date == 240225, :);
 
 ndate = length(unique(dataset_table.date));
 date_arr = unique(dataset_table.date)
