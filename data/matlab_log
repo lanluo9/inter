@@ -107679,3 +107679,389 @@ sess_id_arr =
 
      2     3
 
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   27-Feb-2024 09:08:31
+
+
+stim_type =
+
+    'grating'
+
+date_arr
+
+date_arr =
+
+      240226
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240226'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+
+xls_file = 
+
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+       name: '2P Imaging Notes Lan.xlsx'
+     folder: '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+       date: '26-Feb-2024 14:35:12'
+      bytes: 50149
+      isdir: 0
+    datenum: 7.3931e+05
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Elapsed time is 0.058910 seconds.
+Output argument "behav_input" (and possibly others) not assigned a value in the
+execution with "load_sbx_data" function.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 75)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',75,0)">line 75</a>)
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   27-Feb-2024 09:09:12
+
+
+stim_type =
+
+    'grating'
+
+
+date_arr =
+
+      240226
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240226'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+
+xls_file = 
+
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+       name: '2P Imaging Notes Lan.xlsx'
+     folder: '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+       date: '26-Feb-2024 14:35:12'
+      bytes: 50149
+      isdir: 0
+    datenum: 7.3931e+05
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Elapsed time is 0.023352 seconds.
+Output argument "behav_input" (and possibly others) not assigned a value in the
+execution with "load_sbx_data" function.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('get_data_reg_cellpose_tif', 'C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m', 5)" style="font-weight:bold">get_data_reg_cellpose_tif</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)">line 5</a>)
+[data, behav_input, LL_base, date, imouse, run_str] = load_sbx_data( ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 75)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',75,0)">line 75</a>)
+[~, ~, date, imouse, run_str] = get_data_reg_cellpose_tif(...
+
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)
+edit load_sbx_data
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_function\get_data_reg_cellpose_tif.m',5,0)
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   27-Feb-2024 09:12:56
+
+
+stim_type =
+
+    'grating'
+
+
+date_arr =
+
+      240226
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240226'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+if system_dependent('IsDebugMode')==1, dbstep in; end
+if system_dependent('IsDebugMode')==1, dbstep in; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+start running get_data_reg_cellpose_tif.m
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+
+xls_file = 
+
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+       name: '2P Imaging Notes Lan.xlsx'
+     folder: '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+       date: '26-Feb-2024 14:35:12'
+      bytes: 50149
+      isdir: 0
+    datenum: 7.3931e+05
+
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+time
+
+time =
+
+    '1328'
+
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+time
+
+time =
+
+    '1328'
+
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+start loading sbx
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+if system_dependent('IsDebugMode')==1, dbstep; end
+CD
+
+CD =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan\Data\2P_images\i1381\240226\002'
+
+    imgMatFile = [ImgFolder(irun,:) '_000_000.mat'];
+ 
+    load(imgMatFile);
+ 
+    fName = ['\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\Behavior\Data\data-' imouse '-' date '-' time(irun,:) '.mat'];
+ 
+    behav_mat = load(fName);
+ 
+    temp(irun) = behav_mat.input;
+ 
+    behav_input = behav_mat.input;
+ 
+behav_input
+ 
+behav_input
+ 
+    nframes = max([temp(irun).counterValues{end}(end) info.config.frames]);
+ 
+nframes
+
+nframes =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   108000
+
+    fprintf(['Reading run ' num2str(irun) ', consisting of ' num2str(min(nframes)) ' frames \r\n'])
+Reading run 1, consisting of 108000 frames 
+ 
+
+    try
+        data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+    catch
+        nframes = floor(nframes / 1000) * 1000 % cut off mod(nframes, 1000). my nframes usually are 100K or 108K
+        disp('corrected nframes to read sbx')
+        data_temp = sbxread(imgMatFile(1,1:11),0,min(nframes));
+    end
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.desktop.vareditor.VariableEditor.checkVariableName')" style="font-weight:bold">matlab.desktop.vareditor.VariableEditor.checkVariableName</a>
+The first argument to VariableEditor must be a valid variable name.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('openvar', 'C:\Program Files\MATLAB\R2023a\toolbox\matlab\codetools\openvar.m', 96)" style="font-weight:bold">openvar</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2023a\toolbox\matlab\codetools\openvar.m',96,0)">line 96</a>)
+    matlab.desktop.vareditor.VariableEditor.checkVariableName(name);
+} 
+data_temp
+ 
+size(data_temp,1)== 2
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   0
+
+    offset = offset+min(nframes);
+ 
+    data_temp = squeeze(data_temp);
+ 
+    data = cat(3,data,data_temp);
+ 
+1+1
+
+ans =
+
+     2
+
+    trial_n = [trial_n nframes];
+ 
+if system_dependent('IsDebugMode')==1, dbstep out; end
+Elapsed time is 256.903868 seconds.
+behav_input
+ 
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   27-Feb-2024 09:18:32
+
