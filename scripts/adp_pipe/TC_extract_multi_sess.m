@@ -26,7 +26,7 @@ dataset_meta = readtable(dir_meta);
 
 stim_type = 'grating' % grating_8ori_multisess will pretend to be grating, since they share flashing stim 2p frames.xml
 % dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_8ori_2isi_multisess'), :);
-dataset_table = dataset_meta(dataset_meta.date == 240228, :);
+dataset_table = dataset_meta(dataset_meta.date == 240229, :);
 
 ndate = length(unique(dataset_table.date));
 date_arr = unique(dataset_table.date)
@@ -130,8 +130,10 @@ for i = 1 : length(file_list)
     % % due to out of memory issue, we chop data_reg into n parts, save npSub_tc separately
     if ncell * nframe > 162000 * 126 % hard coded boundary determined by past data - might vary due to other user's RAM usage
         npart = 2;
+        disp('divide into npart due to out of memory')
     else
         npart = 1;
+        disp('do not divide into parts')
     end
 
     arg_ImgFolder = dataset_date(i,:).num{1};
