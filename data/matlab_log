@@ -108750,3 +108750,590 @@ xls_dir =
     '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240225'
 
 start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 228.149146 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     4
+
+Starting, frame 0
+Frame 8100 (42.3 fps)
+Frame 16200 (43.6 fps)
+Frame 24300 (44.0 fps)
+Frame 32400 (44.3 fps)
+Frame 40500 (44.5 fps)
+Frame 48600 (44.8 fps)
+Frame 56700 (45.1 fps)
+Frame 64800 (45.3 fps)
+Frame 72900 (45.4 fps)
+Frame 81000 (45.5 fps)
+Frame 89100 (45.6 fps)
+Frame 97200 (45.7 fps)
+Frame 105300 (45.8 fps)
+Frame 113400 (45.9 fps)
+Frame 121500 (45.9 fps)
+Frame 129600 (45.9 fps)
+Frame 137700 (46.0 fps)
+Frame 145800 (46.0 fps)
+Frame 153900 (46.0 fps)
+Frame 162000 (46.1 fps)
+Registered 162000 frames in 3517.4 seconds (46.1 fps)
+Elapsed time is 3517.386748 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   779
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   8
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   11
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208
+
+  Name                Size              Bytes  Class     Attributes
+
+  tc_screen      162000x1             1296000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+     9
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 11 MB/s 
+mouse 1392 date 240225 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1392 240225 002
+
+isess =
+
+     2
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1392
+
+
+arg_date =
+
+    '240225'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240225'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 254.603190 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+Starting, frame 0
+Frame 8100 (42.2 fps)
+Frame 16200 (44.0 fps)
+Frame 24300 (44.6 fps)
+Frame 32400 (44.6 fps)
+Frame 40500 (44.6 fps)
+Frame 48600 (44.6 fps)
+Frame 56700 (42.7 fps)
+Frame 64800 (42.2 fps)
+Frame 72900 (42.4 fps)
+Frame 81000 (42.6 fps)
+Frame 89100 (41.4 fps)
+Frame 97200 (41.4 fps)
+Frame 105300 (41.6 fps)
+Frame 113400 (41.7 fps)
+Frame 121500 (41.9 fps)
+Frame 129600 (42.1 fps)
+Frame 137700 (42.2 fps)
+Frame 145800 (42.4 fps)
+Frame 153900 (42.6 fps)
+Frame 162000 (42.8 fps)
+Registered 162000 frames in 3785.8 seconds (42.8 fps)
+Elapsed time is 3785.812670 seconds.
+registration finished
+grating
+runs-003
+
+nTrials =
+
+   779
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   8
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   11
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208
+
+  Name                Size              Bytes  Class     Attributes
+
+  tc_screen      162000x1             1296000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    15
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 19 MB/s 
+mouse 1392 date 240225 runs-003 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1392 240225 003
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 4 MB/s 
+wait for batch_cellpose.ipynb
+got cellpose mask, now extract TC from each sess
+
+ans =
+
+    '240225_i1392_runs-002_reg_shifts.mat'
+
+
+ans =
+
+    '240225_i1392_runs-003_reg_shifts.mat'
+
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240225'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 246.311578 seconds.
+Starting, frame 0
+Frame 4050
+Frame 8100
+Frame 12150
+Frame 16200
+Frame 20250
+Frame 24300
+Frame 28350
+Frame 32400
+Frame 36450
+Frame 40500
+Frame 44550
+Frame 48600
+Frame 52650
+Frame 56700
+Frame 60750
+Frame 64800
+Frame 68850
+Frame 72900
+Frame 76950
+Frame 81000
+Registered 81000 frames in 533.2 seconds (151.9 fps)
+stackGetTimeCourses: elapsed time is 8.97948 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   131
+
+Cell #13 
+Cell #26 
+Cell #39 
+Cell #52 
+Cell #65 
+Cell #78 
+Cell #91 
+Cell #104 
+Cell #117 
+Cell #130 
+TC extraction complete for runs-002 part1
+1 part done out of 2
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240225'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 70.179346 seconds.
+Starting, frame 0
+Frame 4050
+Frame 8100
+Frame 12150
+Frame 16200
+Frame 20250
+Frame 24300
+Frame 28350
+Frame 32400
+Frame 36450
+Frame 40500
+Frame 44550
+Frame 48600
+Frame 52650
+Frame 56700
+Frame 60750
+Frame 64800
+Frame 68850
+Frame 72900
+Frame 76950
+Frame 81000
+Registered 81000 frames in 529.1 seconds (153.1 fps)
+stackGetTimeCourses: elapsed time is 9.0086 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   131
+
+Cell #13 
+Cell #26 
+Cell #39 
+Cell #52 
+Cell #65 
+Cell #78 
+Cell #91 
+Cell #104 
+Cell #117 
+Cell #130 
+TC extraction complete for runs-002 part2
+2 part done out of 2
+2 sess done out of 2
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240225'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 233.617982 seconds.
+Starting, frame 0
+Frame 4050
+Frame 8100
+Frame 12150
+Frame 16200
+Frame 20250
+Frame 24300
+Frame 28350
+Frame 32400
+Frame 36450
+Frame 40500
+Frame 44550
+Frame 48600
+Frame 52650
+Frame 56700
+Frame 60750
+Frame 64800
+Frame 68850
+Frame 72900
+Frame 76950
+Frame 81000
+Registered 81000 frames in 525.3 seconds (154.2 fps)
+stackGetTimeCourses: elapsed time is 9.14251 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   131
+
+Cell #13 
+Cell #26 
+Cell #39 
+Cell #52 
+Cell #65 
+Cell #78 
+Cell #91 
+Cell #104 
+Cell #117 
+Cell #130 
+TC extraction complete for runs-003 part1
+1 part done out of 2
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240225'
+
+start loading sbx
+Reading run 1, consisting of 162000 frames 
+Elapsed time is 70.565677 seconds.
+Starting, frame 0
+Frame 4050
+Frame 8100
+Frame 12150
+Frame 16200
+Frame 20250
+Frame 24300
+Frame 28350
+Frame 32400
+Frame 36450
+Frame 40500
+Frame 44550
+Frame 48600
+Frame 52650
+Frame 56700
+Frame 60750
+Frame 64800
+Frame 68850
+Frame 72900
+Frame 76950
+Frame 81000
+Registered 81000 frames in 527.7 seconds (153.5 fps)
+stackGetTimeCourses: elapsed time is 9.10574 seconds.
+start stack_group_proj
+start modify in place
+first reshape
+mean array
+second reshape
+finish stack_group_proj
+
+nCells =
+
+   131
+
+Cell #13 
+Cell #26 
+Cell #39 
+Cell #52 
+Cell #65 
+Cell #78 
+Cell #91 
+Cell #104 
+Cell #117 
+Cell #130 
+TC extraction complete for runs-003 part2
+2 part done out of 2
+2 sess done out of 2
+
+tmp =
+
+     2
+
+open quickRet_LL.m
+
+mouse =
+
+    '1392'
+
+
+date =
+
+    '240228'
+
+
+time =
+
+    '1214'
+
+
+ImgFolder =
+
+    '001'
+
+start quickRet
+waiting for file transfer
+found mat file
+waiting for file transfer
+found sbx file
+Loaded 4050 frames 
+close all
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   29-Feb-2024 10:12:15
+
+
+stim_type =
+
+    'grating'
+
+
+date_arr =
+
+      240228
+
+
+isess =
+
+     1
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1392
+
+
+arg_date =
+
+    '240228'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+take first session 002 of multisess data as ref session
+add your stim_type into function: bunny, mix, grat6, grating(grat1)
+start running get_data_reg_cellpose_tif.m
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240228'
+
+
+xls_file = 
+
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+       name: '2P Imaging Notes Lan.xlsx'
+     folder: '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240228'
+       date: '28-Feb-2024 13:45:27'
+      bytes: 50181
+      isdir: 0
+    datenum: 7.3931e+05
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+start loading sbx
+Reading run 1, consisting of 108000 frames 
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240206_i1380\240206_i1380_runs-003\240206_i1380_runs-003_TCs_cellpose.mat',1)
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240212_i1381\240212_i1381_runs-003\240212_i1381_runs-003_TCs_cellpose.mat',1)
+edit get_cellpose_timecourse
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240212_i1381\240212_i1381_runs-003\240212_i1381_runs-003_reg_shifts.mat',1)
+open TC_align_grat_ori_isi_multisess.m
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   29-Feb-2024 10:28:49
+

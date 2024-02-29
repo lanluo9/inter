@@ -25,11 +25,11 @@ dataset_meta = readtable(dir_meta);
 % clearvars global
 
 stim_type = 'grating' % grating_8ori_multisess will pretend to be grating, since they share flashing stim 2p frames.xml
-dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess'), :);
-dataset_table = dataset_meta(dataset_meta.date == 240212, :);
+% dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_8ori_2isi_multisess'), :);
+dataset_table = dataset_meta(dataset_meta.date == 240228, :);
 
 ndate = length(unique(dataset_table.date));
-date_arr = unique(dataset_table.date);
+date_arr = unique(dataset_table.date)
 
 %%
 
@@ -105,46 +105,73 @@ while ~exist('cellpose_mask.mat','file')
 end
 disp('got cellpose mask, now extract TC from each sess')
 
+% % check ncell, determine if we will encounter out of memory issue
+tif_name = [dir_final_tif, '\cellpose_mask.mat'];
+tif_file = load(tif_name);
+mask_cell = tif_file.cellpose_mask;
+ncell = max(mask_cell(:));
+
+
+
 file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));
 file_list.name
 for i = 1 : length(file_list)
-    if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % pass if multisess cellpose time course exist
-        disp('sess cellpose time course exists, skip to next set:')
-        disp(i+1)
-        continue
-    end
+    % if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % pass if multisess cellpose time course exist
+    %     disp('sess cellpose time course exists, skip to next set:')
+    %     disp(i+1)
+    %     continue
+    % end
 
     file_name = [file_list(i).folder, '\', file_list(i).name];
     load(file_name, 'out');
+    nframe = size(out, 1); % shape = nframe x 4. check nframe, determine if we will encounter out of memory issue
+
+
     arg_ImgFolder = dataset_date(i,:).num{1};
 
-    [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
-    [outs, data_reg] = stackRegister_MA_LL(double(data), [], [], out); % re-register to get data_reg back
-    clear data outs
-
     % due to out of memory issue, we chop data_reg into n parts, save npSub_tc separately
-    npart = 2;
-    for ipart = 1:2
-        nframe_total = size(data_reg, 3);
-        nframe_half = floor(nframe_total / 2);
-        if ipart == 1
-            frame_range_now = 1 : nframe_half;
-        elseif ipart == 2
-            frame_range_now = (nframe_half+1) : nframe_total;
+    if ncell * nframe > 162000 * 126 % hard coded boundary deter
+        npart = 2;
+    
+    end
+
+
+
+
+
+    for ipart = 1:npart
+        
+        run_str = catRunName(arg_ImgFolder, 1);
+        LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from function load_sbx_data
+        TC_isess_ipart_filename = fullfile(LL_base, 'Analysis\2P', [arg_date '_' imouse], ...
+            [arg_date '_' imouse '_' run_str], ...
+            [arg_date '_' imouse '_' run_str '_' num2str(ipart) '_TCs_cellpose.mat']);
+
+        if ~isempty(dir(TC_isess_ipart_filename)) % pass if ipart time course exist
+            disp('ipart cellpose time course exists, skip to next part:')
+            disp(ipart+1)
+            continue
         end
-        data_reg_part = data_reg(:, :, frame_range_now);
+
+        [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
+        nframe_total = size(data, 3);
+        nframe_half = floor(nframe_total / npart);
+        data_part = data(:, :, ( 1+nframe_half*(ipart-1) : nframe_half*ipart ));
+        out_part = out( ( 1+nframe_half*(ipart-1) : nframe_half*ipart ), :); % out shape = nframe x 4
+
+        [~, data_reg_part] = stackRegister_MA_LL(double(data_part), [], [], out_part); % re-register to get data_reg back
+        clear data
 
         cd(dir_final_tif)
         tif_name = [dir_final_tif, '\cellpose_mask.mat'];
-        LL_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_staff\home\lan'; % TODO: spare generating LL_base from function load_sbx_data
         npSub_tc = get_cellpose_timecourse(data_reg_part, tif_name, ...
             LL_base, arg_date, imouse, run_str_sess, ipart);
         
-        disp([num2str(ipart), ' part done out of ', num2s])
-        clear npSub_tc
+        disp([num2str(ipart), ' part done out of ', num2str(npart)])
+        clear npSub_tc data_reg_part
     end
     disp([num2str(isess), ' sess done out of ', num2str(nsess)])
-    clear data_reg
+    
     clear global % suspect weird trace is bc residual global var affecting sbxread
 end
 

@@ -26,7 +26,7 @@ dataset_meta = readtable(dir_meta);
 
 stim_type = 'grating' % grating_8ori_multisess will pretend to be grating, since they share flashing stim 2p frames.xml
 % dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, 'grating_8ori_2isi_multisess'), :);
-dataset_table = dataset_meta(dataset_meta.date == 240225, :);
+dataset_table = dataset_meta(dataset_meta.date == 240228, :);
 
 ndate = length(unique(dataset_table.date));
 date_arr = unique(dataset_table.date)
@@ -105,9 +105,18 @@ while ~exist('cellpose_mask.mat','file')
 end
 disp('got cellpose mask, now extract TC from each sess')
 
+% % check ncell, determine if we will encounter out of memory issue
+tif_name = [dir_final_tif, '\cellpose_mask.mat'];
+tif_file = load(tif_name);
+mask_cell = tif_file.cellpose_mask;
+ncell = max(mask_cell(:));
+
+
 file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));
 file_list.name
 for i = 1 : length(file_list)
+
+    % % NOTE: not compatible with past versions, bc previous TC were not chopped to n parts
     % if ~isempty(dir([file_list(i).folder, '\', '*TCs_cellpose.mat'])) % pass if multisess cellpose time course exist
     %     disp('sess cellpose time course exists, skip to next set:')
     %     disp(i+1)
@@ -116,10 +125,16 @@ for i = 1 : length(file_list)
 
     file_name = [file_list(i).folder, '\', file_list(i).name];
     load(file_name, 'out');
-    arg_ImgFolder = dataset_date(i,:).num{1};
+    nframe = size(out, 1); % shape = nframe x 4. check nframe, determine if we will encounter out of memory issue
 
-    % due to out of memory issue, we chop data_reg into n parts, save npSub_tc separately
-    npart = 2;
+    % % due to out of memory issue, we chop data_reg into n parts, save npSub_tc separately
+    if ncell * nframe > 162000 * 126 % hard coded boundary determined by past data - might vary due to other user's RAM usage
+        npart = 2;
+    else
+        npart = 1;
+    end
+
+    arg_ImgFolder = dataset_date(i,:).num{1};
     for ipart = 1:npart
         
         run_str = catRunName(arg_ImgFolder, 1);
@@ -136,9 +151,9 @@ for i = 1 : length(file_list)
 
         [data, ~, ~, ~, ~, run_str_sess] = load_sbx_data(arg_mouse, arg_date, arg_ImgFolder);
         nframe_total = size(data, 3);
-        nframe_half = floor(nframe_total / 2);
-        data_part = data(:, :, ( 1+nframe_half*(ipart-1) : nframe_half*ipart ));
-        out_part = out( ( 1+nframe_half*(ipart-1) : nframe_half*ipart ), :); % out shape = nframe x 4
+        nframe_part = floor(nframe_total / npart);
+        data_part = data(:, :, ( 1+nframe_part*(ipart-1) : nframe_part*ipart ));
+        out_part = out( ( 1+nframe_part*(ipart-1) : nframe_part*ipart ), :); % out shape = nframe x 4
 
         [~, data_reg_part] = stackRegister_MA_LL(double(data_part), [], [], out_part); % re-register to get data_reg back
         clear data
