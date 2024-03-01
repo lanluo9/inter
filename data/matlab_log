@@ -110572,3 +110572,1070 @@ range_resp =
 
      8     9    10    11
 
+
+date_arr =
+
+      240226
+      240228
+      240229
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240226'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                          <strong>Notes</strong>            
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>_____________________________</strong>
+
+    {'002_000_000'}     200     0.55     15         30         2      1.08e+05    1328    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'fluo trace vis resp clear'}
+    {'003_000_000'}     200     0.55     15         30         2      1.08e+05    1432    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                   }
+
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    79
+
+
+ans =
+
+      216000          79
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   128
+   129
+   130
+   131
+   133
+
+
+isi_thresh =
+
+    10
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+
+range_base =
+
+     1     2     3     4
+
+
+range_resp =
+
+     9    10    11    12
+
+
+arg_mouse =
+
+        1392
+
+
+arg_date =
+
+    '240228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240228'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                                            <strong>Notes</strong>                               
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>__________________________________________________________________</strong>
+
+    {'002_000_000'}     200     0.57     15         30         2      1.08e+05    1228    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'regrowth near V1, tried to evade but unsure whether successful'}
+    {'003_000_000'}     200     0.57     15         30         2      1.08e+05    1344    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                                                        }
+
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    79
+
+
+ans =
+
+      216000          79
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   126
+   127
+   130
+   131
+   132
+
+
+isi_thresh =
+
+    10
+
+
+date_arr =
+
+      240226
+      240228
+      240229
+
+idate = 1
+
+idate =
+
+     1
+
+Error: File:
+C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m
+Line: 58
+A CONTINUE may only be used within a FOR or WHILE loop, and then only within
+the same file as its corresponding FOR or WHILE statement.
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240226'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                          <strong>Notes</strong>            
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>_____________________________</strong>
+
+    {'002_000_000'}     200     0.55     15         30         2      1.08e+05    1328    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'fluo trace vis resp clear'}
+    {'003_000_000'}     200     0.55     15         30         2      1.08e+05    1432    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                   }
+
+
+nframe =
+
+      216000
+
+
+ncell =
+
+    79
+
+
+ans =
+
+      432000          79
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   128
+   129
+   130
+   131
+   133
+
+
+isi_thresh =
+
+    10
+
+trial_len_min
+
+trial_len_min =
+
+   206
+
+figure
+range = trial_len_min; 
+plot(t_ad(1:range), 'r'); hold on; 
+unique(diff(frame_ad))
+
+ans =
+
+         206         207         208         271      108506
+
+length(sess_id_arr)
+
+ans =
+
+     2
+
+isess
+
+isess =
+
+     2
+
+frame_ad_sess
+ 
+frame_ad
+ 
+[216184] - [107678]
+
+ans =
+
+      108506
+
+ntrial
+
+ntrial =
+
+        1036
+
+518*2
+
+ans =
+
+        1036
+
+nframe_seq
+
+nframe_seq =
+
+      216000      216000
+
+sum(nframe_seq(1:isess-1))
+
+ans =
+
+      216000
+
+frame_ad_sess
+ 
+tc
+ 
+[arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']
+
+ans =
+
+    '240226_i1381_runs-003_TCs_cellpose.mat'
+
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240226_i1381\240226_i1381_runs-003\240226_i1381_runs-003_TCs_cellpose.mat',1)
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240226_i1381\240226_i1381_runs-003\240226_i1381_runs-003_1_TCs_cellpose.mat',1)
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                          <strong>Notes</strong>            
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>_____________________________</strong>
+
+    {'002_000_000'}     200     0.55     15         30         2      1.08e+05    1328    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'fluo trace vis resp clear'}
+    {'003_000_000'}     200     0.55     15         30         2      1.08e+05    1432    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                   }
+
+
+date_arr =
+
+      240226
+      240228
+      240229
+
+idate = 1
+
+idate =
+
+     1
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240226'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+length(sess_id_arr)
+{Unrecognized function or variable 'sess_id_arr'.
+} 
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                          <strong>Notes</strong>            
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>_____________________________</strong>
+
+    {'002_000_000'}     200     0.55     15         30         2      1.08e+05    1328    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'fluo trace vis resp clear'}
+    {'003_000_000'}     200     0.55     15         30         2      1.08e+05    1432    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                   }
+
+length(sess_id_arr)
+
+ans =
+
+     2
+
+isess = 1
+
+isess =
+
+     1
+
+    dir_sess = [dir_analysis(1:end-1), num2str(sess_id_arr(isess))];
+ 
+    cd(dir_sess) % go within analysis folder of each sess, where tc_part is stored
+ 
+    
+ 
+    tc_filename_base = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess))];
+ 
+    tc_part1 = [tc_filename_base, '_1_TCs_cellpose.mat'];
+ 
+    tc_part2 = [tc_filename_base, '_2_TCs_cellpose.mat'];
+ 
+    tc_full = [tc_filename_base, '_TCs_cellpose.mat'];
+ 
+exist(tc_part2, 'file')
+
+ans =
+
+     2
+
+        tc_concat = [];
+ 
+        tc_part_file_list = dir(fullfile(dir_sess, '**\*_TCs_cellpose.mat'));
+ 
+tc_part_file_list
+
+tc_part_file_list = 
+
+  3×1 <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> array with fields:
+
+    name
+    folder
+    date
+    bytes
+    isdir
+    datenum
+
+tc_part_file_list
+ 
+
+date_arr =
+
+      240226
+      240228
+      240229
+
+idate = 1
+
+idate =
+
+     1
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240226'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                          <strong>Notes</strong>            
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>_____________________________</strong>
+
+    {'002_000_000'}     200     0.55     15         30         2      1.08e+05    1328    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'fluo trace vis resp clear'}
+    {'003_000_000'}     200     0.55     15         30         2      1.08e+05    1432    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                   }
+
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    79
+
+
+ans =
+
+      216000          79
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   128
+   129
+   130
+   131
+   133
+
+
+isi_thresh =
+
+    10
+
+trial_len_min
+
+trial_len_min =
+
+   206
+
+(unique(diff(frame_ad)))
+
+ans =
+
+   206   207   208   271   506
+
+frame_ad
+ 
+dfof_align_ad
+ 
+dfof_align_ad
+ 
+paradigm_ms
+
+paradigm_ms = 
+
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+      stim1_ms: 100
+      stim2_ms: 100
+    max_isi_ms: 266.6667
+        iti_ms: 6000
+
+edit dfof_by_trial_base
+frame_ad
+ 
+tc_align_ad
+ 
+[Warning: Ignoring extra legend entries.] 
+input_behav.itiTimeMs
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   6000
+
+[Warning: Ignoring extra legend entries.] 
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240226_i1381\240226_i1381_runs-002\240226_i1381_runs-002_TCs_cellpose.mat',1)
+
+idate =
+
+     2
+
+
+arg_mouse =
+
+        1392
+
+
+arg_date =
+
+    '240228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+date_arr =
+
+      240226
+      240228
+      240229
+
+
+idate =
+
+     2
+
+
+arg_mouse =
+
+        1392
+
+
+arg_date =
+
+    '240228'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240228'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                                            <strong>Notes</strong>                               
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>__________________________________________________________________</strong>
+
+    {'002_000_000'}     200     0.57     15         30         2      1.08e+05    1228    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'regrowth near V1, tried to evade but unsure whether successful'}
+    {'003_000_000'}     200     0.57     15         30         2      1.08e+05    1344    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                                                        }
+
+tc full, no need to concat between parts
+Unrecognized function or variable 'tc_concat'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_align_grat_ori_isi_multisess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m', 117)" style="font-weight:bold">TC_align_grat_ori_isi_multisess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m',117,0)">line 117</a>)
+    npSub_tc = tc_concat;
+
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m',117,0)
+tc full, no need to concat between parts
+tc full, no need to concat between parts
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    79
+
+
+ans =
+
+      216000          79
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   126
+   127
+   130
+   131
+   132
+
+
+isi_thresh =
+
+    10
+
+
+date_arr =
+
+      240226
+      240228
+      240229
+
+
+idate =
+
+     3
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240229'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240229'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                             <strong>Notes</strong>                
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>____________________________________</strong>
+
+    {'002_000_000'}     150     0.57     15         30         2      1.08e+05    1355    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'some flinching? can see vis resp'}
+    {'003_000_000'}     150     0.57     15         30         2      1.08e+05    1459    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'vis resp unclear'                }
+
+
+nframe =
+
+      108000
+
+
+ncell =
+
+   121
+
+
+ans =
+
+      216000         121
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   126
+   128
+   130
+   131
+   133
+
+
+isi_thresh =
+
+    10
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+range_base =
+
+     1     2     3     4
+
+
+range_resp =
+
+    10    11    12    13
+
+
+date_arr =
+
+      240226
+      240228
+      240229
+
+
+idate =
+
+     1
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240226'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                          <strong>Notes</strong>            
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>_____________________________</strong>
+
+    {'002_000_000'}     200     0.55     15         30         2      1.08e+05    1328    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'fluo trace vis resp clear'}
+    {'003_000_000'}     200     0.55     15         30         2      1.08e+05    1432    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                   }
+
+tc full, no need to concat between parts
+tc full, no need to concat between parts
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    79
+
+
+ans =
+
+      216000          79
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   128
+   129
+   130
+   131
+   133
+
+
+isi_thresh =
+
+    10
+

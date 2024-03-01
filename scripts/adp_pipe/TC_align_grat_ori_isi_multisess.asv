@@ -290,20 +290,23 @@ close all
 figure
 range = trial_len_min; 
 
-group_size = 250;
+group_size = 100;
 for igroup = 1 : floor(ntrial / group_size)
 
 t = squeeze(nanmean(squeeze(tc_align_ad(:, ...
     1 + (igroup-1)*group_size : igroup*group_size, ...
     :)), 1)); 
 t_ad = squeeze(nanmean(t(:,:), 1));
+
+
 plot(t_ad(1:range)); hold on; 
 end
 
-legend_content = arrayfun(@num2str, [1 : floor(ntrial / group_size)], 'UniformOutput',false);
-legend(legend_content)
+legend_content = arrayfun(@num2str, 1 : floor(ntrial / group_size));
+legend(on)
 grid on; grid minor; 
 set(gcf, 'Position', get(0, 'Screensize')); 
+
 
 %% set resp window
 % find base window & resp window
