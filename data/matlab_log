@@ -109928,3 +109928,146 @@ Set 'VariableNamingRule' to 'preserve' to use the original column headers as
 table variable names.] 
 start loading sbx
 Reading run 1, consisting of 108000 frames 
+Elapsed time is 157.911174 seconds.
+
+ans =
+
+    'data corruption not detected'
+
+start registration. using middle section as motion correct ref
+
+select =
+
+     3
+
+Starting, frame 0
+Frame 5400 (41.8 fps)
+Frame 10800 (44.0 fps)
+Frame 16200 (44.5 fps)
+Frame 21600 (44.6 fps)
+Frame 27000 (44.7 fps)
+Frame 32400 (44.9 fps)
+Frame 37800 (45.1 fps)
+Frame 43200 (45.2 fps)
+Frame 48600 (45.3 fps)
+Frame 54000 (45.3 fps)
+Frame 59400 (45.4 fps)
+Frame 64800 (45.4 fps)
+Frame 70200 (45.4 fps)
+Frame 75600 (45.3 fps)
+Frame 81000 (45.2 fps)
+Frame 86400 (45.1 fps)
+Frame 91800 (45.0 fps)
+Frame 97200 (45.0 fps)
+Frame 102600 (44.9 fps)
+Frame 108000 (44.8 fps)
+Registered 108000 frames in 2408.7 seconds (44.8 fps)
+Elapsed time is 2408.705128 seconds.
+registration finished
+grating
+runs-002
+
+nTrials =
+
+   519
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   3
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   8
+
+
+ans =
+
+  <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a>
+
+   11
+
+
+ans =
+
+  1×3 <a href="matlab:helpPopup int64" style="font-weight:bold">int64</a> row vector
+
+   206   207   208
+
+  Name                Size             Bytes  Class     Attributes
+
+  tc_screen      108000x1             864000  double              
+
+detecting first peak automatically
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    11
+
+saving dfof-max-gauss tif & mat
+saving dfof-max-gauss tif
+1/1[Warning: converting to from 64-bit double precision to 32-bit single
+precision] 
+
+Write 420288 bytes in 0 mins 
+Write speed: 10 MB/s 
+mouse 1381 date 240229 runs-002 - finished data_reg & cellpose tif
+got data_reg & cellpose tif for 1381 240229 002
+
+isess =
+
+     2
+
+
+nsess =
+
+     2
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240229'
+
+
+arg_ImgFolder =
+
+    '002'
+
+
+ref_ImgFolder =
+
+    '002'
+
+
+run_str_ref =
+
+    'runs-002'
+
+cellpose tif exists, skip to next set:
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('assert')" style="font-weight:bold">assert</a>
+Assertion failed.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_extract_multi_sess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m', 88)" style="font-weight:bold">TC_extract_multi_sess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',88,0)">line 88</a>)
+assert(size(file_list, 1) == nsess); % ensure each session saved a mat for
+cellpose tiff
+
+opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_extract_multi_sess.m',88,0)
+
+ans = 
+
+  <a href="matlab:helpPopup datetime" style="font-weight:bold">datetime</a>
+
+   29-Feb-2024 17:29:01
+

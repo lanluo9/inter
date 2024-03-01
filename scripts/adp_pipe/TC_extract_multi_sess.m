@@ -50,7 +50,7 @@ arg_date = num2str(dataset_now.date)
 arg_ImgFolder = dataset_now.num{1}
 
 ref_ImgFolder = dataset_date(1,:).num{1}
-run_str_ref = ['runs-' ref_ImgFolder(1,:)]
+run_str_ref = ['runs-' ref_ImgFolder(1,:)];
 if isess == 1
     disp('take first session 002 of multisess data as ref session')
 end
@@ -109,7 +109,7 @@ disp('got cellpose mask, now extract TC from each sess')
 tif_name = [dir_final_tif, '\cellpose_mask.mat'];
 tif_file = load(tif_name);
 mask_cell = tif_file.cellpose_mask;
-ncell = max(mask_cell(:));
+ncell = double(max(mask_cell(:))); % convert uint16 to double (float)
 
 
 file_list = dir(fullfile(dir_final_tif, '**\*_reg_shifts.mat'));
@@ -168,7 +168,7 @@ for i = 1 : length(file_list)
         disp([num2str(ipart), ' part done out of ', num2str(npart)])
         clear npSub_tc data_reg_part
     end
-    disp([num2str(isess), ' sess done out of ', num2str(nsess)])
+    disp([num2str(i), ' sess done out of ', num2str(nsess)])
     
     clear global % suspect weird trace is bc residual global var affecting sbxread
 end
