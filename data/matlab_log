@@ -111639,3 +111639,776 @@ isi_thresh =
 
     10
 
+close all
+[Warning: Ignoring extra legend entries.] 
+[Warning: Ignoring extra legend entries.] 
+size(tc_align_ad)
+
+ans =
+
+          79        1036         206
+
+[Warning: Ignoring extra legend entries.] 
+[Warning: Ignoring extra legend entries.] 
+[Warning: Ignoring extra legend entries.] 
+frame_ad
+ 
+input_behav.cStimOn
+ 
+frame_ad_sess
+ 
+frame_ad
+ 
+ntrial
+
+ntrial =
+
+        1036
+
+ntrial_sess
+
+ntrial_sess =
+
+   518
+
+ntrial / group_size
+{Unrecognized function or variable 'group_size'.
+} 
+group_size = 100;
+ 
+ntrial / group_size
+
+ans =
+
+   10.3600
+
+floor(ntrial / group_size)
+
+ans =
+
+    10
+
+Unrecognized function or variable 'on'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('TC_align_grat_ori_isi_multisess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m', 305)" style="font-weight:bold">TC_align_grat_ori_isi_multisess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\TC_align_grat_ori_isi_multisess.m',305,0)">line 305</a>)
+legend(on)
+
+legend_content = arrayfun(@num2str, 1 : floor(ntrial / group_size));
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('arrayfun')" style="font-weight:bold">arrayfun</a>
+Non-scalar in Uniform output, at index 10, output 1.
+Set 'UniformOutput' to false.
+} 
+1 : floor(ntrial / group_size)
+
+ans =
+
+     1     2     3     4     5     6     7     8     9    10
+
+legend_content = arrayfun(@num2str, [1 : floor(ntrial / group_size)]);
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('arrayfun')" style="font-weight:bold">arrayfun</a>
+Non-scalar in Uniform output, at index 10, output 1.
+Set 'UniformOutput' to false.
+} 
+legend_content = arrayfun(@num2str, [1 : floor(ntrial / group_size)], 'UniformOutput',false);
+ 
+legend_content
+
+legend_content =
+
+  1×10 <a href="matlab:helpPopup cell" style="font-weight:bold">cell</a> array
+
+  Columns 1 through 8
+
+    {'1'}    {'2'}    {'3'}    {'4'}    {'5'}    {'6'}    {'7'}    {'8'}
+
+  Columns 9 through 10
+
+    {'9'}    {'10'}
+
+close all
+isess = 1
+
+isess =
+
+     1
+
+    input_behav = input_behav_seq(isess);
+ 
+    ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+ 
+    ntrial = ntrial + ntrial_sess;
+ 
+ntrial_sess
+
+ntrial_sess =
+
+   518
+
+ntrial
+
+ntrial =
+
+        1554
+
+ntrial = 0;
+contrast_ad = [];
+ori_seq = [];
+frame_ad = [];
+frame_ad_off = [];
+frame_tg = [];
+ isess = 1
+
+isess =
+
+     1
+
+    input_behav = input_behav_seq(isess);
+ 
+    ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+ 
+    ntrial = ntrial + ntrial_sess;
+ 
+ntrial
+
+ntrial =
+
+   518
+
+ntrial_sess
+
+ntrial_sess =
+
+   518
+
+    contrast_ad_sess = celleqel2mat_padded(input_behav.tBaseGratingContrast)';
+ 
+    contrast_ad_sess = contrast_ad_sess(1:ntrial_sess);
+ 
+    try
+        assert(size(contrast_ad_sess, 1) > size(contrast_ad_sess, 2)) % ensure its a column vector
+    catch
+        contrast_ad_sess = contrast_ad_sess';
+    end
+    contrast_ad = [contrast_ad; contrast_ad_sess];
+contrast_ad
+ 
+ori_seq_sess = celleqel2mat_padded(input_behav.tGratingDirectionDeg)'; 
+    ori_seq_sess(ori_seq_sess == 180) = 0;
+    ori_seq_sess = ori_seq_sess(1:ntrial_sess);
+    try
+        assert(size(ori_seq_sess, 1) > size(ori_seq_sess, 2)) % ensure its a column vector
+    catch
+        ori_seq_sess = ori_seq_sess';
+    end
+    ori_seq = [ori_seq; ori_seq_sess];
+ori_seq
+ 
+    frame_ad_sess = double(cell2mat(input_behav.cStimOn)); 
+ 
+    frame_ad_sess = frame_ad_sess(1:ntrial_sess);
+ 
+    frame_ad_off_sess = double(cell2mat(input_behav.cStimOff));
+ 
+    frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
+ 
+    frame_tg_sess = double(celleqel2mat_padded(input_behav.cTargetOn));
+ 
+    frame_tg_sess = frame_tg_sess(1:ntrial_sess);
+ 
+ntrial_sess
+
+ntrial_sess =
+
+   518
+
+input_behav.cStimOn
+ 
+input_behav.cStimOff
+ 
+input_behav.cTargetOn
+ 
+frame_tg_sess
+ 
+isess > 1
+
+ans =
+
+  <a href="matlab:helpPopup logical" style="font-weight:bold">logical</a>
+
+   0
+
+frame_ad = [frame_ad, frame_ad_sess];
+    frame_ad_off = [frame_ad_off, frame_ad_off_sess];
+    frame_tg = [frame_tg, frame_tg_sess];
+frame_ad
+ 
+ntrial = 0;
+contrast_ad = [];
+ori_seq = [];
+frame_ad = [];
+frame_ad_off = [];
+frame_tg = [];
+
+for isess = 1 : length(sess_id_arr)
+    input_behav = input_behav_seq(isess);
+    ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+    ntrial = ntrial + ntrial_sess;
+
+% % R1 / adapter contrast
+    contrast_ad_sess = celleqel2mat_padded(input_behav.tBaseGratingContrast)';
+    contrast_ad_sess = contrast_ad_sess(1:ntrial_sess);
+    try
+        assert(size(contrast_ad_sess, 1) > size(contrast_ad_sess, 2)) % ensure its a column vector
+    catch
+        contrast_ad_sess = contrast_ad_sess';
+    end
+    contrast_ad = [contrast_ad; contrast_ad_sess];
+
+% % R2 / target orientation
+    ori_seq_sess = celleqel2mat_padded(input_behav.tGratingDirectionDeg)'; 
+    ori_seq_sess(ori_seq_sess == 180) = 0;
+    ori_seq_sess = ori_seq_sess(1:ntrial_sess);
+    try
+        assert(size(ori_seq_sess, 1) > size(ori_seq_sess, 2)) % ensure its a column vector
+    catch
+        ori_seq_sess = ori_seq_sess';
+    end
+    ori_seq = [ori_seq; ori_seq_sess];
+
+% % frame of adapter or target onset -> ISI. take nsess into account
+    frame_ad_sess = double(cell2mat(input_behav.cStimOn)); 
+    frame_ad_sess = frame_ad_sess(1:ntrial_sess);
+    frame_ad_off_sess = double(cell2mat(input_behav.cStimOff));
+    frame_ad_off_sess = frame_ad_off_sess(1:ntrial_sess);
+    frame_tg_sess = double(celleqel2mat_padded(input_behav.cTargetOn));
+    frame_tg_sess = frame_tg_sess(1:ntrial_sess);
+    if isess > 1
+        frame_ad_sess = frame_ad_sess + sum(nframe_seq(1:isess-1));
+        frame_ad_off_sess = frame_ad_off_sess + sum(nframe_seq(1:isess-1));
+        frame_tg_sess = frame_tg_sess + sum(nframe_seq(1:isess-1));
+    end
+    frame_ad = [frame_ad, frame_ad_sess];
+    frame_ad_off = [frame_ad_off, frame_ad_off_sess];
+    frame_tg = [frame_tg, frame_tg_sess];
+end
+contrast_list = unique(contrast_ad)
+
+contrast_list =
+
+     0
+     1
+
+ 
+id_noad = find(contrast_ad == 0); 
+ 
+id_ad = find(contrast_ad == 1); 
+ 
+ori_list = unique(ori_seq)
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+ 
+nori = length(ori_list); 
+ 
+id_ori = cell(nori, 1);
+ 
+for iori  = 1 : nori
+{Error: At least one END is missing. The statement beginning here does not
+have a matching end.
+} 
+for iori  = 1 : nori
+    id_ori{iori} = find(ori_seq == ori_list(iori)); 
+end
+id_ori
+ 
+t = cellfun(@size,id_ori,'uni',false);
+t = cell2mat(t(:,1));
+nrep_stim = unique(t(:));
+nrep_stim = nrep_stim(nrep_stim ~= 1)
+
+nrep_stim =
+
+   128
+   129
+   130
+   131
+   133
+
+trial_len_min = min(unique(diff(frame_ad)));
+ 
+unique(diff(frame_ad))
+
+ans =
+
+   206   207   208   271   506
+
+isi_seq = (frame_tg - frame_ad_off)';
+ 
+isi_seq
+ 
+isi_thresh = 10 % 250 ms = 7-9 frame. 10 frame divides 250 vs 750 ms isi
+
+isi_thresh =
+
+    10
+
+ 
+id_750 = find(isi_seq > isi_thresh); 
+ 
+id_250 = find(isi_seq < isi_thresh); 
+ 
+id_ad750 = intersect(id_ad, id_750); 
+ 
+id_ad250 = intersect(id_ad, id_250);
+ 
+id_250
+ 
+id_ad750 = intersect(id_ad, id_750); 
+
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.desktop.vareditor.VariableEditor.checkVariableName')" style="font-weight:bold">matlab.desktop.vareditor.VariableEditor.checkVariableName</a>
+The first argument to VariableEditor must be a valid variable name.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('openvar', 'C:\Program Files\MATLAB\R2023a\toolbox\matlab\codetools\openvar.m', 96)" style="font-weight:bold">openvar</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2023a\toolbox\matlab\codetools\openvar.m',96,0)">line 96</a>)
+    matlab.desktop.vareditor.VariableEditor.checkVariableName(name);
+} 
+id_ad750
+ 
+id_ad250
+ 
+id_ad250
+ 
+id_isi2 = {id_ad750, id_ad250}; 
+ 
+id_isi3 = {id_noad, id_ad750, id_ad250};
+ 
+nisi = length(id_isi3); % cannot use unique(isi_seq) due to frame jittering. isi = 250 ms -> 7-9 frames, 750 ms -> 22-24 frames 
+ 
+id_isi2
+ 
+id_isi3
+ 
+paradigm_ms.stim1_ms = input_behav.stimOnTimeMs;
+ 
+paradigm_ms.stim2_ms = input_behav.targetOnTimeMs;
+ 
+frame_rate = double(frame_rate); % convert int to double first
+ 
+paradigm_ms.max_isi_ms = max(isi_seq) / frame_rate * 1000; % somewhat accurate max isi
+ 
+paradigm_ms.iti_ms = input_behav.itiTimeMs;
+ 
+frame_rate
+
+frame_rate =
+
+    30
+
+paradigm_ms
+
+paradigm_ms = 
+
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+      stim1_ms: 100
+      stim2_ms: 100
+    max_isi_ms: 266.6667
+        iti_ms: 6000
+
+plot(frame_ad);
+npSub_tc
+ 
+
+date_arr =
+
+      240226
+      240228
+      240229
+
+idate = 1
+
+idate =
+
+     1
+
+ 
+dataset_date = dataset_table(dataset_table.date == date_arr(idate), :);
+ 
+clear global
+close all
+dataset_date
+
+dataset_date =
+
+  2×12 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>               <strong>paradigm</strong>                <strong>gcamp</strong>     <strong>time</strong>     <strong>AWS</strong>            <strong>note</strong>        
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>_______________________________</strong>    <strong>______</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>___________________</strong>
+
+    1381     2.4023e+05    {'V1'}     200     {'002'}       true           false       {'grating_8ori_2isi_multisess'}    {'6s'}    NaN     false    {'exclude 750 isi'}
+    1381     2.4023e+05    {'V1'}     200     {'003'}       true           false       {'grating_8ori_2isi_multisess'}    {'6s'}    NaN     false    {0×0 char         }
+
+dataset_now = dataset_date(end, :); % get metadata from final sess of this date
+ 
+arg_mouse = dataset_now.mouse
+
+arg_mouse =
+
+        1381
+
+ 
+arg_date = num2str(dataset_now.date)
+
+arg_date =
+
+    '240226'
+
+ 
+arg_ImgFolder = dataset_now.num{1}
+
+arg_ImgFolder =
+
+    '003'
+
+ 
+area = dataset_now.area{1}
+
+area =
+
+    'V1'
+
+ 
+imouse = ['i', num2str(arg_mouse)];
+ 
+ 
+dir_analysis = ['Z:\All_Staff\home\lan\Analysis\2P\', arg_date, '_', imouse, ...
+    '\', arg_date, '_', imouse, '_runs-', arg_ImgFolder];
+try cd(dir_analysis)
+catch
+%     mkdir(dir_analysis)
+    dir_analysis = strrep(dir_analysis, 'lan', 'lindsey')
+    disp('this dir exist as a shortcut')
+    cd(dir_analysis)
+end
+if ~isempty(dir('*TC*.mat'))
+    disp('timecourse exists, start generating trace_trial_stim.mat')
+else
+    disp('timecourse doesnt exist yet, skip to next set')
+    % continue
+end
+timecourse exists, start generating trace_trial_stim.mat
+dir('*TC*.mat')
+
+240226_i1381_runs-003_1_TCs_cellpose.mat  
+240226_i1381_runs-003_2_TCs_cellpose.mat  
+240226_i1381_runs-003_TCs_cellpose.mat    
+
+
+global frame_rate range_base range_resp ...
+    ncell ntrial trial_len_min ...
+    nisi nori ori_list...
+    id_ad id_noad id_isi2 id_isi3 id_ori
+
+save_flag = 1; % toggle this to save/skip all .mat creation below
+
+try % if data folder contains 2p imaging note.xls
+    stim_protocol = 'PP_randInt_rand_Targ'
+    xls_dir = fullfile(data_fn, imouse, arg_date)
+    cd(xls_dir)
+    xls_file = dir('*.xlsx');
+    data_now_meta = readtable(xls_file.name);
+    sess_id_arr = find(contains(data_now_meta{:,9}, stim_protocol));
+    data_now_meta(sess_id_arr,:)
+    frame_rate = data_now_meta.(5)(sess_id_arr(end));
+catch % if data folder has been transferred to AWS, cannot read 2p imaging note.xls anymore
+    % sess_id_arr = str2num(dataset_now.num{1}(end));
+    sess_id_arr = [2,3];
+    frame_rate = 30;
+    disp('hard coded sess_id_arr and frame_rate when no imaging note exist. TODO: fix sess_id_arr and ImgFolder')
+end
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                          <strong>Notes</strong>            
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>_____________________________</strong>
+
+    {'002_000_000'}     200     0.55     15         30         2      1.08e+05    1328    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'fluo trace vis resp clear'}
+    {'003_000_000'}     200     0.55     15         30         2      1.08e+05    1432    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                   }
+
+stim_protocol
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+xls_dir
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+
+xls_file
+
+xls_file = 
+
+  <a href="matlab:helpPopup struct" style="font-weight:bold">struct</a> with fields:
+
+       name: '2P Imaging Notes Lan.xlsx'
+     folder: '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240226'
+       date: '26-Feb-2024 14:35:12'
+      bytes: 50149
+      isdir: 0
+    datenum: 7.3931e+05
+
+data_now_meta
+
+data_now_meta =
+
+  3×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                                <strong>Notes</strong>                   
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>__________________________________________</strong>
+
+    {'001_000_000'}     200     0.55     15        15.5        1          4050    1316    {'9pos ret'                                                   }    {'select pos [15,-15], mid lower cluster'}
+    {'002_000_000'}     200     0.55     15          30        2      1.08e+05    1328    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'fluo trace vis resp clear'             }
+    {'003_000_000'}     200     0.55     15          30        2      1.08e+05    1432    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {0×0 char                                }
+
+sess_id_arr
+
+sess_id_arr =
+
+     2
+     3
+
+frame_rate
+
+frame_rate =
+
+    30
+
+whos frame_ad
+whos frame_rate
+  Name            Size            Bytes  Class     Attributes
+
+  frame_rate      1x1                 8  double    global    
+
+isess = 1
+
+isess =
+
+     1
+
+length(sess_id_arr)
+
+ans =
+
+     2
+
+    dir_sess = [dir_analysis(1:end-1), num2str(sess_id_arr(isess))];
+ 
+    cd(dir_sess) % go within analysis folder of each sess, where tc_part is stored
+ 
+    tc_filename_base = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess))];
+ 
+    tc_part1 = [tc_filename_base, '_1_TCs_cellpose.mat'];
+ 
+    tc_part2 = [tc_filename_base, '_2_TCs_cellpose.mat'];
+ 
+    tc_full = [tc_filename_base, '_TCs_cellpose.mat'];
+ 
+tc_full
+
+tc_full =
+
+    '240226_i1381_runs-002_TCs_cellpose.mat'
+
+tc_part2
+
+tc_part2 =
+
+    '240226_i1381_runs-002_2_TCs_cellpose.mat'
+
+ls
+
+.                                              
+..                                             
+240226_i1381_runs-002_1_TCs_cellpose.mat       
+240226_i1381_runs-002_2_TCs_cellpose.mat       
+240226_i1381_runs-002_FOV_avg.pdf              
+240226_i1381_runs-002_FOV_byFrame.pdf          
+240226_i1381_runs-002_TCs_cellpose.mat         
+240226_i1381_runs-002_data_avg.mat             
+240226_i1381_runs-002_input.mat                
+240226_i1381_runs-002_reg_shifts.mat           
+240226_i1381_runs-002_select_register_ref.pdf  
+cellpose_stim_resp_gauss.tif                   
+data_dfof.mat                                  
+find_ca_latency.jpg                            
+find_ca_latency.mat                            
+find_ca_latency_ca_window.jpg                  
+find_ca_latency_zoomin.jpg                     
+
+
+exist(tc_full, 'file')
+
+ans =
+
+     2
+
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240226_i1381\240226_i1381_runs-002\240226_i1381_runs-002_TCs_cellpose.mat',1)
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240226_i1381\240226_i1381_runs-002\240226_i1381_runs-002_TCs_cellpose.mat',1)
+uiimport('Z:\All_Staff\home\lan\Analysis\2P\240226_i1381\240226_i1381_runs-003\240226_i1381_runs-003_TCs_cellpose.mat',1)
+df_flat = [];
+ 
+nframe_seq = [];
+ 
+i = 1
+
+i =
+
+     1
+
+    ImgFolder = dataset_date.num{i};
+ 
+    fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
+{Error: This statement is incomplete.
+} 
+    fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
+        [arg_date, '_', imouse, '_runs-', ImgFolder, '_input.mat']);
+fName
+
+fName =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Analysis\2P\240226_i1381\240226_i1381_runs-002\240226_i1381_runs-002_input.mat'
+
+    temp = load(fName); % load behavior data "input", which clashes with built-in function
+ 
+temp
+ 
+try
+        input_behav_seq(i) = temp.input; 
+        frame_rate = temp.input.frameRateHz;
+    catch
+        input_behav_seq(i) = temp.behav_input; 
+        frame_rate = temp.behav_input.frameRateHz;
+    end
+input_behav_seq
+ 
+for i = 1:length(sess_id_arr)
+    ImgFolder = dataset_date.num{i};
+    fName = fullfile(tc_fn, [arg_date, '_', imouse], [arg_date, '_', imouse, '_runs-', ImgFolder], ...
+        [arg_date, '_', imouse, '_runs-', ImgFolder, '_input.mat']);
+    temp = load(fName); % load behavior data "input", which clashes with built-in function
+    try
+        input_behav_seq(i) = temp.input; 
+        frame_rate = temp.input.frameRateHz;
+    catch
+        input_behav_seq(i) = temp.behav_input; 
+        frame_rate = temp.behav_input.frameRateHz;
+    end
+    clear temp
+
+    cd(fullfile(tc_fn, [arg_date '_' imouse]))
+    cd([arg_date '_' imouse '_runs-', ImgFolder])
+    segment_suffix = ''; % default suffix is empty -> using manual segment
+    try
+        tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_addfake.mat']); % try manual TC first
+    catch
+        tc = load([arg_date '_' imouse '_runs-', ImgFolder,'_TCs_cellpose.mat']); % if not, use cellpose TC
+        segment_suffix = '_cellpose'; % add cellpose suffix for mat_inter subdir, if segmented by cellpose
+    end
+    df_flat = [df_flat; tc.npSub_tc];
+
+    [nframe, ncell] = size(tc.npSub_tc);
+    nframe_seq = [nframe_seq, nframe];
+end
+nframe, ncell, size(df_flat)
+
+nframe =
+
+      108000
+
+
+ncell =
+
+    79
+
+
+ans =
+
+      216000          79
+
+input_behav_seq
+ 
+
+disp('loaded cellpose timecourse & visual input')
+loaded cellpose timecourse & visual input
+try
+    assert(sum(df_flat(nframe,:) < 65535) == ncell)
+catch
+    plot(df_flat(nframe,:)) 
+    disp('some cell at the final frame has fluo value 65535 -> corrupted')
+end
+
+areamousedate = [area '_' imouse '_' arg_date];
+mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
+result_folder = [mapped_path, '\mat_inter\', areamousedate, segment_suffix];
+if ~exist(result_folder); mkdir(result_folder); end
+cd(result_folder)
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   128
+   129
+   130
+   131
+   133
+
+
+isi_thresh =
+
+    10
+
