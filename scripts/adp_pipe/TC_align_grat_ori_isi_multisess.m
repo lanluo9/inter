@@ -1,12 +1,13 @@
 %% init
-% this script takes in a MULTI session timecourse from one day, and aligns it to trial start and stimulus id
+% this script takes in a MULTI session timecourse from one day, 
+    % and aligns it to trial start and stimulus id
 % output: trace_trial_stim.mat 
 % code is inherited from adp_mag_pipeline_mix50.m and adp_mag_pipeline_grating.m
 
 close all; clc; 
 clear; clear global
 
-root_path = 'C:\Users\GlickfeldLab\Documents\test\inter'; %'C:\Users\ll357\Documents\inter';
+root_path = 'C:\Users\GlickfeldLab\Documents\test\inter';
 fn_base = '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff';
 ll_fn = fullfile(fn_base, 'home\lan'); 
 data_fn = fullfile(ll_fn, 'Data\2P_images');
@@ -17,17 +18,18 @@ dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xl
 dataset_meta = readtable(dir_meta);
 
 dataset_table = dataset_meta( ...
-    logical(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess') ...
+    logical(strcmp(dataset_meta.paradigm, 'grating_8ori_2isi_multisess') ...
     ), :);
-dataset_table = dataset_table(dataset_table.date == 240225, :);
+% dataset_table = dataset_table(dataset_table.date == 240225, :);
 
 ndate = length(unique(dataset_table.date));
-date_arr = unique(dataset_table.date);
+date_arr = unique(dataset_table.date)
 
 %% find TC.mat for each date
 
 for idate = 1:ndate
 
+idate = 1
 dataset_date = dataset_table(dataset_table.date == date_arr(idate), :);
 clear global
 close all
@@ -54,7 +56,7 @@ if ~isempty(dir('*TC*.mat'))
     disp('timecourse exists, start generating trace_trial_stim.mat')
 else
     disp('timecourse doesnt exist yet, skip to next set')
-    continue
+    % continue
 end
 
 %%
@@ -83,6 +85,7 @@ catch % if data folder has been transferred to AWS, cannot read 2p imaging note.
 end
 
 
+%%
 % % check if time course is cut into n parts to avoid out of memory, 
 % % if so, concat within sess, save to sess subdir
 
@@ -94,22 +97,26 @@ for isess = 1 : length(sess_id_arr)
     tc_part1 = [tc_filename_base, '_1_TCs_cellpose.mat'];
     tc_part2 = [tc_filename_base, '_2_TCs_cellpose.mat'];
     tc_full = [tc_filename_base, '_TCs_cellpose.mat'];
-    if exist(tc_part2, 'file') % confirm tc was cut into >= 2 parts within session
-        tc_concat = [];
-        tc_part_file_list = dir(fullfile(dir_sess, '**\*_TCs_cellpose.mat'));
-        
-        for ipart = 1 : size(tc_part_file_list, 1) % nrow of tc_part_file_list = nparts in session
-            tc_part = load(tc_part_file_list(ipart).name, 'npSub_tc');
-            tc_concat = [tc_concat; tc_part.npSub_tc]; % concat on row axis (frame)
-        end
-    elseif exist(tc_part1, 'file') % if part2 doenst exist but part1 exist, then part1 is full TC
-        movefile(tc_part1, tc_full); % rename part1 to full TC
-    end
+    
+    if exist(tc_full, 'file')
+        disp('tc full, no need to concat between parts') % prevent repetitive concat using e.g. part1 + part2 + full
+    else
+        if exist(tc_part2, 'file') % confirm tc was cut into >= 2 parts within session
+            tc_concat = [];
+            tc_part_file_list = dir(fullfile(dir_sess, '**\*_TCs_cellpose.mat'));
+            for ipart = 1 : size(tc_part_file_list, 1) % nrow of tc_part_file_list = nparts in session
+                tc_part = load(tc_part_file_list(ipart).name, 'npSub_tc');
+                tc_concat = [tc_concat; tc_part.npSub_tc]; % concat on row axis (frame)
+            end
+            tc_sess = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess)),'_TCs_cellpose.mat'];
+            npSub_tc = tc_concat;
+            save(tc_sess, "npSub_tc") % save full tc within sess (concat across parts)
+            clear npSub_tc
 
-    tc_sess = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess)),'_TCs_cellpose.mat'];
-    npSub_tc = tc_concat;
-    save(tc_sess, "npSub_tc") % save full tc within sess (concat across parts)
-    clear npSub_tc
+        elseif exist(tc_part1, 'file') % if part2 doenst exist but part1 exist, then part1 is full TC
+            movefile(tc_part1, tc_full); % rename part1 to full TC
+        end
+    end
 end
 
 
@@ -277,6 +284,24 @@ if save_flag; save trace_trial_stim.mat trace_by_trial ...
         stim_ori isi_nframe adapter_contrast; end
 close all
 
+
+% %% debug
+% 
+% t = squeeze(nanmean(squeeze(tc_align_ad(:,:,:)), 1)); 
+% t_ad = squeeze(nanmean(t(:,:), 1)); 
+% % t = squeeze(nanmean(squeeze(dfof_align_tg(:,:,:)), 1)); 
+% % t_tg = squeeze(nanmean(t(:,:), 1)); 
+% 
+% figure
+% range = trial_len_min; 
+% plot(t_ad(1:range), 'r'); hold on; 
+% % plot(t_tg(1:range), 'b'); 
+% % xline(endpoint - 100);
+% grid on; grid minor; 
+% set(gcf, 'Position', get(0, 'Screensize')); 
+% legend('ad align', 'targ align')
+% if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
+
 %% set resp window
 % find base window & resp window
 
@@ -298,6 +323,8 @@ if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
 % t_tg = [t_tg(100:end), t_tg(1:100)];
 % endpoint = length(t_ad);
 
+
+% % TODO: debug, why 200 frames seem to contain 2 trials
 figure
 range = trial_len_min; 
 plot(t_ad(1:range), 'r'); hold on; 

@@ -110478,3 +110478,97 @@ ans =
 
     20412000
 
+open TC_align_grat_ori_isi_multisess.m
+date_arr
+
+date_arr =
+
+      240225
+
+
+arg_mouse =
+
+        1392
+
+
+arg_date =
+
+    '240225'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1392\240225'
+
+hard coded. TODO: fix sess_id_arr and ImgFolder
+
+nframe =
+
+      162000
+
+
+ncell =
+
+   131
+
+
+ans =
+
+      324000         131
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+  157.5000
+
+
+nrep_stim =
+
+   773
+   783
+
+
+isi_thresh =
+
+    10
+
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    10
+
+
+range_base =
+
+     1     2     3     4
+
+
+range_resp =
+
+     8     9    10    11
+
