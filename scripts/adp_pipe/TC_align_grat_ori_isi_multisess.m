@@ -19,8 +19,7 @@ dataset_meta = readtable(dir_meta);
 dataset_table = dataset_meta( ...
     logical(strcmp(dataset_meta.paradigm, 'grating_2ori_multisess') ...
     ), :);
-
-% dataset_table = dataset_table(~contains(dataset_table.note, 'bad'), :); % exclude bad
+dataset_table = dataset_table(dataset_table.date == 240225, :);
 
 ndate = length(unique(dataset_table.date));
 date_arr = unique(dataset_table.date);
@@ -29,7 +28,6 @@ date_arr = unique(dataset_table.date);
 
 for idate = 1:ndate
 
-idate = 2
 dataset_date = dataset_table(dataset_table.date == date_arr(idate), :);
 clear global
 close all
@@ -81,7 +79,7 @@ catch % if data folder has been transferred to AWS, cannot read 2p imaging note.
     % sess_id_arr = str2num(dataset_now.num{1}(end));
     sess_id_arr = [2,3];
     frame_rate = 30;
-    disp('hard coded. TODO: fix sess_id_arr and ImgFolder')
+    disp('hard coded sess_id_arr and frame_rate when no imaging note exist. TODO: fix sess_id_arr and ImgFolder')
 end
 
 
@@ -91,10 +89,12 @@ end
 for isess = 1 : length(sess_id_arr)
     dir_sess = [dir_analysis(1:end-1), num2str(sess_id_arr(isess))];
     cd(dir_sess) % go within analysis folder of each sess, where tc_part is stored
-
-    tc_part1 = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess)),'_1_TCs_cellpose.mat'];
-    if exist(tc_part1) % confirm tc was cut into parts within session
     
+    tc_filename_base = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess))];
+    tc_part1 = [tc_filename_base, '_1_TCs_cellpose.mat'];
+    tc_part2 = [tc_filename_base, '_2_TCs_cellpose.mat'];
+    tc_full = [tc_filename_base, '_TCs_cellpose.mat'];
+    if exist(tc_part2, 'file') % confirm tc was cut into >= 2 parts within session
         tc_concat = [];
         tc_part_file_list = dir(fullfile(dir_sess, '**\*_TCs_cellpose.mat'));
         
@@ -102,6 +102,8 @@ for isess = 1 : length(sess_id_arr)
             tc_part = load(tc_part_file_list(ipart).name, 'npSub_tc');
             tc_concat = [tc_concat; tc_part.npSub_tc]; % concat on row axis (frame)
         end
+    elseif exist(tc_part1, 'file') % if part2 doenst exist but part1 exist, then part1 is full TC
+        movefile(tc_part1, tc_full); % rename part1 to full TC
     end
 
     tc_sess = [arg_date '_' imouse '_runs-00', num2str(sess_id_arr(isess)),'_TCs_cellpose.mat'];
