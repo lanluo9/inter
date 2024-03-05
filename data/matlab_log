@@ -112412,3 +112412,13 @@ isi_thresh =
 
     10
 
+argmax_arr = [];
+for itrial = 1 : 100
+    t = squeeze(nanmean(squeeze(tc_align_ad(:, :, :)), 1)); % avg across ncell
+    t_ad = t(itrial, :);
+    [~, argmax] = max(t_ad);
+    argmax_arr = [argmax_arr; argmax];
+    % plot(t_ad(1:range)); hold on; 
+end
+argmax_arr
+ 
