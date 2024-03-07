@@ -20,11 +20,19 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
+% % append a date for multisess 8ori 2isi
+dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
+dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
+dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
+dataset_table = [dataset_table; dataset_table_extend];
+
 select_area = 'V1';
 % select_area = 'LM';
 % select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
+
+%%
 
 sum(strcmp(dataset_table.area, 'V1'))
 sum(strcmp(dataset_table.area, 'LM'))
@@ -40,7 +48,11 @@ for iset = 1:nset
     area = dataset_now.area{1};
     
     imouse = ['i', num2str(arg_mouse)];
-    area_mouse_date_sess = [area '_' imouse '_' arg_date '_' arg_ImgFolder];
+    if length(arg_ImgFolder) == 0
+        area_mouse_date_sess = [area '_' imouse '_' arg_date];
+    else
+        area_mouse_date_sess = [area '_' imouse '_' arg_date '_' arg_ImgFolder];
+    end
     mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
     try
         segment_suffix = '_cellpose';
