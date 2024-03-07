@@ -112422,3 +112422,847 @@ for itrial = 1 : 100
 end
 argmax_arr
  
+uiopen('C:\Users\ll357\Documents\tmp\tmp_resp.m',1)
+uiopen('C:\Users\ll357\Documents\tmp\tmp_script.m',1)
+dataset_table
+
+dataset_table =
+
+  2×12 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>               <strong>paradigm</strong>                <strong>gcamp</strong>     <strong>time</strong>     <strong>AWS</strong>        <strong>note</strong>   
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>_______________________________</strong>    <strong>______</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>__________</strong>
+
+    1381     2.4023e+05    {'V1'}     150     {'002'}       true           false       {'grating_8ori_2isi_multisess'}    {'6s'}    NaN     false    {0×0 char}
+    1381     2.4023e+05    {'V1'}     150     {'003'}       true           false       {'grating_8ori_2isi_multisess'}    {'6s'}    NaN     false    {0×0 char}
+
+dataset_table
+ 
+dataset_table = dataset_table(end, :)
+
+dataset_table =
+
+  1×12 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>               <strong>paradigm</strong>                <strong>gcamp</strong>     <strong>time</strong>     <strong>AWS</strong>        <strong>note</strong>   
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>_______________________________</strong>    <strong>______</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>__________</strong>
+
+    1381     2.4023e+05    {'V1'}     150     {'003'}       true           false       {'grating_8ori_2isi_multisess'}    {'6s'}    NaN     false    {0×0 char}
+
+ 
+nset = size(dataset_table, 1);
+ 
+nset
+
+nset =
+
+     1
+
+iset = 1
+
+iset =
+
+     1
+
+
+iset =
+
+     1
+
+
+nset =
+
+     1
+
+df_flat
+ 
+
+date_arr =
+
+      240229
+
+idate = 1
+
+idate =
+
+     1
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240229'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240229'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                             <strong>Notes</strong>                
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>____________________________________</strong>
+
+    {'002_000_000'}     150     0.57     15         30         2      1.08e+05    1355    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'some flinching? can see vis resp'}
+    {'003_000_000'}     150     0.57     15         30         2      1.08e+05    1459    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'vis resp unclear'                }
+
+tc full, no need to concat between parts
+tc full, no need to concat between parts
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('tabular/dotReference')" style="font-weight:bold"> . </a>
+Index exceeds the number of array elements. Index must not exceed 1.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('tmp_TC_align_grat_ori_isi_multisess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\tmp_TC_align_grat_ori_isi_multisess.m', 129)" style="font-weight:bold">tmp_TC_align_grat_ori_isi_multisess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\tmp_TC_align_grat_ori_isi_multisess.m',129,0)">line 129</a>)
+    ImgFolder = dataset_date.num{i};
+
+
+date_arr =
+
+      240229
+
+idate = 1
+
+idate =
+
+     1
+
+
+arg_mouse =
+
+        1381
+
+
+arg_date =
+
+    '240229'
+
+
+arg_ImgFolder =
+
+    '003'
+
+
+area =
+
+    'V1'
+
+timecourse exists, start generating trace_trial_stim.mat
+
+stim_protocol =
+
+    'PP_randInt_rand_Targ'
+
+
+xls_dir =
+
+    '\\duhs-user-nc1.dhe.duke.edu\dusom_glickfeldlab\All_Staff\home\lan\Data\2P_images\i1381\240229'
+
+[Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'VariableNamingRule' to 'preserve' to use the original column headers as
+table variable names.] 
+
+ans =
+
+  2×10 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+          <strong>Run</strong>          <strong>Depth</strong>    <strong>PMT</strong>     <strong>Power</strong>    <strong>FrameRate</strong>    <strong>Zoom</strong>     <strong>Frames</strong>     <strong>Time</strong>                              <strong>StimulusSet</strong>                                             <strong>Notes</strong>                
+    <strong>_______________</strong>    <strong>_____</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>_________</strong>    <strong>____</strong>    <strong>________</strong>    <strong>____</strong>    <strong>_______________________________________________________________</strong>    <strong>____________________________________</strong>
+
+    {'002_000_000'}     150     0.57     15         30         2      1.08e+05    1355    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'some flinching? can see vis resp'}
+    {'003_000_000'}     150     0.57     15         30         2      1.08e+05    1459    {'PP_randInt_rand_Targ_exclude_750 in flashing stim 2p frames'}    {'vis resp unclear'                }
+
+tc full, no need to concat between parts
+tc full, no need to concat between parts
+
+nframe =
+
+      108000
+
+
+ncell =
+
+   121
+
+
+ans =
+
+      216000         121
+
+loaded cellpose timecourse & visual input
+
+contrast_list =
+
+     0
+     1
+
+
+ori_list =
+
+         0
+   22.5000
+   45.0000
+   67.5000
+   90.0000
+  112.5000
+  135.0000
+  157.5000
+
+
+nrep_stim =
+
+   126
+   128
+   130
+   131
+   133
+
+
+isi_thresh =
+
+    10
+
+edit tc_align_ad
+tc_align_ad
+ 
+assume: first peak comes before n frames. second peak comes after
+
+peak_id =
+
+    12
+
+
+range_base =
+
+     1     2     3     4
+
+
+range_resp =
+
+    10    11    12    13
+
+ppResp
+ 
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('horzcat')" style="font-weight:bold">horzcat</a>
+Dimensions of arrays being concatenated are not consistent.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('tmp_resp', 'C:\Users\ll357\Documents\tmp\tmp_resp.m', 48)" style="font-weight:bold">tmp_resp</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\tmp\tmp_resp.m',48,0)">line 48</a>)
+            trial_id_used = [trial_id(1:step_size:end), ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('tmp_TC_align_grat_ori_isi_multisess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\tmp_TC_align_grat_ori_isi_multisess.m', 432)" style="font-weight:bold">tmp_TC_align_grat_ori_isi_multisess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\tmp_TC_align_grat_ori_isi_multisess.m',432,0)">line 432</a>)
+[ppResp] = tmp_resp(dfof_align_tg, area);
+
+dfof_align_tg
+ 
+edit tmp_resp
+opentoline('C:\Users\ll357\Documents\tmp\tmp_resp.m',48,0)
+trial_id(1:step_size:end)
+
+ans =
+
+          26
+          60
+          80
+          92
+         138
+         168
+         198
+         243
+         264
+         278
+         333
+         378
+         410
+         462
+         504
+         514
+         575
+         591
+         635
+         649
+         686
+         706
+         758
+         783
+         802
+         864
+         877
+         922
+         944
+         981
+        1017
+
+trial_id_mix(1:step_size_mix:end)
+
+ans =
+
+          11
+          28
+          58
+          73
+          82
+         111
+         122
+         169
+         217
+         231
+         239
+         261
+         275
+         300
+         342
+         363
+         396
+         400
+         436
+         454
+         467
+         491
+         497
+         524
+         550
+         571
+         587
+         612
+         622
+         667
+         681
+         699
+         713
+         740
+         779
+         800
+         821
+         857
+         869
+         903
+         918
+         934
+         950
+         980
+        1009
+        1029
+        1034
+
+trial_id_used = [trial_id(1:step_size:end), ...
+                            trial_id_mix(1:step_size_mix:end)];
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('horzcat')" style="font-weight:bold">horzcat</a>
+Dimensions of arrays being concatenated are not consistent.
+} 
+size(trial_id(1:step_size:end))
+
+ans =
+
+    31     1
+
+size(trial_id_mix(1:step_size_mix:end))
+
+ans =
+
+    47     1
+
+step_size
+
+step_size =
+
+     3
+
+step_size_mix
+
+step_size_mix =
+
+     2
+
+trial_id_mix
+ 
+ trial_id_used = [trial_id(1:step_size:end); ...
+                            trial_id_mix(1:step_size_mix:end)];
+if system_dependent('IsDebugMode')==1, dbquit all; end
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('horzcat')" style="font-weight:bold">horzcat</a>
+Dimensions of arrays being concatenated are not consistent.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('tmp_resp', 'C:\Users\ll357\Documents\tmp\tmp_resp.m', 98)" style="font-weight:bold">tmp_resp</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\tmp\tmp_resp.m',98,0)">line 98</a>)
+            trial_id_used = [trial_id(1:step_size:end), ...
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('tmp_TC_align_grat_ori_isi_multisess', 'C:\Users\ll357\Documents\inter\scripts\adp_pipe\tmp_TC_align_grat_ori_isi_multisess.m', 432)" style="font-weight:bold">tmp_TC_align_grat_ori_isi_multisess</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\adp_pipe\tmp_TC_align_grat_ori_isi_multisess.m',432,0)">line 432</a>)
+[ppResp] = tmp_resp(dfof_align_tg, area);
+
+opentoline('C:\Users\ll357\Documents\tmp\tmp_resp.m',98,0)
+opentoline('C:\Users\ll357\Documents\tmp\tmp_resp.m',98,0)
+ppResp
+ 
+fit_param
+ 
+ori_pref
+ 
+tuning_curve_cell_isi
+ 
+R_sq
+ 
+ori_fit
+ 
+edit well_fit_cell_criteria
+start bootstrap runs
+100
+200
+300
+400
+500
+600
+700
+800
+900
+1000
+theta_90
+ 
+vis_bool
+ 
+theta_90
+ 
+well_max
+ 
+ori_fit(:, ~vis_bool) = NaN;
+R_sq(~vis_bool) = NaN;
+theta_90(~vis_bool') = NaN;
+well_max(~vis_bool') = NaN;
+ori_fit
+ 
+R_sq
+ 
+theta_90
+ 
+well_max
+ 
+save_flag = 1;
+ 
+
+if save_flag; save pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat ...
+    ppResp ori_fit R_sq theta_90 well_max; end
+uiopen('C:\Users\ll357\Documents\inter\scripts\misc\borrowed\jeff beck jin 2019 decoder code\z_make_fig6f_cleaned.m',1)
+uiopen('C:\Users\ll357\Documents\tmp\tmp_script_multisess.m',1)
+uiimport('Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i1381_240229_cellpose\pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat',1)
+
+stim_type =
+
+    'grating'
+
+dataset_table_extend
+ 
+dataset_meta
+ 
+dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
+ 
+dataset_table_extend
+ 
+dataset_table_extend
+ 
+dataset_table_extend = dataset_table_extend(1, :)
+
+dataset_table_extend =
+
+  1×12 <a href="matlab:helpPopup table" style="font-weight:bold">table</a>
+
+    <strong>mouse</strong>       <strong>date</strong>        <strong>area</strong>     <strong>depth</strong>      <strong>num</strong>      <strong>cellpose_seg</strong>    <strong>manual_seg</strong>               <strong>paradigm</strong>                <strong>gcamp</strong>     <strong>time</strong>     <strong>AWS</strong>        <strong>note</strong>   
+    <strong>_____</strong>    <strong>__________</strong>    <strong>______</strong>    <strong>_____</strong>    <strong>_______</strong>    <strong>____________</strong>    <strong>__________</strong>    <strong>_______________________________</strong>    <strong>______</strong>    <strong>____</strong>    <strong>_____</strong>    <strong>__________</strong>
+
+    1381     2.4023e+05    {'V1'}     150     {'002'}       true           false       {'grating_8ori_2isi_multisess'}    {'6s'}    NaN     false    {0×0 char}
+
+ 
+dataset_table_extend.num{1}
+
+ans =
+
+    '002'
+
+dataset_table_extend.num{1} = '';
+ 
+dataset_table_extend
+ 
+dataset_table_extend.num{1}
+
+ans =
+
+  0×0 empty <a href="matlab:helpPopup char" style="font-weight:bold">char</a> array
+
+
+stim_type =
+
+    'grating'
+
+dataset_table
+ 
+dataset_table
+ 
+dataset_table = [dataset_table; dataset_table_extend];
+ 
+
+select_area = 'V1';
+% select_area = 'LM';
+% select_area = 'LI';
+area_bool = logical(strcmp(dataset_table.area, select_area));
+dataset_table = dataset_table(area_bool, :);
+
+stim_type =
+
+    'grating'
+
+sum(strcmp(dataset_table.area, 'V1'))
+
+ans =
+
+     7
+
+ 
+nset = size(dataset_table, 1);
+ 
+filename = cell(1, nset);
+ 
+filename
+
+filename =
+
+  1×7 <a href="matlab:helpPopup cell" style="font-weight:bold">cell</a> array
+
+  Columns 1 through 4
+
+    {0×0 double}    {0×0 double}    {0×0 double}    {0×0 double}
+
+  Columns 5 through 7
+
+    {0×0 double}    {0×0 double}    {0×0 double}
+
+nset
+
+nset =
+
+     7
+
+
+ans =
+
+     7
+
+
+ans =
+
+     0
+
+
+ans =
+
+     0
+
+Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cd')" style="font-weight:bold">cd</a>
+Unable to change current folder to
+'Z:\All_Staff\home\lan\Data\2P_images\mat_inter\V1_i1381_240229_'
+(Name is
+nonexistent or not a folder).
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('z_make_fig6f_cleaned', 'C:\Users\ll357\Documents\inter\scripts\misc\borrowed\jeff beck jin 2019 decoder code\z_make_fig6f_cleaned.m', 60)" style="font-weight:bold">z_make_fig6f_cleaned</a> (<a href="matlab: opentoline('C:\Users\ll357\Documents\inter\scripts\misc\borrowed\jeff beck jin 2019 decoder code\z_make_fig6f_cleaned.m',60,0)">line 60</a>)
+        cd(result_folder)
+
+len(arg_ImgFolder)
+{Unrecognized function or variable 'len'.
+} 
+length(arg_ImgFolder)
+
+ans =
+
+     0
+
+
+ans =
+
+     7
+
+
+ans =
+
+     0
+
+
+ans =
+
+     0
+
+
+stim_type =
+
+    'grating'
+
+sum(strcmp(dataset_table.area, 'V1'))
+
+ans =
+
+     7
+
+sum(strcmp(dataset_table.area, 'LM'))
+
+ans =
+
+     0
+
+sum(strcmp(dataset_table.area, 'LI'))
+
+ans =
+
+     0
+
+
+nset = size(dataset_table, 1);
+filename = cell(1, nset);
+for iset = 1:nset
+    dataset_now = dataset_table(iset,:);
+    arg_mouse = dataset_now.mouse;
+    arg_date = num2str(dataset_now.date);
+    arg_ImgFolder = dataset_now.num{1};
+    area = dataset_now.area{1};
+    
+    imouse = ['i', num2str(arg_mouse)];
+    if length(arg_ImgFolder) == 0
+        area_mouse_date_sess = [area '_' imouse '_' arg_date];
+    else
+        area_mouse_date_sess = [area '_' imouse '_' arg_date '_' arg_ImgFolder];
+    end
+    mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
+    try
+        segment_suffix = '_cellpose';
+        result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
+        cd(result_folder)
+    catch
+        segment_suffix = '';
+        result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
+        cd(result_folder)
+    end
+    % jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor.mat');
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
+    filename{1, iset} = jeff_file;
+end
+filename
+ 
+filename
+
+filename =
+
+  1×7 <a href="matlab:helpPopup cell" style="font-weight:bold">cell</a> array
+
+  Columns 1 through 3
+
+    {'Z:\All_Staff\ho…'}    {'Z:\All_Staff\ho…'}    {'Z:\All_Staff\ho…'}
+
+  Columns 4 through 6
+
+    {'Z:\All_Staff\ho…'}    {'Z:\All_Staff\ho…'}    {'Z:\All_Staff\ho…'}
+
+  Column 7
+
+    {'Z:\All_Staff\ho…'}
+
+filename
+ 
+Dataset 1 has 16 good units
+Dataset 2 has 41 good units
+Dataset 3 has 52 good units
+Dataset 4 has 36 good units
+Dataset 5 has 21 good units
+Dataset 6 has 33 good units
+Dataset 7 has 54 good units
+kept 7 out of 7 in V1
+Dataset 1 out of 7 has 16 good units
+Warning Lower Bound Decreasing (DL/L = -6.6941e-13) at iteration 46
+Warning Lower Bound Decreasing (DL/L = -1.3461e-13) at iteration 46
+Warning Lower Bound Decreasing (DL/L = -4.6616e-13) at iteration 43
+Warning Lower Bound Decreasing (DL/L = -3.2985e-12) at iteration 45
+Warning Lower Bound Decreasing (DL/L = -3.4517e-12) at iteration 46
+Warning Lower Bound Decreasing (DL/L = -6.2298e-13) at iteration 44
+Warning Lower Bound Decreasing (DL/L = -1.8723e-12) at iteration 47
+[Warning: X is ill conditioned, or the model is overparameterized, and
+some coefficients are not identifiable.  You should use caution
+in making predictions.] 
+Dataset 2 out of 7 has 41 good units
+[Warning: X is ill conditioned, or the model is overparameterized, and
+some coefficients are not identifiable.  You should use caution
+in making predictions.] 
+Dataset 3 out of 7 has 52 good units
+[Warning: X is ill conditioned, or the model is overparameterized, and
+some coefficients are not identifiable.  You should use caution
+in making predictions.] 
+Dataset 4 out of 7 has 36 good units
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: Iteration limit reached.] 
+[Warning: X is ill conditioned, or the model is overparameterized, and
+some coefficients are not identifiable.  You should use caution
+in making predictions.] 
+Dataset 5 out of 7 has 21 good units
+[Warning: X is ill conditioned, or the model is overparameterized, and
+some coefficients are not identifiable.  You should use caution
+in making predictions.] 
+Dataset 6 out of 7 has 33 good units
+[Warning: X is ill conditioned, or the model is overparameterized, and
+some coefficients are not identifiable.  You should use caution
+in making predictions.] 
+Dataset 7 out of 7 has 54 good units
+[Warning: X is ill conditioned, or the model is overparameterized, and
+some coefficients are not identifiable.  You should use caution
+in making predictions.] 
+
+p =
+
+    0.0218
+

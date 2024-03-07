@@ -344,6 +344,6 @@ axis([-5, 95, 0.4, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_V1_visp_6k_wellmax_neighbor_ver6.mat tmp_250 tmp_750
+% save pop_vec_decoder_V1_visp_6k_wellmax_neighbor_add_multisess.mat tmp_250 tmp_750
 
 %%
