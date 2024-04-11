@@ -20,15 +20,15 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-% % append a date for multisess 8ori 2isi
-dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
-dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
-dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
-dataset_table = [dataset_table; dataset_table_extend];
+% % % append a date for multisess 8ori 2isi
+% dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
+% dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
+% dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
+% dataset_table = [dataset_table; dataset_table_extend];
 
-select_area = 'V1';
+% select_area = 'V1';
 % select_area = 'LM';
-% select_area = 'LI';
+select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -63,8 +63,7 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    % jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor.mat');
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_wellmax_control_ncell_visp.mat');
     filename{1, iset} = jeff_file;
 end
 
@@ -295,6 +294,7 @@ xa = [0, 22.5, 45, 67.5, 90];
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
 
+
 if decoder_mode == 1
     tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
     tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
@@ -309,9 +309,9 @@ if decoder_mode == 1
     % tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
     % tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
-elseif decoder_mode == 0
-    tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
-    tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
+% elseif decoder_mode == 0
+%     tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
+%     tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
 end
 
 % [~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
@@ -319,7 +319,7 @@ end
 
 %% Plotting
 
-% tmp = load('pop_vec_decoder_V1_visp_6k_wellmax_neighbor_ver5.mat');
+% tmp = load('pop_vec_decoder_V1_neighbor_wellmax_control_ncell.mat');
 % tmp_250 = tmp.tmp_250;
 % tmp_750 = tmp.tmp_750;
 
@@ -340,10 +340,11 @@ errorbar(xa+1, nanmean(tmp_750), ...
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
-axis([-5, 95, 0.4, 1])
+axis([-5, 95, 0.3, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_V1_visp_6k_wellmax_neighbor_add_multisess.mat tmp_250 tmp_750
+% save pop_vec_decoder_V1_neighbor_wellmax_control_ncell.mat tmp_250 tmp_750
+% save pop_vec_decoder_LM_sorted_neighbor_wellmax_control_ncell.mat tmp_250 tmp_750
 
 %%
