@@ -64,6 +64,9 @@ for iset = 1:nset
         cd(result_folder)
     end
     jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_wellmax_control_ncell_visp.mat');
+    if strcmp(select_area, 'LM')
+        jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
+    end
     filename{1, iset} = jeff_file;
 end
 
@@ -105,7 +108,7 @@ for n = 1:length(filename)
     idxn{n} = find(well_max > 0);
     
     disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units']);
-    if length(idxn{n}) <= ncell_good_thresh
+    if (length(idxn{n}) <= ncell_good_thresh) || (length(idxn{n}) > 20)
         exclude_sess = [exclude_sess, n];
     end
     sess_kept = [sess_kept, ~ismember(n, exclude_sess)];
@@ -344,7 +347,6 @@ axis([-5, 95, 0.3, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_V1_neighbor_wellmax_control_ncell.mat tmp_250 tmp_750
-% save pop_vec_decoder_LM_sorted_neighbor_wellmax_control_ncell.mat tmp_250 tmp_750
+% save pop_vec_decoder_LI_neighbor_wellmax_control_ncell_visp.mat tmp_250 tmp_750 AUROC
 
 %%
