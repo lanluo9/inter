@@ -27,8 +27,8 @@ dataset_table = dataset_table(seg_bool, :);
 % dataset_table = [dataset_table; dataset_table_extend];
 
 % select_area = 'V1';
-select_area = 'LM';
-% select_area = 'LI';
+% select_area = 'LM';
+select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -121,7 +121,7 @@ disp(['kept ', num2str(sum(sess_kept)), ' out of ', num2str(length(sess_kept)), 
 %%
 
 % Loop through files
-for n = 1 : length(filename)
+for n = 1:length(filename)
     load([filename{n}]);
     
     [~, loc] = max(ori_fit);
@@ -351,6 +351,6 @@ axis([-5, 95, 0.3, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_LM_neighbor_wellmax_control_ncell_vecnorm_visp.mat tmp_250 tmp_750 AUROC
+% save pop_vec_decoder_LI_neighbor_wellmax_control_ncell_visp.mat tmp_250 tmp_750 AUROC
 
 %%
