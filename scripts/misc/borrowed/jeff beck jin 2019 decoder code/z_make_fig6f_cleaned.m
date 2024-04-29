@@ -134,7 +134,11 @@ for n = 1:length(filename)
         ' has ', num2str(length(idxn{n})), ' good units']);
     
     prefs{n} = prefs{n}(idxn{n});
-    f{n} = ori_fit(:, idxn{n});
+
+    ori_fit_empty = zeros(size(ori_fit));
+    f{n} = ori_fit_empty(:, idxn{n}); % try empty ori_fit to check if its useless
+    % f{n} = ori_fit(:, idxn{n});
+
     kappa{n} = abs(fft(log(f{n})));
     kappa{n} = kappa{n}(end, :);
 
