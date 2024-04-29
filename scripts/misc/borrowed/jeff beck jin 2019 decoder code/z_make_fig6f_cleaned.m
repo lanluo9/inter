@@ -63,10 +63,10 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_wellmax_control_ncell_visp.mat');
-    if strcmp(select_area, 'LM')
-        jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
-    end
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_control_ncell_vecnorm_visp.mat');
+    % if strcmp(select_area, 'LM')
+    %     jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
+    % end
     filename{1, iset} = jeff_file;
 end
 
@@ -135,9 +135,9 @@ for n = 1:length(filename)
     
     prefs{n} = prefs{n}(idxn{n});
 
-    ori_fit_empty = zeros(size(ori_fit));
-    f{n} = ori_fit_empty(:, idxn{n}); % try empty ori_fit to check if its useless
-    % f{n} = ori_fit(:, idxn{n});
+    % ori_fit_empty = zeros(size(ori_fit));
+    % f{n} = ori_fit_empty(:, idxn{n}); % try empty ori_fit to check if its useless
+    f{n} = ori_fit(:, idxn{n});
 
     kappa{n} = abs(fft(log(f{n})));
     kappa{n} = kappa{n}(end, :);
