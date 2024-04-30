@@ -2,21 +2,22 @@ function [R_sq, ori_fit] = fit_tuning_jeff(dfof_tg, save_flag)
 
 % write data in correct format for jeff population vector decoder - jin2019
 % input: 
-    % dfof_tg = ncell x nori. save_flag to toggle save .mat
+    % dfof_tg = ncell x nori x nisi. save_flag to toggle save .mat
 % output: 
     % R_sq = ncell x 1. von mises goodness of fit
     % ori_fit = 181 deg x ncell. von mises fit tuning curve values across deg
 
-global ncell ori_list
+global ori_list
 
-fit_param = pi * ones(ncell, 7);
-ori_fit = pi * ones(181, ncell);
+ncell_now = size(dfof_tg, 1);
+fit_param = pi * ones(ncell_now, 7);
+ori_fit = pi * ones(181, ncell_now);
 dfof_cond = dfof_tg(:,:,1); % jeff code only fits unadapted resp to von mises
 
 theta_deg_arr = (0:1:180)';
 theta_rad_arr = deg2rad(theta_deg_arr);
 
-for icell = 1 : ncell
+for icell = 1 : ncell_now
     ori_rad = deg2rad(ori_list);
     data = dfof_cond(icell,:);
 

@@ -108,7 +108,7 @@ for n = 1:length(filename)
     idxn{n} = find(well_max > 0);
     
     disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units']);
-    if (length(idxn{n}) <= ncell_good_thresh) || (length(idxn{n}) > 20)
+    if (length(idxn{n}) <= ncell_good_thresh) % || (length(idxn{n}) > 20)
         exclude_sess = [exclude_sess, n];
     end
     sess_kept = [sess_kept, ~ismember(n, exclude_sess)];
@@ -351,6 +351,6 @@ axis([-5, 95, 0.3, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_LM_neighbor_wellmax_control_ncell_vecnorm_visp.mat tmp_250 tmp_750 AUROC
+% save pop_vec_decoder_LM_neighbor_wellmax_control_ncell_vecnorm_visp.mat tmp_250 tmp_750 AUROC
 
 %%
