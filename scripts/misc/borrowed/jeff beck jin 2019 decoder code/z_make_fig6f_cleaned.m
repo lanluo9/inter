@@ -26,8 +26,8 @@ dataset_table = dataset_table(seg_bool, :);
 % dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
 % dataset_table = [dataset_table; dataset_table_extend];
 
-% select_area = 'V1';
-select_area = 'LM';
+select_area = 'V1';
+% select_area = 'LM';
 % select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
@@ -183,7 +183,8 @@ for n = 1 : length(filename)
     end
 
     % Calculate DVs
-    [~, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:));
+    % [~, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:));
+    [DVtemp, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:)); % like alldataanalysis.m
 
     for j = 1:max(train, 2)
         Btemp{j} = Btemp{j}(1:end - 1, 1);
@@ -192,9 +193,11 @@ for n = 1 : length(filename)
     % Remove bias from estimators
     for j = 1:max(train, 2)
         DVAll.dataset = [DVAll.dataset; n * ones(size(DVAlltemp{j}.opt))];
+        % DVAll.dataset = [DVAll.dataset; n * ones(size(DVtemp{j}.opt))];
         DVAll.Y = [DVAll.Y; data{j}.Y];
         DVAll.cond = [DVAll.cond; j * ones(size(data{j}.Y));];
-        DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
+        % DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
+        DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
     end
 end
 
