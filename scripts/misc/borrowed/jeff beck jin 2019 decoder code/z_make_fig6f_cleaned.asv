@@ -63,7 +63,12 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_control_ncell_vecnorm_visp.mat');
+    % jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_control_ncell_vecnorm_visp.mat');
+    
+    % pop_vec_decoder_jeff_wellmax_control_ncell_visp
+    % pop_vec_decoder_jeff_wellmax_control_ncell
+    % pop_vec_decoder_jeff_10wellmax_vecnorm
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_10wellmax_notnorm.mat');
     % if strcmp(select_area, 'LM')
     %     jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
     % end
@@ -108,7 +113,7 @@ for n = 1:length(filename)
     idxn{n} = find(well_max > 0);
     
     disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units']);
-    if (length(idxn{n}) <= ncell_good_thresh) || (length(idxn{n}) > 20)
+    if (length(idxn{n}) <= ncell_good_thresh) % || (length(idxn{n}) > 20)
         exclude_sess = [exclude_sess, n];
     end
     sess_kept = [sess_kept, ~ismember(n, exclude_sess)];
@@ -121,7 +126,7 @@ disp(['kept ', num2str(sum(sess_kept)), ' out of ', num2str(length(sess_kept)), 
 %%
 
 % Loop through files
-for n = 1:length(filename)
+for n = 1 : length(filename)
     load([filename{n}]);
     
     [~, loc] = max(ori_fit);
@@ -183,7 +188,8 @@ for n = 1:length(filename)
     end
 
     % Calculate DVs
-    [~, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:));
+    % [~, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:));
+    [DVtemp, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:)); % like alldataanalysis.m
 
     for j = 1:max(train, 2)
         Btemp{j} = Btemp{j}(1:end - 1, 1);
@@ -192,51 +198,57 @@ for n = 1:length(filename)
     % Remove bias from estimators
     for j = 1:max(train, 2)
         DVAll.dataset = [DVAll.dataset; n * ones(size(DVAlltemp{j}.opt))];
+        % DVAll.dataset = [DVAll.dataset; n * ones(size(DVtemp{j}.opt))];
         DVAll.Y = [DVAll.Y; data{j}.Y];
         DVAll.cond = [DVAll.cond; j * ones(size(data{j}.Y));];
-        DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
+        % DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
+        DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
     end
+
+    size(DVAll.Y)
+    size(DVAll.cond)
+    size(DVAll.dataset)
 end
 
-%% auroc
-% % decoder ori=0 vs other
-
-decoder_mode = 0; % 0 vs other ori
-ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
-NDC = 500;
-dv = [0:NDC] / NDC;
-usedatasets = [1 : max(DVAll.dataset)];
-norm_ndata = max(DVAll.dataset);
-
-clear AUROC
-kk = 0;
-for dataset = usedatasets
-    kk = kk + 1;
-    for j = 1:2
-        for difficulty = 1:5
-            idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
-            switch difficulty
-                case 1
-                    not8 = 8;
-                case 2
-                    not8 = [1, 7];
-                case 3
-                    not8 = [2, 6];
-                case 4
-                    not8 = [3, 5];
-                case 5
-                    not8 = 4;
-            end
-            idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
-                logical(sum(DVAll.dataset == dataset, 2)));
-            DVtemp = abs(getfield(DVAll, 'PV'));
-            CD = mean(DVtemp(idxcd) > dv);
-            FP = mean(DVtemp(idxfp) >= dv);
-
-            AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
-        end
-    end
-end
+% %% auroc
+% % % decoder ori=0 vs other
+% 
+% decoder_mode = 0; % 0 vs other ori
+% ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
+% NDC = 500;
+% dv = [0:NDC] / NDC;
+% usedatasets = [1 : max(DVAll.dataset)];
+% norm_ndata = max(DVAll.dataset);
+% 
+% clear AUROC
+% kk = 0;
+% for dataset = usedatasets
+%     kk = kk + 1;
+%     for j = 1:2
+%         for difficulty = 1:5
+%             idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
+%             switch difficulty
+%                 case 1
+%                     not8 = 8;
+%                 case 2
+%                     not8 = [1, 7];
+%                 case 3
+%                     not8 = [2, 6];
+%                 case 4
+%                     not8 = [3, 5];
+%                 case 5
+%                     not8 = 4;
+%             end
+%             idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
+%                 logical(sum(DVAll.dataset == dataset, 2)));
+%             DVtemp = abs(getfield(DVAll, 'PV'));
+%             CD = mean(DVtemp(idxcd) > dv);
+%             FP = mean(DVtemp(idxfp) >= dv);
+% 
+%             AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
+%         end
+%     end
+% end
 
 %%
 % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
@@ -308,13 +320,15 @@ if decoder_mode == 1
     tmp_250 = tmp_250_fold;
     tmp_750 = tmp_750_fold;
 
-    % if strcmp(select_area, 'LI')
-    %     thresh = 0.4
-    % else
-    %     thresh = 0.5
-    % end
-    % tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-    % tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+    if strcmp(select_area, 'LI')
+        thresh = 0.4
+    elseif strcmp(select_area, 'LM')
+        thresh = 0
+    else
+        thresh = 0
+    end
+    tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+    tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
 % elseif decoder_mode == 0
 %     tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
@@ -351,6 +365,6 @@ axis([-5, 95, 0.3, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_LI_neighbor_wellmax_control_ncell_visp.mat tmp_250 tmp_750 AUROC
+% save pop_vec_decoder_V_PVemp_10wellmax_notnorm.mat tmp_250 tmp_750 AUROC
 
 %%

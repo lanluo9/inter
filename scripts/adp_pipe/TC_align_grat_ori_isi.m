@@ -501,6 +501,17 @@ end
 % % plot(ori_pref_noad)
 % % legend('boot avg', 'boot med', 'fit')
 
+%% well max cells (limit 10)
+
+well_max_file = fullfile(result_folder, 'well_max_10cell.mat');
+try
+    tmp = load(well_max_file, 'well_max');
+    well_max = tmp.well_max; % shape = [1 x ncell]
+catch
+    disp('not enough vis cells, set well max to all false')
+    well_max = zeros([1, ncell]);
+end
+
 %% find visually driven cells -> vis_driven.ipynb
 % read pickle data
 
@@ -510,21 +521,71 @@ vis_bool = tmp.vis_driven'; % column vector
 
 %% save data for jeff population vector decoder, (un)masked with NaN
 
-save_flag = 1;
-
 % size(ori_fit) % 181 x ncell
 % size(R_sq) % ncell x 1
 % size(theta_90) % 1 x ncell
 
-if save_flag; save pop_vec_decoder_jeff.mat ...
-    ppResp ori_fit R_sq theta_90; end
+% % ori_fit(:, ~vis_bool) = NaN;
+% % R_sq(~vis_bool) = NaN;
+% % theta_90(~vis_bool') = NaN;
+% % well_max(~vis_bool') = NaN;
 
-ori_fit(:, ~vis_bool) = NaN;
-R_sq(~vis_bool) = NaN;
-theta_90(~vis_bool') = NaN;
+save_flag = 1;
 
-if save_flag; save pop_vec_decoder_jeff_nan.mat ...
-    ppResp ori_fit R_sq theta_90; end
+if save_flag; save pop_vec_decoder_jeff_10wellmax_notnorm.mat ...
+    ppResp ori_fit R_sq theta_90 well_max; end
+
+% %% normalize pop vector
+% 
+% % % slice everything with well_max_10
+% well_max_bool = logical(well_max);
+% ppResp = cellfun(@(x) x(well_max_bool, :), ...
+%                 ppResp, ...
+%                 'UniformOutput',false);
+% % ori_fit = ori_fit(:, well_max_bool);
+% % R_sq = R_sq(well_max_bool);
+% theta_90 = theta_90(well_max_bool);
+% well_max = well_max(well_max_bool);
+% 
+% % % % for cell, min-max ori_fit to 0-1 range -> turned off, this seem to cause pv decoder perf = 0
+% % ncell_sess = size(ori_fit, 2);
+% % for icell = 1 : ncell_sess
+% %     tuning_icell = ori_fit(:, icell);
+% %     tuning_icell = (tuning_icell - min(tuning_icell)) / (max(tuning_icell) - min(tuning_icell));
+% %     ori_fit(:, icell) = tuning_icell;
+% % end
+% 
+% % % min-max doenst work & only ends up with AUROC full of zeros
+% % % switch to re-fit ori_fit using normed dfof_tg
+% dfof_tg = dfof_tg(well_max_bool, :, :);
+% nori_sess = size(dfof_tg, 2);
+% nisi_sess = size(dfof_tg, 3);
+% for iisi = 1 : nisi_sess 
+%     for iori = 1 : nori_sess
+%         pop_vec_itrial = dfof_tg(:, iori, iisi); % pop vector in dfof_tg of isi and ori
+%         pop_vec_normed = pop_vec_itrial / norm(pop_vec_itrial);
+%         dfof_tg(:, iori, iisi) = pop_vec_normed;
+%     end
+% end
+% [R_sq, ori_fit] = fit_tuning_jeff(dfof_tg, save_flag);
+% 
+% 
+% % % for iisi x iori of ppResp, for itrial, get [ncell x 1] vector. normalize vector to len=1
+% nisi_sess = size(ppResp, 1);
+% nori_sess = size(ppResp, 2);
+% for iisi = 1 : nisi_sess 
+%     for iori = 1 : nori_sess
+%         ntrial_sess = size(ppResp{iisi, iori}, 2);
+%         for itrial = 1 : ntrial_sess
+%             pop_vec_itrial = ppResp{iisi, iori}(:, itrial); % pop vector of single trial
+%             pop_vec_normed = pop_vec_itrial / norm(pop_vec_itrial);
+%             ppResp{iisi, iori}(:, itrial) = pop_vec_normed;
+%         end
+%     end
+% end
+% 
+% if save_flag; save pop_vec_decoder_jeff_10wellmax_vecnorm.mat ...
+%     ppResp ori_fit R_sq theta_90 well_max; end
 
 
 %% (un)comment loop over sess

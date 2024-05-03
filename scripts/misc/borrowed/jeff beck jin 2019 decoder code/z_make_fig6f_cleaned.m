@@ -26,8 +26,8 @@ dataset_table = dataset_table(seg_bool, :);
 % dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
 % dataset_table = [dataset_table; dataset_table_extend];
 
-select_area = 'V1';
-% select_area = 'LM';
+% select_area = 'V1';
+select_area = 'LM';
 % select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
@@ -63,7 +63,12 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_control_ncell_vecnorm_visp.mat');
+    % jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_control_ncell_vecnorm_visp.mat');
+    
+    % pop_vec_decoder_jeff_wellmax_control_ncell_visp
+    % pop_vec_decoder_jeff_wellmax_control_ncell
+    % pop_vec_decoder_jeff_10wellmax_vecnorm
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_10wellmax_notnorm.mat');
     % if strcmp(select_area, 'LM')
     %     jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
     % end
@@ -199,47 +204,51 @@ for n = 1 : length(filename)
         % DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
         DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
     end
+
+    size(DVAll.Y)
+    size(DVAll.cond)
+    size(DVAll.dataset)
 end
 
-%% auroc
-% % decoder ori=0 vs other
-
-decoder_mode = 0; % 0 vs other ori
-ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
-NDC = 500;
-dv = [0:NDC] / NDC;
-usedatasets = [1 : max(DVAll.dataset)];
-norm_ndata = max(DVAll.dataset);
-
-clear AUROC
-kk = 0;
-for dataset = usedatasets
-    kk = kk + 1;
-    for j = 1:2
-        for difficulty = 1:5
-            idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
-            switch difficulty
-                case 1
-                    not8 = 8;
-                case 2
-                    not8 = [1, 7];
-                case 3
-                    not8 = [2, 6];
-                case 4
-                    not8 = [3, 5];
-                case 5
-                    not8 = 4;
-            end
-            idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
-                logical(sum(DVAll.dataset == dataset, 2)));
-            DVtemp = abs(getfield(DVAll, 'PV'));
-            CD = mean(DVtemp(idxcd) > dv);
-            FP = mean(DVtemp(idxfp) >= dv);
-
-            AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
-        end
-    end
-end
+% %% auroc
+% % % decoder ori=0 vs other
+% 
+% decoder_mode = 0; % 0 vs other ori
+% ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
+% NDC = 500;
+% dv = [0:NDC] / NDC;
+% usedatasets = [1 : max(DVAll.dataset)];
+% norm_ndata = max(DVAll.dataset);
+% 
+% clear AUROC
+% kk = 0;
+% for dataset = usedatasets
+%     kk = kk + 1;
+%     for j = 1:2
+%         for difficulty = 1:5
+%             idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
+%             switch difficulty
+%                 case 1
+%                     not8 = 8;
+%                 case 2
+%                     not8 = [1, 7];
+%                 case 3
+%                     not8 = [2, 6];
+%                 case 4
+%                     not8 = [3, 5];
+%                 case 5
+%                     not8 = 4;
+%             end
+%             idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
+%                 logical(sum(DVAll.dataset == dataset, 2)));
+%             DVtemp = abs(getfield(DVAll, 'PV'));
+%             CD = mean(DVtemp(idxcd) > dv);
+%             FP = mean(DVtemp(idxfp) >= dv);
+% 
+%             AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
+%         end
+%     end
+% end
 
 %%
 % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
@@ -312,9 +321,11 @@ if decoder_mode == 1
     tmp_750 = tmp_750_fold;
 
     % if strcmp(select_area, 'LI')
-    %     thresh = 0.4
-    % else
-    %     thresh = 0.5
+    %     thresh = 0.45
+    % elseif strcmp(select_area, 'LM')
+    %     thresh = 0.45
+    % elseif strcmp(select_area, 'V1')
+    %     thresh = 0
     % end
     % tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
     % tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
@@ -329,9 +340,13 @@ end
 
 %% Plotting
 
-% tmp = load('pop_vec_decoder_V1_neighbor_wellmax_control_ncell.mat');
-% tmp_250 = tmp.tmp_250;
-% tmp_750 = tmp.tmp_750;
+tmp = load('pop_vec_decoder_LI_PVemp_10wellmax_notnorm.mat');
+tmp_250 = tmp.tmp_250;
+tmp_750 = tmp.tmp_750;
+
+thresh = 0.45
+tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
 figure;
 hold on
@@ -354,6 +369,6 @@ axis([-5, 95, 0.3, 1])
 legend('250', '750', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_LM_neighbor_wellmax_control_ncell_vecnorm_visp.mat tmp_250 tmp_750 AUROC
+% save pop_vec_decoder_LM_PVemp_10wellmax_notnorm.mat tmp_250 tmp_750 AUROC
 
 %%
