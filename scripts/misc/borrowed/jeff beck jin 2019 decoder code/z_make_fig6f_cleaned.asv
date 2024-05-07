@@ -63,17 +63,13 @@ for iset = 1:nset
         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
         cd(result_folder)
     end
-    % jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_control_ncell_vecnorm_visp.mat');
-    
-    % pop_vec_decoder_jeff_wellmax_control_ncell_visp
-    % pop_vec_decoder_jeff_wellmax_control_ncell
+
     % pop_vec_decoder_jeff_10wellmax_vecnorm
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_10wellmax_notnorm.mat');
-    % if strcmp(select_area, 'LM')
-    %     jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
-    % end
+    % pop_vec_decoder_jeff_10wellmax_notnorm
+    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_10wellmax_vecnorm.mat');
     filename{1, iset} = jeff_file;
 end
+disp(jeff_file)
 
 %% Data Preparation
 % List of file names
@@ -201,16 +197,16 @@ for n = 1 : length(filename)
         % DVAll.dataset = [DVAll.dataset; n * ones(size(DVtemp{j}.opt))];
         DVAll.Y = [DVAll.Y; data{j}.Y];
         DVAll.cond = [DVAll.cond; j * ones(size(data{j}.Y));];
-        % DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
-        DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
+        DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
+        % DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
     end
 
-    size(DVAll.Y)
-    size(DVAll.cond)
-    size(DVAll.dataset)
+    % size(DVAll.Y)
+    % size(DVAll.cond)
+    % size(DVAll.dataset)
 end
 
-% %% auroc
+%% auroc
 % % % decoder ori=0 vs other
 % 
 % decoder_mode = 0; % 0 vs other ori
@@ -320,15 +316,15 @@ if decoder_mode == 1
     tmp_250 = tmp_250_fold;
     tmp_750 = tmp_750_fold;
 
-    if strcmp(select_area, 'LI')
-        thresh = 0.4
-    elseif strcmp(select_area, 'LM')
-        thresh = 0
-    else
-        thresh = 0
-    end
-    tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-    tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+    % if strcmp(select_area, 'LI')
+    %     thresh = 0.45
+    % elseif strcmp(select_area, 'LM')
+    %     thresh = 0.45
+    % elseif strcmp(select_area, 'V1')
+    %     thresh = 0
+    % end
+    % tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+    % tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
 % elseif decoder_mode == 0
 %     tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
@@ -340,9 +336,15 @@ end
 
 %% Plotting
 
-% tmp = load('pop_vec_decoder_V1_neighbor_wellmax_control_ncell.mat');
+% tmp = load('pop_vec_decoder_neighbor_LM_dvall_PV_10wellmax_vecnorm.mat');
 % tmp_250 = tmp.tmp_250;
 % tmp_750 = tmp.tmp_750;
+
+if strcmp(select_area, 'LI')
+    thresh = 0.4
+    tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+    tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+end
 
 figure;
 hold on
@@ -362,9 +364,48 @@ title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
 axis([-5, 95, 0.3, 1])
-legend('250', '750', 'Location','southeast')
+legend('250', '6000', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_V_PVemp_10wellmax_notnorm.mat tmp_250 tmp_750 AUROC
+% save pop_vec_decoder_neighbor_LI_dvall_PV_10wellmax_vecnorm.mat tmp_250 tmp_750 AUROC
 
-%%
+%% pv decoder perf separate datasets
+
+tmp = load('pop_vec_decoder_neighbor_V1_dvall_PV_10wellmax_notnorm.mat');
+tmp_250 = tmp.tmp_250;
+tmp_750 = tmp.tmp_750;
+
+% if strcmp(select_area, 'LI')
+%     thresh = 0.4
+%     tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+%     tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+% end
+
+figure;
+hold on
+
+norm_ndata = sqrt(size(tmp_250, 1));
+
+for iisi = 1 : 2
+    if iisi == 1
+        tmp = tmp_250;
+    else
+        tmp = tmp_750;
+    end
+
+for iset = 1 : size(tmp_250, 1)
+    perf_iset = tmp(iset, :);
+
+end
+end
+
+errorbar(xa, nanmean(tmp_250), ...
+            nanstd(tmp_250) / norm_ndata, 'b')
+errorbar(xa+1, nanmean(tmp_750), ...
+            nanstd(tmp_750) / norm_ndata, 'r')
+
+title('PV')
+ylabel('AUROC')
+xlabel('Orientation difference')
+axis([-5, 95, 0.3, 1])
+legend('250', '6000', 'Location','southeast')

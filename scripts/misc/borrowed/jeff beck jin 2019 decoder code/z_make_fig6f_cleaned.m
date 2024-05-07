@@ -364,9 +364,51 @@ title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
 axis([-5, 95, 0.3, 1])
-legend('250', '750', 'Location','southeast')
+legend('250', '6000', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
 % save pop_vec_decoder_neighbor_LI_dvall_PV_10wellmax_vecnorm.mat tmp_250 tmp_750 AUROC
 
+%% pv decoder perf separate datasets
+
+tmp = load('pop_vec_decoder_neighbor_V1_dvall_PV_10wellmax_notnorm.mat');
+tmp_250 = tmp.tmp_250;
+tmp_750 = tmp.tmp_750;
+
+% if strcmp(select_area, 'LI')
+%     thresh = 0.4
+%     tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+%     tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+% end
+
+figure;
+hold on
+for iisi = 1 : 2
+    if iisi == 1
+        tmp = tmp_250;
+    else
+        tmp = tmp_750;
+    end
+
+    subplot(1, 2, iisi)
+    for iset = 1 : size(tmp, 1)
+        perf_iset = tmp(iset, :);
+        plot(perf_iset)
+        hold on
+    end
+end
+
 %%
+for iset = 1 : size(tmp_250, 1)
+    subplot(2, 3, iset)
+    for iisi = 1 : 2
+        plot(tmp_250(iset, :), 'b')
+        hold on
+        plot(tmp_750(iset, :), 'r')
+    end
+end
+
+
+
+
+
