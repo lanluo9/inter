@@ -1,0 +1,8 @@
+mouse,date,area,depth,num,cellpose_seg,manual_seg,paradigm,gcamp,time,AWS,note
+1323,200720,V1,200.0,003,,True,grating,6s,,1.0,
+1324,200728,V1,200.0,003,,True,grating,6s,,,
+1322,200803,V1,200.0,002,,True,grating,6s,,,
+1328,201015,V1,200.0,004,,True,grating,6s,,1.0,
+1329,201209,V1,200.0,002,,True,grating,6s,,,
+1337,210120,V1,150.0,003,1.0,,grating,6s,,,
+1381,240229,V1,150.0,multisess,1.0,,grating_8ori_2isi_multisess,6s,,,
