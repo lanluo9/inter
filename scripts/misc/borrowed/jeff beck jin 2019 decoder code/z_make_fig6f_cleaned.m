@@ -323,8 +323,8 @@ if decoder_mode == 1
 end
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-save pop_vec_decoder_neighbor_V1_visnan_allwellmax_notnorm_isi6k.mat ...
-                    tmp_250 tmp_750 tmp_6000 AUROC DVAll
+% save pop_vec_decoder_neighbor_V1_visnan_allwellmax_notnorm_isi6k.mat ...
+%                     tmp_250 tmp_750 tmp_6000 AUROC DVAll
 
 
 %% Plotting
