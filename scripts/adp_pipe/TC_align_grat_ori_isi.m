@@ -301,28 +301,28 @@ t_ad = squeeze(nanmean(t, 1));
 t = squeeze(nanmean(dfof_align_tg, 1));
 t_tg = squeeze(nanmean(t, 1)); 
 
-figure;
-range = 60;
-plot(t_ad(1:range), 'r'); hold on; 
-plot(t_tg(1:range), 'b'); 
-grid on; grid minor; 
-set(gcf, 'Position', get(0, 'Screensize')); 
-legend('ad align', 'targ align')
-if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
-
-% t_ad = [t_ad(100:end), t_ad(1:100)];
-% t_tg = [t_tg(100:end), t_tg(1:100)];
-% endpoint = length(t_ad);
-
-figure
-range = trial_len_min-1; 
-plot(t_ad(1:range), 'r'); hold on; 
-plot(t_tg(1:range), 'b'); 
-% xline(endpoint - 100);
-grid on; grid minor; 
-set(gcf, 'Position', get(0, 'Screensize')); 
-legend('ad align', 'targ align')
-if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
+% figure;
+% range = 60;
+% plot(t_ad(1:range), 'r'); hold on; 
+% plot(t_tg(1:range), 'b'); 
+% grid on; grid minor; 
+% set(gcf, 'Position', get(0, 'Screensize')); 
+% legend('ad align', 'targ align')
+% if save_flag; saveas(gcf, 'dfof align zoomin', 'jpg'); end
+% 
+% % t_ad = [t_ad(100:end), t_ad(1:100)];
+% % t_tg = [t_tg(100:end), t_tg(1:100)];
+% % endpoint = length(t_ad);
+% 
+% figure
+% range = trial_len_min-1; 
+% plot(t_ad(1:range), 'r'); hold on; 
+% plot(t_tg(1:range), 'b'); 
+% % xline(endpoint - 100);
+% grid on; grid minor; 
+% set(gcf, 'Position', get(0, 'Screensize')); 
+% legend('ad align', 'targ align')
+% if save_flag; saveas(gcf, 'dfof align', 'jpg'); end
 
 %% find calcium resp window
 
@@ -335,15 +335,15 @@ if peak_id < 6 % first peak should not be earlier than 6 frames
 end
 range_base = 1:5; range_resp = (peak_id-2):(peak_id+2);
 
-figure;
-plot(t_ad(1:40)); hold on;
-plot(t_tg(1:40));
-xline(range_base(end), 'k--')
-xline(range_resp(1), 'k--')
-xline(range_resp(end), 'k--')
-grid on; grid minor
-% set(gcf, 'Position', get(0, 'Screensize'));
-if save_flag; saveas(gcf, 'find_ca_latency_ca_window.jpg'); end
+% figure;
+% plot(t_ad(1:40)); hold on;
+% plot(t_tg(1:40));
+% xline(range_base(end), 'k--')
+% xline(range_resp(1), 'k--')
+% xline(range_resp(end), 'k--')
+% grid on; grid minor
+% % set(gcf, 'Position', get(0, 'Screensize'));
+% if save_flag; saveas(gcf, 'find_ca_latency_ca_window.jpg'); end
 
 %% use resp window to cut trace_by_trial
 % aka slicing dfof_align_ad & dfof_align_tg
@@ -355,14 +355,14 @@ R1_cell_trial = mean(dfof_align_ad(:, :, range_resp), 3) ...
 R2_cell_trial = mean(dfof_align_tg(:, :, range_resp), 3) ...
               - mean(dfof_align_tg(:, :, range_base), 3); % separate 250 vs 750 isi by saved var isi_nframe
 
-figure
-subplot(211)
-imshow(R1_cell_trial, 'InitialMagnification', 800);
-colorbar;
-subplot(212)
-imshow(R2_cell_trial, 'InitialMagnification', 800);
-colorbar;
-set(gcf, 'Position', get(0, 'Screensize'));
+% figure
+% subplot(211)
+% imshow(R1_cell_trial, 'InitialMagnification', 800);
+% colorbar;
+% subplot(212)
+% imshow(R2_cell_trial, 'InitialMagnification', 800);
+% colorbar;
+% set(gcf, 'Position', get(0, 'Screensize'));
 
 if save_flag; save('trace_trial_stim.mat', 'R1_cell_trial', 'R2_cell_trial', '-append'); end
 
@@ -501,9 +501,11 @@ end
 % % plot(ori_pref_noad)
 % % legend('boot avg', 'boot med', 'fit')
 
-%% well max cells (limit 10)
+%% well max cells (limit N cells)
 
-well_max_file = fullfile(result_folder, 'well_max_10cell.mat');
+% well_max_file = fullfile(result_folder, 'well_max_10cell.mat');
+% well_max_file = fullfile(result_folder, 'well_max_20cell.mat');
+well_max_file = fullfile(result_folder, 'well_max.mat');
 try
     tmp = load(well_max_file, 'well_max');
     well_max = tmp.well_max; % shape = [1 x ncell]
@@ -519,20 +521,20 @@ vis_file = fullfile(result_folder, 'vis_driven_ttest_bonferroni_jeff.mat');
 tmp = load(vis_file);
 vis_bool = tmp.vis_driven'; % column vector
 
-%% save data for jeff population vector decoder, (un)masked with NaN
-
 % size(ori_fit) % 181 x ncell
 % size(R_sq) % ncell x 1
 % size(theta_90) % 1 x ncell
 
-% % ori_fit(:, ~vis_bool) = NaN;
-% % R_sq(~vis_bool) = NaN;
-% % theta_90(~vis_bool') = NaN;
-% % well_max(~vis_bool') = NaN;
+ori_fit(:, ~vis_bool) = NaN;
+R_sq(~vis_bool) = NaN;
+theta_90(~vis_bool') = NaN;
+well_max(~vis_bool') = NaN;
+
+%% save data for jeff population vector decoder, (un)masked with NaN
 
 save_flag = 1;
 
-if save_flag; save pop_vec_decoder_jeff_10wellmax_notnorm.mat ...
+if save_flag; save pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat ...
     ppResp ori_fit R_sq theta_90 well_max; end
 
 % %% normalize pop vector

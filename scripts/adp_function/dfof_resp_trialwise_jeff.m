@@ -10,7 +10,8 @@ function [ppResp] = dfof_resp_trialwise_jeff(dfof_align_tg, save_flag)
     % in each matlab-cell = [ncell x ntrial] mat
 
 global ncell nori nisi id_isi3 id_ori range_base range_resp
-id_isi3_jeff = id_isi3([3, 2, 1]); % reverse original isi order (inf 750 250)
+id_isi3_jeff = id_isi3([3, 2, 1]); % original isi order is inf-750-250) need to reverse to 250-750-inf
+id_isi3_jeff = id_isi3_jeff([1, 3, 2]); % want to compare isi 6k to 250, so re-order isi to 250-inf-750
 id_ori_jeff = id_ori([2; 3; 4; 5; 6; 7; 8; 1]); % change ori order to: 0 deg (180 deg) at the end
 
 ppResp = cell(nisi, nori); 

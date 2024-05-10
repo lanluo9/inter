@@ -26,9 +26,9 @@ dataset_table = dataset_table(seg_bool, :);
 % dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
 % dataset_table = [dataset_table; dataset_table_extend];
 
-% select_area = 'V1';
+select_area = 'V1';
 % select_area = 'LM';
-select_area = 'LI';
+% select_area = 'LI';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
@@ -66,10 +66,13 @@ for iset = 1:nset
 
     % pop_vec_decoder_jeff_10wellmax_vecnorm
     % pop_vec_decoder_jeff_10wellmax_notnorm
-    jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_10wellmax_vecnorm.mat');
+    % pop_vec_decoder_jeff_20wellmax_notnorm_isi6k
+    % pop_vec_decoder_jeff_visonly_nowellmax_notnorm_isi6k
+    jeff_mat = 'pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat';
+    jeff_file = fullfile(result_folder, jeff_mat);
     filename{1, iset} = jeff_file;
 end
-disp(jeff_file)
+disp(jeff_mat)
 
 %% Data Preparation
 % List of file names
@@ -207,44 +210,44 @@ for n = 1 : length(filename)
 end
 
 %% auroc
-% % % decoder ori=0 vs other
-% 
-% decoder_mode = 0; % 0 vs other ori
-% ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
-% NDC = 500;
-% dv = [0:NDC] / NDC;
-% usedatasets = [1 : max(DVAll.dataset)];
-% norm_ndata = max(DVAll.dataset);
-% 
-% clear AUROC
-% kk = 0;
-% for dataset = usedatasets
-%     kk = kk + 1;
-%     for j = 1:2
-%         for difficulty = 1:5
-%             idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
-%             switch difficulty
-%                 case 1
-%                     not8 = 8;
-%                 case 2
-%                     not8 = [1, 7];
-%                 case 3
-%                     not8 = [2, 6];
-%                 case 4
-%                     not8 = [3, 5];
-%                 case 5
-%                     not8 = 4;
-%             end
-%             idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
-%                 logical(sum(DVAll.dataset == dataset, 2)));
-%             DVtemp = abs(getfield(DVAll, 'PV'));
-%             CD = mean(DVtemp(idxcd) > dv);
-%             FP = mean(DVtemp(idxfp) >= dv);
-% 
-%             AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
-%         end
-%     end
-% end
+% % decoder ori=0 vs other
+
+decoder_mode = 0; % 0 vs other ori
+ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
+NDC = 500;
+dv = [0:NDC] / NDC;
+usedatasets = [1 : max(DVAll.dataset)];
+norm_ndata = max(DVAll.dataset);
+
+clear AUROC
+kk = 0;
+for dataset = usedatasets
+    kk = kk + 1;
+    for j = 1:3
+        for difficulty = 1:5
+            idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
+            switch difficulty
+                case 1
+                    not8 = 8;
+                case 2
+                    not8 = [1, 7];
+                case 3
+                    not8 = [2, 6];
+                case 4
+                    not8 = [3, 5];
+                case 5
+                    not8 = 4;
+            end
+            idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
+                logical(sum(DVAll.dataset == dataset, 2)));
+            DVtemp = abs(getfield(DVAll, 'PV'));
+            CD = mean(DVtemp(idxcd) > dv);
+            FP = mean(DVtemp(idxfp) >= dv);
+
+            AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
+        end
+    end
+end
 
 %%
 % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
@@ -260,7 +263,7 @@ clear AUROC
 kk=0;
 for dataset = usedatasets
     kk = kk + 1;
-    for j = 1:2
+    for j = 1:3 % change from 1:2 to 1:3, compare 250 vs 750 AND 250 vs 6k
         for pair = 1:7 % despite ori_dist having 5 cases, we need to separate neighboring pairs (2-1 vs 6-7)
             switch pair
                 case 1
@@ -307,108 +310,93 @@ end
 close all
 xa = [0, 22.5, 45, 67.5, 90];
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
-tmp_750 = squeeze(AUROC{k}(:, 2, :));
-
+tmp_6000 = squeeze(AUROC{k}(:, 2, :));
+tmp_750 = squeeze(AUROC{k}(:, 3, :)); % determined by ISI order in dfof_resp_trialwise_jeff.m
 
 if decoder_mode == 1
     tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
     tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
+    tmp_6000_fold = [tmp_6000(:, 1:2), mean(tmp_6000(:, 3:4), 2), mean(tmp_6000(:, 5:6), 2), tmp_6000(:, end)];
     tmp_250 = tmp_250_fold;
     tmp_750 = tmp_750_fold;
-
-    % if strcmp(select_area, 'LI')
-    %     thresh = 0.45
-    % elseif strcmp(select_area, 'LM')
-    %     thresh = 0.45
-    % elseif strcmp(select_area, 'V1')
-    %     thresh = 0
-    % end
-    % tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-    % tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
-
-% elseif decoder_mode == 0
-%     tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
-%     tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
+    tmp_6000 = tmp_6000_fold;
 end
 
-% [~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
-[~, p, ~, ~] = ttest(tmp_250(:, 2), tmp_750(:, 2), "Tail","right")
+cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+save pop_vec_decoder_neighbor_V1_visnan_allwellmax_notnorm_isi6k.mat ...
+                    tmp_250 tmp_750 tmp_6000 AUROC DVAll
+
 
 %% Plotting
 
 % tmp = load('pop_vec_decoder_neighbor_LM_dvall_PV_10wellmax_vecnorm.mat');
 % tmp_250 = tmp.tmp_250;
-% tmp_750 = tmp.tmp_750;
+% tmp_6000 = tmp.tmp_6000;
+
+tmp_adapted = tmp_250;
+tmp_unadapted = tmp_6000;
+% tmp_unadapted = tmp_750;
+
+% [~, p] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2))
+[~, p, ~, ~] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2), "Tail","right")
 
 if strcmp(select_area, 'LI')
     thresh = 0.4
-    tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-    tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+    tmp_adapted(tmp_adapted < thresh) = 1 - tmp_adapted(tmp_adapted < thresh);
+    tmp_unadapted(tmp_unadapted < thresh) = 1 - tmp_unadapted(tmp_unadapted < thresh);
 end
 
 figure;
 hold on
 
-norm_ndata = sqrt(size(tmp_250, 1));
-errorbar(xa, nanmean(tmp_250), ...
-            nanstd(tmp_250) / norm_ndata, 'b')
-errorbar(xa+1, nanmean(tmp_750), ...
-            nanstd(tmp_750) / norm_ndata, 'r')
-
-% errorbar(xa, nanmedian(tmp_250), ...
-%             nanstd(tmp_250) / norm_ndata, 'b')
-% errorbar(xa+1, nanmedian(tmp_750), ...
-%             nanstd(tmp_750) / norm_ndata, 'r')
-
+norm_ndata = sqrt(size(tmp_adapted, 1));
+errorbar(xa, nanmean(tmp_adapted), ...
+            nanstd(tmp_adapted) / norm_ndata, 'b')
+errorbar(xa+1, nanmean(tmp_unadapted), ...
+            nanstd(tmp_unadapted) / norm_ndata, 'r')
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
 axis([-5, 95, 0.3, 1])
-legend('250', '6000', 'Location','southeast')
+legend('adapt', 'control', 'Location','southeast')
 
-cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_neighbor_LI_dvall_PV_10wellmax_vecnorm.mat tmp_250 tmp_750 AUROC
+
 
 %% pv decoder perf separate datasets
-
-tmp = load('pop_vec_decoder_neighbor_V1_dvall_PV_10wellmax_notnorm.mat');
-tmp_250 = tmp.tmp_250;
-tmp_750 = tmp.tmp_750;
-
-% if strcmp(select_area, 'LI')
-%     thresh = 0.4
-%     tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-%     tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+% 
+% tmp = load('pop_vec_decoder_neighbor_V1_dvall_PV_10wellmax_notnorm.mat');
+% tmp_250 = tmp.tmp_250;
+% tmp_6000 = tmp.tmp_6000;
+% 
+% % if strcmp(select_area, 'LI')
+% %     thresh = 0.4
+% %     tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+% %     tmp_6000(tmp_6000 < thresh) = 1 - tmp_6000(tmp_6000 < thresh);
+% % end
+% 
+% figure;
+% hold on
+% for iisi = 1 : 2
+%     if iisi == 1
+%         tmp = tmp_250;
+%     else
+%         tmp = tmp_6000;
+%     end
+% 
+%     subplot(1, 2, iisi)
+%     for iset = 1 : size(tmp, 1)
+%         perf_iset = tmp(iset, :);
+%         plot(perf_iset)
+%         hold on
+%     end
 % end
-
-figure;
-hold on
-for iisi = 1 : 2
-    if iisi == 1
-        tmp = tmp_250;
-    else
-        tmp = tmp_750;
-    end
-
-    subplot(1, 2, iisi)
-    for iset = 1 : size(tmp, 1)
-        perf_iset = tmp(iset, :);
-        plot(perf_iset)
-        hold on
-    end
-end
-
-%%
-for iset = 1 : size(tmp_250, 1)
-    subplot(2, 3, iset)
-    for iisi = 1 : 2
-        plot(tmp_250(iset, :), 'b')
-        hold on
-        plot(tmp_750(iset, :), 'r')
-    end
-end
-
-
-
-
-
+% 
+% %%
+% for iset = 1 : size(tmp_250, 1)
+%     subplot(2, 3, iset)
+%     for iisi = 1 : 2
+%         plot(tmp_250(iset, :), 'b')
+%         hold on
+%         plot(tmp_6000(iset, :), 'r')
+%     end
+% end

@@ -209,15 +209,15 @@ for n = 1 : length(filename)
         DVAll.dataset = [DVAll.dataset; n * ones(size(DVAlltemp{j}.opt))];
         DVAll.Y = [DVAll.Y; data{j}.Y];
         DVAll.cond = [DVAll.cond; j * ones(size(data{j}.Y));];
-        % DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
-        DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
+        DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
+        % DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
     end
 
-    size(DVAll.Y)
-    size(DVAll.cond)
-    size(DVAll.dataset)
-    size(DVAlltemp{j}.opt)
-    size(DVtemp{j}.opt)
+    % size(DVAll.Y)
+    % size(DVAll.cond)
+    % size(DVAll.dataset)
+    % size(DVAlltemp{j}.opt)
+    % size(DVtemp{j}.opt)
 end
 
 %% auroc
@@ -234,7 +234,7 @@ clear AUROC
 kk = 0;
 for dataset = usedatasets
     kk = kk + 1;
-    for j = 1:2
+    for j = 1:3
         for difficulty = 1:5
             idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
             switch difficulty
@@ -260,61 +260,61 @@ for dataset = usedatasets
     end
 end
 
-% %%
-% % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
-% % % when ori=0, decode against itself
-% 
-% decoder_mode = 1; % decode neighboring ori
-% NDC = 500;
-% dv = [0:NDC] / NDC;
-% usedatasets = [1 : max(DVAll.dataset)];
-% norm_ndata = max(DVAll.dataset);
-% 
-% clear AUROC
-% kk=0;
-% for dataset = usedatasets
-%     kk = kk + 1;
-%     for j = 1:2
-%         for pair = 1:7 % despite ori_dist having 5 cases, we need to separate neighboring pairs (2-1 vs 6-7)
-%             switch pair
-%                 case 1
-%                     ori_cd = 8;
-%                     ori_fp = 8;
-%                 case 2
-%                     ori_cd = [1, 7];
-%                     ori_fp = 8;
-%                 case 3
-%                     ori_cd = 2; % NOTE: fold up case 3 & 4
-%                     ori_fp = 1;
-%                 case 4
-%                     ori_cd = 6;
-%                     ori_fp = 7;
-%                 case 5
-%                     ori_cd = 3; % NOTE: fold up case 5 & 6
-%                     ori_fp = 2;
-%                 case 6
-%                     ori_cd = 5;
-%                     ori_fp = 6;
-%                 case 7
-%                     ori_cd = 4;
-%                     ori_fp = [3, 5];
-%             end
-%             idxfp = (logical(sum(DVAll.Y == ori_fp, 2)) ...
-%                 & DVAll.cond == j ... % NOTE: in neighbor task, compare within isi condition, instead of always comparing to isi=250 ori=0
-%                 & logical(sum(DVAll.dataset == dataset, 2)));
-% 
-%             idxcd = (logical(sum(DVAll.Y == ori_cd, 2)) ...
-%                 & DVAll.cond == j ...
-%                 & logical(sum(DVAll.dataset == dataset, 2)));
-% 
-%             DVtemp = abs(getfield(DVAll, 'PV'));
-%             CD = mean(DVtemp(idxcd) > dv);
-%             FP = mean(DVtemp(idxfp) >= dv);
-% 
-%             AUROC{k}(kk, j, pair) = -trapz(FP, CD);
-%         end
-%     end
-% end
+%%
+% % decode each ori against its left neighbor (sorted by ori_dist from adapter)
+% % when ori=0, decode against itself
+
+decoder_mode = 1; % decode neighboring ori
+NDC = 500;
+dv = [0:NDC] / NDC;
+usedatasets = [1 : max(DVAll.dataset)];
+norm_ndata = max(DVAll.dataset);
+
+clear AUROC
+kk=0;
+for dataset = usedatasets
+    kk = kk + 1;
+    for j = 1:3
+        for pair = 1:7 % despite ori_dist having 5 cases, we need to separate neighboring pairs (2-1 vs 6-7)
+            switch pair
+                case 1
+                    ori_cd = 8;
+                    ori_fp = 8;
+                case 2
+                    ori_cd = [1, 7];
+                    ori_fp = 8;
+                case 3
+                    ori_cd = 2; % NOTE: fold up case 3 & 4
+                    ori_fp = 1;
+                case 4
+                    ori_cd = 6;
+                    ori_fp = 7;
+                case 5
+                    ori_cd = 3; % NOTE: fold up case 5 & 6
+                    ori_fp = 2;
+                case 6
+                    ori_cd = 5;
+                    ori_fp = 6;
+                case 7
+                    ori_cd = 4;
+                    ori_fp = [3, 5];
+            end
+            idxfp = (logical(sum(DVAll.Y == ori_fp, 2)) ...
+                & DVAll.cond == j ... % NOTE: in neighbor task, compare within isi condition, instead of always comparing to isi=250 ori=0
+                & logical(sum(DVAll.dataset == dataset, 2)));
+
+            idxcd = (logical(sum(DVAll.Y == ori_cd, 2)) ...
+                & DVAll.cond == j ...
+                & logical(sum(DVAll.dataset == dataset, 2)));
+
+            DVtemp = abs(getfield(DVAll, 'PV'));
+            CD = mean(DVtemp(idxcd) > dv);
+            FP = mean(DVtemp(idxfp) >= dv);
+
+            AUROC{k}(kk, j, pair) = -trapz(FP, CD);
+        end
+    end
+end
 
 %% stats
 
@@ -322,6 +322,7 @@ close all
 xa = [0, 22.5, 45, 67.5, 90];
 tmp_250 = squeeze(AUROC{k}(:, 1, :));
 tmp_750 = squeeze(AUROC{k}(:, 2, :));
+% tmp_6000 = squeeze(AUROC{k}(:, 3, :)); % ISI order for jin data: 250-750-inf
 
 
 if decoder_mode == 1
@@ -354,9 +355,9 @@ end
 % tmp_250 = tmp.tmp_250;
 % tmp_750 = tmp.tmp_750;
 % 
-thresh = 0.45
-tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
+% thresh = 0.45
+% tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
+% tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
 
 figure;
 hold on
@@ -376,9 +377,10 @@ title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
 axis([-5, 95, 0.3, 1])
-legend('250', '750', 'Location','southeast')
+legend('250', 'other', 'Location','southeast')
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+% save pop_vec_decoder_jin2019_dvall.mat DVAll
 % save pop_vec_decoder_jin2019_dvall_pv.mat tmp_250 tmp_750 AUROC
 % save pop_vec_decoder_jin2019_dv_pvemp.mat tmp_250 tmp_750 AUROC
 
