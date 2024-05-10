@@ -296,6 +296,10 @@ for dataset = usedatasets
                 & DVAll.cond == j ...
                 & logical(sum(DVAll.dataset == dataset, 2)));
 
+            % idxtmp = idxfp; % tmp storage to swap fp and cd index
+            % idxfp = idxcd;
+            % idxcd = idxtmp; % NOTE: swap only causes perf to become (1-perf)
+
             DVtemp = abs(getfield(DVAll, 'PV'));
             CD = mean(DVtemp(idxcd) > dv);
             FP = mean(DVtemp(idxfp) >= dv);
@@ -340,11 +344,11 @@ tmp_unadapted = tmp_6000;
 % [~, p] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2))
 [~, p, ~, ~] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2), "Tail","right")
 
-if strcmp(select_area, 'LI')
-    thresh = 0.4
-    tmp_adapted(tmp_adapted < thresh) = 1 - tmp_adapted(tmp_adapted < thresh);
-    tmp_unadapted(tmp_unadapted < thresh) = 1 - tmp_unadapted(tmp_unadapted < thresh);
-end
+% if strcmp(select_area, 'LI')
+%     thresh = 0.4
+%     tmp_adapted(tmp_adapted < thresh) = 1 - tmp_adapted(tmp_adapted < thresh);
+%     tmp_unadapted(tmp_unadapted < thresh) = 1 - tmp_unadapted(tmp_unadapted < thresh);
+% end
 
 figure;
 hold on

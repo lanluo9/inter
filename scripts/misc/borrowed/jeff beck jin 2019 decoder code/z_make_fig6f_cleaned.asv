@@ -66,7 +66,9 @@ for iset = 1:nset
 
     % pop_vec_decoder_jeff_10wellmax_vecnorm
     % pop_vec_decoder_jeff_10wellmax_notnorm
-    jeff_mat = 'pop_vec_decoder_jeff_10wellmax_notnorm_isi6k.mat';
+    % pop_vec_decoder_jeff_20wellmax_notnorm_isi6k
+    % pop_vec_decoder_jeff_visonly_nowellmax_notnorm_isi6k
+    jeff_mat = 'pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat';
     jeff_file = fullfile(result_folder, jeff_mat);
     filename{1, iset} = jeff_file;
 end
@@ -208,44 +210,44 @@ for n = 1 : length(filename)
 end
 
 %% auroc
-% % % decoder ori=0 vs other
-% 
-% decoder_mode = 0; % 0 vs other ori
-% ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
-% NDC = 500;
-% dv = [0:NDC] / NDC;
-% usedatasets = [1 : max(DVAll.dataset)];
-% norm_ndata = max(DVAll.dataset);
-% 
-% clear AUROC
-% kk = 0;
-% for dataset = usedatasets
-%     kk = kk + 1;
-%     for j = 1:2
-%         for difficulty = 1:5
-%             idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
-%             switch difficulty
-%                 case 1
-%                     not8 = 8;
-%                 case 2
-%                     not8 = [1, 7];
-%                 case 3
-%                     not8 = [2, 6];
-%                 case 4
-%                     not8 = [3, 5];
-%                 case 5
-%                     not8 = 4;
-%             end
-%             idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
-%                 logical(sum(DVAll.dataset == dataset, 2)));
-%             DVtemp = abs(getfield(DVAll, 'PV'));
-%             CD = mean(DVtemp(idxcd) > dv);
-%             FP = mean(DVtemp(idxfp) >= dv);
-% 
-%             AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
-%         end
-%     end
-% end
+% % decoder ori=0 vs other
+
+decoder_mode = 0; % 0 vs other ori
+ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
+NDC = 500;
+dv = [0:NDC] / NDC;
+usedatasets = [1 : max(DVAll.dataset)];
+norm_ndata = max(DVAll.dataset);
+
+clear AUROC
+kk = 0;
+for dataset = usedatasets
+    kk = kk + 1;
+    for j = 1:3
+        for difficulty = 1:5
+            idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
+            switch difficulty
+                case 1
+                    not8 = 8;
+                case 2
+                    not8 = [1, 7];
+                case 3
+                    not8 = [2, 6];
+                case 4
+                    not8 = [3, 5];
+                case 5
+                    not8 = 4;
+            end
+            idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
+                logical(sum(DVAll.dataset == dataset, 2)));
+            DVtemp = abs(getfield(DVAll, 'PV'));
+            CD = mean(DVtemp(idxcd) > dv);
+            FP = mean(DVtemp(idxfp) >= dv);
+
+            AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
+        end
+    end
+end
 
 %%
 % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
@@ -261,7 +263,7 @@ clear AUROC
 kk=0;
 for dataset = usedatasets
     kk = kk + 1;
-    for j = 1:2 % change to 1:3 to compare 250 vs 750, not just 250 vs 6k
+    for j = 1:3 % change from 1:2 to 1:3, compare 250 vs 750 AND 250 vs 6k
         for pair = 1:7 % despite ori_dist having 5 cases, we need to separate neighboring pairs (2-1 vs 6-7)
             switch pair
                 case 1
@@ -294,6 +296,10 @@ for dataset = usedatasets
                 & DVAll.cond == j ...
                 & logical(sum(DVAll.dataset == dataset, 2)));
 
+            idxtmp = idxfp;
+            idxfp = idxcd;
+            idxcd = idxtmp;
+
             DVtemp = abs(getfield(DVAll, 'PV'));
             CD = mean(DVtemp(idxcd) > dv);
             FP = mean(DVtemp(idxfp) >= dv);
@@ -321,7 +327,8 @@ if decoder_mode == 1
 end
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_neighbor_V1_10wellmax_notnorm_isi6k.mat tmp_250 tmp_750 tmp_6000 AUROC
+% save pop_vec_decoder_neighbor_V1_visnan_allwellmax_notnorm_isi6k.mat ...
+%                     tmp_250 tmp_750 tmp_6000 AUROC DVAll
 
 
 %% Plotting
@@ -332,35 +339,30 @@ cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019
 
 tmp_adapted = tmp_250;
 tmp_unadapted = tmp_6000;
+% tmp_unadapted = tmp_750;
 
-% [~, p] = ttest(tmp_adapted(:, 2), tmp_6000(:, 2))
-[~, p, ~, ~] = ttest(tmp_adapted(:, 2), tmp_6000(:, 2), "Tail","right")
+% [~, p] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2))
+[~, p, ~, ~] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2), "Tail","right")
 
 if strcmp(select_area, 'LI')
     thresh = 0.4
-    tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-    tmp_6000(tmp_6000 < thresh) = 1 - tmp_6000(tmp_6000 < thresh);
+    tmp_adapted(tmp_adapted < thresh) = 1 - tmp_adapted(tmp_adapted < thresh);
+    tmp_unadapted(tmp_unadapted < thresh) = 1 - tmp_unadapted(tmp_unadapted < thresh);
 end
 
 figure;
 hold on
 
-norm_ndata = sqrt(size(tmp_250, 1));
-errorbar(xa, nanmean(tmp_250), ...
-            nanstd(tmp_250) / norm_ndata, 'b')
-errorbar(xa+1, nanmean(tmp_6000), ...
-            nanstd(tmp_6000) / norm_ndata, 'r')
-
-% errorbar(xa, nanmedian(tmp_250), ...
-%             nanstd(tmp_250) / norm_ndata, 'b')
-% errorbar(xa+1, nanmedian(tmp_6000), ...
-%             nanstd(tmp_6000) / norm_ndata, 'r')
-
+norm_ndata = sqrt(size(tmp_adapted, 1));
+errorbar(xa, nanmean(tmp_adapted), ...
+            nanstd(tmp_adapted) / norm_ndata, 'b')
+errorbar(xa+1, nanmean(tmp_unadapted), ...
+            nanstd(tmp_unadapted) / norm_ndata, 'r')
 title('PV')
 ylabel('AUROC')
 xlabel('Orientation difference')
 axis([-5, 95, 0.3, 1])
-legend('250', '6000', 'Location','southeast')
+legend('adapt', 'control', 'Location','southeast')
 
 
 
