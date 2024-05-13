@@ -24,7 +24,7 @@ dataset_table = dataset_table(seg_bool, :);
 dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
 dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
 dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
-dataset_table = [dataset_table_extend; dataset_table];
+dataset_table = [dataset_table_extend; dataset_table]; % move to top
 
 select_area = 'V1';
 % select_area = 'LM';
@@ -202,18 +202,23 @@ for n = 1 : length(filename)
     end
 end
 
-%% auroc
+% %% load dvall
+% 
+% cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+% tmp = load('pv_decoder_visnan_wellfit_addmultisessV1.mat')
+% DVAll = tmp.DVAll;
+
+%% ref0 decoder
 % % decoder ori=0 vs other
 
-decoder_mode = 0; % 0 vs other ori
 ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
 NDC = 500;
 dv = [0:NDC] / NDC;
 usedatasets = [1 : max(DVAll.dataset)];
-norm_ndata = max(DVAll.dataset);
 
 clear AUROC
 kk = 0;
+k = 8; % leftover variable from DVAll construction, not sure why it is necessary
 for dataset = usedatasets
     kk = kk + 1;
     for j = 1:3
@@ -246,8 +251,9 @@ for dataset = usedatasets
         end
     end
 end
+AUROC_ref0 = AUROC;
 
-%%
+%% neighbor decoder
 % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
 % % when ori=0, decode against itself
 
@@ -255,10 +261,10 @@ decoder_mode = 1; % decode neighboring ori
 NDC = 500;
 dv = [0:NDC] / NDC;
 usedatasets = [1 : max(DVAll.dataset)];
-norm_ndata = max(DVAll.dataset);
 
 clear AUROC
 kk=0;
+k = 8; % leftover variable from DVAll construction, not sure why it is necessary
 for dataset = usedatasets
     kk = kk + 1;
     for j = 1:3 % change from 1:2 to 1:3, compare 250 vs 750 AND 250 vs 6k
@@ -306,61 +312,135 @@ for dataset = usedatasets
         end
     end
 end
+AUROC_neighbor = AUROC;
+% AUROC_neighbor_fp250 = AUROC; % idxfp DVAll.cond == 1 instead of j
 
-%% stats
+%% stats & plot
 
 close all
-xa = [0, 22.5, 45, 67.5, 90];
-tmp_250 = squeeze(AUROC{k}(:, 1, :));
-tmp_6000 = squeeze(AUROC{k}(:, 2, :));
-tmp_750 = squeeze(AUROC{k}(:, 3, :)); % determined by ISI order in dfof_resp_trialwise_jeff.m
+for decoder_mode = 0:1
+    if decoder_mode == 0
+        AUROC = AUROC_ref0;
+        decoder_mode_str = 'ref0'
+    elseif decoder_mode == 1
+        AUROC = AUROC_neighbor;
+        decoder_mode_str = 'neighbor'
+        % AUROC = AUROC_neighbor_fp250;
+        % decoder_mode_str = 'neighbor fp250'
+    end
+    
+    % tmp_250 = squeeze(AUROC{k}(:, 1, :));
+    % tmp_750 = squeeze(AUROC{k}(:, 2, :));
+    % tmp_6000 = squeeze(AUROC{k}(:, 3, :)); % ISI order for jin data: 250-750-6000
 
-if decoder_mode == 1
-    tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
-    tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
-    tmp_6000_fold = [tmp_6000(:, 1:2), mean(tmp_6000(:, 3:4), 2), mean(tmp_6000(:, 5:6), 2), tmp_6000(:, end)];
-    tmp_250 = tmp_250_fold;
-    tmp_750 = tmp_750_fold;
-    tmp_6000 = tmp_6000_fold;
+    tmp_250 = squeeze(AUROC{k}(:, 1, :));
+    tmp_6000 = squeeze(AUROC{k}(:, 2, :)); % ISI order for my data: 250-6000-750
+    tmp_750 = squeeze(AUROC{k}(:, 3, :)); % determined by dfof_resp_trialwise_jeff.m
+    
+    if decoder_mode == 1
+        tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
+        tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
+        tmp_6000_fold = [tmp_6000(:, 1:2), mean(tmp_6000(:, 3:4), 2), mean(tmp_6000(:, 5:6), 2), tmp_6000(:, end)];
+
+        tmp_250 = tmp_250_fold;
+        tmp_750 = tmp_750_fold;
+        tmp_6000 = tmp_6000_fold;
+    end
+    
+    [~, p750, ~, ~] = ttest(tmp_250(:, 2), tmp_750(:, 2), "Tail","right");
+    disp([decoder_mode_str, ' decoder 22-0 250 vs 750 sig ', num2str(p750)])
+    [~, p6000, ~, ~] = ttest(tmp_250(:, 2), tmp_6000(:, 2), "Tail","right");
+    disp([decoder_mode_str, ' decoder 22-0 250 vs 6000 sig ', num2str(p6000)])
+    
+
+    xa = [0, 22.5, 45, 67.5, 90];
+    figure
+    subplot(121)
+    errorbar(xa, nanmean(tmp_250), ...
+                nanstd(tmp_250) / sqrt(size(tmp_250, 1)), 'b')
+    hold on
+    errorbar(xa+1, nanmean(tmp_750), ...
+                nanstd(tmp_750) / sqrt(size(tmp_250, 1)), 'r')
+    ylabel('AUROC')
+    xlabel('Orientation difference')
+    axis([-5, 95, 0.4, 1])
+    legend('250', '750', 'Location','northwest')
+    title([decoder_mode_str, ' decoder'])
+
+
+    subplot(122)
+    errorbar(xa, nanmean(tmp_250), ...
+                nanstd(tmp_250) / sqrt(size(tmp_250, 1)), 'b')
+    hold on
+    errorbar(xa+1, nanmean(tmp_6000), ...
+                nanstd(tmp_6000) / sqrt(size(tmp_6000, 1)), 'r')
+    ylabel('AUROC')
+    xlabel('Orientation difference')
+    axis([-5, 95, 0.4, 1])
+    legend('250', '6000', 'Location','northwest')
+    title([decoder_mode_str, ' decoder'])
+  
 end
 
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_neighbor_V1_visnan_allwellmax_notnorm_isi6k.mat ...
-%                     tmp_250 tmp_750 tmp_6000 AUROC DVAll
+% save pv_decoder_visnan_wellfit_addmultisessV1.mat DVAll AUROC_ref0 AUROC_neighbor AUROC_neighbor_fp250
 
+%%
 
-%% Plotting
-
-% tmp = load('pop_vec_decoder_neighbor_LM_dvall_PV_10wellmax_vecnorm.mat');
-% tmp_250 = tmp.tmp_250;
-% tmp_6000 = tmp.tmp_6000;
-
-tmp_adapted = tmp_250;
-tmp_unadapted = tmp_6000;
-% tmp_unadapted = tmp_750;
-
-% [~, p] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2))
-[~, p, ~, ~] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2), "Tail","right")
-
-% if strcmp(select_area, 'LI')
-%     thresh = 0.4
-%     tmp_adapted(tmp_adapted < thresh) = 1 - tmp_adapted(tmp_adapted < thresh);
-%     tmp_unadapted(tmp_unadapted < thresh) = 1 - tmp_unadapted(tmp_unadapted < thresh);
+% %% stats
+% 
+% close all
+% xa = [0, 22.5, 45, 67.5, 90];
+% tmp_250 = squeeze(AUROC{k}(:, 1, :));
+% tmp_6000 = squeeze(AUROC{k}(:, 2, :));
+% tmp_750 = squeeze(AUROC{k}(:, 3, :)); % determined by ISI order in dfof_resp_trialwise_jeff.m
+% 
+% if decoder_mode == 1
+%     tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
+%     tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
+%     tmp_6000_fold = [tmp_6000(:, 1:2), mean(tmp_6000(:, 3:4), 2), mean(tmp_6000(:, 5:6), 2), tmp_6000(:, end)];
+%     tmp_250 = tmp_250_fold;
+%     tmp_750 = tmp_750_fold;
+%     tmp_6000 = tmp_6000_fold;
 % end
-
-figure;
-hold on
-
-norm_ndata = sqrt(size(tmp_adapted, 1));
-errorbar(xa, nanmean(tmp_adapted), ...
-            nanstd(tmp_adapted) / norm_ndata, 'b')
-errorbar(xa+1, nanmean(tmp_unadapted), ...
-            nanstd(tmp_unadapted) / norm_ndata, 'r')
-title('PV')
-ylabel('AUROC')
-xlabel('Orientation difference')
-axis([-5, 95, 0.3, 1])
-legend('adapt', 'control', 'Location','southeast')
+% 
+% cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+% % save pop_vec_decoder_neighbor_V1_visnan_allwellmax_notnorm_isi6k.mat ...
+% %                     tmp_250 tmp_750 tmp_6000 AUROC DVAll
+% 
+% 
+% %% Plotting
+% 
+% % tmp = load('pop_vec_decoder_neighbor_LM_dvall_PV_10wellmax_vecnorm.mat');
+% % tmp_250 = tmp.tmp_250;
+% % tmp_6000 = tmp.tmp_6000;
+% 
+% tmp_adapted = tmp_250;
+% tmp_unadapted = tmp_6000;
+% % tmp_unadapted = tmp_750;
+% 
+% % [~, p] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2))
+% [~, p, ~, ~] = ttest(tmp_adapted(:, 2), tmp_unadapted(:, 2), "Tail","right")
+% 
+% % if strcmp(select_area, 'LI')
+% %     thresh = 0.4
+% %     tmp_adapted(tmp_adapted < thresh) = 1 - tmp_adapted(tmp_adapted < thresh);
+% %     tmp_unadapted(tmp_unadapted < thresh) = 1 - tmp_unadapted(tmp_unadapted < thresh);
+% % end
+% 
+% figure;
+% hold on
+% 
+% norm_ndata = sqrt(size(tmp_adapted, 1));
+% errorbar(xa, nanmean(tmp_adapted), ...
+%             nanstd(tmp_adapted) / norm_ndata, 'b')
+% errorbar(xa+1, nanmean(tmp_unadapted), ...
+%             nanstd(tmp_unadapted) / norm_ndata, 'r')
+% title('PV')
+% ylabel('AUROC')
+% xlabel('Orientation difference')
+% axis([-5, 95, 0.3, 1])
+% legend('adapt', 'control', 'Location','southeast')
 
 
 
