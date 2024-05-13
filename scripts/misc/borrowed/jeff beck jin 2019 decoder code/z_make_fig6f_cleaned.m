@@ -20,11 +20,11 @@ dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
 seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
 dataset_table = dataset_table(seg_bool, :);
 
-% % % append a date for multisess 8ori 2isi
-% dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
-% dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
-% dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
-% dataset_table = [dataset_table; dataset_table_extend];
+% % append a date for multisess 8ori 2isi
+dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
+dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
+dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
+dataset_table = [dataset_table; dataset_table_extend];
 
 select_area = 'V1';
 % select_area = 'LM';
@@ -32,11 +32,11 @@ select_area = 'V1';
 area_bool = logical(strcmp(dataset_table.area, select_area));
 dataset_table = dataset_table(area_bool, :);
 
-%%
-
 sum(strcmp(dataset_table.area, 'V1'))
 sum(strcmp(dataset_table.area, 'LM'))
 sum(strcmp(dataset_table.area, 'LI'))
+
+%%
 
 nset = size(dataset_table, 1);
 filename = cell(1, nset);
@@ -97,7 +97,7 @@ exclude_sess = [];
 % end
 
 ncell_good_thresh = 5; % exclude sessions with only 0-n well fit cells
-% theta90_wellfit_thresh = 22.5;
+theta90_wellfit_thresh = 22.5;
 % if strcmp(select_area, 'LI')
 %     theta90_wellfit_thresh = 45; % relax well fit criteria for LI
 % end
@@ -108,8 +108,8 @@ for n = 1:length(filename)
     
     [~, loc] = max(ori_fit);
     prefs{n} = loc / 180 * 2 * pi;
-    % idxn{n} = find(theta_90 < theta90_wellfit_thresh);
-    idxn{n} = find(well_max > 0);
+    idxn{n} = find(theta_90 < theta90_wellfit_thresh);
+    % idxn{n} = find(well_max > 0);
     
     disp(['Dataset ', num2str(n), ' has ', num2str(length(idxn{n})), ' good units']);
     if (length(idxn{n}) <= ncell_good_thresh) % || (length(idxn{n}) > 20)
@@ -130,19 +130,17 @@ for n = 1 : length(filename)
     
     [~, loc] = max(ori_fit);
     prefs{n} = loc / 180 * 2 * pi;
-    % idxn{n} = find(theta_90 < theta90_wellfit_thresh);
-    idxn{n} = find(well_max > 0);
+    idxn{n} = find(theta_90 < theta90_wellfit_thresh);
+    % idxn{n} = find(well_max > 0);
     
     disp(['Dataset ', num2str(n), ... 
         ' out of ', num2str(length(filename)), ...
         ' has ', num2str(length(idxn{n})), ' good units']);
     
     prefs{n} = prefs{n}(idxn{n});
-
     % ori_fit_empty = zeros(size(ori_fit));
-    % f{n} = ori_fit_empty(:, idxn{n}); % try empty ori_fit to check if its useless
+    % f{n} = ori_fit_empty(:, idxn{n}); % if empty ori_fit, all auroc = 0
     f{n} = ori_fit(:, idxn{n});
-
     kappa{n} = abs(fft(log(f{n})));
     kappa{n} = kappa{n}(end, :);
 
@@ -187,7 +185,6 @@ for n = 1 : length(filename)
     end
 
     % Calculate DVs
-    % [~, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:));
     [DVtemp, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:)); % like alldataanalysis.m
 
     for j = 1:max(train, 2)
@@ -203,10 +200,6 @@ for n = 1 : length(filename)
         DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
         % DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
     end
-
-    % size(DVAll.Y)
-    % size(DVAll.cond)
-    % size(DVAll.dataset)
 end
 
 %% auroc
@@ -225,7 +218,12 @@ for dataset = usedatasets
     kk = kk + 1;
     for j = 1:3
         for difficulty = 1:5
-            idxfp = (DVAll.Y == 8 & DVAll.cond == 1 & logical(sum(DVAll.dataset == dataset, 2)));
+            idxfp = (DVAll.Y == 8 ...
+                & DVAll.cond == 1 ... % for ref0 decoder, always compare w isi=250 ori=0
+                & logical(sum(DVAll.dataset == dataset, 2)));
+            % NOTE: only changing to DVAll.cond == j will yield same perf at 22-0 
+            % for both ref0 and neighbor decoder
+
             switch difficulty
                 case 1
                     not8 = 8;

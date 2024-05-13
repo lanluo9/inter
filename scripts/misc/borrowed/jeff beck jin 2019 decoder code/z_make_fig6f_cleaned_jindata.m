@@ -10,73 +10,9 @@ data_fn = fullfile(ll_fn, 'Data\2P_images');
 mworks_fn = fullfile(fn_base, 'Behavior\Data'); 
 tc_fn = fullfile(ll_fn, 'Analysis\2P');
 
-% dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
-% dataset_meta = readtable(dir_meta);
-% 
-% stim_type = 'grating' % grat_8ori_3isi
-% dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
-% 
-% dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
-% seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
-% dataset_table = dataset_table(seg_bool, :);
-% 
-% % % % append a date for multisess 8ori 2isi
-% % dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
-% % dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
-% % dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
-% % dataset_table = [dataset_table; dataset_table_extend];
-% 
-% % select_area = 'V1';
-% select_area = 'LM';
-% % select_area = 'LI';
-% area_bool = logical(strcmp(dataset_table.area, select_area));
-% dataset_table = dataset_table(area_bool, :);
-% 
-% %%
-% 
-% sum(strcmp(dataset_table.area, 'V1'))
-% sum(strcmp(dataset_table.area, 'LM'))
-% sum(strcmp(dataset_table.area, 'LI'))
-% 
-% nset = size(dataset_table, 1);
-% filename = cell(1, nset);
-% for iset = 1:nset
-%     dataset_now = dataset_table(iset,:);
-%     arg_mouse = dataset_now.mouse;
-%     arg_date = num2str(dataset_now.date);
-%     arg_ImgFolder = dataset_now.num{1};
-%     area = dataset_now.area{1};
-% 
-%     imouse = ['i', num2str(arg_mouse)];
-%     if length(arg_ImgFolder) == 0
-%         area_mouse_date_sess = [area '_' imouse '_' arg_date];
-%     else
-%         area_mouse_date_sess = [area '_' imouse '_' arg_date '_' arg_ImgFolder];
-%     end
-%     mapped_path = 'Z:\All_Staff\home\lan\Data\2P_images';
-%     try
-%         segment_suffix = '_cellpose';
-%         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
-%         cd(result_folder)
-%     catch
-%         segment_suffix = '';
-%         result_folder = [mapped_path, '\mat_inter\', area_mouse_date_sess, segment_suffix];
-%         cd(result_folder)
-%     end
-%     % jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_control_ncell_vecnorm_visp.mat');
-% 
-%     % pop_vec_decoder_jeff_wellmax_control_ncell_visp
-%     % pop_vec_decoder_jeff_wellmax_control_ncell
-%     % pop_vec_decoder_jeff_10wellmax_vecnorm
-%     jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_10wellmax_notnorm.mat');
-%     % if strcmp(select_area, 'LM')
-%     %     jeff_file = fullfile(result_folder, 'pop_vec_decoder_jeff_visp_6k_neighbor_v2.mat');
-%     % end
-%     filename{1, iset} = jeff_file;
-% end
 
-% % Data Preparation
-% % List of file names
+%% Data Preparation
+% List of file names
 filename = {'170323_i689_runs-002-003', '170323_i696_runs-002-003', '170324_i674_runs-002-003', ...
             '170327_i684_runs-002-003', '170503_i711_runs-002-003', '170503_i712_runs-002-003', ...
             '170510_i574_runs-002-003', '170808_i720_runs-002-003', '170810_i738_runs-002-003', ...
@@ -87,8 +23,6 @@ for n = 1:length(filename)
     filename{n} = ['Z:\All_Staff\home\lan\Analysis\optimal decoder from jeff beck dropbox\Lindsay\', ...
         filename{n}, '_newFits.mat'];
 end
-
-%%
 
 PCmax = 15;
 train = 3;
@@ -101,15 +35,8 @@ DVAll.PV = [];
 
 % check if session has any good units
 exclude_sess = [];
-% if strcmp(select_area, 'LM')
-%     exclude_sess = [18]; % too many well fit cells, unlikely to be LM
-% end
-
 ncell_good_thresh = 0; % exclude sessions with only 0-n well fit cells
 theta90_wellfit_thresh = 22.5;
-% if strcmp(select_area, 'LI')
-%     theta90_wellfit_thresh = 45; % relax well fit criteria for LI
-% end
     
 sess_kept = [];
 for n = 1:length(filename)
@@ -128,97 +55,96 @@ for n = 1:length(filename)
 end
 sess_kept = logical(sess_kept);
 filename = filename(1, sess_kept);
-disp(['kept ', num2str(sum(sess_kept)), ' out of ', num2str(length(sess_kept)), ...
-    % ' in ', select_area...
-    ])
+disp(['kept ', num2str(sum(sess_kept)), ' out of ', num2str(length(sess_kept))])
 
-%%
 
-% Loop through files
-for n = 1 : length(filename)
-    load([filename{n}]);
-    
-    [~, loc] = max(ori_fit);
-    prefs{n} = loc / 180 * 2 * pi;
-    idxn{n} = find(theta_90 < theta90_wellfit_thresh);
-    % idxn{n} = find(well_max > 0);
-    
-    disp(['Dataset ', num2str(n), ... 
-        ' out of ', num2str(length(filename)), ...
-        ' has ', num2str(length(idxn{n})), ' good units']);
-    
-    prefs{n} = prefs{n}(idxn{n});
+% %% construct DVAll, no rerun unless changed
+% 
+% % Loop through files
+% for n = 1 : length(filename)
+%     load([filename{n}]);
+% 
+%     [~, loc] = max(ori_fit);
+%     prefs{n} = loc / 180 * 2 * pi;
+%     idxn{n} = find(theta_90 < theta90_wellfit_thresh);
+%     % idxn{n} = find(well_max > 0);
+% 
+%     disp(['Dataset ', num2str(n), ... 
+%         ' out of ', num2str(length(filename)), ...
+%         ' has ', num2str(length(idxn{n})), ' good units']);
+% 
+%     prefs{n} = prefs{n}(idxn{n});
+% 
+%     % ori_fit_empty = zeros(size(ori_fit));
+%     % f{n} = ori_fit_empty(:, idxn{n}); % try empty ori_fit to check if its useless
+%     f{n} = ori_fit(:, idxn{n});
+% 
+%     kappa{n} = abs(fft(log(f{n})));
+%     kappa{n} = kappa{n}(end, :);
+% 
+%     % Data preparation for analysis
+%     for j = 1:max(train, 2)
+%         data{j}.X = [];
+%         data{j}.Y = [];
+% 
+%         for k = 1:8
+%             data{j}.X = [data{j}.X; ppResp{j, k}'];
+%             data{j}.Y = [data{j}.Y; k * ones(size(ppResp{j, k}, 2), 1)];
+%         end
+% 
+%         % Remove rows with NaN values
+%         idx = ~any(isnan(data{j}.X), 2);
+%         data{j}.X = data{j}.X(idx, :);
+%         data{j}.Y = data{j}.Y(idx, 1);
+% 
+%         data{j}.X = data{j}.X(:, idxn{n});
+%         data{j}.Xraw = [data{j}.X];
+%     end
+% 
+%     % Calculate principal components
+%     CC = cov([data{1}.X; data{2}.X]);
+%     [V, D] = eig(CC, 'vector');
+%     PCs = min(PCmax, size(data{j}.X, 2));
+%     D = D(max(size(data{1}.X, 2) - PCs + 1, 1):end);
+%     V = V(:, max(size(data{1}.X, 2) - PCs + 1, 1):end);
+% 
+%     dataAll.X = [];
+%     dataAll.Xraw = [];
+%     dataAll.Y = [];
+%     dataAll.cond = [];
+%     for j = 1:max(train, 2)
+%         data{j}.X = data{j}.X * V * diag(1 ./ sqrt(D));
+%         data{j}.X = data{j}.X(:, max(size(data{j}.X, 2) - PCs + 1, 1):end);
+%         data{j}.X = [data{j}.X, ones(size(data{j}.X, 1), 1)];
+%         dataAll.X = [dataAll.X; data{j}.X];
+%         dataAll.Xraw = [dataAll.Xraw; data{j}.Xraw];
+%         dataAll.Y = [dataAll.Y; data{j}.Y];
+%         dataAll.cond = [dataAll.cond; j * ones(size(data{j}.Y))];
+%     end
+% 
+%     % Calculate DVs
+%     % [~, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:));
+%     [DVtemp, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:)); % like alldataanalysis.m
+% 
+%     for j = 1:max(train, 2)
+%         Btemp{j} = Btemp{j}(1:end - 1, 1);
+%     end
+% 
+%     % Remove bias from estimators
+%     for j = 1:max(train, 2)
+%         DVAll.dataset = [DVAll.dataset; n * ones(size(DVAlltemp{j}.opt))];
+%         DVAll.Y = [DVAll.Y; data{j}.Y];
+%         DVAll.cond = [DVAll.cond; j * ones(size(data{j}.Y));];
+%         DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
+%         % DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
+%     end
+% end
 
-    % ori_fit_empty = zeros(size(ori_fit));
-    % f{n} = ori_fit_empty(:, idxn{n}); % try empty ori_fit to check if its useless
-    f{n} = ori_fit(:, idxn{n});
+%% load dvall
 
-    kappa{n} = abs(fft(log(f{n})));
-    kappa{n} = kappa{n}(end, :);
-
-    % Data preparation for analysis
-    for j = 1:max(train, 2)
-        data{j}.X = [];
-        data{j}.Y = [];
-
-        for k = 1:8
-            data{j}.X = [data{j}.X; ppResp{j, k}'];
-            data{j}.Y = [data{j}.Y; k * ones(size(ppResp{j, k}, 2), 1)];
-        end
-
-        % Remove rows with NaN values
-        idx = ~any(isnan(data{j}.X), 2);
-        data{j}.X = data{j}.X(idx, :);
-        data{j}.Y = data{j}.Y(idx, 1);
-
-        data{j}.X = data{j}.X(:, idxn{n});
-        data{j}.Xraw = [data{j}.X];
-    end
-
-    % Calculate principal components
-    CC = cov([data{1}.X; data{2}.X]);
-    [V, D] = eig(CC, 'vector');
-    PCs = min(PCmax, size(data{j}.X, 2));
-    D = D(max(size(data{1}.X, 2) - PCs + 1, 1):end);
-    V = V(:, max(size(data{1}.X, 2) - PCs + 1, 1):end);
-
-    dataAll.X = [];
-    dataAll.Xraw = [];
-    dataAll.Y = [];
-    dataAll.cond = [];
-    for j = 1:max(train, 2)
-        data{j}.X = data{j}.X * V * diag(1 ./ sqrt(D));
-        data{j}.X = data{j}.X(:, max(size(data{j}.X, 2) - PCs + 1, 1):end);
-        data{j}.X = [data{j}.X, ones(size(data{j}.X, 1), 1)];
-        dataAll.X = [dataAll.X; data{j}.X];
-        dataAll.Xraw = [dataAll.Xraw; data{j}.Xraw];
-        dataAll.Y = [dataAll.Y; data{j}.Y];
-        dataAll.cond = [dataAll.cond; j * ones(size(data{j}.Y))];
-    end
-
-    % Calculate DVs
-    % [~, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:));
-    [DVtemp, DVAlltemp, Btemp, ~] = getDVs(data, dataAll, 0, prefs{n}(:,:), kappa{n}(:,:), f{n}(:,:)); % like alldataanalysis.m
-
-    for j = 1:max(train, 2)
-        Btemp{j} = Btemp{j}(1:end - 1, 1);
-    end
-
-    % Remove bias from estimators
-    for j = 1:max(train, 2)
-        DVAll.dataset = [DVAll.dataset; n * ones(size(DVAlltemp{j}.opt))];
-        DVAll.Y = [DVAll.Y; data{j}.Y];
-        DVAll.cond = [DVAll.cond; j * ones(size(data{j}.Y));];
-        DVAll.PV = [DVAll.PV; DVAlltemp{j}.PV];
-        % DVAll.PV = [DVAll.PV; DVtemp{j}.PVemp];
-    end
-
-    % size(DVAll.Y)
-    % size(DVAll.cond)
-    % size(DVAll.dataset)
-    % size(DVAlltemp{j}.opt)
-    % size(DVtemp{j}.opt)
-end
+cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+tmp = load('pop_vec_decoder_jin2019_dvall.mat')
+DVAll = tmp.DVAll;
 
 %% auroc
 % % decoder ori=0 vs other
@@ -227,11 +153,11 @@ decoder_mode = 0; % 0 vs other ori
 ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
 NDC = 500;
 dv = [0:NDC] / NDC;
-usedatasets = [1 : max(DVAll.dataset)];
-norm_ndata = max(DVAll.dataset);
+usedatasets=[2:4,6:12]; % original dataset filter by jeff
 
 clear AUROC
 kk = 0;
+k = 8; % leftover variable from DVAll construction, not sure why it is necessary
 for dataset = usedatasets
     kk = kk + 1;
     for j = 1:3
@@ -259,6 +185,7 @@ for dataset = usedatasets
         end
     end
 end
+AUROC_ref0 = AUROC;
 
 %%
 % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
@@ -267,8 +194,7 @@ end
 decoder_mode = 1; % decode neighboring ori
 NDC = 500;
 dv = [0:NDC] / NDC;
-usedatasets = [1 : max(DVAll.dataset)];
-norm_ndata = max(DVAll.dataset);
+usedatasets=[2:4,6:12]; % original dataset filter by jeff
 
 clear AUROC
 kk=0;
@@ -315,73 +241,68 @@ for dataset = usedatasets
         end
     end
 end
+AUROC_neighbor = AUROC;
 
-%% stats
+%% stats & plot
 
 close all
-xa = [0, 22.5, 45, 67.5, 90];
-tmp_250 = squeeze(AUROC{k}(:, 1, :));
-tmp_750 = squeeze(AUROC{k}(:, 2, :));
-% tmp_6000 = squeeze(AUROC{k}(:, 3, :)); % ISI order for jin data: 250-750-inf
+for decoder_mode = 0:1
+    if decoder_mode == 0
+        AUROC = AUROC_ref0;
+        decoder_mode_str = 'ref0'
+    elseif decoder_mode == 1
+        AUROC = AUROC_neighbor;
+        decoder_mode_str = 'neighbor'
+    end
+    
+    tmp_250 = squeeze(AUROC{k}(:, 1, :));
+    tmp_750 = squeeze(AUROC{k}(:, 2, :));
+    tmp_6000 = squeeze(AUROC{k}(:, 3, :)); % ISI order for jin data: 250-750-inf
+    
+    if decoder_mode == 1
+        tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
+        tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
+        tmp_6000_fold = [tmp_6000(:, 1:2), mean(tmp_6000(:, 3:4), 2), mean(tmp_6000(:, 5:6), 2), tmp_6000(:, end)];
+
+        tmp_250 = tmp_250_fold;
+        tmp_750 = tmp_750_fold;
+        tmp_6000 = tmp_6000_fold;
+    end
+    
+    [~, p750, ~, ~] = ttest(tmp_250(:, 2), tmp_750(:, 2), "Tail","right");
+    disp([decoder_mode_str, ' decoder 22-0 250 vs 750 sig ', num2str(p750)])
+    [~, p6000, ~, ~] = ttest(tmp_250(:, 2), tmp_6000(:, 2), "Tail","right");
+    disp([decoder_mode_str, ' decoder 22-0 250 vs 6000 sig ', num2str(p6000)])
+    
+
+    xa = [0, 22.5, 45, 67.5, 90];
+    figure
+    subplot(121)
+    errorbar(xa, nanmean(tmp_250), ...
+                nanstd(tmp_250) / sqrt(size(tmp_250, 1)), 'b')
+    hold on
+    errorbar(xa+1, nanmean(tmp_750), ...
+                nanstd(tmp_750) / sqrt(size(tmp_250, 1)), 'r')
+    ylabel('AUROC')
+    xlabel('Orientation difference')
+    axis([-5, 95, 0.4, 1])
+    legend('250', '750', 'Location','northwest')
+    title([decoder_mode_str, ' decoder'])
 
 
-if decoder_mode == 1
-    tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
-    tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
-    tmp_250 = tmp_250_fold;
-    tmp_750 = tmp_750_fold;
-
-    % if strcmp(select_area, 'LI')
-    %     thresh = 0.45
-    % elseif strcmp(select_area, 'LM')
-    %     thresh = 0.45
-    % elseif strcmp(select_area, 'V1')
-    %     thresh = 0
-    % end
-    % tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-    % tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
-
-% elseif decoder_mode == 0
-%     tmp_250 = tmp_250(tmp_250(:, end) >= 0.6, :) % filter out sessions where easy task (0 vs 90) perf < 0.6
-%     tmp_750 = tmp_750(tmp_250(:, end) >= 0.6, :) % apply same filter as above, so based on isi 250 easy task perf
+    subplot(122)
+    errorbar(xa, nanmean(tmp_250), ...
+                nanstd(tmp_250) / sqrt(size(tmp_250, 1)), 'b')
+    hold on
+    errorbar(xa+1, nanmean(tmp_6000), ...
+                nanstd(tmp_6000) / sqrt(size(tmp_6000, 1)), 'r')
+    ylabel('AUROC')
+    xlabel('Orientation difference')
+    axis([-5, 95, 0.4, 1])
+    legend('250', '6000', 'Location','northwest')
+    title([decoder_mode_str, ' decoder'])
+  
 end
 
-% [~, p] = ttest(tmp_250(:, 2), tmp_750(:, 2))
-[~, p, ~, ~] = ttest(tmp_250(:, 2), tmp_750(:, 2), "Tail","right")
-
-%% Plotting
-
-% tmp = load('pop_vec_decoder_LI_PVemp_10wellmax_notnorm.mat');
-% tmp_250 = tmp.tmp_250;
-% tmp_750 = tmp.tmp_750;
-% 
-% thresh = 0.45
-% tmp_250(tmp_250 < thresh) = 1 - tmp_250(tmp_250 < thresh);
-% tmp_750(tmp_750 < thresh) = 1 - tmp_750(tmp_750 < thresh);
-
-figure;
-hold on
-
-norm_ndata = sqrt(size(tmp_250, 1));
-errorbar(xa, nanmean(tmp_250), ...
-            nanstd(tmp_250) / norm_ndata, 'b')
-errorbar(xa+1, nanmean(tmp_750), ...
-            nanstd(tmp_750) / norm_ndata, 'r')
-
-% errorbar(xa, nanmedian(tmp_250), ...
-%             nanstd(tmp_250) / norm_ndata, 'b')
-% errorbar(xa+1, nanmedian(tmp_750), ...
-%             nanstd(tmp_750) / norm_ndata, 'r')
-
-title('PV')
-ylabel('AUROC')
-xlabel('Orientation difference')
-axis([-5, 95, 0.3, 1])
-legend('250', 'other', 'Location','southeast')
-
 cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pop_vec_decoder_jin2019_dvall.mat DVAll
-% save pop_vec_decoder_jin2019_dvall_pv.mat tmp_250 tmp_750 AUROC
-% save pop_vec_decoder_jin2019_dv_pvemp.mat tmp_250 tmp_750 AUROC
-
-%%
+% save pv_decoder_jin2019_replicate.mat DVAll AUROC_ref0 AUROC_neighbor
