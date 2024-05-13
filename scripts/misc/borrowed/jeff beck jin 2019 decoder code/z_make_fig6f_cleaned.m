@@ -24,7 +24,7 @@ dataset_table = dataset_table(seg_bool, :);
 dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
 dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
 dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
-dataset_table = [dataset_table; dataset_table_extend];
+dataset_table = [dataset_table_extend; dataset_table];
 
 select_area = 'V1';
 % select_area = 'LM';

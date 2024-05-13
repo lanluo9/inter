@@ -20,7 +20,7 @@ dataset_meta = readtable(dir_meta);
 dataset_table = dataset_meta( ...
     logical(strcmp(dataset_meta.paradigm, 'grating_8ori_2isi_multisess') ...
     ), :);
-% dataset_table = dataset_table(dataset_table.date == 240225, :);
+dataset_table = dataset_table(dataset_table.date == 240229, :);
 
 ndate = length(unique(dataset_table.date));
 date_arr = unique(dataset_table.date)
@@ -285,36 +285,36 @@ if save_flag; save trace_trial_stim.mat trace_by_trial ...
 close all
 
 
-%% debug
-
-figure
-range = trial_len_min; 
-
-% group_size = 250;
-% for igroup = 1 : floor(ntrial / group_size)
-% t = squeeze(nanmean(squeeze(tc_align_ad(:, ...
-%     1 + (igroup-1)*group_size : igroup*group_size, ...
-%     :)), 1)); 
-% t_ad = squeeze(nanmean(t(:,:), 1));
-% plot(t_ad(1:range)); hold on; 
+% %% debug
+% 
+% figure
+% range = trial_len_min; 
+% 
+% % group_size = 250;
+% % for igroup = 1 : floor(ntrial / group_size)
+% % t = squeeze(nanmean(squeeze(tc_align_ad(:, ...
+% %     1 + (igroup-1)*group_size : igroup*group_size, ...
+% %     :)), 1)); 
+% % t_ad = squeeze(nanmean(t(:,:), 1));
+% % plot(t_ad(1:range)); hold on; 
+% % end
+% % legend_content = arrayfun(@num2str, [1 : floor(ntrial / group_size)], 'UniformOutput',false);
+% % legend(legend_content)
+% 
+% 
+% argmax_arr = [];
+% for itrial = 1 : 100
+%     t = squeeze(nanmean(squeeze(tc_align_ad(:, :, :)), 1)); % avg across ncell
+%     t_ad = t(itrial, :);
+%     [~, argmax] = max(t_ad);
+%     argmax_arr = [argmax_arr; argmax];
+%     % plot(t_ad(1:range)); hold on; 
 % end
-% legend_content = arrayfun(@num2str, [1 : floor(ntrial / group_size)], 'UniformOutput',false);
-% legend(legend_content)
-
-
-argmax_arr = [];
-for itrial = 1 : 100
-    t = squeeze(nanmean(squeeze(tc_align_ad(:, :, :)), 1)); % avg across ncell
-    t_ad = t(itrial, :);
-    [~, argmax] = max(t_ad);
-    argmax_arr = [argmax_arr; argmax];
-    % plot(t_ad(1:range)); hold on; 
-end
-% legend_content = arrayfun(@num2str, [1 : 10], 'UniformOutput',false);
-% legend(legend_content)
-
-grid on; grid minor; 
-set(gcf, 'Position', get(0, 'Screensize')); 
+% % legend_content = arrayfun(@num2str, [1 : 10], 'UniformOutput',false);
+% % legend(legend_content)
+% 
+% grid on; grid minor; 
+% set(gcf, 'Position', get(0, 'Screensize')); 
 
 %% set resp window
 % find base window & resp window
@@ -427,6 +427,176 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 % % off final trial of each sess just like above:
 % % ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
+%% trial-wise response and baseline for Jeff population vector decoder
+
+[ppResp] = dfof_resp_trialwise_jeff(dfof_align_tg, save_flag);
+
+% % because multisess V1 grat has no isi=750, but pv decoder needs it
+% % lets fill in isi 750 with isi 6000 data:
+for icol = 1 : size(ppResp, 2)
+    ppResp{3, icol} = ppResp{2, icol}; % last row should be 750 data, but we use 6000 data instead to fill it out
+end
+
+% %% discard trials by pupil or run speed -> trial_filter_by_pupil_or_speed.m
+% open trial_filter_by_pupil_or_speed.m
+% TODO: when we integrate trial filter (bool) into dataframe, need to cut
+% off final trial of each sess just like above:
+% ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
+
+%% fit von mises tuning curve
+% fit_param under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
+% ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
+% save tuning curve for each cell & isi
+
+[fit_param, ori_pref, tuning_curve_cell_isi] = fit_tuning(dfof_tg, save_flag);
+[R_sq, ori_fit] = fit_tuning_jeff(dfof_tg, save_flag);
+
+% %% fit tuning curve with half trials
+% 
+% % save_flag = 1
+% fit_tuning_half_trials(dfof_align_tg, save_flag);
+% save_flag = 0
+
+%% well-fit cells
+% cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+
+bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
+if exist(bootstrap_file, 'file')
+    tmp = load(bootstrap_file, 'ori_perc');
+    theta_90 = tmp.ori_perc'; % shape = [1 x ncell]. 90 percentile distance from avg fitted ori_pref
+    
+    % tmp = load(bootstrap_file, 'ori_pref_runs');
+    % if size(tmp.ori_pref_runs, 2) == 1000
+    %     disp('already done 1k bootstraps for well_fit, skip')
+    % end
+else
+    save_flag = 1;
+    nrun = 1000; 
+    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
+
+    tmp = load(bootstrap_file, 'ori_perc');
+    theta_90 = tmp.ori_perc'; % shape = [1 x ncell]. 90 percentile distance from avg fitted ori_pref
+end
+
+% % relax well_fit_cell_criteria to a lower percentile for LI
+% bootstrap_file = fullfile(result_folder, 'fit_bootstrap_relax.mat');
+% if exist(bootstrap_file, 'file')
+%     continue
+% else
+%     save_flag = 1;
+%     nrun = 1000;
+%     percentile_threshold = 0.7;
+%     well_fit_cell = well_fit_cell_criteria_relax(percentile_threshold, nrun, save_flag);
+%     disp('well_fit_cell percent:')
+%     sum(well_fit_cell) / length(well_fit_cell) * 100
+% end
+
+% % % validation that well_fit cells' tuning is comparable no matter how you
+% % % calculate their tuning: by avg or med of ori_pref_runs, or by ori_pref
+% % % generated from fit_tuning func
+% % tmp = load(bootstrap_file);
+% % well_fit_bool = tmp.well_fit_cell;
+% % 
+% % ori_pref_noad = ori_pref(:, 1); % first col is no-adapter ori pref
+% % ori_pref_noad_boot_avg = mean(tmp.ori_pref_runs, 2); % avg across boots
+% % ori_pref_noad_boot_med = median(tmp.ori_pref_runs, 2);
+% % 
+% % ori_pref_noad = ori_pref_noad(well_fit_bool);
+% % ori_pref_noad_boot_avg = ori_pref_noad_boot_avg(well_fit_bool);
+% % ori_pref_noad_boot_med = ori_pref_noad_boot_med(well_fit_bool);
+% % 
+% % plot(ori_pref_noad_boot_avg)
+% % hold on
+% % plot(ori_pref_noad_boot_med)
+% % plot(ori_pref_noad)
+% % legend('boot avg', 'boot med', 'fit')
+
+%% well max cells (limit N cells)
+
+% well_max_file = fullfile(result_folder, 'well_max_10cell.mat');
+% well_max_file = fullfile(result_folder, 'well_max_20cell.mat');
+well_max_file = fullfile(result_folder, 'well_max.mat');
+try
+    tmp = load(well_max_file, 'well_max');
+    well_max = tmp.well_max; % shape = [1 x ncell]
+catch
+    disp('not enough vis cells, set well max to all false')
+    well_max = zeros([1, ncell]);
+end
+
 %% find visually driven cells -> vis_driven.ipynb
+% read pickle data
+
+vis_file = fullfile(result_folder, 'vis_driven_ttest_bonferroni_jeff.mat');
+tmp = load(vis_file);
+vis_bool = tmp.vis_driven'; % column vector
+
+% size(ori_fit) % 181 x ncell
+% size(R_sq) % ncell x 1
+% size(theta_90) % 1 x ncell
+
+ori_fit(:, ~vis_bool) = NaN;
+R_sq(~vis_bool) = NaN;
+theta_90(~vis_bool') = NaN;
+well_max(~vis_bool') = NaN;
+
+%% save data for jeff population vector decoder, (un)masked with NaN
+
+save_flag = 1;
+
+if save_flag; save pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat ...
+    ppResp ori_fit R_sq theta_90 well_max; end
+
+% %% normalize pop vector
+% 
+% % % slice everything with well_max_10
+% well_max_bool = logical(well_max);
+% ppResp = cellfun(@(x) x(well_max_bool, :), ...
+%                 ppResp, ...
+%                 'UniformOutput',false);
+% % ori_fit = ori_fit(:, well_max_bool);
+% % R_sq = R_sq(well_max_bool);
+% theta_90 = theta_90(well_max_bool);
+% well_max = well_max(well_max_bool);
+% 
+% % % % for cell, min-max ori_fit to 0-1 range -> turned off, this seem to cause pv decoder perf = 0
+% % ncell_sess = size(ori_fit, 2);
+% % for icell = 1 : ncell_sess
+% %     tuning_icell = ori_fit(:, icell);
+% %     tuning_icell = (tuning_icell - min(tuning_icell)) / (max(tuning_icell) - min(tuning_icell));
+% %     ori_fit(:, icell) = tuning_icell;
+% % end
+% 
+% % % min-max doenst work & only ends up with AUROC full of zeros
+% % % switch to re-fit ori_fit using normed dfof_tg
+% dfof_tg = dfof_tg(well_max_bool, :, :);
+% nori_sess = size(dfof_tg, 2);
+% nisi_sess = size(dfof_tg, 3);
+% for iisi = 1 : nisi_sess 
+%     for iori = 1 : nori_sess
+%         pop_vec_itrial = dfof_tg(:, iori, iisi); % pop vector in dfof_tg of isi and ori
+%         pop_vec_normed = pop_vec_itrial / norm(pop_vec_itrial);
+%         dfof_tg(:, iori, iisi) = pop_vec_normed;
+%     end
+% end
+% [R_sq, ori_fit] = fit_tuning_jeff(dfof_tg, save_flag);
+% 
+% 
+% % % for iisi x iori of ppResp, for itrial, get [ncell x 1] vector. normalize vector to len=1
+% nisi_sess = size(ppResp, 1);
+% nori_sess = size(ppResp, 2);
+% for iisi = 1 : nisi_sess 
+%     for iori = 1 : nori_sess
+%         ntrial_sess = size(ppResp{iisi, iori}, 2);
+%         for itrial = 1 : ntrial_sess
+%             pop_vec_itrial = ppResp{iisi, iori}(:, itrial); % pop vector of single trial
+%             pop_vec_normed = pop_vec_itrial / norm(pop_vec_itrial);
+%             ppResp{iisi, iori}(:, itrial) = pop_vec_normed;
+%         end
+%     end
+% end
+% 
+% if save_flag; save pop_vec_decoder_jeff_10wellmax_vecnorm.mat ...
+%     ppResp ori_fit R_sq theta_90 well_max; end
 
 end
