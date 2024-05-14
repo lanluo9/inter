@@ -397,7 +397,7 @@ for dataset = usedatasets
                     ori_fp = [3, 5];
             end
             idxfp = (logical(sum(DVAll.Y == ori_fp, 2)) ...
-                & DVAll.cond == 1 ... % NOTE: in neighbor task, compare within isi condition, instead of always comparing to isi=250 ori=0
+                & DVAll.cond == 1 ... % NOTE: across isi
                 & logical(sum(DVAll.dataset == dataset, 2)));
 
             idxcd = (logical(sum(DVAll.Y == ori_cd, 2)) ...
