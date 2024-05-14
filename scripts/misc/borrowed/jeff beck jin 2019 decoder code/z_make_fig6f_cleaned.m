@@ -202,13 +202,13 @@ for n = 1 : length(filename)
     end
 end
 
-% %% load dvall
-% 
-% cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% tmp = load('pv_decoder_visnan_wellfit_addmultisessV1.mat')
-% DVAll = tmp.DVAll;
+%% load dvall
 
-%% ref0 decoder
+cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+tmp = load('pv_decoder_visnan_wellfit_addmultisessV1.mat');
+DVAll = tmp.DVAll;
+
+%% ref0 decoder (default: across ISI)
 % % decoder ori=0 vs other
 
 ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
@@ -251,13 +251,57 @@ for dataset = usedatasets
         end
     end
 end
-AUROC_ref0 = AUROC;
+AUROC_ref0_acrossISI = AUROC;
 
-%% neighbor decoder
+%% ref0 decoder (modified: within ISI)
+% % decoder ori=0 vs other
+
+ori_fp = [1, 2, 3, 4, 5, 6, 7]; % TODO: why??
+NDC = 500;
+dv = [0:NDC] / NDC;
+usedatasets = [1 : max(DVAll.dataset)];
+
+clear AUROC
+kk = 0;
+k = 8; % leftover variable from DVAll construction, not sure why it is necessary
+for dataset = usedatasets
+    kk = kk + 1;
+    for j = 1:3
+        for difficulty = 1:5
+            idxfp = (DVAll.Y == 8 ...
+                & DVAll.cond == j ... % modified: decode 0 vs other within isi
+                & logical(sum(DVAll.dataset == dataset, 2)));
+            % NOTE: only changing to DVAll.cond == j will yield same perf at 22-0 
+            % for both ref0 and neighbor decoder
+
+            switch difficulty
+                case 1
+                    not8 = 8;
+                case 2
+                    not8 = [1, 7];
+                case 3
+                    not8 = [2, 6];
+                case 4
+                    not8 = [3, 5];
+                case 5
+                    not8 = 4;
+            end
+            idxcd = (logical(sum(DVAll.Y == not8, 2)) & DVAll.cond == j & ...
+                logical(sum(DVAll.dataset == dataset, 2)));
+            DVtemp = abs(getfield(DVAll, 'PV'));
+            CD = mean(DVtemp(idxcd) > dv);
+            FP = mean(DVtemp(idxfp) >= dv);
+
+            AUROC{k}(kk, j, difficulty) = -trapz(FP, CD);
+        end
+    end
+end
+AUROC_ref0_withinISI = AUROC;
+
+%% neighbor decoder (default: within ISI)
 % % decode each ori against its left neighbor (sorted by ori_dist from adapter)
 % % when ori=0, decode against itself
 
-decoder_mode = 1; % decode neighboring ori
 NDC = 500;
 dv = [0:NDC] / NDC;
 usedatasets = [1 : max(DVAll.dataset)];
@@ -312,21 +356,78 @@ for dataset = usedatasets
         end
     end
 end
-AUROC_neighbor = AUROC;
-% AUROC_neighbor_fp250 = AUROC; % idxfp DVAll.cond == 1 instead of j
+AUROC_neighbor_withinISI = AUROC;
 
-%% stats & plot
+%% neighbor decoder (modified: across ISI)
+% % decode each ori against its left neighbor (sorted by ori_dist from adapter)
+% % when ori=0, decode against itself
+
+NDC = 500;
+dv = [0:NDC] / NDC;
+usedatasets = [1 : max(DVAll.dataset)];
+
+clear AUROC
+kk=0;
+k = 8; % leftover variable from DVAll construction, not sure why it is necessary
+for dataset = usedatasets
+    kk = kk + 1;
+    for j = 1:3 % change from 1:2 to 1:3, compare 250 vs 750 AND 250 vs 6k
+        for pair = 1:7 % despite ori_dist having 5 cases, we need to separate neighboring pairs (2-1 vs 6-7)
+            switch pair
+                case 1
+                    ori_cd = 8;
+                    ori_fp = 8;
+                case 2
+                    ori_cd = [1, 7];
+                    ori_fp = 8;
+                case 3
+                    ori_cd = 2; % NOTE: fold up case 3 & 4
+                    ori_fp = 1;
+                case 4
+                    ori_cd = 6;
+                    ori_fp = 7;
+                case 5
+                    ori_cd = 3; % NOTE: fold up case 5 & 6
+                    ori_fp = 2;
+                case 6
+                    ori_cd = 5;
+                    ori_fp = 6;
+                case 7
+                    ori_cd = 4;
+                    ori_fp = [3, 5];
+            end
+            idxfp = (logical(sum(DVAll.Y == ori_fp, 2)) ...
+                & DVAll.cond == 1 ... % NOTE: in neighbor task, compare within isi condition, instead of always comparing to isi=250 ori=0
+                & logical(sum(DVAll.dataset == dataset, 2)));
+
+            idxcd = (logical(sum(DVAll.Y == ori_cd, 2)) ...
+                & DVAll.cond == j ...
+                & logical(sum(DVAll.dataset == dataset, 2)));
+
+            % idxtmp = idxfp; % tmp storage to swap fp and cd index
+            % idxfp = idxcd;
+            % idxcd = idxtmp; % NOTE: swap only causes perf to become (1-perf)
+
+            DVtemp = abs(getfield(DVAll, 'PV'));
+            CD = mean(DVtemp(idxcd) > dv);
+            FP = mean(DVtemp(idxfp) >= dv);
+
+            AUROC{k}(kk, j, pair) = -trapz(FP, CD);
+        end
+    end
+end
+AUROC_neighbor_acrossISI = AUROC;
+
+%% stats & plot: within ISI
 
 close all
 for decoder_mode = 0:1
     if decoder_mode == 0
-        AUROC = AUROC_ref0;
-        decoder_mode_str = 'ref0'
+        AUROC = AUROC_ref0_withinISI;
+        decoder_mode_str = 'ref0 withinISI'
     elseif decoder_mode == 1
-        AUROC = AUROC_neighbor;
-        decoder_mode_str = 'neighbor'
-        % AUROC = AUROC_neighbor_fp250;
-        % decoder_mode_str = 'neighbor fp250'
+        AUROC = AUROC_neighbor_withinISI;
+        decoder_mode_str = 'neighbor withinISI'
     end
     
     % tmp_250 = squeeze(AUROC{k}(:, 1, :));
@@ -382,7 +483,72 @@ for decoder_mode = 0:1
   
 end
 
-cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+
+%% stats & plot: across ISI (false positive trial index = cond isi 250)
+
+for decoder_mode = 0:1
+    if decoder_mode == 0
+        AUROC = AUROC_ref0_acrossISI;
+        decoder_mode_str = 'ref0 acrossISI'
+    elseif decoder_mode == 1
+        AUROC = AUROC_neighbor_acrossISI;
+        decoder_mode_str = 'neighbor acrossISI'
+    end
+    
+    % tmp_250 = squeeze(AUROC{k}(:, 1, :));
+    % tmp_750 = squeeze(AUROC{k}(:, 2, :));
+    % tmp_6000 = squeeze(AUROC{k}(:, 3, :)); % ISI order for jin data: 250-750-6000
+
+    tmp_250 = squeeze(AUROC{k}(:, 1, :));
+    tmp_6000 = squeeze(AUROC{k}(:, 2, :)); % ISI order for my data: 250-6000-750
+    tmp_750 = squeeze(AUROC{k}(:, 3, :)); % determined by dfof_resp_trialwise_jeff.m
+    
+    if decoder_mode == 1
+        tmp_250_fold = [tmp_250(:, 1:2), mean(tmp_250(:, 3:4), 2), mean(tmp_250(:, 5:6), 2), tmp_250(:, end)];
+        tmp_750_fold = [tmp_750(:, 1:2), mean(tmp_750(:, 3:4), 2), mean(tmp_750(:, 5:6), 2), tmp_750(:, end)];
+        tmp_6000_fold = [tmp_6000(:, 1:2), mean(tmp_6000(:, 3:4), 2), mean(tmp_6000(:, 5:6), 2), tmp_6000(:, end)];
+
+        tmp_250 = tmp_250_fold;
+        tmp_750 = tmp_750_fold;
+        tmp_6000 = tmp_6000_fold;
+    end
+    
+    [~, p750, ~, ~] = ttest(tmp_250(:, 2), tmp_750(:, 2), "Tail","right");
+    disp([decoder_mode_str, ' decoder 22-0 250 vs 750 sig ', num2str(p750)])
+    [~, p6000, ~, ~] = ttest(tmp_250(:, 2), tmp_6000(:, 2), "Tail","right");
+    disp([decoder_mode_str, ' decoder 22-0 250 vs 6000 sig ', num2str(p6000)])
+    
+
+    xa = [0, 22.5, 45, 67.5, 90];
+    figure
+    subplot(121)
+    errorbar(xa, nanmean(tmp_250), ...
+                nanstd(tmp_250) / sqrt(size(tmp_250, 1)), 'b')
+    hold on
+    errorbar(xa+1, nanmean(tmp_750), ...
+                nanstd(tmp_750) / sqrt(size(tmp_250, 1)), 'r')
+    ylabel('AUROC')
+    xlabel('Orientation difference')
+    axis([-5, 95, 0.4, 1])
+    legend('250', '750', 'Location','northwest')
+    title([decoder_mode_str, ' decoder'])
+
+
+    subplot(122)
+    errorbar(xa, nanmean(tmp_250), ...
+                nanstd(tmp_250) / sqrt(size(tmp_250, 1)), 'b')
+    hold on
+    errorbar(xa+1, nanmean(tmp_6000), ...
+                nanstd(tmp_6000) / sqrt(size(tmp_6000, 1)), 'r')
+    ylabel('AUROC')
+    xlabel('Orientation difference')
+    axis([-5, 95, 0.4, 1])
+    legend('250', '6000', 'Location','northwest')
+    title([decoder_mode_str, ' decoder'])
+  
+end
+
+% cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
 % save pv_decoder_visnan_wellfit_addmultisessV1.mat DVAll AUROC_ref0 AUROC_neighbor AUROC_neighbor_fp250
 
 %%
