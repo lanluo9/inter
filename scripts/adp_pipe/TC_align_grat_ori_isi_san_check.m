@@ -395,40 +395,40 @@ else
     theta_90 = tmp.ori_perc'; % shape = [1 x ncell]. 90 percentile distance from avg fitted ori_pref
 end
 
-%% well max cells (limit N cells)
-
-% well_max_file = fullfile(result_folder, 'well_max_10cell.mat');
-% well_max_file = fullfile(result_folder, 'well_max_20cell.mat');
-well_max_file = fullfile(result_folder, 'well_max.mat');
-try
-    tmp = load(well_max_file, 'well_max');
-    well_max = tmp.well_max; % shape = [1 x ncell]
-catch
-    disp('not enough vis cells, set well max to all false')
-    well_max = zeros([1, ncell]);
-end
+% %% well max cells (limit N cells)
+% 
+% % well_max_file = fullfile(result_folder, 'well_max_10cell.mat');
+% % well_max_file = fullfile(result_folder, 'well_max_20cell.mat');
+% well_max_file = fullfile(result_folder, 'well_max.mat');
+% try
+%     tmp = load(well_max_file, 'well_max');
+%     well_max = tmp.well_max; % shape = [1 x ncell]
+% catch
+%     disp('not enough vis cells, set well max to all false')
+%     well_max = zeros([1, ncell]);
+% end
 
 %% find visually driven cells -> vis_driven.ipynb
-% read pickle data
-
-vis_file = fullfile(result_folder, 'vis_driven_ttest_bonferroni_jeff.mat');
-tmp = load(vis_file);
-vis_bool = tmp.vis_driven'; % column vector
-
-% size(ori_fit) % 181 x ncell
-% size(R_sq) % ncell x 1
-% size(theta_90) % 1 x ncell
-
-ori_fit(:, ~vis_bool) = NaN;
-R_sq(~vis_bool) = NaN;
-theta_90(~vis_bool') = NaN;
-well_max(~vis_bool') = NaN;
-
+% % read pickle data
+% 
+% vis_file = fullfile(result_folder, 'vis_driven_ttest_bonferroni_jeff.mat');
+% tmp = load(vis_file);
+% vis_bool = tmp.vis_driven'; % column vector
+% 
+% % size(ori_fit) % 181 x ncell
+% % size(R_sq) % ncell x 1
+% % size(theta_90) % 1 x ncell
+% 
+% ori_fit(:, ~vis_bool) = NaN;
+% R_sq(~vis_bool) = NaN;
+% theta_90(~vis_bool') = NaN;
+% % well_max(~vis_bool') = NaN;
+% 
 %% save data for jeff population vector decoder, (un)masked with NaN
-
-save_flag = 1;
-
-if save_flag; save pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat ...
-    ppResp ori_fit R_sq theta_90 well_max; end
+% 
+% save_flag = 1;
+% 
+% if save_flag; save pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat ...
+%     ppResp ori_fit R_sq theta_90 well_max; end
 
 end
