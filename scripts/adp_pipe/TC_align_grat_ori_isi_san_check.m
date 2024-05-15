@@ -142,11 +142,13 @@ cd(result_folder)
 
 input_behav = input_behav_seq;
 % ntrial = sum(input_behav.trialsSinceReset); % NOTE: cant use due to mismatch
-ntrial = length(input_behav.tBaseGratingContrast); % must use length of stim info
+ntrial = length(input_behav.tBaseGratingContrast) - 1; % must use length of stim info
+% % final trial discarded bc too few frames
+
 
 contrast_ad = celleqel2mat_padded(input_behav.tBaseGratingContrast); 
 id_noad = find(contrast_ad == 0); id_ad = find(contrast_ad == 1); 
-% id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = []; 
+id_noad(id_noad > ntrial) = []; id_ad(id_ad > ntrial) = []; 
 
 frame_ad = double(cell2mat(input_behav.cStimOn)); 
 frame_ad_off = double(cell2mat(input_behav.cStimOff)); % NOTE error in frame_ad_off: not consecutive -> gap between trial 219 vs 220
@@ -156,7 +158,7 @@ isi_unique = unique(isi_seq)
 
 nisi = length(unique(frame_tg - frame_ad));
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
-% id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
+id_750(id_750 > ntrial) = []; id_250(id_250 > ntrial) = []; 
 id_ad750 = intersect(id_ad, id_750); id_ad250 = intersect(id_ad, id_250);
 id_isi2 = {id_ad750, id_ad250}; 
 id_isi3 = {id_noad, id_ad750, id_ad250};
@@ -169,7 +171,7 @@ paradigm_ms.iti_ms = input_behav.itiTimeMs;
 
 ori_seq = celleqel2mat_padded(input_behav.tGratingDirectionDeg); 
 ori_seq(ori_seq == 180) = 0;
-% ori_seq(end) = [];
+ori_seq(end) = []; % discard final trial
 ori_list = unique(ori_seq); 
 nori = length(ori_list); id_ori = cell(nori, 1);
 for iori  = 1 : nori
@@ -409,26 +411,25 @@ end
 % end
 
 %% find visually driven cells -> vis_driven.ipynb
-% % read pickle data
-% 
-% vis_file = fullfile(result_folder, 'vis_driven_ttest_bonferroni_jeff.mat');
-% tmp = load(vis_file);
-% vis_bool = tmp.vis_driven'; % column vector
-% 
-% % size(ori_fit) % 181 x ncell
-% % size(R_sq) % ncell x 1
-% % size(theta_90) % 1 x ncell
-% 
-% ori_fit(:, ~vis_bool) = NaN;
-% R_sq(~vis_bool) = NaN;
-% theta_90(~vis_bool') = NaN;
-% % well_max(~vis_bool') = NaN;
+
+vis_file = fullfile(result_folder, 'vis_strict_ttest_bonferroni_jeff.mat');
+tmp = load(vis_file);
+vis_bool = tmp.vis_driven'; % column vector
+
+% size(ori_fit) % 181 x ncell
+% size(R_sq) % ncell x 1
+% size(theta_90) % 1 x ncell
+
+ori_fit(:, ~vis_bool) = NaN;
+R_sq(~vis_bool) = NaN;
+theta_90(~vis_bool') = NaN;
+% well_max(~vis_bool') = NaN;
 % 
 %% save data for jeff population vector decoder, (un)masked with NaN
-% 
-% save_flag = 1;
-% 
-% if save_flag; save pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat ...
-%     ppResp ori_fit R_sq theta_90 well_max; end
+
+save_flag = 1;
+
+if save_flag; save pop_vec_decoder_jeff_visnan_wellfit_isi6k.mat ...
+    ppResp ori_fit R_sq theta_90; end % well_max
 
 end

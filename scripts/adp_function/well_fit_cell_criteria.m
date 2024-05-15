@@ -20,8 +20,10 @@ for icell = 1 : ncell
         bootstrap_draw = round(ntrials_ori_noad * 0.7);
         idx_run = randsample(idx, bootstrap_draw, 1); % w replacement
 
-        base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); base_win = mean(base_win, 2);
-        resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); resp_win = mean(resp_win, 2);
+        base_win = squeeze(dfof_align_tg(icell, idx_run, range_base)); 
+        base_win = mean(base_win, 2);
+        resp_win = squeeze(dfof_align_tg(icell, idx_run, range_resp)); 
+        resp_win = mean(resp_win, 2);
         dfof_avg_runs(icell, iori, irun) = mean( resp_win - base_win );
 %       dfof_ste_runs(icell, iori, irun) = std( resp_win - base_win ) ./ sqrt(ntrials_ori_noad);
     end
@@ -35,6 +37,7 @@ for icell = 1 : ncell
     ori_pref(ori_pref < 0) = ori_pref(ori_pref < 0) + 180; ori_pref(ori_pref >= 180) = ori_pref(ori_pref >= 180) - 180;
     ori_pref_runs(icell, irun) = ori_pref;
 end
+
 end
 
 ori_distance = abs(ori_pref_runs - mean(ori_pref_runs,2));
