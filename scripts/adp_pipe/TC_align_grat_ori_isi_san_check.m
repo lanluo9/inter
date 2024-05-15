@@ -1,8 +1,8 @@
 %% init
 % this script inherits from TC_align_grat_ori_isi.m
 % but is used for grating 8ori 3isi data from lindsey & miaomiao jin
-% as a san check for tuning bias plot anormaly, where stim2 ori=90 trials still
-% get large adaptation despite adapter ori=0 (orthogonal)
+% as a san check for tuning bias plot anormaly, where stim2 ori=90 trials still get large adaptation despite adapter ori=0 (orthogonal)
+% also to rerun grat8ori_fig_sort.ipynb to generate all plot for grat paper using Jin 2019 data
 
 close all; clc; 
 clear; clear global
@@ -71,7 +71,7 @@ global frame_rate range_base range_resp ...
     nisi nori ori_list...
     id_ad id_noad id_isi2 id_isi3 id_ori
 
-save_flag = 1; % toggle this to save/skip all .mat creation below
+save_flag = 0; % toggle this to save/skip all .mat creation below
 
 % % try % if data folder contains 2p imaging note.xls
 % %     stim_protocol = 'grat_SF6'
@@ -152,7 +152,7 @@ frame_ad = double(cell2mat(input_behav.cStimOn));
 frame_ad_off = double(cell2mat(input_behav.cStimOff)); % NOTE error in frame_ad_off: not consecutive -> gap between trial 219 vs 220
 frame_tg = celleqel2mat_padded(input_behav.cTargetOn); frame_tg = double(frame_tg);
 isi_seq = frame_tg - frame_ad - 3; % due to error in frame_ad_off, has to calc isi this way
-unique(isi_seq)
+isi_unique = unique(isi_seq)
 
 nisi = length(unique(frame_tg - frame_ad));
 id_750 = find(isi_seq > mean(isi_seq)); id_250 = find(isi_seq < mean(isi_seq)); 
@@ -205,46 +205,46 @@ adapter_contrast = contrast_ad'; % contrast of adapter (R1)
 if save_flag; save trace_trial_stim.mat trace_by_trial ...
         stim_ori isi_nframe adapter_contrast; end
 
-%% san check
-% what can generate possibly fake adp when adapter vs target are orthogonal?  
-% check if bin=90 tuning curve is real: plot timecourse for stim2=90, noad vs 250
-
-% size(dfof_align_ad); % ncell x ntrial x nframe
-
-% isi_nframe = isi_nframe(1:length(stim_ori)); % cut off final trial
-% adapter_contrast = adapter_contrast(1:length(stim_ori));
-trial_id_noad_1 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
-trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
-trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
-
-
-% file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
-% tmp = load(file);
-% cell_id_filter = logical(tmp.vis_orimod_cell_bool');
-% clear tmp
-
-% file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat';
-% tmp = load(file);
-% cell_id_filter = logical(tmp.vis_cell_bool');
-% clear tmp
-
-cell_id_filter = ones(size(dfof_align_ad, 1), 1); % turn off cell filter
-
-
-trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
-trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
-trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
-
-figure;
-plot(trace_noad_1, 'b')
-hold on
-plot(trace_noad_2, 'g')
-plot(trace_ad_250, 'r')
-legend('noad early', 'noad late', 'ad250');
-xlim([0, 60]);
-set(gcf, 'Position', get(0, 'Screensize')); 
-% if save_flag; saveas(gcf, 'san check stim2=90, noad vs ad250', 'jpg'); end
-% close
+% %% san check
+% % what can generate possibly fake adp when adapter vs target are orthogonal?  
+% % check if bin=90 tuning curve is real: plot timecourse for stim2=90, noad vs 250
+% 
+% % size(dfof_align_ad); % ncell x ntrial x nframe
+% 
+% % isi_nframe = isi_nframe(1:length(stim_ori)); % cut off final trial
+% % adapter_contrast = adapter_contrast(1:length(stim_ori));
+% trial_id_noad_1 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==0); % trials without adapter but fake isi=250, stim2 ori=90
+% trial_id_noad_2 = (stim_ori==90) & (isi_nframe>10) & (adapter_contrast==0); % trials without adapter but fake isi=750, stim2 ori=90
+% trial_id_ad_250 = (stim_ori==90) & (isi_nframe<10) & (adapter_contrast==1); % trials with isi=250 adapter, stim2 ori=90
+% 
+% 
+% % file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_orimod_cell_bool.mat';
+% % tmp = load(file);
+% % cell_id_filter = logical(tmp.vis_orimod_cell_bool');
+% % clear tmp
+% 
+% % file = 'C:\Users\ll357\Documents\inter\results\tuning curve bias san check\vis_cell_bool.mat';
+% % tmp = load(file);
+% % cell_id_filter = logical(tmp.vis_cell_bool');
+% % clear tmp
+% 
+% cell_id_filter = ones(size(dfof_align_ad, 1), 1); % turn off cell filter
+% 
+% 
+% trace_noad_1 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_1, :), 1), 2));
+% trace_noad_2 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_noad_2, :), 1), 2));
+% trace_ad_250 = squeeze(nanmean(nanmean(dfof_align_ad(cell_id_filter, trial_id_ad_250, :), 1), 2));
+% 
+% figure;
+% plot(trace_noad_1, 'b')
+% hold on
+% plot(trace_noad_2, 'g')
+% plot(trace_ad_250, 'r')
+% legend('noad early', 'noad late', 'ad250');
+% xlim([0, 60]);
+% set(gcf, 'Position', get(0, 'Screensize')); 
+% % if save_flag; saveas(gcf, 'san check stim2=90, noad vs ad250', 'jpg'); end
+% % close
 
 %% set resp window
 % find base window & resp window
@@ -315,14 +315,14 @@ R1_cell_trial = mean(dfof_align_ad(:, :, range_resp), 3) ...
 R2_cell_trial = mean(dfof_align_tg(:, :, range_resp), 3) ...
               - mean(dfof_align_tg(:, :, range_base), 3); % separate 250 vs 750 isi by saved var isi_nframe
 
-figure
-subplot(211)
-imshow(R1_cell_trial, 'InitialMagnification', 800);
-colorbar;
-subplot(212)
-imshow(R2_cell_trial, 'InitialMagnification', 800);
-colorbar;
-set(gcf, 'Position', get(0, 'Screensize'));
+% figure
+% subplot(211)
+% imshow(R1_cell_trial, 'InitialMagnification', 800);
+% colorbar;
+% subplot(212)
+% imshow(R2_cell_trial, 'InitialMagnification', 800);
+% colorbar;
+% set(gcf, 'Position', get(0, 'Screensize'));
 
 if save_flag; save('trace_trial_stim.mat', 'R1_cell_trial', 'R2_cell_trial', '-append'); end
 
@@ -360,7 +360,12 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 % off final trial of each sess just like above:
 % ntrial_sess = input_behav.trialSinceReset - 1; % final trial discarded bc too few frames
 
-%% find visually driven cells -> vis_driven.ipynb
+%% trial-wise response and baseline for Jeff population vector decoder
+
+save_flag = 1
+[ppResp] = dfof_resp_trialwise_jeff(dfof_align_tg, save_flag); 
+% % NOTE: regenerated ppResp here, didnt get same value as
+% % Z:\All_Staff\home\lan\Analysis\optimal decoder from jeff beck dropbox\Lindsay _newFits.mat
 
 %% fit von mises tuning curve
 % fit_param under conditions = ncell x nparam x nisi [noad vs ad750 vs ad250]
@@ -369,60 +374,61 @@ if save_flag; save resp_base_trialwise.mat dfof_ad_trial dfof_tg_trial...
 
 [tuning_curve_cell_isi] = tuning_curve_nofit(dfof_tg, save_flag);
 
-% %% fit tuning curve with half trials
-% 
-% % save_flag = 1
-% fit_tuning_half_trials(dfof_align_tg, save_flag);
-% % save_flag = 0
-% 
-% % %% well-fit cells
-% % % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
-% % 
-% % bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
-% % if exist(bootstrap_file, 'file')
-% %     tmp = load(bootstrap_file, 'ori_pref_runs');
-% %     if size(tmp.ori_pref_runs, 2) == 1000
-% %         disp('already done 1k bootstraps for well_fit, skip')
-% % %         continue
-% %     end
-% % else
-% %     save_flag = 1;
-% %     nrun = 1000; 
-% %     well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
-% %     % sum(well_fit_cell) / length(well_fit_cell)
-% % end
-% 
-% % % relax well_fit_cell_criteria to a lower percentile for LI
-% % bootstrap_file = fullfile(result_folder, 'fit_bootstrap_relax.mat');
-% % if exist(bootstrap_file, 'file')
-% %     continue
-% % else
-% %     save_flag = 1;
-% %     nrun = 1000;
-% %     percentile_threshold = 0.7;
-% %     well_fit_cell = well_fit_cell_criteria_relax(percentile_threshold, nrun, save_flag);
-% %     disp('well_fit_cell percent:')
-% %     sum(well_fit_cell) / length(well_fit_cell) * 100
-% % end
-% 
-% % % validation that well_fit cells' tuning is comparable no matter how you
-% % % calculate their tuning: by avg or med of ori_pref_runs, or by ori_pref
-% % % generated from fit_tuning func
-% % tmp = load(bootstrap_file);
-% % well_fit_bool = tmp.well_fit_cell;
-% % 
-% % ori_pref_noad = ori_pref(:, 1); % first col is no-adapter ori pref
-% % ori_pref_noad_boot_avg = mean(tmp.ori_pref_runs, 2); % avg across boots
-% % ori_pref_noad_boot_med = median(tmp.ori_pref_runs, 2);
-% % 
-% % ori_pref_noad = ori_pref_noad(well_fit_bool);
-% % ori_pref_noad_boot_avg = ori_pref_noad_boot_avg(well_fit_bool);
-% % ori_pref_noad_boot_med = ori_pref_noad_boot_med(well_fit_bool);
-% % 
-% % plot(ori_pref_noad_boot_avg)
-% % hold on
-% % plot(ori_pref_noad_boot_med)
-% % plot(ori_pref_noad)
-% % legend('boot avg', 'boot med', 'fit')
+%% well-fit cells
+% cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit
+
+bootstrap_file = fullfile(result_folder, 'fit_bootstrap_90perc.mat');
+if exist(bootstrap_file, 'file')
+    tmp = load(bootstrap_file, 'ori_perc');
+    theta_90 = tmp.ori_perc'; % shape = [1 x ncell]. 90 percentile distance from avg fitted ori_pref
+    
+    % tmp = load(bootstrap_file, 'ori_pref_runs');
+    % if size(tmp.ori_pref_runs, 2) == 1000
+    %     disp('already done 1k bootstraps for well_fit, skip')
+    % end
+else
+    save_flag = 1;
+    nrun = 1000; 
+    well_fit_cell = well_fit_cell_criteria(dfof_align_tg, nrun, save_flag); 
+
+    tmp = load(bootstrap_file, 'ori_perc');
+    theta_90 = tmp.ori_perc'; % shape = [1 x ncell]. 90 percentile distance from avg fitted ori_pref
+end
+
+%% well max cells (limit N cells)
+
+% well_max_file = fullfile(result_folder, 'well_max_10cell.mat');
+% well_max_file = fullfile(result_folder, 'well_max_20cell.mat');
+well_max_file = fullfile(result_folder, 'well_max.mat');
+try
+    tmp = load(well_max_file, 'well_max');
+    well_max = tmp.well_max; % shape = [1 x ncell]
+catch
+    disp('not enough vis cells, set well max to all false')
+    well_max = zeros([1, ncell]);
+end
+
+%% find visually driven cells -> vis_driven.ipynb
+% read pickle data
+
+vis_file = fullfile(result_folder, 'vis_driven_ttest_bonferroni_jeff.mat');
+tmp = load(vis_file);
+vis_bool = tmp.vis_driven'; % column vector
+
+% size(ori_fit) % 181 x ncell
+% size(R_sq) % ncell x 1
+% size(theta_90) % 1 x ncell
+
+ori_fit(:, ~vis_bool) = NaN;
+R_sq(~vis_bool) = NaN;
+theta_90(~vis_bool') = NaN;
+well_max(~vis_bool') = NaN;
+
+%% save data for jeff population vector decoder, (un)masked with NaN
+
+save_flag = 1;
+
+if save_flag; save pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat ...
+    ppResp ori_fit R_sq theta_90 well_max; end
 
 end

@@ -30,7 +30,7 @@ dataset_table = dataset_table(seg_bool, :);
 
 % area_bool = logical(strcmp(dataset_table.area, 'LM') + strcmp(dataset_table.area, 'V1'));
 area_bool = logical(strcmp(dataset_table.area, 'V1'));
-dataset_table = dataset_table(area_bool, :);
+% dataset_table = dataset_table(area_bool, :);
 sum(strcmp(dataset_table.area, 'V1'))
 sum(strcmp(dataset_table.area, 'LM'))
 sum(strcmp(dataset_table.area, 'LI'))
