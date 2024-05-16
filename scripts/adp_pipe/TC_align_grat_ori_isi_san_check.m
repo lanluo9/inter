@@ -374,7 +374,10 @@ save_flag = 1
 % ori_pref under conditions = ncell x nisi [noad vs ad750 vs ad250]
 % save tuning curve for each cell & isi
 
-[tuning_curve_cell_isi] = tuning_curve_nofit(dfof_tg, save_flag);
+% [tuning_curve_cell_isi] = tuning_curve_nofit(dfof_tg, save_flag);
+[fit_param, ori_pref, tuning_curve_cell_isi] = fit_tuning(dfof_tg, save_flag);
+[R_sq, ori_fit] = fit_tuning_jeff(dfof_tg, save_flag);
+
 
 %% well-fit cells
 % cells whose noad-tg 90% bootstraps are within 22.5 deg of all-trials-included fit

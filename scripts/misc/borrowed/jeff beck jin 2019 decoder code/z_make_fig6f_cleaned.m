@@ -13,18 +13,18 @@ tc_fn = fullfile(ll_fn, 'Analysis\2P');
 dir_meta = 'Z:\All_Staff\home\lan\Data\2P_images\mat_inter/adp_dataset_master.xlsx';
 dataset_meta = readtable(dir_meta);
 
-stim_type = 'grating' % grat_8ori_3isi
+stim_type = 'grating_lindsey_miaomiao' % grating
 dataset_table = dataset_meta(strcmp(dataset_meta.paradigm, stim_type), :);
 
-dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
-seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
-dataset_table = dataset_table(seg_bool, :);
-
-% % append a date for multisess 8ori 2isi
-dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
-dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
-dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
-dataset_table = [dataset_table_extend; dataset_table]; % move to top
+% dataset_table = dataset_table(strcmp(dataset_table.gcamp, '6s'), :);
+% seg_bool = dataset_table.manual_seg | dataset_table.cellpose_seg; % exclude not-segmented data
+% dataset_table = dataset_table(seg_bool, :);
+% 
+% % % append a date for multisess 8ori 2isi
+% dataset_table_extend = dataset_meta(dataset_meta.date == 240229, :);
+% dataset_table_extend = dataset_table_extend(1, :); % take first sess as meta
+% dataset_table_extend.num{1} = ''; % accommodate area_mouse_date_sess to multisess (no sess appended)
+% dataset_table = [dataset_table_extend; dataset_table]; % move to top
 
 select_area = 'V1';
 % select_area = 'LM';
@@ -68,7 +68,9 @@ for iset = 1:nset
     % pop_vec_decoder_jeff_10wellmax_notnorm
     % pop_vec_decoder_jeff_20wellmax_notnorm_isi6k
     % pop_vec_decoder_jeff_visonly_nowellmax_notnorm_isi6k
-    jeff_mat = 'pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k.mat';
+    % pop_vec_decoder_jeff_visnan_allwellmax_notnorm_isi6k
+    % pop_vec_decoder_jeff_visnan_wellfit_isi6k
+    jeff_mat = 'pop_vec_decoder_jeff_visnan_wellfit_isi6k.mat';
     jeff_file = fullfile(result_folder, jeff_mat);
     filename{1, iset} = jeff_file;
 end
@@ -121,6 +123,7 @@ sess_kept = logical(sess_kept);
 filename = filename(1, sess_kept);
 disp(['kept ', num2str(sum(sess_kept)), ' out of ', num2str(length(sess_kept)), ...
     ' in ', select_area])
+% % NOTE: this achieved the same dataset filtering as hard-coded in z_make_fig6f_cleaned_jindata.m
 
 %%
 
@@ -202,11 +205,11 @@ for n = 1 : length(filename)
     end
 end
 
-%% load dvall
-
-cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-tmp = load('pv_decoder_visnan_wellfit_addmultisessV1.mat');
-DVAll = tmp.DVAll;
+% %% load dvall
+% 
+% cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
+% tmp = load('pv_decoder_visnan_wellfit_addmultisessV1.mat');
+% DVAll = tmp.DVAll;
 
 %% ref0 decoder (default: across ISI)
 % % decoder ori=0 vs other
