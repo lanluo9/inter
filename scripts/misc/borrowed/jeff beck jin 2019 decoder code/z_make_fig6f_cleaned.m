@@ -552,7 +552,7 @@ for decoder_mode = 0:1
 end
 
 % cd('C:\Users\ll357\Documents\inter\results\decoder_grat8\pop vec decoder jin2019 jeff')
-% save pv_decoder_visnan_wellfit_addmultisessV1.mat DVAll AUROC_ref0 AUROC_neighbor AUROC_neighbor_fp250
+% save pv_decoder_visnan_wellfit_jin2019_regenerated.mat DVAll
 
 %%
 
